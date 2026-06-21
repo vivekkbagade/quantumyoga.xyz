@@ -3459,30 +3459,6 @@ td,
 }
 ```
 
-## File: repomix.config.json
-```json
-{
-  "output": {
-    "style": "markdown",
-    "filePath": "repomix-output.md"
-  },
-  "ignore": {
-    "customPatterns": [
-      "dist/**",
-      "node_modules/**",
-      "package-lock.json",
-      "*.jpg",
-      "*.png",
-      "*.svg",
-      "repomix-output.*",
-      "**/*.md",
-      "wiki/**",
-      "openspec/**"
-    ]
-  }
-}
-```
-
 ## File: sample_ledger.csv
 ```
 Transaction Date,UTR / Transaction Ref,Transaction Description,Amount,Status
@@ -3832,6 +3808,30 @@ http.get('http://localhost:80/api/db', (res) => {
     "express": "^5.2.1",
     "pg": "^8.21.0",
     "ws": "^8.21.0"
+  }
+}
+```
+
+## File: repomix.config.json
+```json
+{
+  "output": {
+    "style": "markdown",
+    "filePath": "repomix-output.md"
+  },
+  "ignore": {
+    "customPatterns": [
+      "dist/**",
+      "node_modules/**",
+      "package-lock.json",
+      "*.jpg",
+      "*.png",
+      "*.svg",
+      "repomix-output.*",
+      "**/*.md",
+      "wiki/**",
+      "openspec/**"
+    ]
   }
 }
 ```
