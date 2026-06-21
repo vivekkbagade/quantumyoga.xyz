@@ -139,6 +139,94 @@ export default defineConfig({
             res.end(JSON.stringify({ error: err.message }));
           });
         });
+
+        // WhatsApp Proxy Middleware for Development Server
+        server.middlewares.use('/api/send-whatsapp', (req, res, next) => {
+          if (req.method !== 'POST') { next(); return; }
+          let body = '';
+          req.on('data', chunk => { body += chunk; });
+          req.on('end', async () => {
+            try {
+              const { to, message } = JSON.parse(body);
+              console.log(`[Vite Dev WhatsApp Proxy] Send attempt to ${to}: "${message}"`);
+              
+              // Load .env variables manually to ensure local Twilio settings are loaded
+              const envPath = path.resolve(__dirname, '.env');
+              if (fs.existsSync(envPath)) {
+                const envContent = fs.readFileSync(envPath, 'utf8');
+                envContent.split('\n').forEach(line => {
+                  const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+                  if (match) {
+                    const key = match[1];
+                    let value = (match[2] || '').trim();
+                    if (value.startsWith('"') && value.endsWith('"')) value = value.slice(1, -1);
+                    if (value.startsWith("'") && value.endsWith("'")) value = value.slice(1, -1);
+                    process.env[key] = value;
+                  }
+                });
+              }
+
+              const accountSid = process.env.TWILIO_ACCOUNT_SID;
+              const authToken = process.env.TWILIO_AUTH_TOKEN;
+              const sender = process.env.TWILIO_SENDER_NUMBER || '+14155238886';
+
+              if (accountSid && accountSid !== 'ACyour_account_sid_here' && authToken && authToken !== 'your_auth_token_here') {
+                const { default: https } = await import('node:https');
+                let recipient = to.trim();
+                if (!recipient.startsWith('whatsapp:')) {
+                  let clean = recipient.replace(/\D/g, "");
+                  if (clean.length === 10) clean = "91" + clean;
+                  recipient = `whatsapp:+${clean}`;
+                }
+                const twilioSender = sender.startsWith('whatsapp:') ? sender : `whatsapp:${sender}`;
+                const payload = new URLSearchParams({
+                  To: recipient,
+                  From: twilioSender,
+                  Body: message
+                }).toString();
+
+                const options = {
+                  hostname: 'api.twilio.com',
+                  port: 443,
+                  path: `/2010-04-01/Accounts/${accountSid}/Messages.json`,
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Length': Buffer.byteLength(payload),
+                    'Authorization': 'Basic ' + Buffer.from(accountSid + ':' + authToken).toString('base64')
+                  }
+                };
+
+                const proxyReq = https.request(options, proxyRes => {
+                  let responseData = '';
+                  proxyRes.on('data', chunk => { responseData += chunk; });
+                  proxyRes.on('end', () => {
+                    console.log(`[Vite Dev WhatsApp Twilio] Status: ${proxyRes.statusCode}, Response: ${responseData}`);
+                    res.statusCode = proxyRes.statusCode;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(responseData);
+                  });
+                });
+                proxyReq.on('error', err => {
+                  console.error('[Vite Dev WhatsApp Twilio Error]', err);
+                  res.statusCode = 500;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify({ error: err.message }));
+                });
+                proxyReq.write(payload);
+                proxyReq.end();
+              } else {
+                console.log('[Vite Dev WhatsApp Proxy] Twilio credentials not configured. Mocking success.');
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: true, mock: true }));
+              }
+            } catch (err) {
+              res.statusCode = 400;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: err.message }));
+            }
+          });
+        });
       }
     }
   ],

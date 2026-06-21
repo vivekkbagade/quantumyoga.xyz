@@ -203,6 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loginPasswordInput = document.getElementById("login-password");
   const registerNameInput = document.getElementById("register-name");
   const registerEmailInput = document.getElementById("register-email");
+  const registerPhoneInput = document.getElementById("register-phone");
   const registerPasswordInput = document.getElementById("register-password");
   const loginErrorMsg = document.getElementById("login-error-msg");
   const registerErrorMsg = document.getElementById("register-error-msg");
@@ -219,11 +220,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Profile DOM Elements
   const profileUserName = document.getElementById("profile-user-name");
   const profileUserEmail = document.getElementById("profile-user-email");
+  const profileUserPhone = document.getElementById("profile-user-phone");
   const profileStatCompleted = document.getElementById("profile-stat-completed");
   const profileStatFavorites = document.getElementById("profile-stat-favorites");
   const profileFavoritesList = document.getElementById("profile-favorites-list");
   const profileHistoryList = document.getElementById("profile-history-list");
   const profileThemeSelect = document.getElementById("profile-theme-select");
+  const profilePhoneInput = document.getElementById("profile-phone-input");
+  const profilePhoneSaveBtn = document.getElementById("profile-phone-save-btn");
+  const profilePhoneSuccessMsg = document.getElementById("profile-phone-success-msg");
+  const profileSandboxOptinWidget = document.getElementById("profile-sandbox-optin-widget");
   
   const profileDashboardTabBtn = document.getElementById("profile-dashboard-tab-btn");
   const profilePracticeTabBtn = document.getElementById("profile-practice-tab-btn");
@@ -427,6 +433,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const closeInspectModalBtn = document.getElementById("close-inspect-modal");
   const inspectUserName = document.getElementById("inspect-user-name");
   const inspectUserEmail = document.getElementById("inspect-user-email");
+  const inspectUserPhone = document.getElementById("inspect-user-phone");
+  const inspectUserPhoneInput = document.getElementById("inspect-user-phone-input");
   const inspectStatCompleted = document.getElementById("inspect-stat-completed");
   const inspectStatFavorites = document.getElementById("inspect-stat-favorites");
   const inspectFavoritesList = document.getElementById("inspect-favorites-list");
@@ -1935,6 +1943,23 @@ document.addEventListener("DOMContentLoaded", async () => {
           <p style="margin: 0;"><strong>Email:</strong> ${data.email}</p>
           <p style="margin: 8px 0 0;"><strong>Membership Tier:</strong> ${data.tier || "Basic"}</p>
         </div>
+        
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 20px; margin: 24px 0;">
+          <h3 style="color: #10b981; margin: 0 0 8px 0; font-size: 16px;">💬 Receive Notifications on WhatsApp</h3>
+          <p style="margin: 0 0 12px 0; font-size: 13px; line-height: 1.45; color: #b5e2d5;">
+            We send automated class bookings, rescheduling alerts, and invoice alerts directly to your phone. To receive alerts from our Twilio testing sandbox, please register your number:
+          </p>
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <div style="background: white; padding: 4px; border-radius: 6px; display: inline-block;">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https%3A%2F%2Fwa.me%2F14155238886%3Ftext%3Djoin%2520increase-selection" alt="Twilio QR Code" style="width: 100px; height: 100px; display: block;">
+            </div>
+            <div style="font-size: 13px; line-height: 1.4; color: #e0e0e0; min-width: 200px;">
+              <strong>Option 1:</strong> Scan the QR code with your mobile camera.<br>
+              <strong>Option 2:</strong> Send <strong><code>join increase-selection</code></strong> to <a href="https://wa.me/14155238886?text=join%20increase-selection" target="_blank" style="color: #10b981; font-weight: bold; text-decoration: underline;">+1 415 523 8886</a>
+            </div>
+          </div>
+        </div>
+
         <p>Log in at any time to explore poses, routines, and book private coaching sessions. Namaste!</p>
       `;
     } else if (template === "invoice") {
@@ -2066,6 +2091,19 @@ Please verify and update my status. Thank you!`);
         
         ${closingText}
       `;
+    } else if (template === "payment-under-review") {
+      body = `
+        <h2 style="color: #fb923c; margin-top: 0;">Payment Under Review ⏳</h2>
+        <p>Hello ${data.name || data.to || "Student"},</p>
+        <p>We have received your payment reference for the following invoice and it is now under review by our administration team.</p>
+        <div style="background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.3); border-radius: 8px; padding: 16px; margin: 24px 0;">
+          <p style="margin: 0;"><strong>Invoice #:</strong> ${data.invoiceId}</p>
+          <p style="margin: 8px 0 0;"><strong>Amount:</strong> ₹${data.amount}</p>
+          <p style="margin: 8px 0 0;"><strong>Transaction Ref / UTR:</strong> <code style="color: #fb923c;">${data.utr}</code></p>
+          <p style="margin: 8px 0 0;"><strong>Status:</strong> Under Review</p>
+        </div>
+        <p>Once our team verifies the transfer, your invoice will be marked as paid and we will notify you. Thank you for your patience!</p>
+      `;
     } else if (template === "reminder") {
       const upi = loadUpiSettings();
       const upiUrl = `upi://pay?pa=${encodeURIComponent(upi.vpa)}&pn=${encodeURIComponent(upi.name)}&am=${encodeURIComponent(data.amount)}&tn=${encodeURIComponent("Invoice: " + (data.invoiceId || "Payment"))}`;
@@ -2148,6 +2186,23 @@ Please verify and update my status. Thank you!`);
           </p>
         </div>
         <p style="color: #f87171; font-weight: 600;">⚠️ Please log in and change your password immediately — this temporary password is active now.</p>
+        
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 20px; margin: 24px 0;">
+          <h3 style="color: #10b981; margin: 0 0 8px 0; font-size: 16px;">💬 Receive Notifications on WhatsApp</h3>
+          <p style="margin: 0 0 12px 0; font-size: 13px; line-height: 1.45; color: #b5e2d5;">
+            We send automated class bookings, rescheduling alerts, and invoice alerts directly to your phone. To receive alerts from our Twilio testing sandbox, please register your number:
+          </p>
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <div style="background: white; padding: 4px; border-radius: 6px; display: inline-block;">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https%3A%2F%2Fwa.me%2F14155238886%3Ftext%3Djoin%2520increase-selection" alt="Twilio QR Code" style="width: 100px; height: 100px; display: block;">
+            </div>
+            <div style="font-size: 13px; line-height: 1.4; color: #e0e0e0; min-width: 200px;">
+              <strong>Option 1:</strong> Scan the QR code with your mobile camera.<br>
+              <strong>Option 2:</strong> Send <strong><code>join increase-selection</code></strong> to <a href="https://wa.me/14155238886?text=join%20increase-selection" target="_blank" style="color: #10b981; font-weight: bold; text-decoration: underline;">+1 415 523 8886</a>
+            </div>
+          </div>
+        </div>
+
         <p>Once logged in, you can explore poses, book private coaching sessions, track your progress, and much more.</p>
         <div style="text-align: center; margin: 28px 0;">
           <a href="${typeof window !== "undefined" ? window.location.origin : "#"}" style="background: linear-gradient(135deg, #7c3aed, #db2777); color: #fff; text-decoration: none; padding: 12px 32px; border-radius: 8px; font-weight: 700; font-size: 15px; display: inline-block;">Log In to Quantum Yoga →</a>
@@ -2406,6 +2461,15 @@ Please verify and update my status. Thank you!`);
     // Update profile page details
     profileUserName.textContent = state.currentUser.name;
     profileUserEmail.textContent = state.currentUser.email;
+    if (profileUserPhone) {
+      profileUserPhone.textContent = state.currentUser.phone ? `Phone: ${state.currentUser.phone}` : "Phone: -";
+    }
+    if (profilePhoneInput) {
+      profilePhoneInput.value = state.currentUser.phone || "";
+    }
+    if (profileSandboxOptinWidget) {
+      profileSandboxOptinWidget.style.display = state.currentUser.phone ? "block" : "none";
+    }
     profileStatCompleted.textContent = state.currentUser.routineHistory ? state.currentUser.routineHistory.length : 0;
     profileStatFavorites.textContent = state.currentUser.favorites ? state.currentUser.favorites.length : 0;
 
@@ -2641,6 +2705,7 @@ Please verify and update my status. Thank you!`);
     e.preventDefault();
     const name = registerNameInput.value.trim();
     const email = registerEmailInput.value.trim().toLowerCase();
+    const phone = registerPhoneInput.value.trim();
     const password = registerPasswordInput.value;
     
     if (password.length < 6) {
@@ -2664,6 +2729,7 @@ Please verify and update my status. Thank you!`);
     const newUser = {
       name,
       email,
+      phone,
       password, // Cleartext password for local mockup
       favorites: [],
       routineHistory: [],
@@ -2680,6 +2746,14 @@ Please verify and update my status. Thank you!`);
     
     users.push(newUser);
     saveUsers(users);
+    
+    // Send transactional welcome email and WhatsApp notification
+    try {
+      sendTransactionalEmail("welcome", { email: email, tier: "Basic" }, email);
+      sendWhatsAppNotification("welcome", { tempPass: "" }, email);
+    } catch (err) {
+      console.error("Welcome communications failed:", err);
+    }
     
     // Log user session in
     state.currentUser = newUser;
@@ -3676,6 +3750,7 @@ Please verify and update my status. Thank you!`);
     profilePastAppointments.innerHTML = "";
     
     const appointments = loadAppointments();
+    const paymentsList = loadPayments();
     const userEmail = state.currentUser ? state.currentUser.email : "";
     const myAppts = appointments.filter(a => a.studentEmail === userEmail);
     
@@ -3729,11 +3804,15 @@ Please verify and update my status. Thank you!`);
         `;
       }
       
+      const relatedPayment = paymentsList.find(p => p.appointmentId === appt.id || (appt.invoiceId && p.id === appt.invoiceId));
+      const isPaid = relatedPayment && (relatedPayment.status === "paid" || relatedPayment.status === "refund initiated" || relatedPayment.status === "refunded");
+      const feeDisplay = (appt.status === "Cancelled" && !isPaid) ? "None" : `\u20b9${apptFee}`;
+      
       card.innerHTML = `
         <div style="display: flex; flex-direction: column; gap: 0.25rem;">
           <span style="font-weight: 600; color: var(--text-primary);">${appt.selectedRoutine}</span>
           <span style="font-size: 0.8rem; color: var(--text-muted);">\uD83D\uDCC5 ${formatDateToIndian(appt.date)} at \u23F0 ${appt.time}</span>
-          <span style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 600;">Fee: \u20b9${apptFee}</span>
+          <span style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 600;">Fee: ${feeDisplay}</span>
           ${actionButtons}
         </div>
         <div>
@@ -3780,6 +3859,7 @@ Please verify and update my status. Thank you!`);
     adminAppointmentsTableBody.innerHTML = "";
     
     const appointments = loadAppointments();
+    const paymentsList = loadPayments();
     const query = adminAppointmentsSearchInput ? adminAppointmentsSearchInput.value.toLowerCase().trim() : "";
     
     appointments.sort((a, b) => {
@@ -3811,7 +3891,9 @@ Please verify and update my status. Thank you!`);
         actionButtons = `<span style="color: var(--text-muted); font-size: 0.8rem;">None</span>`;
       }
 
-      const feeLabel = `<span style="font-weight:600;color:var(--accent-primary);">\u20b9${apptFee}</span>`;
+      const relatedPayment = paymentsList.find(p => p.appointmentId === appt.id || (appt.invoiceId && p.id === appt.invoiceId));
+      const isPaid = relatedPayment && (relatedPayment.status === "paid" || relatedPayment.status === "refund initiated" || relatedPayment.status === "refunded");
+      const feeLabel = (appt.status === "Cancelled" && !isPaid) ? `<span style="color:var(--text-muted);">-</span>` : `<span style="font-weight:600;color:var(--accent-primary);">\u20b9${apptFee}</span>`;
       
       const usersList = loadUsers();
       const studentUser = usersList.find(u => u.email === appt.studentEmail);
@@ -4176,6 +4258,17 @@ Please verify and update my status. Thank you!`);
       payments[idx].status = "review";
       payments[idx].utr = txId;
       savePayments(payments);
+      
+      try {
+        await sendTransactionalEmail("payment-under-review", {
+          invoiceId: payments[idx].id,
+          amount: payments[idx].amount,
+          utr: payments[idx].utr
+        }, payments[idx].userEmail);
+      } catch (err) {
+        console.error("Failed to send payment under review email:", err);
+      }
+      
       alert(`Found verification email! Extracted Tx ID: ${txId}. Invoice status updated to Under Review.`);
       renderAdminPayments();
       renderAdminOverview();
@@ -4215,13 +4308,25 @@ Please verify and update my status. Thank you!`);
     }
   }
 
-  function sendReminder(invoiceId) {
+  async function sendReminder(invoiceId) {
     const payments = loadPayments();
     const idx = payments.findIndex(p => p.id === invoiceId);
     if (idx > -1) {
       payments[idx].lastReminderSent = new Date().toISOString().split('T')[0];
       savePayments(payments);
-      alert(`Reminder for Invoice #${invoiceId} logged and notification sent to ${payments[idx].userEmail}.`);
+      
+      try {
+        await sendTransactionalEmail("reminder", {
+          invoiceId: payments[idx].id,
+          description: payments[idx].description,
+          amount: payments[idx].amount,
+          dueDate: payments[idx].dueDate
+        }, payments[idx].userEmail);
+        alert(`Reminder for Invoice #${invoiceId} email and WhatsApp logged and sent to ${payments[idx].userEmail}.`);
+      } catch (err) {
+        console.error("Failed to send payment reminder email:", err);
+        alert(`Reminder logged, but notification failed: ${err.message || err}`);
+      }
       renderAdminPayments();
     }
   }
@@ -5356,7 +5461,8 @@ Please verify and update my status. Thank you!`);
       "lead-converted": "Welcome to Quantum Yoga — Your Account is Ready 🧘", // Task 2.2
       "payment-approved": `Payment Approved & Confirmed — Invoice #${data.invoiceId || ""}`,
       "payment-declined": `Payment Verification Update — Invoice #${data.invoiceId || ""}`,
-      "refunded": `Refund Processed — Invoice #${data.invoiceId || ""}`
+      "refunded": `Refund Processed — Invoice #${data.invoiceId || ""}`,
+      "payment-under-review": `Payment Under Review — Invoice #${data.invoiceId || ""}`
     };
     
     const subject = subjects[template] || "Message from Quantum Yoga";
@@ -5430,6 +5536,31 @@ Please verify and update my status. Thank you!`);
     }
 
     saveEmails(emails);
+
+    // Automatically send WhatsApp notification alongside payment/reminder emails
+    try {
+      if (template === "payment-approved") {
+        await sendWhatsAppNotification("payment-approved", {
+          message: `Hi {{name}}, your payment of ₹${data.amount || ""} (UTR: ${data.utr || "N/A"}) for Invoice #${data.invoiceId || ""} has been approved and confirmed. Thank you!`
+        }, toEmail);
+      } else if (template === "payment-declined") {
+        await sendWhatsAppNotification("payment-declined", {
+          message: `Hello {{name}}, your payment verification request for Invoice #${data.invoiceId || ""} has been declined. Please log in and check your transaction details.`
+        }, toEmail);
+      } else if (template === "refunded") {
+        await sendWhatsAppNotification("refunded", {
+          message: `Hi {{name}}, your refund of ₹${data.amount || ""} for Invoice #${data.invoiceId || ""} has been processed successfully. Date: ${data.refundDate || ""}.`
+        }, toEmail);
+      } else if (template === "reminder") {
+        await sendWhatsAppNotification("invoice", data, toEmail);
+      } else if (template === "payment-under-review") {
+        await sendWhatsAppNotification("payment-under-review", {
+          message: `Hi {{name}}, we have received your payment reference (UTR: ${data.utr || "N/A"}) for Invoice #${data.invoiceId || ""} (₹${data.amount || ""}). Your payment status is now Under Review while we verify the transaction.`
+        }, toEmail);
+      }
+    } catch (wErr) {
+      console.error("[WhatsApp Auto-Send Error]", wErr);
+    }
   }
 
   async function sendWhatsAppNotification(type, data, userEmail) {
@@ -5463,14 +5594,19 @@ Please verify and update my status. Thank you!`);
     // Build the message body using templates
     let templateText = "";
     if (type === "booking") {
-      templateText = settings.templates?.booking || "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}.";
+      templateText = settings.templates?.booking || "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}. Session Fee: ₹{{amount}}. Pay via UPI VPA: {{upiVpa}} ({{upiName}}) or tap here: {{upiLink}}";
     } else if (type === "invoice") {
-      templateText = settings.templates?.invoice || "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}";
+      templateText = settings.templates?.invoice || "Hello {{name}}, a new invoice {{invoiceId}} for ₹{{amount}} is due on {{dueDate}}. Pay via UPI VPA: {{upiVpa}} ({{upiName}}) or tap here: {{upiLink}}";
     } else if (type === "welcome") {
       templateText = settings.templates?.welcome || "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.";
     } else {
       templateText = data.message || "";
     }
+
+    const upi = loadUpiSettings();
+    const upiVpa = upi ? upi.vpa : "quantumyoga@upi";
+    const upiName = upi ? upi.name : "Quantum Yoga Studio";
+    const upiLink = `upi://pay?pa=${encodeURIComponent(upiVpa)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(data.amount || "")}&tn=${encodeURIComponent("Invoice: " + (data.invoiceId || ""))}`;
 
     // Replace templates placeholders
     let message = templateText
@@ -5482,6 +5618,9 @@ Please verify and update my status. Thank you!`);
       .replace(/{{amount}}/g, data.amount || "")
       .replace(/{{dueDate}}/g, data.dueDate || "")
       .replace(/{{tempPass}}/g, data.tempPass || "")
+      .replace(/{{upiVpa}}/g, upiVpa)
+      .replace(/{{upiName}}/g, upiName)
+      .replace(/{{upiLink}}/g, upiLink)
       .replace(/{{link}}/g, window.location.origin + "/#profile-section");
 
     try {
@@ -6126,6 +6265,11 @@ Please verify and update my status. Thank you!`);
 
         // Task 4.1 — fire welcome + credentials email to the new member
         await sendTransactionalEmail("lead-converted", { name: lead.name, tempPassword: generatedPassword }, lead.email);
+        try {
+          await sendWhatsAppNotification("welcome", { tempPass: generatedPassword }, lead.email);
+        } catch (wErr) {
+          console.error("WhatsApp welcome dispatch failed:", wErr);
+        }
 
         if (inspectLeadSuccessMsg) {
           const originalText = inspectLeadSuccessMsg.textContent;
@@ -6170,6 +6314,8 @@ Please verify and update my status. Thank you!`);
     
     inspectUserName.textContent = user.name;
     inspectUserEmail.textContent = user.email;
+    if (inspectUserPhone) inspectUserPhone.textContent = user.phone ? `Phone: ${user.phone}` : "Phone: -";
+    if (inspectUserPhoneInput) inspectUserPhoneInput.value = user.phone || "";
     inspectStatCompleted.textContent = user.routineHistory ? user.routineHistory.length : 0;
     inspectStatFavorites.textContent = user.favorites ? user.favorites.length : 0;
     
@@ -6829,6 +6975,44 @@ Please verify and update my status. Thank you!`);
     });
   }
 
+  // Phone save button listener
+  if (profilePhoneSaveBtn) {
+    profilePhoneSaveBtn.addEventListener("click", () => {
+      if (!state.currentUser) return;
+      const phoneVal = profilePhoneInput ? profilePhoneInput.value.trim() : "";
+      
+      // Indian mobile format check regex
+      const phoneRegex = /^(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}$/;
+      if (phoneVal && !phoneRegex.test(phoneVal)) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
+      }
+
+      const users = loadUsers();
+      const userIndex = users.findIndex(u => u.email === state.currentUser.email);
+      if (userIndex > -1) {
+        users[userIndex].phone = phoneVal;
+        state.currentUser.phone = phoneVal;
+        saveUsers(users);
+        
+        if (profileUserPhone) {
+          profileUserPhone.textContent = phoneVal ? `Phone: ${phoneVal}` : "Phone: -";
+        }
+        
+        if (profileSandboxOptinWidget) {
+          profileSandboxOptinWidget.style.display = phoneVal ? "block" : "none";
+        }
+        
+        if (profilePhoneSuccessMsg) {
+          profilePhoneSuccessMsg.style.display = "inline";
+          setTimeout(() => {
+            profilePhoneSuccessMsg.style.display = "none";
+          }, 3000);
+        }
+      }
+    });
+  }
+
   // Admin default theme change listener
   if (adminDefaultThemeSelect) {
     adminDefaultThemeSelect.addEventListener("change", () => {
@@ -6975,7 +7159,7 @@ Please verify and update my status. Thank you!`);
   }
 
   if (upiPaymentUtrForm) {
-    upiPaymentUtrForm.addEventListener("submit", (e) => {
+    upiPaymentUtrForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const invoiceId = upiPaymentUtrForm.dataset.invoiceId;
       const utr = upiPaymentUtrInput.value.trim();
@@ -6991,6 +7175,16 @@ Please verify and update my status. Thank you!`);
         payments[idx].status = "review";
         payments[idx].utr = utr;
         savePayments(payments);
+        
+        try {
+          await sendTransactionalEmail("payment-under-review", {
+            invoiceId: payments[idx].id,
+            amount: payments[idx].amount,
+            utr: payments[idx].utr
+          }, payments[idx].userEmail);
+        } catch (err) {
+          console.error("Failed to send payment under review email:", err);
+        }
         
         closeUpiPaymentModal();
         renderClientBillingHistory();
@@ -7066,12 +7260,15 @@ Please verify and update my status. Thank you!`);
       const statusVal = inspectMembershipStatusSelect.value;
       const expiryVal = inspectMembershipExpiryInput.value;
       const notesVal = inspectCoachingNotes.value.trim();
+      const phoneVal = inspectUserPhoneInput ? inspectUserPhoneInput.value.trim() : "";
       const batchVal = inspectUserBatchSelect ? inspectUserBatchSelect.value : "";
       
       const users = loadUsers();
       const userIndex = users.findIndex(u => u.email === inspectedUserEmail);
       
       if (userIndex > -1) {
+        users[userIndex].phone = phoneVal;
+        if (inspectUserPhone) inspectUserPhone.textContent = phoneVal ? `Phone: ${phoneVal}` : "Phone: -";
         users[userIndex].membership = {
           tier: tierVal,
           status: statusVal,
@@ -7264,7 +7461,9 @@ Please verify and update my status. Thank you!`);
         sendWhatsAppNotification("booking", {
           routine: routine,
           date: date,
-          time: time
+          time: time,
+          amount: String(apptFee),
+          invoiceId: invoiceId
         }, studentEmail);
       }
       

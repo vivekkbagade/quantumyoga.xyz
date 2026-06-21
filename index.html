@@ -145,6 +145,7 @@
           <div class="profile-info-details">
             <h2 id="profile-user-name">User Name</h2>
             <p id="profile-user-email">user@email.com</p>
+            <p id="profile-user-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: -</p>
             <div id="profile-membership-badge-wrap" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
               <span class="badge badge-category" id="profile-membership-tier" style="font-weight: 700;">Basic Member</span>
               <span class="badge badge-category" id="profile-membership-status" style="font-weight: 700;">Active</span>
@@ -157,6 +158,29 @@
                 <option value="light">Ethereal Light (Light)</option>
                 <option value="sunset">Zen Sunset (Sunset)</option>
               </select>
+            </div>
+            <div class="profile-phone-wrapper" style="margin-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="profile-phone-input" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">Edit Phone:</label>
+              <input type="tel" id="profile-phone-input" pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number" placeholder="+91 98765 43210" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.5rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; outline: none; width: 140px;">
+              <button id="profile-phone-save-btn" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Save</button>
+              <span id="profile-phone-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.75rem;">&#x2713; Saved</span>
+            </div>
+            
+            <!-- Twilio Sandbox Opt-in Instructions Widget -->
+            <div id="profile-sandbox-optin-widget" style="margin-top: 1.25rem; padding: 1rem; background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: var(--radius-sm); max-width: 480px; display: none;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: #10B981; display: flex; align-items: center; gap: 0.35rem;">💬 Link Twilio Sandbox</span>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.35rem 0 0.75rem 0; line-height: 1.45;">
+                To receive alerts, your phone number must first join the Twilio testing sandbox:
+              </p>
+              <div style="display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;">
+                <div style="background: white; padding: 0.35rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; flex-shrink: 0; box-shadow: var(--shadow-sm);">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=https%3A%2F%2Fwa.me%2F14155238886%3Ftext%3Djoin%2520increase-selection" alt="Twilio QR Code" style="width: 130px; height: 130px;">
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; flex: 1; min-width: 200px;">
+                  <strong>Option 1:</strong> Scan the QR code with your mobile camera to launch WhatsApp.<br>
+                  <strong>Option 2:</strong> Send <code>join increase-selection</code> to <a href="https://wa.me/14155238886?text=join%20increase-selection" target="_blank" style="color: #10B981; font-weight: 700; text-decoration: underline;">+1 415 523 8886</a>
+                </div>
+              </div>
             </div>
           </div>
           <div class="profile-stats">
@@ -1216,6 +1240,7 @@
             <div class="profile-info-details">
               <h2 id="inspect-user-name">User Name</h2>
               <p id="inspect-user-email">user@email.com</p>
+              <p id="inspect-user-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: -</p>
             </div>
             <div class="profile-stats" style="gap: 1.5rem;">
               <div class="stat-box">
@@ -1258,6 +1283,11 @@
                   <option value="Premium">Premium Member</option>
                   <option value="Unlimited VIP">Unlimited VIP</option>
                 </select>
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-user-phone-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Phone Number</label>
+                <input type="tel" id="inspect-user-phone-input" pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number" placeholder="+91 98765 43210" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
               </div>
               
               <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
@@ -1464,6 +1494,10 @@
           <div class="form-group">
             <label for="register-email">Email Address</label>
             <input type="email" id="register-email" required placeholder="your.email@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="register-phone">Phone Number</label>
+            <input type="tel" id="register-phone" required pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number (e.g., +91 98765 43210 or 09876543210)" placeholder="+91 98765 43210" autocomplete="tel">
           </div>
           <div class="form-group">
             <label for="register-password">Password</label>

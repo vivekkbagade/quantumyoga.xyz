@@ -12,8 +12,8 @@ Every student payment transaction maps to the following record structure:
 *   `userEmail`: Linked studio member email.
 *   `description` / `amount`: Purpose of charge and value in INR (₹).
 *   `dueDate` / `paymentDate`: Timeline dates.
-*   `status`: Current state, transitioning between `pending`, `paid`, and `overdue`.
-*   `utr`: User-submitted UPI Unique Transaction Reference.
+*   `status`: Current state, transitioning between `pending`, `review` (Under Review), `paid` (Approved), and `cancelled`.
+*   `utr`: User-submitted UPI Unique Transaction Reference (12-digit code).
 
 ---
 
@@ -38,7 +38,26 @@ To keep transaction processing cost-free, the platform leverages direct peer-to-
 [Member inputs 12-digit UTR code on form]
                │
                ▼
-[Status updates to 'paid', logs UTR reference]
+[Status updates to 'review' (Under Review) & logs UTR reference]
+               │
+               ├──────────────────────────────────────────┐
+               ▼                                          ▼
+[Triggers 'payment-under-review' Email]   [Triggers 'payment-under-review' WhatsApp]
+(includes Invoice, Amount, and UTR)       (includes Invoice, Amount, and UTR)
+               │                                          │
+               └────────────────────┬─────────────────────┘
+                                    │
+                                    ▼
+                 [Admin reviews & approves payment]
+                                    │
+               ┌────────────────────┴─────────────────────┐
+               ▼                                          ▼
+ [Status updates to 'paid']              [Triggers 'payment-approved' WhatsApp]
+ (includes Invoice, Amount, and UTR)     (includes Invoice, Amount, and UTR)
+               │
+               ▼
+ [Triggers 'payment-approved' Email]
+ (includes Invoice, Amount, and UTR)
 ```
 
 ---
@@ -48,3 +67,4 @@ To keep transaction processing cost-free, the platform leverages direct peer-to-
 1.  **Overdue Banners:** If a logged-in member has *any* invoices past their due dates, a sticky global banner warns them of overdue fees and links directly to the invoice page.
 2.  **Dynamic Receipts:** Fully responsive HTML invoice receipt layouts are generated on-demand with options to save or print. Contains transactional audit checkmarks, payment logs, and company branding.
 3.  **Manual Invoices:** Administrators can quickly generate ad-hoc fee demands against any student account via the admin control panel.
+4.  **Notifications:** Both email and WhatsApp notifications keep students informed about invoice status updates.

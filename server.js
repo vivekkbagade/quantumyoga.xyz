@@ -47,8 +47,8 @@ const DEFAULT_WHATSAPP_SETTINGS = {
   gatewayUrl: "",
   templates: {
     welcome: "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
-    invoice: "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
-    booking: "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}."
+    invoice: "Hello {{name}}, a new invoice {{invoiceId}} for ₹{{amount}} is due on {{dueDate}}. Pay via UPI VPA: {{upiVpa}} ({{upiName}}) or tap here: {{upiLink}}",
+    booking: "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}. Session Fee: ₹{{amount}}. Pay via UPI VPA: {{upiVpa}} ({{upiName}}) or tap here: {{upiLink}}"
   }
 };
 
