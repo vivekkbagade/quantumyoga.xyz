@@ -11112,15 +11112,43 @@ export default defineConfig({
 
               let status = 'review';
               let matchedEntry = null;
+              let verificationError = '';
+
+              // Load reconciliation settings
+              const recSettings = dbState.reconciliationSettings || { tolerance: 0.05, maxAgeDays: 30 };
+              const tolerance = parseFloat(recSettings.tolerance) !== undefined ? parseFloat(recSettings.tolerance) : 0.05;
+              const maxAgeDays = parseInt(recSettings.maxAgeDays) !== undefined ? parseInt(recSettings.maxAgeDays) : 30;
+
+              let dateMatch = true;
 
               if (ledgerMatch) {
                 const entryAmount = parseFloat(ledgerMatch.amount);
-                if (Math.abs(entryAmount - submittedAmount) < 0.01) {
-                  status = 'paid';
-                  matchedEntry = ledgerMatch;
+
+                // Verify date window limit
+                if (ledgerMatch.date && payment.dueDate) {
+                  const ledgerDate = new Date(ledgerMatch.date);
+                  const invoiceDate = new Date(payment.dueDate);
+                  const diffTime = Math.abs(ledgerDate - invoiceDate);
+                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                  if (diffDays > maxAgeDays) {
+                    dateMatch = false;
+                  }
+                }
+
+                if (Math.abs(entryAmount - submittedAmount) <= tolerance) {
+                  if (dateMatch) {
+                    status = 'paid';
+                    matchedEntry = ledgerMatch;
+                  } else {
+                    status = 'discrepancy';
+                    verificationError = 'Date window exceeded';
+                  }
                 } else {
                   status = 'discrepancy';
+                  verificationError = 'Amount mismatch';
                 }
+              } else {
+                verificationError = 'UTR not found in ledger';
               }
 
               payment.status = status;
@@ -11129,8 +11157,34 @@ export default defineConfig({
                 payment.paymentDate = matchedEntry?.date || new Date().toISOString().split('T')[0];
                 payment.verifiedAt = new Date().toISOString();
                 payment.verificationSource = 'ledger';
+                if (payment.verificationError) delete payment.verificationError;
               } else {
-                payment.verificationError = status === 'discrepancy' ? 'Amount mismatch' : 'UTR not found in ledger';
+                payment.verificationError = verificationError;
+              }
+
+              // Log the reconciliation audit log
+              const auditLog = {
+                id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                timestamp: new Date().toISOString(),
+                invoiceId,
+                utr: submittedUtr,
+                amount: submittedAmount,
+                status,
+                details: status === 'paid'
+                  ? `Auto-approved: UTR matches. Amount: ₹${submittedAmount} (within tolerance of ±₹${tolerance}).`
+                  : (status === 'discrepancy'
+                      ? (verificationError === 'Date window exceeded'
+                          ? `Discrepancy: UTR matched but transaction date (${ledgerMatch.date}) is beyond the ${maxAgeDays}-day window of invoice due date (${payment.dueDate}).`
+                          : `Discrepancy: UTR matched but amount differs. Submitted: ₹${submittedAmount}, Ledger: ₹${ledgerMatch.amount}.`)
+                      : `Under Review: UTR not found in bank statement ledger.`)
+              };
+
+              if (!dbState.upi_reconciliation_logs) {
+                dbState.upi_reconciliation_logs = [];
+              }
+              dbState.upi_reconciliation_logs.unshift(auditLog);
+              if (dbState.upi_reconciliation_logs.length > 500) {
+                dbState.upi_reconciliation_logs = dbState.upi_reconciliation_logs.slice(0, 500);
               }
 
               fs.writeFileSync(dbPath, JSON.stringify(dbState, null, 2), 'utf8');
@@ -11151,7 +11205,7 @@ export default defineConfig({
           req.on('data', chunk => { body += chunk; });
           req.on('end', () => {
             try {
-              const { fileContent } = JSON.parse(body);
+              const { fileContent, columnMapping } = JSON.parse(body);
               if (!fileContent) {
                 res.statusCode = 400;
                 res.end(JSON.stringify({ error: 'No file content provided' }));
@@ -11167,11 +11221,35 @@ export default defineConfig({
               }
 
               const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
-              const utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
-              const amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
-              const dateIdx = headers.findIndex(h => /date/i.test(h));
-              const senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
-              const detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
+              
+              // Find column indices using custom mapping or falling back to regex
+              let utrIdx = -1;
+              let amountIdx = -1;
+              let dateIdx = -1;
+              let senderIdx = -1;
+              let detailsIdx = -1;
+
+              if (columnMapping) {
+                const getIndex = (fieldVal) => {
+                  if (!fieldVal) return -1;
+                  if (/^\d+$/.test(fieldVal)) {
+                    return parseInt(fieldVal);
+                  }
+                  return headers.findIndex(h => h.toLowerCase() === String(fieldVal).toLowerCase());
+                };
+
+                utrIdx = getIndex(columnMapping.utr);
+                amountIdx = getIndex(columnMapping.amount);
+                dateIdx = getIndex(columnMapping.date);
+                senderIdx = getIndex(columnMapping.senderName || columnMapping.sender);
+                detailsIdx = getIndex(columnMapping.details);
+              }
+
+              if (utrIdx === -1) utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
+              if (amountIdx === -1) amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
+              if (dateIdx === -1) dateIdx = headers.findIndex(h => /date/i.test(h));
+              if (senderIdx === -1) senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
+              if (detailsIdx === -1) detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
 
               if (utrIdx === -1 || amountIdx === -1) {
                 res.statusCode = 400;
@@ -12419,6 +12497,59 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  function populateReconciliationSettingsInputs(settings) {
+    const toleranceInput = document.getElementById("admin-recon-tolerance");
+    const maxDaysInput = document.getElementById("admin-recon-max-days");
+    const colUtrInput = document.getElementById("admin-col-utr");
+    const colAmountInput = document.getElementById("admin-col-amount");
+    const colDateInput = document.getElementById("admin-col-date");
+    const colSenderInput = document.getElementById("admin-col-sender");
+
+    if (settings) {
+      if (toleranceInput) toleranceInput.value = settings.tolerance !== undefined ? settings.tolerance : "0.05";
+      if (maxDaysInput) maxDaysInput.value = settings.maxAgeDays !== undefined ? settings.maxAgeDays : "30";
+      if (settings.columnMapping) {
+        if (colUtrInput) colUtrInput.value = settings.columnMapping.utr || "";
+        if (colAmountInput) colAmountInput.value = settings.columnMapping.amount || "";
+        if (colDateInput) colDateInput.value = settings.columnMapping.date || "";
+        if (colSenderInput) colSenderInput.value = settings.columnMapping.sender || "";
+      }
+    }
+  }
+
+  function renderReconciliationLogs(logs) {
+    const tableBody = document.getElementById("admin-reconciliation-logs-table-body");
+    if (!tableBody) return;
+
+    if (!logs || logs.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No reconciliation actions logged yet.</td></tr>`;
+      return;
+    }
+
+    tableBody.innerHTML = logs.map(log => {
+      const dateStr = new Date(log.timestamp).toLocaleString();
+      let statusColor = "var(--text-secondary)";
+      if (log.status === "paid") {
+        statusColor = "#10B981";
+      } else if (log.status === "discrepancy") {
+        statusColor = "#FBBF24";
+      } else {
+        statusColor = "#9CA3AF";
+      }
+
+      return `
+        <tr>
+          <td style="white-space: nowrap; color: var(--text-secondary);">${dateStr}</td>
+          <td><code style="color: var(--accent-primary); font-weight: bold;">${log.invoiceId}</code></td>
+          <td><code>${log.utr}</code></td>
+          <td style="font-weight: 600;">₹${log.amount}</td>
+          <td><span style="color: ${statusColor}; border: 1px solid ${statusColor}40; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.72rem; font-weight: bold; background: ${statusColor}10;">${log.status.toUpperCase()}</span></td>
+          <td style="color: var(--text-secondary); font-size: 0.78rem;">${log.details}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
   // Asynchronous database synchronization helpers
   async function loadFromServer() {
     try {
@@ -12430,9 +12561,17 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (db.leads) localStorage.setItem("qy_leads", JSON.stringify(db.leads));
           if (db.upi_settings) localStorage.setItem("qy_upi_settings", JSON.stringify(db.upi_settings));
           if (db.batches) localStorage.setItem("qy_batches", JSON.stringify(db.batches));
-           if (db.payments) localStorage.setItem("qy_payments", JSON.stringify(db.payments));
+          if (db.payments) localStorage.setItem("qy_payments", JSON.stringify(db.payments));
           if (db.appointments) localStorage.setItem("qy_appointments", JSON.stringify(db.appointments));
           if (db.upi_ledger) localStorage.setItem("qy_upi_ledger", JSON.stringify(db.upi_ledger));
+          if (db.reconciliationSettings) {
+            localStorage.setItem("qy_reconciliation_settings", JSON.stringify(db.reconciliationSettings));
+            populateReconciliationSettingsInputs(db.reconciliationSettings);
+          }
+          if (db.upi_reconciliation_logs) {
+            localStorage.setItem("qy_reconciliation_logs", JSON.stringify(db.upi_reconciliation_logs));
+            renderReconciliationLogs(db.upi_reconciliation_logs);
+          }
           
           // Auto-sync any old/historically mismatched cancelled appointments with their billing records
           syncCancelledAppointmentsWithBilling();
@@ -12471,6 +12610,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             renderAdminOverview();
             renderAdminBatches();
             renderAdminPayments();
+            const logsRaw = localStorage.getItem("qy_reconciliation_logs");
+            if (logsRaw) renderReconciliationLogs(JSON.parse(logsRaw));
           }
         }
       }
@@ -12512,7 +12653,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         emails: JSON.parse(localStorage.getItem(STORAGE_KEY_EMAILS) || "[]"),
         upi_ledger: JSON.parse(localStorage.getItem("qy_upi_ledger") || "[]"),
         gmailSettings: gmailSettingsForDb,
-        whatsappSettings: whatsappSettingsParsed
+        whatsappSettings: whatsappSettingsParsed,
+        reconciliationSettings: JSON.parse(localStorage.getItem("qy_reconciliation_settings") || JSON.stringify({ tolerance: 0.05, maxAgeDays: 30, columnMapping: { utr: "", amount: "", date: "", sender: "" } })),
+        upi_reconciliation_logs: JSON.parse(localStorage.getItem("qy_reconciliation_logs") || "[]")
       };
       await fetch('/api/db', {
         method: 'POST',
@@ -18401,10 +18544,14 @@ Please verify and update my status. Thank you!`);
       reader.onload = async (event) => {
         const fileContent = event.target.result;
         try {
+          const settingsRaw = localStorage.getItem("qy_reconciliation_settings");
+          const settingsParsed = settingsRaw ? JSON.parse(settingsRaw) : null;
+          const columnMapping = settingsParsed ? settingsParsed.columnMapping : null;
+
           const response = await fetch('/api/admin/upload-ledger', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fileContent })
+            body: JSON.stringify({ fileContent, columnMapping })
           });
 
           if (!response.ok) {
@@ -18442,6 +18589,48 @@ Please verify and update my status. Thank you!`);
         adminLedgerUploadBtn.disabled = false;
       };
       reader.readAsText(file);
+    });
+  }
+
+  // Admin Reconciliation settings form submit listener
+  const adminReconciliationForm = document.getElementById("admin-reconciliation-settings-form");
+  if (adminReconciliationForm) {
+    adminReconciliationForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const tolerance = parseFloat(document.getElementById("admin-recon-tolerance").value.trim());
+      const maxAgeDays = parseInt(document.getElementById("admin-recon-max-days").value.trim());
+
+      const settings = {
+        tolerance: isNaN(tolerance) ? 0.05 : tolerance,
+        maxAgeDays: isNaN(maxAgeDays) ? 30 : maxAgeDays,
+        columnMapping: {
+          utr: document.getElementById("admin-col-utr").value.trim(),
+          amount: document.getElementById("admin-col-amount").value.trim(),
+          date: document.getElementById("admin-col-date").value.trim(),
+          sender: document.getElementById("admin-col-sender").value.trim()
+        }
+      };
+
+      localStorage.setItem("qy_reconciliation_settings", JSON.stringify(settings));
+      saveToServer();
+
+      const successMsg = document.getElementById("admin-reconciliation-settings-success");
+      if (successMsg) {
+        successMsg.style.display = "block";
+        setTimeout(() => { successMsg.style.display = "none"; }, 3000);
+      }
+    });
+  }
+
+  // Admin Clear Reconciliation Logs Action
+  const adminClearReconLogsBtn = document.getElementById("admin-clear-reconciliation-logs-btn");
+  if (adminClearReconLogsBtn) {
+    adminClearReconLogsBtn.addEventListener("click", () => {
+      if (confirm("Are you sure you want to clear all reconciliation audit logs? This action cannot be undone.")) {
+        localStorage.setItem("qy_reconciliation_logs", "[]");
+        renderReconciliationLogs([]);
+        saveToServer();
+      }
     });
   }
 
@@ -19931,7 +20120,72 @@ Please verify and update my status. Thank you!`);
             </div>
           </div>
 
-        </div>
+          <!-- UPI Reconciliation & CSV Column Settings Card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">⚙️ Reconciliation Settings</h3>
+            <form id="admin-reconciliation-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-recon-tolerance" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Tolerance (INR):</label>
+                <input type="number" step="0.01" id="admin-recon-tolerance" required placeholder="e.g. 0.05" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-recon-max-days" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Date Limit (Days):</label>
+                <input type="number" id="admin-recon-max-days" required placeholder="e.g. 30" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem; margin-top: 0.3rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.3rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem;">CSV Column Map (Headers or Index):</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem;">
+                  <div>
+                    <label for="admin-col-utr" style="font-size: 0.7rem; color: var(--text-secondary);">UTR:</label>
+                    <input type="text" id="admin-col-utr" placeholder="e.g. UTR" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
+                  </div>
+                  <div>
+                    <label for="admin-col-amount" style="font-size: 0.7rem; color: var(--text-secondary);">Amount:</label>
+                    <input type="text" id="admin-col-amount" placeholder="e.g. Amount" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
+                  </div>
+                  <div>
+                    <label for="admin-col-date" style="font-size: 0.7rem; color: var(--text-secondary);">Date:</label>
+                    <input type="text" id="admin-col-date" placeholder="e.g. Date" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
+                  </div>
+                  <div>
+                    <label for="admin-col-sender" style="font-size: 0.7rem; color: var(--text-secondary);">Sender:</label>
+                    <input type="text" id="admin-col-sender" placeholder="e.g. Sender" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.4rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Settings</button>
+              <div id="admin-reconciliation-settings-success" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center; margin-top: 0.2rem;">&#x2713; Saved.</div>
+            </form>
+          </div>
+
+        </div> <!-- Close the grid -->
+
+        <!-- Reconciliation Logs Audit Section -->
+        <div class="admin-panel" style="margin-top: 1.5rem; background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1.2rem; box-shadow: var(--shadow-md);">
+          <h3 style="margin: 0 0 0.8rem; color: var(--text-primary); display: flex; align-items: center; justify-content: space-between; font-size: 0.95rem;">
+            <span>📋 Reconciliation Audit Logs</span>
+            <button type="button" id="admin-clear-reconciliation-logs-btn" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; color: #ef4444; border-color: rgba(239, 68, 68, 0.2); background: transparent;">Clear Log History</button>
+          </h3>
+          <div class="admin-table-wrapper" style="max-height: 250px; overflow-y: auto;">
+            <table class="admin-table" style="font-size: 0.82rem;">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Invoice ID</th>
+                  <th>UTR</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Audit Details</th>
+                </tr>
+              </thead>
+              <tbody id="admin-reconciliation-logs-table-body">
+                <!-- Dynamically populated verification activities -->
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No reconciliation actions logged yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- ==================== ADMIN EMAIL PANEL ==================== -->
@@ -21346,15 +21600,43 @@ app.post('/api/verify-upi', async (req, res) => {
 
     let status = 'review';
     let matchedEntry = null;
+    let verificationError = '';
+
+    // Load reconciliation settings
+    const recSettings = dbState.reconciliationSettings || { tolerance: 0.05, maxAgeDays: 30 };
+    const tolerance = parseFloat(recSettings.tolerance) !== undefined ? parseFloat(recSettings.tolerance) : 0.05;
+    const maxAgeDays = parseInt(recSettings.maxAgeDays) !== undefined ? parseInt(recSettings.maxAgeDays) : 30;
+
+    let dateMatch = true;
 
     if (ledgerMatch) {
       const entryAmount = parseFloat(ledgerMatch.amount);
-      if (Math.abs(entryAmount - submittedAmount) < 0.01) {
-        status = 'paid';
-        matchedEntry = ledgerMatch;
+      
+      // Verify date window limit
+      if (ledgerMatch.date && payment.dueDate) {
+        const ledgerDate = new Date(ledgerMatch.date);
+        const invoiceDate = new Date(payment.dueDate);
+        const diffTime = Math.abs(ledgerDate - invoiceDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays > maxAgeDays) {
+          dateMatch = false;
+        }
+      }
+
+      if (Math.abs(entryAmount - submittedAmount) <= tolerance) {
+        if (dateMatch) {
+          status = 'paid';
+          matchedEntry = ledgerMatch;
+        } else {
+          status = 'discrepancy';
+          verificationError = 'Date window exceeded';
+        }
       } else {
         status = 'discrepancy';
+        verificationError = 'Amount mismatch';
       }
+    } else {
+      verificationError = 'UTR not found in ledger';
     }
 
     // Update payment record
@@ -21364,8 +21646,34 @@ app.post('/api/verify-upi', async (req, res) => {
       payment.paymentDate = matchedEntry?.date || new Date().toISOString().split('T')[0];
       payment.verifiedAt = new Date().toISOString();
       payment.verificationSource = 'ledger';
+      delete payment.verificationError;
     } else {
-      payment.verificationError = status === 'discrepancy' ? 'Amount mismatch' : 'UTR not found in ledger';
+      payment.verificationError = verificationError;
+    }
+
+    // Log the reconciliation audit log
+    const auditLog = {
+      id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+      timestamp: new Date().toISOString(),
+      invoiceId,
+      utr: submittedUtr,
+      amount: submittedAmount,
+      status,
+      details: status === 'paid'
+        ? `Auto-approved: UTR matches. Amount: ₹${submittedAmount} (within tolerance of ±₹${tolerance}).`
+        : (status === 'discrepancy'
+            ? (verificationError === 'Date window exceeded'
+                ? `Discrepancy: UTR matched but transaction date (${ledgerMatch.date}) is beyond the ${maxAgeDays}-day window of invoice due date (${payment.dueDate}).`
+                : `Discrepancy: UTR matched but amount differs. Submitted: ₹${submittedAmount}, Ledger: ₹${ledgerMatch.amount}.`)
+            : `Under Review: UTR not found in bank statement ledger.`)
+    };
+
+    if (!dbState.upi_reconciliation_logs) {
+      dbState.upi_reconciliation_logs = [];
+    }
+    dbState.upi_reconciliation_logs.unshift(auditLog);
+    if (dbState.upi_reconciliation_logs.length > 500) {
+      dbState.upi_reconciliation_logs = dbState.upi_reconciliation_logs.slice(0, 500);
     }
 
     await setDbState(dbState);
@@ -21378,7 +21686,7 @@ app.post('/api/verify-upi', async (req, res) => {
 
 // POST /api/admin/upload-ledger
 app.post('/api/admin/upload-ledger', async (req, res) => {
-  const { fileContent } = req.body; // Expect base64 or plaintext CSV
+  const { fileContent, columnMapping } = req.body; // Expect base64/plaintext CSV and optional custom mapping
   if (!fileContent) {
     return res.status(400).json({ error: 'No file content provided' });
   }
@@ -21397,12 +21705,34 @@ app.post('/api/admin/upload-ledger', async (req, res) => {
 
     const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
     
-    // Find column indices
-    const utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
-    const amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
-    const dateIdx = headers.findIndex(h => /date/i.test(h));
-    const senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
-    const detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
+    // Find column indices using custom mapping or falling back to regex
+    let utrIdx = -1;
+    let amountIdx = -1;
+    let dateIdx = -1;
+    let senderIdx = -1;
+    let detailsIdx = -1;
+
+    if (columnMapping) {
+      const getIndex = (fieldVal) => {
+        if (!fieldVal) return -1;
+        if (/^\d+$/.test(fieldVal)) {
+          return parseInt(fieldVal);
+        }
+        return headers.findIndex(h => h.toLowerCase() === String(fieldVal).toLowerCase());
+      };
+
+      utrIdx = getIndex(columnMapping.utr);
+      amountIdx = getIndex(columnMapping.amount);
+      dateIdx = getIndex(columnMapping.date);
+      senderIdx = getIndex(columnMapping.senderName || columnMapping.sender);
+      detailsIdx = getIndex(columnMapping.details);
+    }
+
+    if (utrIdx === -1) utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
+    if (amountIdx === -1) amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
+    if (dateIdx === -1) dateIdx = headers.findIndex(h => /date/i.test(h));
+    if (senderIdx === -1) senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
+    if (detailsIdx === -1) detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
 
     if (utrIdx === -1 || amountIdx === -1) {
       return res.status(400).json({ error: `Could not identify required columns. Found headers: ${headers.join(', ')}. Need columns mapping to UTR/Ref and Amount.` });

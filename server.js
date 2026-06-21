@@ -357,15 +357,43 @@ app.post('/api/verify-upi', async (req, res) => {
 
     let status = 'review';
     let matchedEntry = null;
+    let verificationError = '';
+
+    // Load reconciliation settings
+    const recSettings = dbState.reconciliationSettings || { tolerance: 0.05, maxAgeDays: 30 };
+    const tolerance = parseFloat(recSettings.tolerance) !== undefined ? parseFloat(recSettings.tolerance) : 0.05;
+    const maxAgeDays = parseInt(recSettings.maxAgeDays) !== undefined ? parseInt(recSettings.maxAgeDays) : 30;
+
+    let dateMatch = true;
 
     if (ledgerMatch) {
       const entryAmount = parseFloat(ledgerMatch.amount);
-      if (Math.abs(entryAmount - submittedAmount) < 0.01) {
-        status = 'paid';
-        matchedEntry = ledgerMatch;
+      
+      // Verify date window limit
+      if (ledgerMatch.date && payment.dueDate) {
+        const ledgerDate = new Date(ledgerMatch.date);
+        const invoiceDate = new Date(payment.dueDate);
+        const diffTime = Math.abs(ledgerDate - invoiceDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays > maxAgeDays) {
+          dateMatch = false;
+        }
+      }
+
+      if (Math.abs(entryAmount - submittedAmount) <= tolerance) {
+        if (dateMatch) {
+          status = 'paid';
+          matchedEntry = ledgerMatch;
+        } else {
+          status = 'discrepancy';
+          verificationError = 'Date window exceeded';
+        }
       } else {
         status = 'discrepancy';
+        verificationError = 'Amount mismatch';
       }
+    } else {
+      verificationError = 'UTR not found in ledger';
     }
 
     // Update payment record
@@ -375,8 +403,34 @@ app.post('/api/verify-upi', async (req, res) => {
       payment.paymentDate = matchedEntry?.date || new Date().toISOString().split('T')[0];
       payment.verifiedAt = new Date().toISOString();
       payment.verificationSource = 'ledger';
+      delete payment.verificationError;
     } else {
-      payment.verificationError = status === 'discrepancy' ? 'Amount mismatch' : 'UTR not found in ledger';
+      payment.verificationError = verificationError;
+    }
+
+    // Log the reconciliation audit log
+    const auditLog = {
+      id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+      timestamp: new Date().toISOString(),
+      invoiceId,
+      utr: submittedUtr,
+      amount: submittedAmount,
+      status,
+      details: status === 'paid'
+        ? `Auto-approved: UTR matches. Amount: ₹${submittedAmount} (within tolerance of ±₹${tolerance}).`
+        : (status === 'discrepancy'
+            ? (verificationError === 'Date window exceeded'
+                ? `Discrepancy: UTR matched but transaction date (${ledgerMatch.date}) is beyond the ${maxAgeDays}-day window of invoice due date (${payment.dueDate}).`
+                : `Discrepancy: UTR matched but amount differs. Submitted: ₹${submittedAmount}, Ledger: ₹${ledgerMatch.amount}.`)
+            : `Under Review: UTR not found in bank statement ledger.`)
+    };
+
+    if (!dbState.upi_reconciliation_logs) {
+      dbState.upi_reconciliation_logs = [];
+    }
+    dbState.upi_reconciliation_logs.unshift(auditLog);
+    if (dbState.upi_reconciliation_logs.length > 500) {
+      dbState.upi_reconciliation_logs = dbState.upi_reconciliation_logs.slice(0, 500);
     }
 
     await setDbState(dbState);
@@ -389,7 +443,7 @@ app.post('/api/verify-upi', async (req, res) => {
 
 // POST /api/admin/upload-ledger
 app.post('/api/admin/upload-ledger', async (req, res) => {
-  const { fileContent } = req.body; // Expect base64 or plaintext CSV
+  const { fileContent, columnMapping } = req.body; // Expect base64/plaintext CSV and optional custom mapping
   if (!fileContent) {
     return res.status(400).json({ error: 'No file content provided' });
   }
@@ -408,12 +462,34 @@ app.post('/api/admin/upload-ledger', async (req, res) => {
 
     const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
     
-    // Find column indices
-    const utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
-    const amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
-    const dateIdx = headers.findIndex(h => /date/i.test(h));
-    const senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
-    const detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
+    // Find column indices using custom mapping or falling back to regex
+    let utrIdx = -1;
+    let amountIdx = -1;
+    let dateIdx = -1;
+    let senderIdx = -1;
+    let detailsIdx = -1;
+
+    if (columnMapping) {
+      const getIndex = (fieldVal) => {
+        if (!fieldVal) return -1;
+        if (/^\d+$/.test(fieldVal)) {
+          return parseInt(fieldVal);
+        }
+        return headers.findIndex(h => h.toLowerCase() === String(fieldVal).toLowerCase());
+      };
+
+      utrIdx = getIndex(columnMapping.utr);
+      amountIdx = getIndex(columnMapping.amount);
+      dateIdx = getIndex(columnMapping.date);
+      senderIdx = getIndex(columnMapping.senderName || columnMapping.sender);
+      detailsIdx = getIndex(columnMapping.details);
+    }
+
+    if (utrIdx === -1) utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
+    if (amountIdx === -1) amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
+    if (dateIdx === -1) dateIdx = headers.findIndex(h => /date/i.test(h));
+    if (senderIdx === -1) senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
+    if (detailsIdx === -1) detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
 
     if (utrIdx === -1 || amountIdx === -1) {
       return res.status(400).json({ error: `Could not identify required columns. Found headers: ${headers.join(', ')}. Need columns mapping to UTR/Ref and Amount.` });
