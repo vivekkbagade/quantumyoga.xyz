@@ -218,7 +218,62 @@ app.post('/api/send-whatsapp', async (req, res) => {
   const dbState = await getDbState();
   const settings = dbState?.whatsappSettings || DEFAULT_WHATSAPP_SETTINGS;
   
-  const enabled = settings.enabled || !!process.env.WHATSAPP_API_KEY;
+  const enabled = settings.enabled || !!process.env.WHATSAPP_API_KEY || !!process.env.TWILIO_AUTH_TOKEN;
+  
+  // If Twilio credentials are in environment, use Twilio!
+  if (enabled && process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+    try {
+      const accountSid = process.env.TWILIO_ACCOUNT_SID;
+      const authToken = process.env.TWILIO_AUTH_TOKEN;
+      const sender = process.env.TWILIO_SENDER_NUMBER || '+14155238886';
+      
+      let recipient = to.trim();
+      if (!recipient.startsWith('whatsapp:')) {
+        let clean = recipient.replace(/\D/g, "");
+        if (clean.length === 10) clean = "91" + clean;
+        recipient = `whatsapp:+${clean}`;
+      }
+      
+      const twilioSender = sender.startsWith('whatsapp:') ? sender : `whatsapp:${sender}`;
+      
+      const payload = new URLSearchParams({
+        To: recipient,
+        From: twilioSender,
+        Body: message
+      }).toString();
+      
+      const options = {
+        hostname: 'api.twilio.com',
+        port: 443,
+        path: `/2010-04-01/Accounts/${accountSid}/Messages.json`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(payload),
+          'Authorization': 'Basic ' + Buffer.from(accountSid + ':' + authToken).toString('base64')
+        }
+      };
+      
+      const proxyReq = https.request(options, proxyRes => {
+        let responseData = '';
+        proxyRes.on('data', chunk => { responseData += chunk; });
+        proxyRes.on('end', () => {
+          console.log(`[Twilio WhatsApp Link] Status: ${proxyRes.statusCode}, Response: ${responseData}`);
+          res.status(200).json({ success: proxyRes.statusCode >= 200 && proxyRes.statusCode < 300, mock: false, providerStatus: proxyRes.statusCode });
+        });
+      });
+      proxyReq.on('error', err => {
+        console.error('[Twilio WhatsApp Link Error]', err);
+        res.status(200).json({ success: true, mock: true, error: err.message });
+      });
+      proxyReq.write(payload);
+      proxyReq.end();
+      return;
+    } catch (e) {
+      console.error('[Twilio Config Gateway Error]', e);
+    }
+  }
+
   const apiKey = process.env.WHATSAPP_API_KEY || settings.apiKey;
   const gatewayUrl = process.env.WHATSAPP_GATEWAY_URL || settings.gatewayUrl;
   
