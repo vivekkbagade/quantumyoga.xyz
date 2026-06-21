@@ -1,0 +1,17 @@
+{
+  "output": {
+    "style": "markdown",
+    "filePath": "repomix-output.md"
+  },
+  "ignore": {
+    "customPatterns": [
+      "dist/**",
+      "node_modules/**",
+      "package-lock.json",
+      "*.jpg",
+      "*.png",
+      "*.svg",
+      "repomix-output.*"
+    ]
+  }
+}

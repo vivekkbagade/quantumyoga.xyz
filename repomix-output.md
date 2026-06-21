@@ -1,9 +1,9 @@
-This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix.
 
 # File Summary
 
 ## Purpose
-This file contains a packed representation of the entire repository's contents.
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
 It is designed to be easily consumable by AI systems for analysis, code review,
 or other automated processes.
 
@@ -28,6 +28,7 @@ The content is organized as follows:
 ## Notes
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching these patterns are excluded: dist/**, node_modules/**, package-lock.json, *.jpg, *.png, *.svg, repomix-output.*
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Files are sorted by Git change count (files with more changes are at the bottom)
@@ -45,7 +46,6 @@ The content is organized as follows:
 .gitignore
 app.js
 data.js
-download.jpg
 index.css
 index.html
 openspec/changes/add-whatsapp-functionality/.openspec.yaml
@@ -234,6 +234,7 @@ openspec/specs/leads-crm/spec.md
 openspec/specs/user-auth-profile/spec.md
 package.json
 README.md
+repomix.config.json
 sample_ledger.csv
 schema.sql
 scratch/check_ids.js
@@ -252,6 +253,27 @@ wiki/WhatsApp-Integration.md
 ```
 
 # Files
+
+## File: repomix.config.json
+````json
+{
+  "output": {
+    "style": "markdown",
+    "filePath": "repomix-output.md"
+  },
+  "ignore": {
+    "customPatterns": [
+      "dist/**",
+      "node_modules/**",
+      "package-lock.json",
+      "*.jpg",
+      "*.png",
+      "*.svg",
+      "repomix-output.*"
+    ]
+  }
+}
+````
 
 ## File: .agent/skills/openspec-apply-change/SKILL.md
 ````markdown
@@ -1539,48 +1561,6 @@ After completing all artifacts, summarize:
 - If context is critically unclear, ask the user - but prefer making reasonable decisions to keep momentum
 - If a change with that name already exists, ask if user wants to continue it or create a new one
 - Verify each artifact file exists after writing before proceeding to next
-````
-
-## File: .gitignore
-````
-# Dependencies
-node_modules/
-/.pnp
-.pnp.js
-
-# Testing
-/coverage
-/test-results
-
-# Production build
-/dist
-/build
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Databases / Local stores
-db.json
-*.db
-*.sqlite
-
-# IDEs and editors
-.idea/
-.vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.DS_Store
-Thumbs.db
-
-# Repomix output
-repomix-output.*
 ````
 
 ## File: data.js
@@ -10821,6 +10801,45 @@ A setup guide for the dual-integration engine supporting transactional emails vi
 
 ### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
 Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.
+````
+
+## File: .gitignore
+````
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+/test-results
+
+# Production build
+/dist
+/build
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Databases / Local stores
+db.json
+*.db
+*.sqlite
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
 ````
 
 ## File: openspec/changes/auto-review-upi-payments/design.md
