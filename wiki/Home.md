@@ -20,3 +20,6 @@ Details on landing page wellness inquiry ingestion, lead pipeline swimlanes (Kan
 
 ### 5. [Email Communication Systems](Email-Communication.md)
 A setup guide for the dual-integration engine supporting transactional emails via the Resend API and full inbox capabilities via Gmail OAuth2.
+
+### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
+Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.

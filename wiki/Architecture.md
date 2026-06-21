@@ -13,7 +13,7 @@ Quantum Yoga utilizes a clean, decoupled design featuring a responsive SPA front
 +-------------------------------------------------------------+
 |                     Express API Server                      |
 |  - Static content serving                                   |
-|  - Resend & Google Gmail OAuth Proxy Endpoints              |
+|  - Resend, Google Gmail OAuth & WhatsApp Proxy Endpoints    |
 +-------------------------------------------------------------+
                               │
        ┌──────────────────────┼──────────────────────┐
