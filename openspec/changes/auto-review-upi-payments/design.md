@@ -43,12 +43,20 @@ Currently, Quantum Yoga lacks automated transaction matching, requiring manual v
 
 ### 3. Excel/CSV Ledger Upload API
 *   **Approach:** Add a `POST /api/admin/upload-ledger` endpoint to process Excel/CSV bank statement files.
-*   **Parsing Utility:** Use a library or standard text parser in `server.js` to parse CSV or Excel data. It must read column headers to locate the UTR (typically under columns named "UTR", "Ref No", "Transaction ID", "Reference Number") and Transaction Amount.
+*   **Parsing Utility:** Use a basic CSV text parser in `server.js` to parse CSV data. It reads column headers to locate the UTR and Transaction Amount.
 *   **Deduplication:** When merging new transactions, query existing `upi_ledger` records by UTR to prevent duplicating imported transaction references.
+
+### 4. Planned Reconciliation Enhancements
+*   **Fuzzy Amount Matching:** The endpoint comparison checks whether `Math.abs(ledgerAmount - invoiceAmount) < tolerance` where the tolerance is configurable (defaulting to ±₹0.05) to protect against rounding anomalies.
+*   **Date Window Verification:** When a match is found in the `upi_ledger`, the system validates if `Math.abs(new Date(ledgerMatch.date) - new Date(invoice.date)) <= maxAgeMs` (defaulting to 30 days) before auto-approving.
+*   **Statement Schema Mapping:** An administrative configuration object `upi_ledger_mapping` is saved to settings, allowing the parser to match dynamic header indices (e.g., column index 4 maps to `utr`, index 2 maps to `amount`).
+*   **Reconciliation Log Audit:** A schema collection `upi_reconciliation_logs` is implemented to record matches, failures, invoice IDs, and timestamps.
 
 ## Risks / Trade-offs
 
 *   **Risk:** Sync latency (students paying after the latest upload will not auto-verify until the next upload).
     *   *Mitigation:* Clearly notify the student during UTR submission that auto-verification runs against imported statements and may take time to verify, leaving the manual admin override active.
 *   **Risk:** Spoofing or fake UTR guessing attacks.
-    *   *Mitigation:* Once a UTR in the ledger is successfully matched and linked to an invoice, mark it as "linked" or remove it from the pool of unlinked ledger entries to prevent double-claiming.
+    *   *Mitigation:* Once a UTR in the ledger is successfully matched and linked to an invoice, mark it as "linked" or prevent double-claiming by checking if the UTR was already associated with a paid invoice.
+*   **Risk:** Re-use of old UTRs or stale statements.
+    *   *Mitigation:* Apply the 30-day date window validation to ensure UTR claims are linked only to current transaction timelines.
