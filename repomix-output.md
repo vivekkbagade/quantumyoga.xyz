@@ -28,19 +28,212 @@ The content is organized as follows:
 ## Notes
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Files matching these patterns are excluded: dist/**, node_modules/**, package-lock.json, *.jpg, *.png, *.svg, repomix-output.*, **/*.md, wiki/**, openspec/**
+- Files matching these patterns are excluded: dist/**, node_modules/**, package-lock.json, *.jpg, *.png, *.svg, repomix-output.*
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Files are sorted by Git change count (files with more changes are at the bottom)
 
 # Directory Structure
 ```
+.agent/skills/openspec-apply-change/SKILL.md
+.agent/skills/openspec-archive-change/SKILL.md
+.agent/skills/openspec-explore/SKILL.md
+.agent/skills/openspec-propose/SKILL.md
+.agent/workflows/opsx-apply.md
+.agent/workflows/opsx-archive.md
+.agent/workflows/opsx-explore.md
+.agent/workflows/opsx-propose.md
 .gitignore
 app.js
 data.js
 index.css
 index.html
+openspec/changes/add-whatsapp-functionality/.openspec.yaml
+openspec/changes/add-whatsapp-functionality/design.md
+openspec/changes/add-whatsapp-functionality/proposal.md
+openspec/changes/add-whatsapp-functionality/specs/billing-payments/spec.md
+openspec/changes/add-whatsapp-functionality/specs/class-scheduling/spec.md
+openspec/changes/add-whatsapp-functionality/specs/leads-crm/spec.md
+openspec/changes/add-whatsapp-functionality/specs/whatsapp-communication/spec.md
+openspec/changes/add-whatsapp-functionality/tasks.md
+openspec/changes/admin-default-theme/.openspec.yaml
+openspec/changes/admin-default-theme/design.md
+openspec/changes/admin-default-theme/proposal.md
+openspec/changes/admin-default-theme/specs/admin-default-theme/spec.md
+openspec/changes/admin-default-theme/tasks.md
+openspec/changes/admin-users-reports/.openspec.yaml
+openspec/changes/admin-users-reports/design.md
+openspec/changes/admin-users-reports/proposal.md
+openspec/changes/admin-users-reports/specs/admin-dashboard/spec.md
+openspec/changes/admin-users-reports/tasks.md
+openspec/changes/all-in-one-dashboard/.openspec.yaml
+openspec/changes/all-in-one-dashboard/design.md
+openspec/changes/all-in-one-dashboard/proposal.md
+openspec/changes/all-in-one-dashboard/specs/all-in-one-dashboard/spec.md
+openspec/changes/all-in-one-dashboard/tasks.md
+openspec/changes/appointment-scheduling/.openspec.yaml
+openspec/changes/appointment-scheduling/design.md
+openspec/changes/appointment-scheduling/proposal.md
+openspec/changes/appointment-scheduling/specs/appointment-scheduling/spec.md
+openspec/changes/appointment-scheduling/tasks.md
+openspec/changes/auto-billing-appointments/.openspec.yaml
+openspec/changes/auto-billing-appointments/design.md
+openspec/changes/auto-billing-appointments/proposal.md
+openspec/changes/auto-billing-appointments/specs/appointment-billing/spec.md
+openspec/changes/auto-billing-appointments/tasks.md
+openspec/changes/auto-review-upi-payments/.openspec.yaml
+openspec/changes/auto-review-upi-payments/design.md
+openspec/changes/auto-review-upi-payments/proposal.md
+openspec/changes/auto-review-upi-payments/specs/billing-payments/spec.md
+openspec/changes/auto-review-upi-payments/tasks.md
+openspec/changes/batch-appointment-pricing/.openspec.yaml
+openspec/changes/batch-appointment-pricing/design.md
+openspec/changes/batch-appointment-pricing/proposal.md
+openspec/changes/batch-appointment-pricing/specs/appointment-scheduling/spec.md
+openspec/changes/batch-appointment-pricing/specs/batch-appointment-pricing/spec.md
+openspec/changes/batch-appointment-pricing/specs/class-scheduling-batches/spec.md
+openspec/changes/batch-appointment-pricing/tasks.md
+openspec/changes/class-scheduling-batches/.openspec.yaml
+openspec/changes/class-scheduling-batches/design.md
+openspec/changes/class-scheduling-batches/proposal.md
+openspec/changes/class-scheduling-batches/specs/class-scheduling-batches/spec.md
+openspec/changes/class-scheduling-batches/tasks.md
+openspec/changes/convert-leads-pipeline-to-swimlane/.openspec.yaml
+openspec/changes/convert-leads-pipeline-to-swimlane/design.md
+openspec/changes/convert-leads-pipeline-to-swimlane/proposal.md
+openspec/changes/convert-leads-pipeline-to-swimlane/specs/leads-swimlane/spec.md
+openspec/changes/convert-leads-pipeline-to-swimlane/tasks.md
+openspec/changes/convert-to-india-locale/.openspec.yaml
+openspec/changes/convert-to-india-locale/design.md
+openspec/changes/convert-to-india-locale/proposal.md
+openspec/changes/convert-to-india-locale/specs/india-locale-conversion/spec.md
+openspec/changes/convert-to-india-locale/tasks.md
+openspec/changes/custom-client-pages/.openspec.yaml
+openspec/changes/custom-client-pages/design.md
+openspec/changes/custom-client-pages/proposal.md
+openspec/changes/custom-client-pages/specs/custom-client-pages/spec.md
+openspec/changes/custom-client-pages/tasks.md
+openspec/changes/fix-lead-conversion-users-sync/.openspec.yaml
+openspec/changes/fix-lead-conversion-users-sync/design.md
+openspec/changes/fix-lead-conversion-users-sync/proposal.md
+openspec/changes/fix-lead-conversion-users-sync/specs/db-sync-reliability/spec.md
+openspec/changes/fix-lead-conversion-users-sync/tasks.md
+openspec/changes/force-password-change-on-temp-login/.openspec.yaml
+openspec/changes/force-password-change-on-temp-login/design.md
+openspec/changes/force-password-change-on-temp-login/proposal.md
+openspec/changes/force-password-change-on-temp-login/specs/force-password-change/spec.md
+openspec/changes/force-password-change-on-temp-login/tasks.md
+openspec/changes/force-user-login/.openspec.yaml
+openspec/changes/force-user-login/design.md
+openspec/changes/force-user-login/proposal.md
+openspec/changes/force-user-login/specs/force-user-login/spec.md
+openspec/changes/force-user-login/tasks.md
+openspec/changes/forgot-password-remember-me/.openspec.yaml
+openspec/changes/forgot-password-remember-me/design.md
+openspec/changes/forgot-password-remember-me/proposal.md
+openspec/changes/forgot-password-remember-me/specs/forgot-password/spec.md
+openspec/changes/forgot-password-remember-me/specs/remember-me-session/spec.md
+openspec/changes/forgot-password-remember-me/tasks.md
+openspec/changes/glassmorphic-ux/.openspec.yaml
+openspec/changes/glassmorphic-ux/design.md
+openspec/changes/glassmorphic-ux/proposal.md
+openspec/changes/glassmorphic-ux/specs/glass-ux/spec.md
+openspec/changes/glassmorphic-ux/tasks.md
+openspec/changes/gmail-email-integration/.openspec.yaml
+openspec/changes/gmail-email-integration/design.md
+openspec/changes/gmail-email-integration/proposal.md
+openspec/changes/gmail-email-integration/specs/admin-email-inbox/spec.md
+openspec/changes/gmail-email-integration/specs/gmail-oauth-connect/spec.md
+openspec/changes/gmail-email-integration/specs/student-email-inbox/spec.md
+openspec/changes/gmail-email-integration/specs/transactional-email-triggers/spec.md
+openspec/changes/gmail-email-integration/tasks.md
+openspec/changes/implement-supabase-json/.openspec.yaml
+openspec/changes/implement-supabase-json/design.md
+openspec/changes/implement-supabase-json/proposal.md
+openspec/changes/implement-supabase-json/specs/supabase-json-storage/spec.md
+openspec/changes/implement-supabase-json/tasks.md
+openspec/changes/indian-phone-format/.openspec.yaml
+openspec/changes/indian-phone-format/design.md
+openspec/changes/indian-phone-format/proposal.md
+openspec/changes/indian-phone-format/specs/indian-phone-format/spec.md
+openspec/changes/indian-phone-format/tasks.md
+openspec/changes/lead-conversion-password/.openspec.yaml
+openspec/changes/lead-conversion-password/design.md
+openspec/changes/lead-conversion-password/proposal.md
+openspec/changes/lead-conversion-password/specs/lead-conversion-password/spec.md
+openspec/changes/lead-conversion-password/tasks.md
+openspec/changes/lead-email-triggers/.openspec.yaml
+openspec/changes/lead-email-triggers/design.md
+openspec/changes/lead-email-triggers/proposal.md
+openspec/changes/lead-email-triggers/specs/conversion-email-trigger/spec.md
+openspec/changes/lead-email-triggers/specs/inquiry-email-trigger/spec.md
+openspec/changes/lead-email-triggers/tasks.md
+openspec/changes/leads-management/.openspec.yaml
+openspec/changes/leads-management/design.md
+openspec/changes/leads-management/proposal.md
+openspec/changes/leads-management/specs/leads-management/spec.md
+openspec/changes/leads-management/tasks.md
+openspec/changes/member-management/.openspec.yaml
+openspec/changes/member-management/design.md
+openspec/changes/member-management/proposal.md
+openspec/changes/member-management/specs/member-management/spec.md
+openspec/changes/member-management/tasks.md
+openspec/changes/multiple-ux-themes/.openspec.yaml
+openspec/changes/multiple-ux-themes/design.md
+openspec/changes/multiple-ux-themes/proposal.md
+openspec/changes/multiple-ux-themes/specs/theme-selector/spec.md
+openspec/changes/multiple-ux-themes/tasks.md
+openspec/changes/payments-reminders-receipts/.openspec.yaml
+openspec/changes/payments-reminders-receipts/design.md
+openspec/changes/payments-reminders-receipts/proposal.md
+openspec/changes/payments-reminders-receipts/specs/payments-reminders-receipts/spec.md
+openspec/changes/payments-reminders-receipts/tasks.md
+openspec/changes/persistent-data-storage/.openspec.yaml
+openspec/changes/persistent-data-storage/design.md
+openspec/changes/persistent-data-storage/proposal.md
+openspec/changes/persistent-data-storage/specs/persistent-data-storage/spec.md
+openspec/changes/persistent-data-storage/tasks.md
+openspec/changes/resend-email-provider/.openspec.yaml
+openspec/changes/resend-email-provider/design.md
+openspec/changes/resend-email-provider/proposal.md
+openspec/changes/resend-email-provider/specs/admin-email-inbox/spec.md
+openspec/changes/resend-email-provider/specs/email-provider-selector/spec.md
+openspec/changes/resend-email-provider/specs/resend-provider/spec.md
+openspec/changes/resend-email-provider/tasks.md
+openspec/changes/restrict-admin-client-features/.openspec.yaml
+openspec/changes/restrict-admin-client-features/design.md
+openspec/changes/restrict-admin-client-features/proposal.md
+openspec/changes/restrict-admin-client-features/specs/admin-client-restrictions/spec.md
+openspec/changes/restrict-admin-client-features/tasks.md
+openspec/changes/session-expiry-idle-redirect/.openspec.yaml
+openspec/changes/session-expiry-idle-redirect/design.md
+openspec/changes/session-expiry-idle-redirect/proposal.md
+openspec/changes/session-expiry-idle-redirect/specs/session-management/spec.md
+openspec/changes/session-expiry-idle-redirect/tasks.md
+openspec/changes/upi-qr-payments/.openspec.yaml
+openspec/changes/upi-qr-payments/design.md
+openspec/changes/upi-qr-payments/proposal.md
+openspec/changes/upi-qr-payments/specs/upi-qr-payments/spec.md
+openspec/changes/upi-qr-payments/tasks.md
+openspec/changes/user-auth-profile/.openspec.yaml
+openspec/changes/user-auth-profile/design.md
+openspec/changes/user-auth-profile/proposal.md
+openspec/changes/user-auth-profile/specs/user-auth-profile/spec.md
+openspec/changes/user-auth-profile/tasks.md
+openspec/changes/yoga-website/.openspec.yaml
+openspec/changes/yoga-website/design.md
+openspec/changes/yoga-website/proposal.md
+openspec/changes/yoga-website/specs/media-viewer/spec.md
+openspec/changes/yoga-website/specs/yoga-content/spec.md
+openspec/changes/yoga-website/tasks.md
+openspec/specs/billing-payments/spec.md
+openspec/specs/class-scheduling/spec.md
+openspec/specs/core-yoga/spec.md
+openspec/specs/email-communication/spec.md
+openspec/specs/leads-crm/spec.md
+openspec/specs/user-auth-profile/spec.md
 package.json
+README.md
 repomix.config.json
 sample_ledger.csv
 schema.sql
@@ -50,12 +243,1307 @@ server.js
 setup-db.js
 tst.json
 vite.config.js
+wiki/Architecture.md
+wiki/Billing-and-Payments.md
+wiki/Core-Yoga-Directory.md
+wiki/Email-Communication.md
+wiki/Home.md
+wiki/Lead-Management-and-CRM.md
+wiki/WhatsApp-Integration.md
 ```
 
 # Files
 
+## File: .agent/skills/openspec-apply-change/SKILL.md
+````markdown
+---
+name: openspec-apply-change
+description: Implement tasks from an OpenSpec change. Use when the user wants to start implementing, continue implementation, or work through tasks.
+license: MIT
+compatibility: Requires openspec CLI.
+metadata:
+  author: openspec
+  version: "1.0"
+  generatedBy: "1.4.1"
+---
+
+Implement tasks from an OpenSpec change.
+
+**Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+
+**Steps**
+
+1. **Select the change**
+
+   If a name is provided, use it. Otherwise:
+   - Infer from conversation context if the user mentioned a change
+   - Auto-select if only one active change exists
+   - If ambiguous, run `openspec list --json` to get available changes and use the **AskUserQuestion tool** to let the user select
+
+   Always announce: "Using change: <name>" and how to override (e.g., `/opsx:apply <other>`).
+
+2. **Check status to understand the schema**
+   ```bash
+   openspec status --change "<name>" --json
+   ```
+   Parse the JSON to understand:
+   - `schemaName`: The workflow being used (e.g., "spec-driven")
+   - `planningHome`, `changeRoot`, and `actionContext`: planning scope and edit constraints
+   - Which artifact contains the tasks (typically "tasks" for spec-driven, check status for others)
+
+3. **Get apply instructions**
+
+   ```bash
+   openspec instructions apply --change "<name>" --json
+   ```
+
+   This returns:
+   - `contextFiles`: artifact ID -> array of concrete file paths (varies by schema - could be proposal/specs/design/tasks or spec/tests/implementation/docs)
+   - Progress (total, complete, remaining)
+   - Task list with status
+   - Dynamic instruction based on current state
+
+   **Handle states:**
+   - If `state: "blocked"` (missing artifacts): show message, suggest using openspec-continue-change
+   - If `state: "all_done"`: congratulate, suggest archive
+   - Otherwise: proceed to implementation
+
+   **Workspace guard:** If status JSON reports `actionContext.mode: "workspace-planning"` and `allowedEditRoots` is empty, explain that full workspace apply is not supported in this slice. Treat linked repos and folders as read-only context, ask the user to select an affected area through an explicit implementation workflow, and STOP before editing files.
+
+4. **Read context files**
+
+   Read every file path listed under `contextFiles` from the apply instructions output.
+   The files depend on the schema being used:
+   - **spec-driven**: proposal, specs, design, tasks
+   - Other schemas: follow the contextFiles from CLI output
+
+5. **Show current progress**
+
+   Display:
+   - Schema being used
+   - Progress: "N/M tasks complete"
+   - Remaining tasks overview
+   - Dynamic instruction from CLI
+
+6. **Implement tasks (loop until done or blocked)**
+
+   For each pending task:
+   - Show which task is being worked on
+   - Make the code changes required
+   - Keep changes minimal and focused
+   - Mark task complete in the tasks file: `- [ ]` → `- [x]`
+   - Continue to next task
+
+   **Pause if:**
+   - Task is unclear → ask for clarification
+   - Implementation reveals a design issue → suggest updating artifacts
+   - Error or blocker encountered → report and wait for guidance
+   - User interrupts
+
+7. **On completion or pause, show status**
+
+   Display:
+   - Tasks completed this session
+   - Overall progress: "N/M tasks complete"
+   - If all done: suggest archive
+   - If paused: explain why and wait for guidance
+
+**Output During Implementation**
+
+```
+## Implementing: <change-name> (schema: <schema-name>)
+
+Working on task 3/7: <task description>
+[...implementation happening...]
+✓ Task complete
+
+Working on task 4/7: <task description>
+[...implementation happening...]
+✓ Task complete
+```
+
+**Output On Completion**
+
+```
+## Implementation Complete
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Progress:** 7/7 tasks complete ✓
+
+### Completed This Session
+- [x] Task 1
+- [x] Task 2
+...
+
+All tasks complete! Ready to archive this change.
+```
+
+**Output On Pause (Issue Encountered)**
+
+```
+## Implementation Paused
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Progress:** 4/7 tasks complete
+
+### Issue Encountered
+<description of the issue>
+
+**Options:**
+1. <option 1>
+2. <option 2>
+3. Other approach
+
+What would you like to do?
+```
+
+**Guardrails**
+- Keep going through tasks until done or blocked
+- Always read context files before starting (from the apply instructions output)
+- If task is ambiguous, pause and ask before implementing
+- If implementation reveals issues, pause and suggest artifact updates
+- Keep code changes minimal and scoped to each task
+- Update task checkbox immediately after completing each task
+- Pause on errors, blockers, or unclear requirements - don't guess
+- Use contextFiles from CLI output, don't assume specific file names
+
+**Fluid Workflow Integration**
+
+This skill supports the "actions on a change" model:
+
+- **Can be invoked anytime**: Before all artifacts are done (if tasks exist), after partial implementation, interleaved with other actions
+- **Allows artifact updates**: If implementation reveals design issues, suggest updating artifacts - not phase-locked, work fluidly
+````
+
+## File: .agent/skills/openspec-archive-change/SKILL.md
+````markdown
+---
+name: openspec-archive-change
+description: Archive a completed change in the experimental workflow. Use when the user wants to finalize and archive a change after implementation is complete.
+license: MIT
+compatibility: Requires openspec CLI.
+metadata:
+  author: openspec
+  version: "1.0"
+  generatedBy: "1.4.1"
+---
+
+Archive a completed change in the experimental workflow.
+
+**Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+
+**Steps**
+
+1. **If no change name provided, prompt for selection**
+
+   Run `openspec list --json` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+
+   Show only active changes (not already archived).
+   Include the schema used for each change if available.
+
+   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
+
+2. **Check artifact completion status**
+
+   Run `openspec status --change "<name>" --json` to check artifact completion.
+
+   Parse the JSON to understand:
+   - `schemaName`: The workflow being used
+   - `planningHome`, `changeRoot`, `artifactPaths`, and `actionContext`: path and scope context
+   - `artifacts`: List of artifacts with their status (`done` or other)
+
+   If status reports `actionContext.mode: "workspace-planning"`, explain that workspace archive is not supported in this slice and STOP. Do not move workspace changes into repo-local archives or edit linked repos.
+
+   **If any artifacts are not `done`:**
+   - Display warning listing incomplete artifacts
+   - Use **AskUserQuestion tool** to confirm user wants to proceed
+   - Proceed if user confirms
+
+3. **Check task completion status**
+
+   Read the tasks file (typically `tasks.md`) to check for incomplete tasks.
+
+   Count tasks marked with `- [ ]` (incomplete) vs `- [x]` (complete).
+
+   **If incomplete tasks found:**
+   - Display warning showing count of incomplete tasks
+   - Use **AskUserQuestion tool** to confirm user wants to proceed
+   - Proceed if user confirms
+
+   **If no tasks file exists:** Proceed without task-related warning.
+
+4. **Assess delta spec sync state**
+
+   Use `artifactPaths.specs.existingOutputPaths` from status JSON to check for delta specs. If none exist, proceed without sync prompt.
+
+   **If delta specs exist:**
+   - Compare each delta spec with its corresponding main spec at `openspec/specs/<capability>/spec.md`
+   - Determine what changes would be applied (adds, modifications, removals, renames)
+   - Show a combined summary before prompting
+
+   **Prompt options:**
+   - If changes needed: "Sync now (recommended)", "Archive without syncing"
+   - If already synced: "Archive now", "Sync anyway", "Cancel"
+
+   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke openspec-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
+
+5. **Perform the archive**
+
+   Create an `archive` directory under `planningHome.changesDir` if it doesn't exist:
+   ```bash
+   mkdir -p "<planningHome.changesDir>/archive"
+   ```
+
+   Generate target name using current date: `YYYY-MM-DD-<change-name>`
+
+   **Check if target already exists:**
+   - If yes: Fail with error, suggest renaming existing archive or using different date
+   - If no: Move `changeRoot` to the archive directory
+
+   ```bash
+   mv "<changeRoot>" "<planningHome.changesDir>/archive/YYYY-MM-DD-<name>"
+   ```
+
+6. **Display summary**
+
+   Show archive completion summary including:
+   - Change name
+   - Schema that was used
+   - Archive location
+   - Whether specs were synced (if applicable)
+   - Note about any warnings (incomplete artifacts/tasks)
+
+**Output On Success**
+
+```
+## Archive Complete
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Archived to:** the archive path derived from `planningHome.changesDir`/YYYY-MM-DD-<name>/
+**Specs:** ✓ Synced to main specs (or "No delta specs" or "Sync skipped")
+
+All artifacts complete. All tasks complete.
+```
+
+**Guardrails**
+- Always prompt for change selection if not provided
+- Use artifact graph (openspec status --json) for completion checking
+- Don't block archive on warnings - just inform and confirm
+- Preserve .openspec.yaml when moving to archive (it moves with the directory)
+- Show clear summary of what happened
+- If sync is requested, use openspec-sync-specs approach (agent-driven)
+- If delta specs exist, always run the sync assessment and show the combined summary before prompting
+````
+
+## File: .agent/skills/openspec-explore/SKILL.md
+````markdown
+---
+name: openspec-explore
+description: Enter explore mode - a thinking partner for exploring ideas, investigating problems, and clarifying requirements. Use when the user wants to think through something before or during a change.
+license: MIT
+compatibility: Requires openspec CLI.
+metadata:
+  author: openspec
+  version: "1.0"
+  generatedBy: "1.4.1"
+---
+
+Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
+
+**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first and create a change proposal. You MAY create OpenSpec artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
+
+**This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
+
+---
+
+## The Stance
+
+- **Curious, not prescriptive** - Ask questions that emerge naturally, don't follow a script
+- **Open threads, not interrogations** - Surface multiple interesting directions and let the user follow what resonates. Don't funnel them through a single path of questions.
+- **Visual** - Use ASCII diagrams liberally when they'd help clarify thinking
+- **Adaptive** - Follow interesting threads, pivot when new information emerges
+- **Patient** - Don't rush to conclusions, let the shape of the problem emerge
+- **Grounded** - Explore the actual codebase when relevant, don't just theorize
+
+---
+
+## What You Might Do
+
+Depending on what the user brings, you might:
+
+**Explore the problem space**
+- Ask clarifying questions that emerge from what they said
+- Challenge assumptions
+- Reframe the problem
+- Find analogies
+
+**Investigate the codebase**
+- Map existing architecture relevant to the discussion
+- Find integration points
+- Identify patterns already in use
+- Surface hidden complexity
+
+**Compare options**
+- Brainstorm multiple approaches
+- Build comparison tables
+- Sketch tradeoffs
+- Recommend a path (if asked)
+
+**Visualize**
+```
+┌─────────────────────────────────────────┐
+│     Use ASCII diagrams liberally        │
+├─────────────────────────────────────────┤
+│                                         │
+│      ┌────────┐         ┌────────┐      │
+│      │ State  │────────▶│ State  │      │
+│      │   A    │         │   B    │      │
+│      └────────┘         └────────┘      │
+│                                         │
+│   System diagrams, state machines,      │
+│   data flows, architecture sketches,    │
+│   dependency graphs, comparison tables  │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+**Surface risks and unknowns**
+- Identify what could go wrong
+- Find gaps in understanding
+- Suggest spikes or investigations
+
+---
+
+## OpenSpec Awareness
+
+You have full context of the OpenSpec system. Use it naturally, don't force it.
+
+### Check for context
+
+At the start, quickly check what exists:
+```bash
+openspec list --json
+```
+
+This tells you:
+- If there are active changes
+- Their names, schemas, and status
+- What the user might be working on
+
+### When no change exists
+
+Think freely. When insights crystallize, you might offer:
+
+- "This feels solid enough to start a change. Want me to create a proposal?"
+- Or keep exploring - no pressure to formalize
+
+### When a change exists
+
+If the user mentions a change or you detect one is relevant:
+
+1. **Resolve and read existing artifacts for context**
+   - Run `openspec status --change "<name>" --json`.
+   - Use `changeRoot`, `artifactPaths`, and `actionContext` from the status JSON.
+   - Read existing files from `artifactPaths.<artifact>.existingOutputPaths`.
+
+2. **Reference them naturally in conversation**
+   - "Your design mentions using Redis, but we just realized SQLite fits better..."
+   - "The proposal scopes this to premium users, but we're now thinking everyone..."
+
+3. **Offer to capture when decisions are made**
+
+    | Insight Type               | Where to Capture               |
+    |----------------------------|--------------------------------|
+    | New requirement discovered | `specs/<capability>/spec.md` |
+    | Requirement changed        | `specs/<capability>/spec.md` |
+    | Design decision made       | `design.md`                  |
+    | Scope changed              | `proposal.md`                |
+    | New work identified        | `tasks.md`                   |
+    | Assumption invalidated     | Relevant artifact              |
+
+   Example offers:
+   - "That's a design decision. Capture it in design.md?"
+   - "This is a new requirement. Add it to specs?"
+   - "This changes scope. Update the proposal?"
+
+4. **The user decides** - Offer and move on. Don't pressure. Don't auto-capture.
+
+---
+
+## What You Don't Have To Do
+
+- Follow a script
+- Ask the same questions every time
+- Produce a specific artifact
+- Reach a conclusion
+- Stay on topic if a tangent is valuable
+- Be brief (this is thinking time)
+
+---
+
+## Handling Different Entry Points
+
+**User brings a vague idea:**
+```
+User: I'm thinking about adding real-time collaboration
+
+You: Real-time collab is a big space. Let me think about this...
+
+      COLLABORATION SPECTRUM
+      ════════════════════════════════════════════
+
+      Awareness          Coordination         Sync
+          │                   │                 │
+          ▼                   ▼                 ▼
+      ┌────────┐         ┌────────┐        ┌────────┐
+      │Presence│         │Cursors │        │  CRDT  │
+      │  "3    │         │ Multi  │        │Conflict│
+      │online" │         │ select │        │  free  │
+      └────────┘         └────────┘        └────────┘
+          │                   │                 │
+       trivial            moderate           complex
+
+      Where's your head at?
+```
+
+**User brings a specific problem:**
+```
+User: The auth system is a mess
+
+You: [reads codebase]
+
+     ┌─────────────────────────────────────────────┐
+     │              CURRENT AUTH FLOW              │
+     └─────────────────────────────────────────────┘
+                        │
+          ┌─────────────┼─────────────┐
+          ▼             ▼             ▼
+     ┌─────────┐  ┌─────────┐  ┌─────────┐
+     │ Google  │  │  GitHub │  │  Email  │
+     │  OAuth  │  │  OAuth  │  │  Magic  │
+     └────┬────┘  └────┬────┘  └────┬────┘
+          │             │             │
+          └─────────────┼─────────────┘
+                        ▼
+                  ┌───────────┐
+                  │  Session  │
+                  └─────┬─────┘
+                        │
+                        ▼
+                  ┌───────────┐
+                  │   Perms   │
+                  └───────────┘
+
+     I see three tangles. Which one's burning?
+```
+
+**User is stuck mid-implementation:**
+```
+User: /opsx:explore add-auth-system
+      The OAuth integration is more complex than expected
+
+You: [reads change artifacts]
+
+     You're on task 4: "Implement OAuth flow"
+
+     Let me trace what's involved...
+
+     [draws diagram, explores options, suggests paths]
+
+     Want to update the design to reflect this?
+     Or add a spike task to investigate?
+```
+
+**User wants to compare options:**
+```
+User: Should we use Postgres or SQLite?
+
+You: Generic answer is boring. What's the context?
+
+User: A CLI tool that tracks local dev environments
+
+You: That changes everything.
+
+     ┌─────────────────────────────────────────────────┐
+     │          CLI TOOL DATA STORAGE                  │
+     └─────────────────────────────────────────────────┘
+
+     Key constraints:
+     • No daemon running
+     • Must work offline
+     • Single user
+
+                  SQLite          Postgres
+     Deployment   embedded ✓      needs server ✗
+     Offline      yes ✓           no ✗
+     Single file  yes ✓           no ✗
+
+     SQLite. Not even close.
+
+     Unless... is there a sync component?
+```
+
+---
+
+## Ending Discovery
+
+There's no required ending. Discovery might:
+
+- **Flow into a proposal**: "Ready to start? I can create a change proposal."
+- **Result in artifact updates**: "Updated design.md with these decisions"
+- **Just provide clarity**: User has what they need, moves on
+- **Continue later**: "We can pick this up anytime"
+
+When it feels like things are crystallizing, you might summarize:
+
+```
+## What We Figured Out
+
+**The problem**: [crystallized understanding]
+
+**The approach**: [if one emerged]
+
+**Open questions**: [if any remain]
+
+**Next steps** (if ready):
+- Create a change proposal
+- Keep exploring: just keep talking
+```
+
+But this summary is optional. Sometimes the thinking IS the value.
+
+---
+
+## Guardrails
+
+- **Don't implement** - Never write code or implement features. Creating OpenSpec artifacts is fine, writing application code is not.
+- **Don't fake understanding** - If something is unclear, dig deeper
+- **Don't rush** - Discovery is thinking time, not task time
+- **Don't force structure** - Let patterns emerge naturally
+- **Don't auto-capture** - Offer to save insights, don't just do it
+- **Do visualize** - A good diagram is worth many paragraphs
+- **Do explore the codebase** - Ground discussions in reality
+- **Do question assumptions** - Including the user's and your own
+````
+
+## File: .agent/skills/openspec-propose/SKILL.md
+````markdown
+---
+name: openspec-propose
+description: Propose a new change with all artifacts generated in one step. Use when the user wants to quickly describe what they want to build and get a complete proposal with design, specs, and tasks ready for implementation.
+license: MIT
+compatibility: Requires openspec CLI.
+metadata:
+  author: openspec
+  version: "1.0"
+  generatedBy: "1.4.1"
+---
+
+Propose a new change - create the change and generate all artifacts in one step.
+
+I'll create a change with artifacts:
+- proposal.md (what & why)
+- design.md (how)
+- tasks.md (implementation steps)
+
+When ready to implement, run /opsx:apply
+
+---
+
+**Input**: The user's request should include a change name (kebab-case) OR a description of what they want to build.
+
+**Steps**
+
+1. **If no clear input provided, ask what they want to build**
+
+   Use the **AskUserQuestion tool** (open-ended, no preset options) to ask:
+   > "What change do you want to work on? Describe what you want to build or fix."
+
+   From their description, derive a kebab-case name (e.g., "add user authentication" → `add-user-auth`).
+
+   **IMPORTANT**: Do NOT proceed without understanding what the user wants to build.
+
+2. **Create the change directory**
+   ```bash
+   openspec new change "<name>"
+   ```
+   This creates a scaffolded change in the planning home resolved by the CLI with `.openspec.yaml`.
+
+3. **Get the artifact build order**
+   ```bash
+   openspec status --change "<name>" --json
+   ```
+   Parse the JSON to get:
+   - `applyRequires`: array of artifact IDs needed before implementation (e.g., `["tasks"]`)
+   - `artifacts`: list of all artifacts with their status and dependencies
+   - `planningHome`, `changeRoot`, `artifactPaths`, and `actionContext`: path and scope context. Use these instead of assuming repo-local paths.
+
+4. **Create artifacts in sequence until apply-ready**
+
+   Use the **TodoWrite tool** to track progress through the artifacts.
+
+   Loop through artifacts in dependency order (artifacts with no pending dependencies first):
+
+   a. **For each artifact that is `ready` (dependencies satisfied)**:
+      - Get instructions:
+        ```bash
+        openspec instructions <artifact-id> --change "<name>" --json
+        ```
+      - The instructions JSON includes:
+        - `context`: Project background (constraints for you - do NOT include in output)
+        - `rules`: Artifact-specific rules (constraints for you - do NOT include in output)
+        - `template`: The structure to use for your output file
+        - `instruction`: Schema-specific guidance for this artifact type
+        - `resolvedOutputPath`: Resolved path or pattern to write the artifact
+        - `dependencies`: Completed artifacts to read for context
+      - Read any completed dependency files for context
+      - Create the artifact file using `template` as the structure and write it to `resolvedOutputPath`
+      - Apply `context` and `rules` as constraints - but do NOT copy them into the file
+      - Show brief progress: "Created <artifact-id>"
+
+   b. **Continue until all `applyRequires` artifacts are complete**
+      - After creating each artifact, re-run `openspec status --change "<name>" --json`
+      - Check if every artifact ID in `applyRequires` has `status: "done"` in the artifacts array
+      - Stop when all `applyRequires` artifacts are done
+
+   c. **If an artifact requires user input** (unclear context):
+      - Use **AskUserQuestion tool** to clarify
+      - Then continue with creation
+
+5. **Show final status**
+   ```bash
+   openspec status --change "<name>"
+   ```
+
+**Output**
+
+After completing all artifacts, summarize:
+- Change name and location
+- List of artifacts created with brief descriptions
+- What's ready: "All artifacts created! Ready for implementation."
+- Prompt: "Run `/opsx:apply` or ask me to implement to start working on the tasks."
+
+**Artifact Creation Guidelines**
+
+- Follow the `instruction` field from `openspec instructions` for each artifact type
+- The schema defines what each artifact should contain - follow it
+- Read dependency artifacts for context before creating new ones
+- Use `template` as the structure for your output file - fill in its sections
+- **IMPORTANT**: `context` and `rules` are constraints for YOU, not content for the file
+  - Do NOT copy `<context>`, `<rules>`, `<project_context>` blocks into the artifact
+  - These guide what you write, but should never appear in the output
+
+**Guardrails**
+- Create ALL artifacts needed for implementation (as defined by schema's `apply.requires`)
+- Always read dependency artifacts before creating a new one
+- If context is critically unclear, ask the user - but prefer making reasonable decisions to keep momentum
+- If a change with that name already exists, ask if user wants to continue it or create a new one
+- Verify each artifact file exists after writing before proceeding to next
+````
+
+## File: .agent/workflows/opsx-apply.md
+````markdown
+---
+description: Implement tasks from an OpenSpec change (Experimental)
+---
+
+Implement tasks from an OpenSpec change.
+
+**Input**: Optionally specify a change name (e.g., `/opsx:apply add-auth`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+
+**Steps**
+
+1. **Select the change**
+
+   If a name is provided, use it. Otherwise:
+   - Infer from conversation context if the user mentioned a change
+   - Auto-select if only one active change exists
+   - If ambiguous, run `openspec list --json` to get available changes and use the **AskUserQuestion tool** to let the user select
+
+   Always announce: "Using change: <name>" and how to override (e.g., `/opsx:apply <other>`).
+
+2. **Check status to understand the schema**
+   ```bash
+   openspec status --change "<name>" --json
+   ```
+   Parse the JSON to understand:
+   - `schemaName`: The workflow being used (e.g., "spec-driven")
+   - `planningHome`, `changeRoot`, and `actionContext`: planning scope and edit constraints
+   - Which artifact contains the tasks (typically "tasks" for spec-driven, check status for others)
+
+3. **Get apply instructions**
+
+   ```bash
+   openspec instructions apply --change "<name>" --json
+   ```
+
+   This returns:
+   - `contextFiles`: artifact ID -> array of concrete file paths (varies by schema)
+   - Progress (total, complete, remaining)
+   - Task list with status
+   - Dynamic instruction based on current state
+
+   **Handle states:**
+   - If `state: "blocked"` (missing artifacts): show message, suggest using `/opsx:continue`
+   - If `state: "all_done"`: congratulate, suggest archive
+   - Otherwise: proceed to implementation
+
+   **Workspace guard:** If status JSON reports `actionContext.mode: "workspace-planning"` and `allowedEditRoots` is empty, explain that full workspace apply is not supported in this slice. Treat linked repos and folders as read-only context, ask the user to select an affected area through an explicit implementation workflow, and STOP before editing files.
+
+4. **Read context files**
+
+   Read every file path listed under `contextFiles` from the apply instructions output.
+   The files depend on the schema being used:
+   - **spec-driven**: proposal, specs, design, tasks
+   - Other schemas: follow the contextFiles from CLI output
+
+5. **Show current progress**
+
+   Display:
+   - Schema being used
+   - Progress: "N/M tasks complete"
+   - Remaining tasks overview
+   - Dynamic instruction from CLI
+
+6. **Implement tasks (loop until done or blocked)**
+
+   For each pending task:
+   - Show which task is being worked on
+   - Make the code changes required
+   - Keep changes minimal and focused
+   - Mark task complete in the tasks file: `- [ ]` → `- [x]`
+   - Continue to next task
+
+   **Pause if:**
+   - Task is unclear → ask for clarification
+   - Implementation reveals a design issue → suggest updating artifacts
+   - Error or blocker encountered → report and wait for guidance
+   - User interrupts
+
+7. **On completion or pause, show status**
+
+   Display:
+   - Tasks completed this session
+   - Overall progress: "N/M tasks complete"
+   - If all done: suggest archive
+   - If paused: explain why and wait for guidance
+
+**Output During Implementation**
+
+```
+## Implementing: <change-name> (schema: <schema-name>)
+
+Working on task 3/7: <task description>
+[...implementation happening...]
+✓ Task complete
+
+Working on task 4/7: <task description>
+[...implementation happening...]
+✓ Task complete
+```
+
+**Output On Completion**
+
+```
+## Implementation Complete
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Progress:** 7/7 tasks complete ✓
+
+### Completed This Session
+- [x] Task 1
+- [x] Task 2
+...
+
+All tasks complete! You can archive this change with `/opsx:archive`.
+```
+
+**Output On Pause (Issue Encountered)**
+
+```
+## Implementation Paused
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Progress:** 4/7 tasks complete
+
+### Issue Encountered
+<description of the issue>
+
+**Options:**
+1. <option 1>
+2. <option 2>
+3. Other approach
+
+What would you like to do?
+```
+
+**Guardrails**
+- Keep going through tasks until done or blocked
+- Always read context files before starting (from the apply instructions output)
+- If task is ambiguous, pause and ask before implementing
+- If implementation reveals issues, pause and suggest artifact updates
+- Keep code changes minimal and scoped to each task
+- Update task checkbox immediately after completing each task
+- Pause on errors, blockers, or unclear requirements - don't guess
+- Use contextFiles from CLI output, don't assume specific file names
+
+**Fluid Workflow Integration**
+
+This skill supports the "actions on a change" model:
+
+- **Can be invoked anytime**: Before all artifacts are done (if tasks exist), after partial implementation, interleaved with other actions
+- **Allows artifact updates**: If implementation reveals design issues, suggest updating artifacts - not phase-locked, work fluidly
+````
+
+## File: .agent/workflows/opsx-archive.md
+````markdown
+---
+description: Archive a completed change in the experimental workflow
+---
+
+Archive a completed change in the experimental workflow.
+
+**Input**: Optionally specify a change name after `/opsx:archive` (e.g., `/opsx:archive add-auth`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+
+**Steps**
+
+1. **If no change name provided, prompt for selection**
+
+   Run `openspec list --json` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+
+   Show only active changes (not already archived).
+   Include the schema used for each change if available.
+
+   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
+
+2. **Check artifact completion status**
+
+   Run `openspec status --change "<name>" --json` to check artifact completion.
+
+   Parse the JSON to understand:
+   - `schemaName`: The workflow being used
+   - `planningHome`, `changeRoot`, `artifactPaths`, and `actionContext`: path and scope context
+   - `artifacts`: List of artifacts with their status (`done` or other)
+
+   If status reports `actionContext.mode: "workspace-planning"`, explain that workspace archive is not supported in this slice and STOP. Do not move workspace changes into repo-local archives or edit linked repos.
+
+   **If any artifacts are not `done`:**
+   - Display warning listing incomplete artifacts
+   - Prompt user for confirmation to continue
+   - Proceed if user confirms
+
+3. **Check task completion status**
+
+   Read the tasks file (typically `tasks.md`) to check for incomplete tasks.
+
+   Count tasks marked with `- [ ]` (incomplete) vs `- [x]` (complete).
+
+   **If incomplete tasks found:**
+   - Display warning showing count of incomplete tasks
+   - Prompt user for confirmation to continue
+   - Proceed if user confirms
+
+   **If no tasks file exists:** Proceed without task-related warning.
+
+4. **Assess delta spec sync state**
+
+   Use `artifactPaths.specs.existingOutputPaths` from status JSON to check for delta specs. If none exist, proceed without sync prompt.
+
+   **If delta specs exist:**
+   - Compare each delta spec with its corresponding main spec at `openspec/specs/<capability>/spec.md`
+   - Determine what changes would be applied (adds, modifications, removals, renames)
+   - Show a combined summary before prompting
+
+   **Prompt options:**
+   - If changes needed: "Sync now (recommended)", "Archive without syncing"
+   - If already synced: "Archive now", "Sync anyway", "Cancel"
+
+   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke openspec-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
+
+5. **Perform the archive**
+
+   Create an `archive` directory under `planningHome.changesDir` if it doesn't exist:
+   ```bash
+   mkdir -p "<planningHome.changesDir>/archive"
+   ```
+
+   Generate target name using current date: `YYYY-MM-DD-<change-name>`
+
+   **Check if target already exists:**
+   - If yes: Fail with error, suggest renaming existing archive or using different date
+   - If no: Move `changeRoot` to the archive directory
+
+   ```bash
+   mv "<changeRoot>" "<planningHome.changesDir>/archive/YYYY-MM-DD-<name>"
+   ```
+
+6. **Display summary**
+
+   Show archive completion summary including:
+   - Change name
+   - Schema that was used
+   - Archive location
+   - Spec sync status (synced / sync skipped / no delta specs)
+   - Note about any warnings (incomplete artifacts/tasks)
+
+**Output On Success**
+
+```
+## Archive Complete
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Archived to:** the archive path derived from `planningHome.changesDir`/YYYY-MM-DD-<name>/
+**Specs:** ✓ Synced to main specs
+
+All artifacts complete. All tasks complete.
+```
+
+**Output On Success (No Delta Specs)**
+
+```
+## Archive Complete
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Archived to:** the archive path derived from `planningHome.changesDir`/YYYY-MM-DD-<name>/
+**Specs:** No delta specs
+
+All artifacts complete. All tasks complete.
+```
+
+**Output On Success With Warnings**
+
+```
+## Archive Complete (with warnings)
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Archived to:** the archive path derived from `planningHome.changesDir`/YYYY-MM-DD-<name>/
+**Specs:** Sync skipped (user chose to skip)
+
+**Warnings:**
+- Archived with 2 incomplete artifacts
+- Archived with 3 incomplete tasks
+- Delta spec sync was skipped (user chose to skip)
+
+Review the archive if this was not intentional.
+```
+
+**Output On Error (Archive Exists)**
+
+```
+## Archive Failed
+
+**Change:** <change-name>
+**Target:** the archive path derived from `planningHome.changesDir`/YYYY-MM-DD-<name>/
+
+Target archive directory already exists.
+
+**Options:**
+1. Rename the existing archive
+2. Delete the existing archive if it's a duplicate
+3. Wait until a different date to archive
+```
+
+**Guardrails**
+- Always prompt for change selection if not provided
+- Use artifact graph (openspec status --json) for completion checking
+- Don't block archive on warnings - just inform and confirm
+- Preserve .openspec.yaml when moving to archive (it moves with the directory)
+- Show clear summary of what happened
+- If sync is requested, use the Skill tool to invoke `openspec-sync-specs` (agent-driven)
+- If delta specs exist, always run the sync assessment and show the combined summary before prompting
+````
+
+## File: .agent/workflows/opsx-explore.md
+````markdown
+---
+description: Enter explore mode - think through ideas, investigate problems, clarify requirements
+---
+
+Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
+
+**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first and create a change proposal. You MAY create OpenSpec artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
+
+**This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
+
+**Input**: The argument after `/opsx:explore` is whatever the user wants to think about. Could be:
+- A vague idea: "real-time collaboration"
+- A specific problem: "the auth system is getting unwieldy"
+- A change name: "add-dark-mode" (to explore in context of that change)
+- A comparison: "postgres vs sqlite for this"
+- Nothing (just enter explore mode)
+
+---
+
+## The Stance
+
+- **Curious, not prescriptive** - Ask questions that emerge naturally, don't follow a script
+- **Open threads, not interrogations** - Surface multiple interesting directions and let the user follow what resonates. Don't funnel them through a single path of questions.
+- **Visual** - Use ASCII diagrams liberally when they'd help clarify thinking
+- **Adaptive** - Follow interesting threads, pivot when new information emerges
+- **Patient** - Don't rush to conclusions, let the shape of the problem emerge
+- **Grounded** - Explore the actual codebase when relevant, don't just theorize
+
+---
+
+## What You Might Do
+
+Depending on what the user brings, you might:
+
+**Explore the problem space**
+- Ask clarifying questions that emerge from what they said
+- Challenge assumptions
+- Reframe the problem
+- Find analogies
+
+**Investigate the codebase**
+- Map existing architecture relevant to the discussion
+- Find integration points
+- Identify patterns already in use
+- Surface hidden complexity
+
+**Compare options**
+- Brainstorm multiple approaches
+- Build comparison tables
+- Sketch tradeoffs
+- Recommend a path (if asked)
+
+**Visualize**
+```
+┌─────────────────────────────────────────┐
+│     Use ASCII diagrams liberally        │
+├─────────────────────────────────────────┤
+│                                         │
+│      ┌────────┐         ┌────────┐      │
+│      │ State  │────────▶│ State  │      │
+│      │   A    │         │   B    │      │
+│      └────────┘         └────────┘      │
+│                                         │
+│   System diagrams, state machines,      │
+│   data flows, architecture sketches,    │
+│   dependency graphs, comparison tables  │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+**Surface risks and unknowns**
+- Identify what could go wrong
+- Find gaps in understanding
+- Suggest spikes or investigations
+
+---
+
+## OpenSpec Awareness
+
+You have full context of the OpenSpec system. Use it naturally, don't force it.
+
+### Check for context
+
+At the start, quickly check what exists:
+```bash
+openspec list --json
+```
+
+This tells you:
+- If there are active changes
+- Their names, schemas, and status
+- What the user might be working on
+
+If the user mentioned a specific change name, read its artifacts for context.
+
+### When no change exists
+
+Think freely. When insights crystallize, you might offer:
+
+- "This feels solid enough to start a change. Want me to create a proposal?"
+- Or keep exploring - no pressure to formalize
+
+### When a change exists
+
+If the user mentions a change or you detect one is relevant:
+
+1. **Resolve and read existing artifacts for context**
+   - Run `openspec status --change "<name>" --json`.
+   - Use `changeRoot`, `artifactPaths`, and `actionContext` from the status JSON.
+   - Read existing files from `artifactPaths.<artifact>.existingOutputPaths`.
+
+2. **Reference them naturally in conversation**
+   - "Your design mentions using Redis, but we just realized SQLite fits better..."
+   - "The proposal scopes this to premium users, but we're now thinking everyone..."
+
+3. **Offer to capture when decisions are made**
+
+    | Insight Type               | Where to Capture               |
+    |----------------------------|--------------------------------|
+    | New requirement discovered | `specs/<capability>/spec.md` |
+    | Requirement changed        | `specs/<capability>/spec.md` |
+    | Design decision made       | `design.md`                  |
+    | Scope changed              | `proposal.md`                |
+    | New work identified        | `tasks.md`                   |
+    | Assumption invalidated     | Relevant artifact              |
+
+   Example offers:
+   - "That's a design decision. Capture it in design.md?"
+   - "This is a new requirement. Add it to specs?"
+   - "This changes scope. Update the proposal?"
+
+4. **The user decides** - Offer and move on. Don't pressure. Don't auto-capture.
+
+---
+
+## What You Don't Have To Do
+
+- Follow a script
+- Ask the same questions every time
+- Produce a specific artifact
+- Reach a conclusion
+- Stay on topic if a tangent is valuable
+- Be brief (this is thinking time)
+
+---
+
+## Ending Discovery
+
+There's no required ending. Discovery might:
+
+- **Flow into a proposal**: "Ready to start? I can create a change proposal."
+- **Result in artifact updates**: "Updated design.md with these decisions"
+- **Just provide clarity**: User has what they need, moves on
+- **Continue later**: "We can pick this up anytime"
+
+When things crystallize, you might offer a summary - but it's optional. Sometimes the thinking IS the value.
+
+---
+
+## Guardrails
+
+- **Don't implement** - Never write code or implement features. Creating OpenSpec artifacts is fine, writing application code is not.
+- **Don't fake understanding** - If something is unclear, dig deeper
+- **Don't rush** - Discovery is thinking time, not task time
+- **Don't force structure** - Let patterns emerge naturally
+- **Don't auto-capture** - Offer to save insights, don't just do it
+- **Do visualize** - A good diagram is worth many paragraphs
+- **Do explore the codebase** - Ground discussions in reality
+- **Do question assumptions** - Including the user's and your own
+````
+
+## File: .agent/workflows/opsx-propose.md
+````markdown
+---
+description: Propose a new change - create it and generate all artifacts in one step
+---
+
+Propose a new change - create the change and generate all artifacts in one step.
+
+I'll create a change with artifacts:
+- proposal.md (what & why)
+- design.md (how)
+- tasks.md (implementation steps)
+
+When ready to implement, run /opsx:apply
+
+---
+
+**Input**: The argument after `/opsx:propose` is the change name (kebab-case), OR a description of what the user wants to build.
+
+**Steps**
+
+1. **If no input provided, ask what they want to build**
+
+   Use the **AskUserQuestion tool** (open-ended, no preset options) to ask:
+   > "What change do you want to work on? Describe what you want to build or fix."
+
+   From their description, derive a kebab-case name (e.g., "add user authentication" → `add-user-auth`).
+
+   **IMPORTANT**: Do NOT proceed without understanding what the user wants to build.
+
+2. **Create the change directory**
+   ```bash
+   openspec new change "<name>"
+   ```
+   This creates a scaffolded change in the planning home resolved by the CLI with `.openspec.yaml`.
+
+3. **Get the artifact build order**
+   ```bash
+   openspec status --change "<name>" --json
+   ```
+   Parse the JSON to get:
+   - `applyRequires`: array of artifact IDs needed before implementation (e.g., `["tasks"]`)
+   - `artifacts`: list of all artifacts with their status and dependencies
+   - `planningHome`, `changeRoot`, `artifactPaths`, and `actionContext`: path and scope context. Use these instead of assuming repo-local paths.
+
+4. **Create artifacts in sequence until apply-ready**
+
+   Use the **TodoWrite tool** to track progress through the artifacts.
+
+   Loop through artifacts in dependency order (artifacts with no pending dependencies first):
+
+   a. **For each artifact that is `ready` (dependencies satisfied)**:
+      - Get instructions:
+        ```bash
+        openspec instructions <artifact-id> --change "<name>" --json
+        ```
+      - The instructions JSON includes:
+        - `context`: Project background (constraints for you - do NOT include in output)
+        - `rules`: Artifact-specific rules (constraints for you - do NOT include in output)
+        - `template`: The structure to use for your output file
+        - `instruction`: Schema-specific guidance for this artifact type
+        - `resolvedOutputPath`: Resolved path or pattern to write the artifact
+        - `dependencies`: Completed artifacts to read for context
+      - Read any completed dependency files for context
+      - Create the artifact file using `template` as the structure and write it to `resolvedOutputPath`
+      - Apply `context` and `rules` as constraints - but do NOT copy them into the file
+      - Show brief progress: "Created <artifact-id>"
+
+   b. **Continue until all `applyRequires` artifacts are complete**
+      - After creating each artifact, re-run `openspec status --change "<name>" --json`
+      - Check if every artifact ID in `applyRequires` has `status: "done"` in the artifacts array
+      - Stop when all `applyRequires` artifacts are done
+
+   c. **If an artifact requires user input** (unclear context):
+      - Use **AskUserQuestion tool** to clarify
+      - Then continue with creation
+
+5. **Show final status**
+   ```bash
+   openspec status --change "<name>"
+   ```
+
+**Output**
+
+After completing all artifacts, summarize:
+- Change name and location
+- List of artifacts created with brief descriptions
+- What's ready: "All artifacts created! Ready for implementation."
+- Prompt: "Run `/opsx:apply` to start implementing."
+
+**Artifact Creation Guidelines**
+
+- Follow the `instruction` field from `openspec instructions` for each artifact type
+- The schema defines what each artifact should contain - follow it
+- Read dependency artifacts for context before creating new ones
+- Use `template` as the structure for your output file - fill in its sections
+- **IMPORTANT**: `context` and `rules` are constraints for YOU, not content for the file
+  - Do NOT copy `<context>`, `<rules>`, `<project_context>` blocks into the artifact
+  - These guide what you write, but should never appear in the output
+
+**Guardrails**
+- Create ALL artifacts needed for implementation (as defined by schema's `apply.requires`)
+- Always read dependency artifacts before creating a new one
+- If context is critically unclear, ask the user - but prefer making reasonable decisions to keep momentum
+- If a change with that name already exists, ask if user wants to continue it or create a new one
+- Verify each artifact file exists after writing before proceeding to next
+````
+
 ## File: data.js
-```javascript
+````javascript
 export const YOGA_POSES = [
   {
     id: "mountain-pose",
@@ -468,10 +1956,10 @@ export const YOGA_ROUTINES = [
     ]
   }
 ];
-```
+````
 
 ## File: index.css
-```css
+````css
 /* ==========================================================================
    Quantum Yoga - Premium Design System & Stylesheet
    ========================================================================== */
@@ -3457,18 +4945,5121 @@ td,
   0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
   40% { transform: scale(1); opacity: 1; }
 }
+````
+
+## File: openspec/changes/add-whatsapp-functionality/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-21
+````
+
+## File: openspec/changes/add-whatsapp-functionality/design.md
+````markdown
+## Context
+
+Quantum Yoga manages student records, billing schedules, and communication through its central database state. The app currently supports email notifications (via Resend) and admin-student messaging (via Gmail OAuth). This design details the integration of WhatsApp as a primary notification channel for alerts, billing links, and booking confirmations.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Provide direct WhatsApp Web action shortcuts (`https://wa.me/`) from the Admin CRM board, lead details modal, and student lists to start chats with pre-filled templates.
+- Dispatch automatic WhatsApp reminders upon class booking, rescheduling, and new/overdue invoice creation.
+- Add system settings in the admin panel to toggle WhatsApp globally, specify API keys, and custom templates.
+
+**Non-Goals:**
+- A custom interactive WhatsApp inbox in the application dashboard (we will redirect admins to WhatsApp Web/Desktop instead).
+- Verification of phone number delivery status within the platform.
+
+## Decisions
+
+### 1. Integration Method
+- **Decision:** Use a lightweight WhatsApp API proxy endpoint `/api/send-whatsapp` in `server.js`. The proxy will send HTTP requests to a configurable service provider (e.g. Twilio API or custom REST gateway).
+- **Rationale:** Keeps configuration details (API keys) secure on the backend and allows flexible provider replacement without client-side modifications.
+
+### 2. Live Chat Redirection
+- **Decision:** Implement client-side redirection using `https://wa.me/<phone>?text=<message>` for custom admin-initiated messages.
+- **Rationale:** Zero cost, requires no API credits, and works seamlessly on both mobile (WhatsApp App) and desktop (WhatsApp Web or Desktop Client).
+
+### 3. Settings Schema Extension
+- **Decision:** Save configuration in the global DB state under a new `whatsappSettings` object:
+  ```json
+  "whatsappSettings": {
+    "enabled": false,
+    "apiKey": "",
+    "gatewayUrl": "",
+    "templates": {
+      "welcome": "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
+      "invoice": "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
+      "booking": "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}."
+    }
+  }
+  ```
+
+## Risks / Trade-offs
+
+- **[Risk] Invalid or Unformatted Phone Numbers** → **Mitigation:** Sanitize phone numbers on the frontend/backend by stripping spaces, dashes, and letters, ensuring the country code prefix is added (e.g., `+91` for Indian locale).
+- **[Risk] High API Cost for Automated WhatsApp Gateways** → **Mitigation:** Provide a global toggle in settings to enable/disable automated WhatsApp alerts, falling back to free standard email alerts.
+````
+
+## File: openspec/changes/add-whatsapp-functionality/proposal.md
+````markdown
+## Why
+
+Students often miss email notifications (invoices, class reminders, booking confirmations) due to cluttered inboxes. Integrating WhatsApp communication will significantly improve response rates for pending invoices, lower session cancellation rates through timely alerts, and streamline admin communication with CRM leads.
+
+## What Changes
+
+- Add **WhatsApp Notifications** capability to send automatic alerts (welcomes, class booking confirmations, payment reminders with payment links) directly to student phone numbers.
+- Add **Admin WhatsApp Hub / Quick Link Actions** within the CRM and Invoices dashboard to initiate WhatsApp chats with students/leads.
+- Add **WhatsApp Settings Panel** in Admin System Settings to configure WhatsApp integration credentials.
+
+## Capabilities
+
+### New Capabilities
+- `whatsapp-communication`: Captures the configuration, template message schemas, and workflow triggers for sending automated notifications and launching chats with members and leads via WhatsApp.
+
+### Modified Capabilities
+- `billing-payments`: Integrating WhatsApp automated reminders for invoice generation and overdue alerts.
+- `class-scheduling`: Integrating WhatsApp notifications for booking confirmations, rescheduling, and cancellations.
+- `leads-crm`: Integrating WhatsApp chat shortcut links inside the swimlane Kanban board and CRM logs to easily communicate with prospects.
+
+## Impact
+
+- **Backend (server.js):** Additional endpoint proxies for WhatsApp messaging providers (e.g., Twilio API or custom gateway API), template storage, and webhooks.
+- **Frontend (index.html, index.css):** Configuration controls under Admin > Settings, new WhatsApp action buttons (with icons) next to invoice listings, lead cards, and appointment schedules.
+- **State Schema:** Integration keys (VPA details, active WhatsApp toggle, API key, template strings) in the DB state.
+````
+
+## File: openspec/changes/add-whatsapp-functionality/specs/billing-payments/spec.md
+````markdown
+# Billing, Invoices & Payments Delta Spec
+
+## ADDED Requirements
+
+### Requirement: WhatsApp Invoice Reminders
+The system SHALL support sending automatic invoice notifications and overdue alerts via WhatsApp when a new invoice is created or becomes overdue, containing details like Invoice ID, due date, amount, and the direct payment link.
+
+#### Scenario: Send invoice notice on creation
+- **WHEN** a new invoice is issued for a member and WhatsApp notifications are enabled
+- **THEN** the system SHALL send a WhatsApp message to the member's phone number containing the invoice details and payment link
+````
+
+## File: openspec/changes/add-whatsapp-functionality/specs/class-scheduling/spec.md
+````markdown
+# Class Scheduling & Batches Delta Spec
+
+## ADDED Requirements
+
+### Requirement: WhatsApp Appointment Alert Triggers
+The system SHALL dispatch a WhatsApp notification to the member when their private coaching session is booked, rescheduled, or cancelled.
+
+#### Scenario: Dispatch alert on booking appointment
+- **WHEN** an appointment is successfully scheduled and WhatsApp notifications are enabled
+- **THEN** the system SHALL send a WhatsApp message to the member confirming the date, time, and target routine
+
+#### Scenario: Dispatch alert on rescheduling appointment
+- **WHEN** an appointment is rescheduled and WhatsApp notifications are enabled
+- **THEN** the system SHALL send a WhatsApp message to the member confirming the updated appointment details
+````
+
+## File: openspec/changes/add-whatsapp-functionality/specs/leads-crm/spec.md
+````markdown
+# Lead Management & CRM Delta Spec
+
+## ADDED Requirements
+
+### Requirement: CRM WhatsApp Quick Action
+The system SHALL display a WhatsApp chat button on lead cards within the Kanban swimlane board and inside the Lead details modal to allow administrators to directly interact with prospects.
+
+#### Scenario: Admin starts chat from Kanban card
+- **WHEN** an admin clicks the WhatsApp icon on a lead card in the CRM swimlane board
+- **THEN** the system SHALL launch the WhatsApp Web interface with the lead's phone number prepopulated with an introductory greeting template
+````
+
+## File: openspec/changes/add-whatsapp-functionality/specs/whatsapp-communication/spec.md
+````markdown
+# WhatsApp Communication Spec
+
+This capability governs the WhatsApp message templates, administrative configuration settings, API proxying, and automated alert dispatches for client/instructor updates.
+
+## ADDED Requirements
+
+### Requirement: WhatsApp System Settings
+The system SHALL permit administrators to configure WhatsApp integration settings in the Admin System Settings panel, including a global toggle to enable/disable WhatsApp notifications, a provider API key input, and custom notification templates.
+
+#### Scenario: Admin configures WhatsApp settings
+- **WHEN** the admin visits the System Settings page, enters a valid API key, toggles "Enable WhatsApp Notifications" to active, and saves the settings
+- **THEN** the system SHALL store the WhatsApp configuration keys in the database state and display a success indicator
+
+### Requirement: Send Custom WhatsApp Message
+The system SHALL provide a backend endpoint to dispatch WhatsApp message payloads through a configured provider (e.g. Twilio API or placeholder gateway) using templates with placeholder variables.
+
+#### Scenario: Dispatch WhatsApp notification
+- **WHEN** a system event triggers a notification (e.g., booking confirmation) and WhatsApp notifications are enabled
+- **THEN** the system SHALL resolve the message placeholders and post the payload to the WhatsApp provider gateway endpoint
+
+### Requirement: Admin Chat Shortcut Action
+The system SHALL display a WhatsApp Chat shortcut button next to any member or lead phone number to allow admins to instantly launch a pre-populated chat using WhatsApp Web (`https://wa.me/`).
+
+#### Scenario: Admin initiates WhatsApp chat
+- **WHEN** the admin clicks the WhatsApp icon/button next to a member's phone number
+- **THEN** the system SHALL open a new browser tab navigating to `https://wa.me/<phone_number>?text=<encoded_prepopulated_message>`
+````
+
+## File: openspec/changes/add-whatsapp-functionality/tasks.md
+````markdown
+## 1. Backend Integration & Routing
+
+- [x] 1.1 Extend the database state schema to include the `whatsappSettings` configuration object (enabled state, API key, gateway URL, and template text strings).
+- [x] 1.2 Implement the `/api/send-whatsapp` Express POST route in `server.js` to dispatch mock or production HTTP requests to the WhatsApp provider endpoint.
+
+## 2. Admin System Settings
+
+- [x] 2.1 Add the WhatsApp Integration Settings interface to the Admin Settings panel in `index.html` (global toggle, API credentials input, template editor).
+- [x] 2.2 Bind DOM event handlers to save WhatsApp Settings changes to the database state on update.
+
+## 3. Automated Notification Triggers
+
+- [x] 3.1 Integrate a WhatsApp notification trigger inside the manual invoicing tool code when an invoice is issued or updated.
+- [x] 3.2 Integrate WhatsApp triggers inside the appointment booking, rescheduling, and cancellation event handlers.
+
+## 4. UI Dashboard WhatsApp Shortcut Actions
+
+- [x] 4.1 Update the CRM Swimlane Kanban cards in `index.html`/JavaScript to include WhatsApp direct-chat launch icons next to prospect phone numbers.
+- [x] 4.2 Add WhatsApp launch controls next to student profiles, appointment lists, and outstanding billing ledger items.
+````
+
+## File: openspec/changes/admin-default-theme/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/admin-default-theme/design.md
+````markdown
+## Context
+
+Currently, the visual theme defaults to "Midnight Aura" (dark mode) for all guest users and newly registered users. There is no central configuration allowing administrators to change the default theme site-wide. We need to introduce an administrative system default theme selector within the Admin control panel that persists the default theme choice, applying it dynamically to guest users and users who haven't saved a custom preference.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Add a "System Settings" sub-panel in the Admin control panel with a "System Default Theme" selector.
+- Persist the selected default theme in LocalStorage under the key `qy_site_default_theme` (defaulting to `midnight` if empty).
+- Dynamically apply the site default theme to all guest users and unauthenticated sessions on load/logout.
+- Fallback user preference checks to the site default theme for any user who does not have an explicit `theme` choice saved in their user object.
+
+**Non-Goals:**
+- Modifying visual themes or adding new styles beyond the existing ones (Midnight Aura, Ethereal Light, Zen Sunset).
+- Allowing non-admin users to change site-wide configuration.
+
+## Decisions
+
+### 1. Dedicated System Settings Sub-Tab
+- **Decision**: Add a new sub-tab named "System Settings" in the Admin interface next to "User Management" and "Reports & Analytics".
+- **Rationale**: Keeps settings clean, separate from operational data like reports and user logs, and follows the existing tab-switching architecture.
+
+### 2. User Theme Customization Fallback
+- **Decision**: Set the theme field on registration to an empty string (`theme: ""`) or leave it undefined to signify "System Default". When loading a user profile, apply `user.theme || getSiteDefaultTheme()`.
+- **Rationale**: If the administrator changes the default theme, all users who have not explicitly customized their theme preference will automatically adopt the new site-wide theme. Once a user selects a custom preference in their profile tab, it overrides the default.
+
+## Risks / Trade-offs
+
+- **[Risk]** The site-wide default theme doesn't apply instantly to guest pages or when logged out.
+  - *Mitigation*: Ensure `checkSession()` and `updateUIForLogout()` explicitly invoke `applyTheme(getSiteDefaultTheme())`.
+````
+
+## File: openspec/changes/admin-default-theme/proposal.md
+````markdown
+## Why
+
+Currently, site-wide themes default strictly to Midnight Aura for guest users and newly registered users. Giving administrators control over the default system theme allows them to set a custom site-wide aesthetic (such as Ethereal Light or Zen Sunset) that applies to all unauthenticated users and new users, enhancing central customization control.
+
+## What Changes
+
+- Add a Default Theme configuration control (dropdown select) within the Admin dashboard panel.
+- Save the configured default theme persistently in LocalStorage (under the key `qy_site_default_theme`).
+- Automatically apply this admin-configured default theme for guest users/unauthenticated sessions on page load and logout.
+- Apply the admin-configured default theme immediately to any logged-in user who does not have an overriding custom theme preference saved in their profile.
+
+## Capabilities
+
+### New Capabilities
+- `admin-default-theme`: Allows administrative control over the default site-wide visual theme for guest users and users who have not set a custom preference.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to add the system default theme selector dropdown in the Admin dashboard panel.
+- Modifies `app.js` to process the default site-wide theme configuration, persist it in LocalStorage, and apply it dynamically.
+````
+
+## File: openspec/changes/admin-default-theme/specs/admin-default-theme/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Admin Dashboard Default Theme Customization Control
+The system SHALL display a visual theme selector dropdown (Midnight Aura, Ethereal Light, Zen Sunset) inside the admin dashboard panel for authenticated administrators.
+
+#### Scenario: Admin views the dashboard to manage system defaults
+- **WHEN** the user is logged in as the administrator and views the Admin Dashboard
+- **THEN** the system SHALL render a dropdown selector labeled "System Default Theme" populated with the visual theme options.
+
+### Requirement: System Default Theme Storage Persistence
+When the administrator selects an alternative theme from the system default theme selector, the system SHALL save this setting persistently inside LocalStorage under the key `qy_site_default_theme`.
+
+#### Scenario: Admin updates the system default theme
+- **WHEN** the administrator selects "Zen Sunset" from the default theme dropdown
+- **THEN** the system SHALL save the value "sunset" to LocalStorage under the key `qy_site_default_theme`.
+
+### Requirement: Guest Theme Initialization using System Default
+Upon page load or logout, the system SHALL check for the admin-configured default theme in LocalStorage under the key `qy_site_default_theme` and apply it immediately. If no setting is found, the system SHALL default to Midnight Aura.
+
+#### Scenario: Guest user lands on website with light default configuration
+- **WHEN** a guest user loads the landing page and the value of `qy_site_default_theme` in LocalStorage is "light"
+- **THEN** the system SHALL immediately apply the Ethereal Light styles by adding the `theme-light` class to the root HTML element.
+
+### Requirement: User Preference Fallback to System Default
+Upon user registration or user login, if the user profile does not contain a custom overriding theme choice, the system SHALL fall back to and apply the current admin-configured default theme.
+
+#### Scenario: Registering a new user with an active system default theme
+- **WHEN** a new user account is registered and the current admin default theme is set to "sunset"
+- **THEN** the system SHALL apply the Zen Sunset visual theme on startup while preserving their choice to customize it later.
+````
+
+## File: openspec/changes/admin-default-theme/tasks.md
+````markdown
+## 1. UI Implementation
+
+- [x] 1.1 Add the "System Settings" sub-tab button `#admin-settings-tab-btn` and settings panel `#admin-settings-panel` (with default theme dropdown selector `#admin-default-theme-select`) to the admin section in `index.html`.
+
+## 2. Logic & Controller Integration
+
+- [x] 2.1 Bind DOM elements for `adminSettingsTabBtn`, `adminSettingsPanel`, and `adminDefaultThemeSelect` in `app.js`.
+- [x] 2.2 Extend the `setAdminSubTab(panelName)` function in `app.js` to support tab-switching logic for the "settings" panel.
+- [x] 2.3 Implement the `getSiteDefaultTheme()` utility function and update new user registration data to save an empty string theme option (`theme: ""`) signifying inheritance of site defaults.
+- [x] 2.4 Update `checkSession()`, `updateUIForLogin()`, and `updateUIForLogout()` to dynamically retrieve and apply `getSiteDefaultTheme()` when no custom user preference is present.
+- [x] 2.5 Bind the change listener for `#admin-default-theme-select` to write selection updates to LocalStorage under the key `qy_site_default_theme` and re-apply styles in real-time.
+
+## 3. Verification
+
+- [x] 3.1 Verify admin-initiated default theme shifts save correctly in LocalStorage.
+- [x] 3.2 Verify dynamic system-wide styling fallback changes for guests, unregistered sessions, and logged-in users who do not have custom overrides.
+````
+
+## File: openspec/changes/admin-users-reports/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/admin-users-reports/design.md
+````markdown
+## Context
+
+The Quantum Yoga application currently supports client-side authentication, favoriting poses, and tracking routine completion logs using browser `LocalStorage`. However, there is no administrative dashboard or metrics tracking. We need to introduce an admin interface for overseeing user profiles, managing user accounts, and generating aggregate statistics.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Seed a default administrator account (`admin@quantumyoga.com` / `adminpass`) automatically in `LocalStorage` if it does not exist.
+- Add an administrative view (`#admin-section`) with sub-tabs for User Management and Reports & Analytics.
+- Render a user table listing all accounts (name, email, completed count, favorites count) with options to inspect a user's profile or delete their account.
+- Allow viewing any user's profile in a read-only modal (showing their specific favorites and completion history).
+- Display aggregate metrics cards: Total registered users, total routines completed, most popular routine, and most favorited pose.
+- Display a unified chronological completion log showing completions across all user accounts.
+
+**Non-Goals:**
+- Backend integration or production security authentication.
+- Modifying routines/poses databases dynamically.
+
+## Decisions
+
+### 1. Seeding Location
+- **Decision**: Initialize the default admin user during the startup sequence in `app.js` (inside user storage initialization logic).
+- **Rationale**: Ensures that the administrative credentials are ready for use immediately upon page load without manual database setup.
+- **Alternative considered**: Requiring the administrator to register. Rejected because registration shouldn't allow regular users to gain administrative roles.
+
+### 2. Profile Inspection
+- **Decision**: Render inspected user profiles inside a modal overlay (`#admin-inspect-modal`), reusing the layout structure of the `#profile-section`.
+- **Rationale**: Reuses design patterns and keeps code concise while keeping the admin dashboard layout clean.
+- **Alternative considered**: Direct inline expansion in the user table. Rejected because tables get cluttered when displaying list history.
+
+### 3. Analytics Computations
+- **Decision**: Compute analytics dynamically in JS from the `qy_users` LocalStorage array whenever the Reports sub-tab is clicked.
+- **Rationale**: Since all state is local, computing metrics on-the-fly ensures real-time accuracy with minimal overhead.
+- **Alternative considered**: Storing summary analytics state. Rejected because keeping summary data synchronized with user deletions/additions adds unnecessary complexity.
+
+## Risks / Trade-offs
+
+- **[Risk]** Administrator accidentally deletes the admin account.
+  - *Mitigation*: Prevent the admin user row in User Management from showing a "Delete" button.
+- **[Risk]** Plaintext credentials in mock local database.
+  - *Mitigation*: Add warning comments in the code highlighting that this is a mockup database for design verification.
+````
+
+## File: openspec/changes/admin-users-reports/proposal.md
+````markdown
+## Why
+
+Currently, Quantum Yoga only has user-facing views for registration, profile management, and routine/pose directory interactions. There is no mechanism for administrators to oversee registered users, inspect individual user profiles (favorites, routine history), or view aggregate engagement metrics and engagement reports. Adding administrative oversight is essential to understand usage trends and manage user accounts.
+
+## What Changes
+
+- Introduce a new special administrative user account (`admin@quantumyoga.com`) that is initialized automatically if it doesn't exist.
+- Add an "Admin Panel" tab/navigation link in the header, visible only to authenticated administrator users.
+- Implement an administrative view/dashboard (`#admin-section`) featuring two main sub-panels:
+  - **User Management**: A table displaying all registered users (name, email, stats) with controls to view individual profiles (viewing their favorites/history) and delete users.
+  - **Reports & Analytics**: Aggregate engagement reports (e.g., total registrations, popular routines, most favorited poses, and a log of all routine completions).
+
+## Capabilities
+
+### New Capabilities
+- `admin-dashboard`: Establishes the administrator dashboard containing user account oversight, user-specific profile inspection, and user engagement report generation.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to add the `#admin-section` panel, sub-tabs for User Management and Analytics, and header nav updates.
+- Modifies `app.js` to seed the admin account, manage admin session rendering, construct the admin-only interface, and handle user deletion and data compilation.
+- Modifies `index.css` to add premium glassmorphic styling for tables, analytics graphs/metrics cards, and admin tab navigations.
+````
+
+## File: openspec/changes/admin-users-reports/specs/admin-dashboard/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Admin Account Seeding
+The system SHALL check LocalStorage on startup and automatically seed a default administrator account if it does not already exist.
+- Email: `admin@quantumyoga.com`
+- Password: `adminpass`
+- Name: `Administrator`
+
+#### Scenario: First-time application load
+- **WHEN** the user opens the application for the first time
+- **THEN** the system SHALL create the default administrator user entry inside the LocalStorage database.
+
+### Requirement: Admin Header Navigation Visibility
+The system SHALL show the "Admin Panel" navigation link and tab pill only when the logged-in user is the seeded administrator (`admin@quantumyoga.com`).
+- For regular users or guests, these navigation controls MUST remain hidden.
+
+#### Scenario: Admin logging in
+- **WHEN** the user logs in as `admin@quantumyoga.com` with `adminpass`
+- **THEN** the system SHALL display the "Admin Panel" nav link in the header and the "Admin Panel" tab pill in the SPA layout.
+
+#### Scenario: Non-admin logging in
+- **WHEN** the user logs in with a regular client account
+- **THEN** the system SHALL NOT display the "Admin Panel" navigation links.
+
+### Requirement: Admin Panel Main View
+The system SHALL render a dedicated Admin dashboard when the "Admin Panel" tab is active. The Admin dashboard SHALL contain sub-tabs to switch between "User Management" and "Reports & Analytics".
+
+#### Scenario: Selecting Admin Panel tab
+- **WHEN** the logged-in admin clicks the "Admin Panel" nav link or tab pill
+- **THEN** the system SHALL display the `#admin-section` container and activate the User Management sub-panel by default.
+
+### Requirement: User Management oversight
+The system SHALL display a tabular list of all registered user accounts (except the active admin user themselves) with administrative actions.
+- Action "View Profile": SHALL display a modal detail overlay rendering the selected user's name, email, favorited poses list, and completed routines list.
+- Action "Delete": SHALL remove the selected user from the LocalStorage database and refresh the table view.
+
+#### Scenario: Inspecting regular user profile
+- **WHEN** the administrator clicks the "View Profile" button on a user row
+- **THEN** the system SHALL open a read-only modal showing that user's specific stats, favorites, and completions.
+
+#### Scenario: Deleting regular user
+- **WHEN** the administrator clicks the "Delete" button on a user row and confirms the deletion
+- **THEN** the system SHALL delete the user record from LocalStorage and refresh the user management table.
+
+### Requirement: Reports & Analytics Generation
+The system SHALL compile and display aggregate analytics metrics and a unified completion log across all registered users.
+- Aggregate metrics cards: Total Users, Total Completions, Most Completed Routine, and Most Favorited Pose.
+- Engagement log: A chronological table listing all completions (User Name, Routine Name, Timestamp).
+
+#### Scenario: Viewing analytics dashboard
+- **WHEN** the administrator clicks the "Reports & Analytics" sub-tab in the Admin Panel
+- **THEN** the system SHALL calculate the aggregate statistics from all user objects in LocalStorage and populate the metrics cards and completions history table.
+````
+
+## File: openspec/changes/admin-users-reports/tasks.md
+````markdown
+## 1. UI Layout Updates
+
+- [x] 1.1 Add the "Admin Panel" header nav link and tab button in `index.html`.
+- [x] 1.2 Create the `#admin-section` container in `index.html` with sub-tabs for User Management and Reports & Analytics.
+- [x] 1.3 Add a glassmorphic user profile inspection modal `#admin-inspect-modal` in `index.html`.
+
+## 2. Seeding & Tab Navigation Controllers
+
+- [x] 2.1 Implement administrator account seeding logic on initialization in `app.js`.
+- [x] 2.2 Add admin role check to determine the visibility of administrative navigation controls.
+- [x] 2.3 Implement SPA navigation logic for `#admin-section` and sub-tab selection.
+
+## 3. User Management & Reports Logic
+
+- [x] 3.1 Implement the User Management table renderer to list regular users and their metrics in `app.js`.
+- [x] 3.2 Implement "View Profile" overlay modal inspection handler in `app.js`.
+- [x] 3.3 Implement "Delete User" account removal and table refresh handler in `app.js`.
+- [x] 3.4 Implement live engagement reports computation (stats cards and completions log) in `app.js`.
+
+## 4. Styling & Verification
+
+- [x] 4.1 Design premium glassmorphic tables, metrics cards, completion logs, and sub-nav layouts in `index.css`.
+- [x] 4.2 Verify administrator login, user management oversight, profile inspection, user deletion, and reports compilation in the browser.
+````
+
+## File: openspec/changes/all-in-one-dashboard/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/all-in-one-dashboard/design.md
+````markdown
+## Context
+
+The current administrative panel is divided into separate list tables for users, analytics metrics, and general settings. An executive admin landing dashboard is missing. We will design a unified dashboard page containing KPI trackers, daily insights cards, chronological activity logs, and financial snapshots to provide a single cockpit view for studio administrators.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Insert an "Overview Dashboard" sub-tab in the Admin Console as the default view.
+- Render visual KPI cards summarizing members count, revenue totals, scheduled appointments, and pending invoice counts.
+- Build a daily insights generator card containing recommendations on class capacity and billing operations.
+- Construct unified timelines showing upcoming bookings and payment adjustments across the studio.
+
+**Non-Goals:**
+- Integrating external email services for reminders (warnings are simulated on-screen alerts).
+- Writing complex backend aggregation routines (computations are handled on-the-fly from LocalStorage).
+
+## Decisions
+
+### 1. Default Sub-Tab Integration
+- **Decision**: Add a new sub-tab button `#admin-overview-tab-btn` at the beginning of the admin sub-navigation in `index.html`, routing administrators to `#admin-overview-panel` by default.
+- **Rationale**: Elevates high-level metrics to the first view, aligning with modern dashboard management tools.
+
+### 2. Live Aggregated Metric Widgets
+- **Decision**: Create a summary function in `app.js` that computes counts and sums:
+  - Active Members: Length of `qy_users` excluding the admin email.
+  - Total Revenue: Sum of paid invoices inside `qy_payments`.
+  - Today's Classes/Sessions: Merged schedule items from `qy_appointments` and active user batch classes occurring today.
+  - Outstanding Payments: Unpaid records inside `qy_payments`.
+- **Rationale**: Computing metrics on-the-fly ensures statistics remain fully synchronized with database states.
+
+### 3. Client-Side Rules-Based Insights
+- **Decision**: Implement a rules utility in `app.js` that checks for specific system warnings:
+  - Generates alert cards if any active batch has less than 2 members.
+  - Generates prompt alerts listing outstanding balances that have passed their payment due date.
+- **Rationale**: Translates standard tables into high-value actionable guidance.
+
+## Risks / Trade-offs
+
+- **[Risk]** Heavy metrics calculations on huge LocalStorage arrays could block the main UI thread.
+  - *Mitigation*: Cap records or only run metrics calculations when the administrator actively opens the Admin Overview tab.
+````
+
+## File: openspec/changes/all-in-one-dashboard/proposal.md
+````markdown
+## Why
+
+Quantum Yoga administrators currently lack a unified overview dashboard to monitor studio business and daily operations in a single view. The all-in-one dashboard creates a central administrative landing page providing quick snapshot metrics, daily business insights, upcoming student appointments, and recent payment logs—enabling smarter studio management.
+
+## What Changes
+
+- **Admin Landing Dashboard**: Add an "Overview Dashboard" as the primary tab inside the Admin Console, displaying visual summary widgets and active feeds.
+- **Real-Time Snapshot Widgets**: Display key performance indicators (KPIs) like total active members, revenue collected, scheduled appointments today, and outstanding payments.
+- **Daily Insights Generator**: Render automated recommendations and analytics (e.g., peak batch times, pending follow-ups, or action items).
+- **Consolidated Activity Feeds**: Show unified calendars of upcoming client bookings and recent payment/invoice updates in a clean timeline view.
+
+## Capabilities
+
+### New Capabilities
+- `all-in-one-dashboard`: Introduces a consolidated overview dashboard inside the admin control panel containing KPI stats, daily insights, consolidated schedules, and recent payment logs.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to inject the new administrative "Overview Dashboard" panel, including widget containers, feed sections, and styling grids.
+- Modifies `app.js` to compute real-time metrics from `qy_users`, `qy_batches`, `qy_appointments`, and `qy_payments`, generating dynamic daily recommendations and populating admin lists.
+````
+
+## File: openspec/changes/all-in-one-dashboard/specs/all-in-one-dashboard/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Administrative Overview Dashboard Landing
+The system SHALL provide a central overview dashboard inside the Admin Panel that serves as the default landing view.
+
+#### Scenario: Admin accesses overview dashboard
+- **WHEN** the admin user navigates to the Admin Panel
+- **THEN** the system SHALL load and display the "Overview Dashboard" sub-tab and its associated statistics widgets by default.
+
+### Requirement: Real-time Studio Performance KPIs
+The system SHALL calculate and render real-time summary widgets showing key metrics representing the studio's health.
+
+#### Scenario: Admin reviews studio statistics
+- **WHEN** the admin views the Overview Dashboard
+- **THEN** the system SHALL query local storage databases (users, batches, appointments, payments) and output numerical counters for total active members, monthly studio revenue, scheduled sessions today, and unpaid dues.
+
+### Requirement: Dynamic Studio Insights Recommendations
+The system SHALL generate and display business insights based on current cohort, schedule, or financial logs.
+
+#### Scenario: Dashboard flags overdue payments reminder prompt
+- **WHEN** there are unpaid invoices that have passed their due dates in the database
+- **THEN** the system SHALL generate an insight card suggesting the administrator send payment reminders to the affected users.
+
+### Requirement: Consolidated Operational Timelines
+The system SHALL aggregate and display chronological feeds of upcoming class timetables and recent payment records.
+
+#### Scenario: Admin checks studio schedules and billing logs
+- **WHEN** the admin checks the dashboard feeds
+- **THEN** the system SHALL query, sort, and display a list of all upcoming member appointments and a list of recently updated subscription invoice actions.
+````
+
+## File: openspec/changes/all-in-one-dashboard/tasks.md
+````markdown
+## 1. UI Structure Integration
+
+- [x] 1.1 Insert the "Overview Dashboard" sub-tab button (`#admin-overview-tab-btn`) into the Admin navigation header in `index.html`.
+- [x] 1.2 Add the default active dashboard panel (`#admin-overview-panel`) containing grid grids for KPI stat boxes, daily insights containers, and feed timelines.
+- [x] 1.3 Update other admin panels (User Management, Reports, Settings) to start as inactive and hide appropriately.
+
+## 2. CSS Styling & Layout Polish
+
+- [x] 2.1 Add grid CSS styles for KPI cards, giving them distinctive visual states, hover effects, and rounded glass boundaries.
+- [x] 2.2 Define CSS for the activity timeline, payment streams, and insight alert cards, using distinct color tokens (Midnight, Ethereal, Sunset) for priority types.
+
+## 3. Dynamic Aggregation & Rules Logic
+
+- [x] 3.1 Bind navigation click listeners in `app.js` to route and execute the administrative dashboard renderer `renderAdminOverview()`.
+- [x] 3.2 Write logic to read LocalStorage records (`qy_users`, `qy_payments`, `qy_batches`, `qy_appointments`) and update KPI number displays.
+- [x] 3.3 Create the rules checks generator to append recommendations (e.g. low class enrollments or unpaid balance warnings).
+- [x] 3.4 Query and render the merged scheduling timeline and the payment/invoice changes feed, capping items to the top 5 records.
+
+## 4. Manual Verification & Verification
+
+- [x] 4.1 Log in as the administrator and verify that the Admin Panel defaults to loading the Overview tab.
+- [x] 4.2 Validate that the metrics recalculate and the timelines dynamically update when user records or payment invoices are modified.
+````
+
+## File: openspec/changes/appointment-scheduling/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/appointment-scheduling/design.md
+````markdown
+## Context
+
+Quantum Yoga needs to provide scheduling options for personalized training sessions and class routines. We will implement an appointment manager allowing students to book, reschedule, and cancel yoga appointments, and giving instructors a central view to track all scheduled sessions.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Add an "Appointments" sub-section inside the student's Profile section.
+- Persist booking records in LocalStorage under the key `qy_appointments`.
+- Support new session booking, rescheduling, and cancellation options for both students and admins.
+- Add an "Appointments" sub-tab and panel inside the Admin dashboard.
+
+**Non-Goals:**
+- Integrating with external calendar platforms (Google Calendar, Outlook) or payment gateways.
+
+## Decisions
+
+### 1. Data Schema & Model
+- **Decision**: Store appointments under `qy_appointments` in LocalStorage as objects containing appointment ID, student email, selected routine, date (YYYY-MM-DD), time (HH:MM), and status (`scheduled`, `rescheduled`, `cancelled`).
+- **Rationale**: Keeps database transactions simple and client-side filtering straightforward.
+
+### 2. Dialog Modal Booking UI
+- **Decision**: Create an appointment dialog modal (`#appointment-modal`) in the UI that is reused for both booking new sessions and rescheduling existing ones.
+- **Rationale**: Standardizes interface rendering, minimizes CSS bloat, and guarantees a consistent layout.
+
+## Risks / Trade-offs
+
+- **[Risk]** Users booking slots that overlap or conflict.
+  - *Mitigation*: Implement client-side validation that checks for duplicate bookings matching the same student email, date, and time.
+````
+
+## File: openspec/changes/appointment-scheduling/proposal.md
+````markdown
+## Why
+
+Yoga teachers and studio administrators need a central tool to schedule, reschedule, and track student sessions (e.g., private training, routines coaching). Introducing appointment scheduling keeps busy teachers organized, helps students view upcoming and past sessions in one place, and provides flexible booking, rescheduling, and cancellation options.
+
+## What Changes
+
+- **Student Appointment Dashboard**: Add an "Appointments" panel inside the user Profile dashboard to list upcoming and past booked sessions.
+- **Self-Service Booking & Management**: Allow students to request new appointments (selecting date, time, and routine) and reschedule or cancel existing bookings.
+- **Admin Appointments Panel**: Add a new "Appointments Management" sub-tab and panel inside the Admin section to list, search, reschedule, cancel, or book sessions for any student.
+
+## Capabilities
+
+### New Capabilities
+- `appointment-scheduling`: Enables students and administrators to book, reschedule, cancel, and track upcoming and past yoga sessions, syncing schedules persistently.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to add the student appointment card lists, booking modals, and the administrative appointments management panel.
+- Modifies `app.js` to handle appointment scheduling operations, update booking statuses, and persist records in LocalStorage under the key `qy_appointments`.
+````
+
+## File: openspec/changes/appointment-scheduling/specs/appointment-scheduling/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Student Self-Service Appointment Booking
+The system SHALL provide authenticated users with controls inside their Profile dashboard to schedule new private coaching appointments.
+
+#### Scenario: User books a routine review session
+- **WHEN** the student selects "Vinyasa flow routine", date "2026-07-15", time "09:00 AM", and clicks "Schedule Appointment"
+- **THEN** the system SHALL validate the details, create the appointment in LocalStorage under the user's name, and display the booking in their upcoming sessions list.
+
+### Requirement: Appointment Cancellation and Rescheduling
+The system SHALL enable users to cancel or reschedule any upcoming appointment directly from their schedule list.
+
+#### Scenario: Student cancels a scheduled appointment
+- **WHEN** the student selects an upcoming appointment and clicks "Cancel Appointment"
+- **THEN** the system SHALL transition the appointment status to "Cancelled" and update the active timetable displays.
+
+#### Scenario: Student reschedules a scheduled appointment
+- **WHEN** the student selects an upcoming appointment, inputs a new date "2026-07-16", a new time "10:30 AM", and confirms the change
+- **THEN** the system SHALL update the date, time, and set the status to "Rescheduled" in LocalStorage.
+
+### Requirement: Admin Dashboard Session Control
+The system SHALL provide administrators with a dedicated appointment dashboard to view, reschedule, cancel, or book unlimited appointments for any registered student.
+
+#### Scenario: Admin reschedules a student session
+- **WHEN** the administrator logs into the Admin Console, opens "Appointments", locates the scheduled session for "sarah@inquiry.com", changes the date to "2026-07-20", and clicks "Save Schedule"
+- **THEN** the system SHALL update the appointment details, syncing the updated schedule back to Sarah's user profile.
+````
+
+## File: openspec/changes/appointment-scheduling/tasks.md
+````markdown
+## 1. UI Implementation
+
+- [x] 1.1 Add the student "Appointments" dashboard section `#profile-appointments-section` (including placeholders for upcoming/past sessions and request buttons) under the Profile section in `index.html`.
+- [x] 1.2 Inject the appointment booking and rescheduling dialog modal form `#appointment-modal` to `index.html`.
+- [x] 1.3 Add the "Appointments Management" sub-tab button `#admin-appointments-tab-btn` and panel `#admin-appointments-panel` to the admin section of `index.html`.
+
+## 2. Logic & Controller Integration
+
+- [x] 2.1 Bind DOM variables for student appointment list cards, booking buttons, admin tabs, and scheduler overlay fields in `app.js`.
+- [x] 2.2 Extend `setAdminSubTab(panelName)` in `app.js` to support tab-switching for the `"appointments"` panel and render active schedule tables.
+- [x] 2.3 Implement LocalStorage appointment storage functions (`loadAppointments()`, `saveAppointments()`) and booking handlers to create new student sessions.
+- [x] 2.4 Implement student-facing rescheduling dialog views and cancellation handlers in `app.js`.
+- [x] 2.5 Integrate administrator scheduler tools in `app.js` to book, reschedule, or cancel appointments for any student user.
+
+## 3. Verification
+
+- [x] 3.1 Verify student appointments list, self-service rescheduling, and cancellation updates display and persist correctly in the browser.
+- [x] 3.2 Verify admin appointments pipeline controls (rescheduling, booking for users, canceling sessions) function and synchronize in the browser.
+````
+
+## File: openspec/changes/auto-billing-appointments/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-14
+````
+
+## File: openspec/changes/auto-billing-appointments/design.md
+````markdown
+## Context
+
+The system allows both students and administrators to book private coaching sessions via a unified booking modal (`appointmentForm`). Invoices/payments are stored as JSON in LocalStorage under the key `qy_payments` and are loaded via `loadPayments()` and saved via `savePayments()`. Currently, invoicing is a manual process. This design describes how we will automate invoice generation during the booking submission flow.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Automatically generate a pending invoice of ₹1500 when booking a new private coaching appointment.
+- Leverage the existing `qy_payments` schema and billing UI to list and display the auto-generated invoices.
+- Dynamically refresh the student's dashboard billing tables and the administrator's KPI numbers immediately post-booking.
+
+**Non-Goals:**
+- Changing payment states automatically when appointments are rescheduled or cancelled.
+- Integration with external payment gateways (invoices remain in "pending" status, requiring manual UPI UTR submission as per current flow).
+- Variable pricing for coaching sessions (coaching sessions are billed at a flat rate of ₹1500).
+
+## Decisions
+
+### 1. Unified Event Trigger
+- **Decision**: Embed the auto-billing creation logic directly inside the `appointmentForm` submit listener function, specifically when a new appointment is created (non-rescheduled path).
+- **Rationale**: Since both client-side and admin-side bookings utilize the `appointmentForm` and trigger the same submission listener, this represents a single, DRY integration point.
+- **Alternatives considered**: Injecting the logic inside `saveAppointments()`. Rejected because `saveAppointments()` is also called on cancellations and reschedules, which should not trigger new invoices.
+
+### 2. Invoice Fields Definition
+- **Decision**: Populate invoice fields as follows:
+  - `id`: `"INV-" + Date.now()` (matching the prefix standard and guaranteeing uniqueness).
+  - `userEmail`: Selected student's email address.
+  - `description`: `"Private coaching class fee"`.
+  - `amount`: `"1500"`.
+  - `dueDate`: Date of the appointment (YYYY-MM-DD format).
+  - `status`: `"pending"`.
+- **Rationale**: Reuses the exact schema layout expected by the `loadPayments()`, `savePayments()`, and billing UI tables, ensuring seamless integration.
+
+## Risks / Trade-offs
+
+- **[Risk]**: Booking a session for a date in the past could lead to an immediate "overdue" state.
+  - *Mitigation*: The UI already prevents booking appointments in the past (e.g., checks `date < todayStr` and throws an alert).
+- **[Risk]**: Out-of-sync invoice if booking is cancelled.
+  - *Mitigation*: Invoices generated will remain as a record of commitment. Cancellation does not automatically delete the pending invoice, which is standard billing practice unless waived manually by the administrator.
+````
+
+## File: openspec/changes/auto-billing-appointments/proposal.md
+````markdown
+## Why
+
+Currently, when students or admins book a private coaching session, there is no automated trigger to bill the student. Automating invoice generation immediately upon booking a private coaching session ensures that coaching fees are tracked consistently, reduces administrative overhead, and ensures students receive payment links instantly.
+
+## What Changes
+
+- **Auto Invoicing**: Automatically create a new pending invoice of ₹1500 when a private coaching appointment is successfully booked by either a student or an administrator.
+- **Billing History Sync**: Ensure the automatically generated invoice immediately displays in the student's invoice history/billing panel.
+- **KPI Updates**: Automatically update the administrative billing metrics (Total Invoiced, Pending Dues, etc.) and dashboards once an appointment is booked and the corresponding invoice is generated.
+
+## Capabilities
+
+### New Capabilities
+- `appointment-billing`: Handles the automatic creation of pending invoices for private coaching appointments, updates local ledger arrays, and refreshes the student and admin billing interfaces.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+- **app.js**: Modification in the appointment booking form submission event listener to trigger invoice creation.
+- **LocalStorage**: `qy_payments` array will receive newly appended invoice objects when a private coaching appointment is created.
+- **UI Elements**: Student's Billing panel and Admin's KPI panels will dynamically update without requiring manual page reload.
+````
+
+## File: openspec/changes/auto-billing-appointments/specs/appointment-billing/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Automated Private Coaching Invoicing
+The system SHALL automatically generate a pending billing invoice for a student when a private coaching appointment is booked.
+
+#### Scenario: Student books a private coaching session
+- **WHEN** a logged-in student submits the private coaching appointment booking form
+- **THEN** the system SHALL automatically create a new pending invoice of ₹1500 with a description "Private coaching class fee" and due date equal to the selected appointment date
+- **AND** the system SHALL add this invoice to the student's list of payments in LocalStorage
+- **AND** the system SHALL render the new invoice on the student's billing dashboard
+
+#### Scenario: Administrator books a private coaching session for a student
+- **WHEN** the administrator submits the appointment booking form for a selected student
+- **THEN** the system SHALL automatically create a new pending invoice of ₹1500 with a description "Private coaching class fee" and due date equal to the selected appointment date
+- **AND** the system SHALL add this invoice to the student's list of payments in LocalStorage
+- **AND** the system SHALL update the admin dashboard billing KPIs immediately
+````
+
+## File: openspec/changes/auto-billing-appointments/tasks.md
+````markdown
+## 1. Core Logic Integration
+
+- [x] 1.1 Update `appointmentForm` submit listener in `app.js` to construct a new pending invoice of ₹1500 when booking a new appointment
+- [x] 1.2 Generate unique invoice ID using `"INV-" + Date.now()` and set `dueDate` matching the appointment date
+- [x] 1.3 Save the newly created invoice into the `qy_payments` array in LocalStorage using `savePayments`
+
+## 2. UI Updates and Dashboard Synchronization
+
+- [x] 2.1 Trigger refresh functions for client billing history (`renderClientBillingHistory()`) and client dashboard (`renderClientDashboard()`) upon successful booking
+- [x] 2.2 Trigger refresh functions for administrator dashboard overview metrics (`renderAdminOverview()`) upon successful booking
+
+## 3. Verification
+
+- [x] 3.1 Verify that booking a new private coaching session as a student generates a pending invoice of ₹1500 and updates student billing history
+- [x] 3.2 Verify that booking a new private coaching session as an admin for a student generates a pending invoice and immediately updates admin billing KPIs
+````
+
+## File: openspec/changes/auto-review-upi-payments/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-21
+````
+
+## File: openspec/changes/batch-appointment-pricing/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-15
+````
+
+## File: openspec/changes/batch-appointment-pricing/design.md
+````markdown
+## Context
+
+Quantum Yoga's batch scheduling and appointment booking systems currently have no cost model. Batches are created with only a name, instructor, and capacity; appointments have no price field at all. The Payments & Billing panel is completely disconnected from these services — admins must manually craft every invoice from scratch, guessing at the correct fee. This change introduces a pricing layer that ties into the existing LocalStorage-backed invoice system (`qy_payments`) and surfaces fees in the relevant screens.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Add a `sessionFee` (INR) field to the batch data model (`qy_batches`), settable at batch creation and editable thereafter.
+- Add a global `appointment_default_fee` setting (INR) in System Settings, stored under `qy_appointment_fee` in LocalStorage, defaulting to 0 if unset.
+- Surface these fees on the student's "My Appointments" panel and within the User Management batch column.
+- Add a "Charge for Session" quick-action in Payments & Billing that auto-populates the invoice form with the student email and the configured fee for the session type.
+- Pre-populate the amount field in the invoice modal when triggered from appointment or batch contexts.
+
+**Non-Goals:**
+- Automated recurring billing or subscription logic (outside scope of this change).
+- Dynamic per-student fee overrides at the individual appointment level.
+- Integration with external payment gateways.
+- Retroactively re-pricing or re-issuing historical invoices.
+
+## Decisions
+
+### 1. Where to Store the Appointment Default Fee
+- **Decision**: Store as a single scalar value in LocalStorage under `qy_appointment_fee` (e.g., `"1500"`), separate from `qy_upi_settings`.
+- **Rationale**: Keeps it independent and easily readable without deserializing the UPI object. Consistent with how `site_default_theme` is a separate key in the db.json seed and LocalStorage.
+- **Alternative considered**: Nesting inside `qy_upi_settings` — rejected because UPI settings are payment-gateway config, not session pricing.
+
+### 2. Where to Show the "Charge for Session" Action
+- **Decision**: Add the action as a button in the Admin Appointments Management table row (per appointment) and in the batch cohorts table row (per batch student). When clicked, it opens the existing Issue Manual Invoice form pre-filled with the student's email and the configured fee.
+- **Rationale**: Reuses the existing invoice form and flow rather than building a new billing UI; minimal surface area change.
+- **Alternative considered**: A dedicated "Batch Billing" sub-panel — too heavyweight for the current scope.
+
+### 3. Batch Session Fee — Per-Session or Per-Month
+- **Decision**: The fee is a flat per-session amount. The admin decides how frequently to invoice. No automatic scheduling.
+- **Rationale**: Keeps the model simple and consistent with how the existing manual invoice system works (amount, description, due date are admin-controlled).
+
+### 4. Backward Compatibility for Existing Batch Records
+- **Decision**: Treat missing `sessionFee` as `0` (zero / not set) in all display and invoice contexts. Existing records remain valid without a migration step.
+- **Rationale**: LocalStorage data cannot be migrated with a guarantee across browser sessions; defaulting to 0 is safe and non-breaking.
+
+## Risks / Trade-offs
+
+- **[Risk]** Admins forget to set the fee when creating a batch, leading to ₹0 invoices being auto-issued.
+  - *Mitigation*: Show a visible "₹0 — not set" placeholder in the batch table fee column; warn in the "Charge for Session" flow if fee is 0.
+- **[Risk]** The Invoice form prefill is overridden by the user before submitting, causing an incorrect charge.
+  - *Mitigation*: This is acceptable — the prefill is a convenience, not an enforcement. Admins retain full control.
+````
+
+## File: openspec/changes/batch-appointment-pricing/proposal.md
+````markdown
+## Why
+
+Batches and private coaching appointments currently have no associated cost defined in the system, making it impossible for administrators to automatically issue billing invoices tied to these services. Admins must manually issue invoices with no reference to a standard price, which is error-prone and inconsistent. Adding configurable pricing per batch and per appointment type lets the platform automatically pre-fill or auto-generate invoices on the Payments screen, and display costs to students on relevant screens.
+
+## What Changes
+
+- **Batch Pricing Field**: Add a "Session Fee (₹)" field to the batch creation form and batch data model, allowing admins to define how much each batch session costs per student.
+- **Appointment Pricing Field**: Add a configurable "Default Session Fee (₹)" setting in System Settings for private coaching appointments, so all new appointments carry a default cost.
+- **Auto-fill Invoice on Appointment Booking**: When an admin books or a student books a private coaching appointment, automatically pre-populate the invoice amount field using the configured appointment session fee.
+- **Batch Fee on User Management**: When viewing enrolled users, surface the applicable batch session fee alongside the batch name so admins can see cost context at a glance.
+- **Appointment Cost on Student Profile**: Display the fee for each upcoming appointment on the student's "My Appointments" panel so students know what they owe.
+- **Payments Screen Quick-Issue**: In the Payments & Billing panel, add a "Charge for Session" quick-action button next to batch and appointment entries that auto-populates and issues an invoice using the configured cost.
+
+## Capabilities
+
+### New Capabilities
+- `batch-appointment-pricing`: Allows administrators to define a session fee per batch and a global default fee for private appointments, and surfaces those costs across booking, billing, and profile screens.
+
+### Modified Capabilities
+- `class-scheduling-batches`: Batch data model gains a `sessionFee` field; batch creation and editing forms gain a price input; User Management table shows fee alongside batch name.
+- `appointment-scheduling`: Appointment booking modal pre-fills a cost field using the configured default appointment fee; student profile displays the fee per appointment card.
+
+## Impact
+
+- **`index.html`**: Add "Session Fee" input to `#admin-create-batch-form`; add appointment default fee setting to `#admin-settings-panel`; add fee display to appointment cards in `#profile-upcoming-appointments`; add "Charge for Session" quick-action in `#admin-payments-panel`.
+- **`app.js`**: Update batch save/load logic to persist `sessionFee`; add `qy_appointment_fee` setting to LocalStorage; update appointment booking to record and display cost; update user management render to include batch fee column; add quick-charge invoice helper.
+- **`db.json`**: Update the seed batch record to include `sessionFee`; add `appointment_fee` default to seed data.
+````
+
+## File: openspec/changes/batch-appointment-pricing/specs/appointment-scheduling/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Admin can set appointment default session fee in System Settings
+The System Settings panel SHALL include an "Appointment Default Session Fee (₹)" input field. The entered value SHALL be persisted in LocalStorage under the key `qy_appointment_fee`. This fee SHALL be used as the default cost for all new private coaching appointments.
+
+#### Scenario: Admin saves a default appointment fee
+- **WHEN** the admin navigates to System Settings, enters a value in "Appointment Default Session Fee (₹)", and saves
+- **THEN** the value SHALL be persisted to LocalStorage as `qy_appointment_fee` and reflected in the input on next load
+
+#### Scenario: No appointment fee set
+- **WHEN** `qy_appointment_fee` is absent or zero in LocalStorage
+- **THEN** the settings field SHALL display "0" as a placeholder
+
+### Requirement: Appointment fee displayed on student profile appointment cards
+Each upcoming appointment card in the student's "My Appointments" panel SHALL display the session fee associated with that appointment at time of booking (or the current default fee if none was recorded at booking time).
+
+#### Scenario: Student views upcoming appointment with a fee
+- **WHEN** a student views their "My Appointments" section and has an upcoming appointment
+- **THEN** each appointment card SHALL show a "Fee: ₹&lt;amount&gt;" line
+
+#### Scenario: Appointment fee is zero or unset
+- **WHEN** an appointment has no fee recorded and no default fee is configured
+- **THEN** the appointment card SHALL display "Fee: ₹0"
+````
+
+## File: openspec/changes/batch-appointment-pricing/specs/batch-appointment-pricing/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Admin can configure a session fee per batch
+When creating or editing a batch, the administrator SHALL be able to specify a numeric session fee (in INR) for that batch. The fee SHALL be stored as `sessionFee` on the batch object in `qy_batches`. If not set, it SHALL default to `0`.
+
+#### Scenario: Admin sets a fee when creating a batch
+- **WHEN** the admin fills in the "Create New Cohort Batch" form and enters a value in the "Session Fee (₹)" field
+- **THEN** the created batch object SHALL include `sessionFee` equal to the entered value, persisted in `qy_batches`
+
+#### Scenario: Admin creates a batch without entering a fee
+- **WHEN** the admin submits the batch creation form without entering a session fee
+- **THEN** the batch SHALL be created with `sessionFee: 0`
+
+#### Scenario: Batch fee visible in Active Batch Cohorts table
+- **WHEN** batches are listed in the Admin "Active Batch Cohorts" table
+- **THEN** each row SHALL display a "Session Fee" column showing the fee as "₹&lt;amount&gt;" or "Not set" if zero
+
+### Requirement: Batch session fee shown in User Management
+The administrator's User Management table SHALL display the enrolled batch name AND its session fee for each user row that has a batch assigned.
+
+#### Scenario: User enrolled in a batch with a fee
+- **WHEN** the admin views the User Management table and a user is enrolled in a batch that has a `sessionFee > 0`
+- **THEN** the Batch column SHALL display the batch name followed by the fee (e.g., "Morning Vinyasa Flow — ₹800/session")
+
+#### Scenario: User enrolled in a batch with no fee set
+- **WHEN** a user's enrolled batch has `sessionFee` of 0
+- **THEN** the Batch column SHALL display the batch name followed by "— ₹0"
+
+#### Scenario: User not enrolled in any batch
+- **WHEN** a user has no `batchId`
+- **THEN** the Batch column SHALL display "—"
+
+### Requirement: Charge for Session quick-action in Payments panel
+The admin SHALL be able to trigger a pre-filled invoice from the Appointments Management table row using a "Charge for Session" action, using the configured appointment default fee.
+
+#### Scenario: Admin charges for a specific appointment
+- **WHEN** the admin clicks "Charge for Session" on an appointment row in the Appointments Management table
+- **THEN** the Issue Manual Invoice form SHALL open with the student's email and the configured `appointment_default_fee` pre-filled in the amount field
+
+#### Scenario: Fee is zero when no default appointment fee is configured
+- **WHEN** no appointment default fee has been configured and the admin clicks "Charge for Session"
+- **THEN** the invoice form SHALL open pre-filled with the student email and amount "0", and a warning SHALL be displayed indicating the fee is not configured
+
+---
+*File: specs/batch-appointment-pricing/spec.md*
+````
+
+## File: openspec/changes/batch-appointment-pricing/specs/class-scheduling-batches/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Batch creation form includes a session fee field
+The "Create New Cohort Batch" admin form SHALL include a numeric "Session Fee (₹)" input field. The entered amount SHALL be saved as `sessionFee` on the batch object in the `qy_batches` LocalStorage array.
+
+#### Scenario: Fee field present in create form
+- **WHEN** the admin navigates to the Batches & Scheduling tab and views the Create New Cohort Batch form
+- **THEN** a "Session Fee (₹)" number input SHALL be visible in the form
+
+#### Scenario: Fee persisted on batch creation
+- **WHEN** the admin submits the batch creation form with a session fee value of 1200
+- **THEN** the new batch object in `qy_batches` SHALL contain `sessionFee: 1200`
+
+### Requirement: Active Batch Cohorts table shows session fee column
+The "Active Batch Cohorts" table in the Admin Batches & Scheduling panel SHALL include a "Session Fee" column displaying each batch's `sessionFee` in INR format.
+
+#### Scenario: Table displays fee for batch with fee set
+- **WHEN** a batch with `sessionFee: 800` is listed in the Active Batch Cohorts table
+- **THEN** the Session Fee column SHALL display "₹800"
+
+#### Scenario: Table displays zero for batch without fee
+- **WHEN** a batch has `sessionFee: 0` or the field is absent
+- **THEN** the Session Fee column SHALL display "₹0"
+````
+
+## File: openspec/changes/batch-appointment-pricing/tasks.md
+````markdown
+## 1. Data Model & Seed Updates
+
+- [x] 1.1 Add `sessionFee` field (default `0`) to the seed batch record in `db.json` under `batches`
+- [x] 1.2 Add `appointment_fee` default value (e.g., `1500`) to `db.json` as a top-level key for seeding
+
+## 2. Batch Pricing — Admin Batches & Scheduling Panel
+
+- [x] 2.1 Add a "Session Fee (₹)" number input (`id="admin-batch-fee-input"`) to the `#admin-create-batch-form` in `index.html`
+- [x] 2.2 Update the batch creation handler in `app.js` to read the fee input and include `sessionFee` in the new batch object saved to `qy_batches`
+- [x] 2.3 Add a "Session Fee" column header to the Active Batch Cohorts table (`#admin-batches-table`) in `index.html`
+- [x] 2.4 Update the batch table render function in `app.js` to display `₹<sessionFee>` (or `₹0`) in the new column for each batch row
+
+## 3. Appointment Default Fee — System Settings
+
+- [x] 3.1 Add an "Appointment Default Session Fee (₹)" number input (`id="admin-appointment-fee-input"`) and save button inside `#admin-settings-panel` in `index.html`
+- [x] 3.2 Add `loadAppointmentFee()` and `saveAppointmentFee()` helpers in `app.js` that read/write `qy_appointment_fee` in LocalStorage; seed from `db.json` on first load
+- [x] 3.3 Wire the save button listener in `app.js` to call `saveAppointmentFee()` with the input value and show a success confirmation message
+
+## 4. Fee Display — Student Profile Appointment Cards
+
+- [x] 4.1 Update the appointment card render function in `app.js` to include a "Fee: ₹&lt;amount&gt;" line for each upcoming appointment card (use the `fee` field stored on the appointment, falling back to the current `qy_appointment_fee` default)
+- [x] 4.2 Update the appointment save logic in `app.js` to snapshot the current `qy_appointment_fee` value onto each new appointment object as `fee` at booking time
+
+## 5. Fee Display — User Management Batch Column
+
+- [x] 5.1 Update the User Management table render in `app.js` to show the enrolled batch name plus its `sessionFee` (e.g., "Morning Vinyasa Flow — ₹800/session") or "—" if no batch is assigned
+
+## 6. "Charge for Session" Quick-Action — Payments Panel
+
+- [x] 6.1 Add a "Charge for Session" button to each appointment row in the `#admin-appointments-table` in `index.html` (action column)
+- [x] 6.2 Implement a `chargeForAppointment(appointmentId)` helper in `app.js` that reads the appointment's stored `fee` (or falls back to `qy_appointment_fee`), pre-fills `#admin-invoice-email` and `#admin-invoice-amount` in the invoice form, scrolls to / highlights the Payments panel, and displays a warning if the fee is `0`
+
+## 7. Verification
+
+- [x] 7.1 Verify a batch created with a session fee of ₹1000 shows "₹1000" in the Active Batch Cohorts table and "Morning Vinyasa Flow — ₹1000/session" in User Management for enrolled users
+- [x] 7.2 Verify saving the appointment default fee in System Settings persists across page refresh
+- [x] 7.3 Verify that a newly booked appointment card on the student profile displays the correct "Fee: ₹&lt;amount&gt;" value
+- [x] 7.4 Verify clicking "Charge for Session" on an appointment pre-fills the invoice form with the correct student email and fee amount
+- [x] 7.5 Verify that when no appointment fee is configured, clicking "Charge for Session" shows a visible warning that the fee is not set
+````
+
+## File: openspec/changes/class-scheduling-batches/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/class-scheduling-batches/design.md
+````markdown
+## Context
+
+Quantum Yoga currently has no cohort organization or session scheduling. We need to design a system allowing administrators to define student batches and associate class timetables (weekdays, times, and yoga routines) with them. Registered students will then see their batch schedule and a live countdown to their next class on their Profile page.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Implement a "Batches & Scheduling" sub-tab in the Admin Console.
+- Support creation, deletion, and class scheduling for batches, stored in LocalStorage under the key `qy_batches`.
+- Support enrollment by updating the user's data object in LocalStorage with a `batchId` property.
+- Display batch details, weekly schedules, and a real-time countdown to the next class inside the student's Profile tab.
+
+**Non-Goals:**
+- Implementing actual video conferencing or streaming tools (class sessions are routine-guidance schedules).
+- Handling payment or fee subscription processing for batches.
+
+## Decisions
+
+### 1. Data Schema & Persistence
+- **Decision**: Store batches as a flat array under `qy_batches` in LocalStorage, containing IDs, names, and a list of timetable objects. Map users to batches via a `batchId` string property inside each user object in `qy_users`.
+- **Rationale**: Keeps data retrieval fast, relational mapping simple, and fits perfectly within the client-side mockup architecture.
+
+### 2. Next Class Countdown Logic
+- **Decision**: Implement a timer in `app.js` that runs every minute (or second) when the user is on the Profile tab. Calculate the delta from the current date/time to the next occurring class slot based on the weekdays (Monday-Sunday) and times (HH:MM) defined in the batch timetable.
+- **Rationale**: Provides a dynamic, interactive feel in the profile section without requiring complex backend scheduling jobs.
+
+### 3. Integrated Admin Modal Assignment
+- **Decision**: Add a batch selection dropdown directly into the existing "Inspect User" detail modal.
+- **Rationale**: Reuses the existing administrative detail modal framework, avoiding screen clutter and UI overhead.
+
+## Risks / Trade-offs
+
+- **[Risk]** The countdown timer calculations might cause performance lag if updated too frequently.
+  - *Mitigation*: Run the countdown interval check only when the active tab is "profile" and the user is enrolled in a batch.
+````
+
+## File: openspec/changes/class-scheduling-batches/proposal.md
+````markdown
+## Why
+
+Currently, Quantum Yoga lacks any organizational structure for scheduling yoga classes or grouping students into cohort-based groups. Introducing class scheduling and batch management allows administrators to organize students into specific batches (e.g., Morning Batch, Weekend Advanced) and assign class timetables, giving students structured learning schedules and visual countdowns to their next session.
+
+## What Changes
+
+- **Admin Console Batch Control**: Add a "Batches & Scheduling" sub-tab in the Admin panel to let instructors create, edit, or delete student batches.
+- **Student Enrollment**: Provide search and assign controls in the Admin panel to associate registered students with created batches.
+- **Timetable Scheduler**: Enable instructors to define class events for each batch, selecting a day of the week, class time, and target routine.
+- **My Schedule View**: Provide regular users with a "My Batch & Schedule" view in their Profile tab, including a countdown to their next class and quick links to open the scheduled routine.
+
+## Capabilities
+
+### New Capabilities
+- `class-scheduling-batches`: Allows instructors to organize users into named batches, schedule weekly timetables, and displays personalized countdowns and routine schedules to enrolled students.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to include the batch creation controls, enrollment panels, and student weekly schedule cards.
+- Modifies `app.js` to manage batch states, user assignment, timetables scheduling, and profile calendar rendering.
+````
+
+## File: openspec/changes/class-scheduling-batches/specs/class-scheduling-batches/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Admin Batch Management
+The system SHALL provide administrative controls within the Admin Panel to create, list, and delete named student batches.
+
+#### Scenario: Creating a student batch
+- **WHEN** the administrator enters "Sunrise Flow Batch" in the batch creation input and clicks "Create Batch"
+- **THEN** the system SHALL save the batch, clear the input, and display the new batch in the list of active batches.
+
+### Requirement: Admin Class Scheduling Timetable
+The system SHALL allow administrators to schedule class sessions for any created batch by selecting a weekday, a start time, and a designated yoga routine.
+
+#### Scenario: Adding a class session to a batch
+- **WHEN** the administrator selects the batch "Sunrise Flow Batch", day "Monday", time "07:30", routine "Morning Sun Salutation", and clicks "Schedule Class"
+- **THEN** the system SHALL add the session to the batch's weekly timetable.
+
+### Requirement: User Batch Enrollment
+The system SHALL enable administrators to enroll any registered user into a created batch, or remove them from a batch.
+
+#### Scenario: Enrolling a user in a batch
+- **WHEN** the administrator inspects a user profile from the user table, selects "Sunrise Flow Batch" from the enrollment dropdown, and clicks "Save Enrollment"
+- **THEN** the system SHALL associate the user with the batch and save the assignment to LocalStorage.
+
+### Requirement: Student Timetable and Next Class Countdown
+The system SHALL display the active student's batch name, weekly timetable, and a real-time countdown clock showing the time remaining until their next scheduled class session in their Profile view.
+
+#### Scenario: Student views their schedule
+- **WHEN** an authenticated user enrolled in "Sunrise Flow Batch" clicks on their "Profile" tab
+- **THEN** the system SHALL display the text "Sunrise Flow Batch", render the weekly class list, and display the countdown to their next upcoming class.
+````
+
+## File: openspec/changes/class-scheduling-batches/tasks.md
+````markdown
+## 1. UI Implementation
+
+- [x] 1.1 Add the "Batches & Scheduling" sub-tab button `#admin-batches-tab-btn` and settings sub-panel `#admin-batches-panel` to the admin section of `index.html`.
+- [x] 1.2 Implement the batch creation form, active batch list, and class scheduling controls (weekday, start time, routine select) in `#admin-batches-panel` of `index.html`.
+- [x] 1.3 Add the batch enrollment selector control to the administrative user inspection modal (`#admin-inspect-modal`) in `index.html`.
+- [x] 1.4 Add a "My Batch & Schedule" dashboard card (including placeholders for batch title, timetable list, and live countdown timer) inside `#profile-section` in `index.html`.
+
+## 2. Logic & Controller Integration
+
+- [x] 2.1 Bind new DOM references for admin batch sub-tabs, dropdown fields, profile schedule card, and countdown displays in `app.js`.
+- [x] 2.2 Extend `setAdminSubTab(panelName)` in `app.js` to support tab-switching for the `"batches"` panel and reload batch details.
+- [x] 2.3 Implement LocalStorage batch storage functions (`loadBatches()`, `saveBatches()`) and admin handlers to create named batches, delete batches, and schedule classes in `app.js`.
+- [x] 2.4 Integrate user enrollment dropdown render and update save logic inside the admin user inspection modal functions of `app.js`.
+- [x] 2.5 Implement the user profile timetable renderer, scheduled routine link bindings, and class countdown calculation timer intervals in `app.js`.
+
+## 3. Verification
+
+- [x] 3.1 Verify admin tools for batch creation, class scheduling, and student enrollment save correctly in LocalStorage.
+- [x] 3.2 Verify student-facing schedule lists, countdown calculations, and routine quick-links update and persist in the browser.
+````
+
+## File: openspec/changes/convert-leads-pipeline-to-swimlane/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-14
+````
+
+## File: openspec/changes/convert-leads-pipeline-to-swimlane/design.md
+````markdown
+## Context
+
+Currently, inquiry leads are rendered in a flat `table` format under the Leads Pipeline panel. Converting this to a swimlane board (Kanban style) requires changing the tabular HTML structure to a column-based layout, adding CSS grid/flex styles for the board, columns, and cards, and rewriting the JavaScript rendering logic to partition leads by status.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Replace the flat HTML `table` in the leads pipeline sub-panel with a horizontal board containing four swimlane columns: `New`, `Contacted`, `Converted`, and `Closed`.
+- Render lead cards displaying crucial inquiry details (name, email, phone, date, message excerpt) inside columns.
+- Add quick action buttons on cards to transition their status left/right or to adjacent status columns.
+- Retain search filtering capabilities, filtering active cards across columns dynamically.
+- Keep data synchronized with LocalStorage database stores.
+
+**Non-Goals:**
+- Full drag-and-drop HTML5 API implementation (we will focus on click-to-move interactive action controls for robustness and mobile friendliness, with drag-and-drop as an optional visual enhancement if needed).
+- Changing the schema of leads in LocalStorage (we will keep the existing status attributes: `New`, `Contacted`, `Converted`, `Closed`).
+
+## Decisions
+
+### 1. Board Layout and Responsive Columns
+- **Decision**: Lay out columns horizontally using CSS Grid (`grid-template-columns: repeat(4, 1fr)`) with a minimum width (`min-width: 250px`) on columns and horizontal scroll (`overflow-x: auto`) on the parent board wrapper.
+- **Rationale**: CSS Grid provides clean, equal-width columns. The minimum width combined with overflow-x ensures responsiveness on smaller screens (tablet and mobile viewports) without breaking column layouts.
+
+### 2. Action Controls on Cards
+- **Decision**: Add quick chevron/arrow action buttons at the bottom of each card (e.g., `←` and `→` or descriptive buttons like `Move to Contacted`) to change status, plus an "Inspect" button to open the existing full detail modal.
+- **Rationale**: Clickable button controls are highly reliable, accessible via keyboard/assistive technologies, and work seamlessly on touchscreen mobile devices compared to raw drag-and-drop event handlers.
+
+### 3. Search and Status Filtering behavior
+- **Decision**: When the search input is populated, cards that do not match the query are hidden or removed, while matching cards are rendered in their respective columns. If the status filter dropdown is set to a specific value (e.g. "Contacted"), other columns will be collapsed or hidden from view, showing only the active swimlane.
+- **Rationale**: Keeps the existing search and filter DOM elements functional while adapting their output representation to the Kanban board structure.
+
+## Risks / Trade-offs
+
+- **[Risk]** Large volumes of inquiry leads could cause long vertical scroll feeds within a single column.
+  - *Mitigation*: Limit columns to vertical scroll (`max-height: 500px; overflow-y: auto`) and display column header counters so administrators can see card volumes at a glance.
+````
+
+## File: openspec/changes/convert-leads-pipeline-to-swimlane/proposal.md
+````markdown
+## Why
+
+Currently, the admin panel renders the leads pipeline as a traditional flat table. This makes it difficult for administrators to quickly visualize the progress of prospective student inquiries through different relationship states. Converting this pipeline into a kanban-style swimlane board organizes leads into functional columns based on status, improving pipeline tracking and visual feedback.
+
+## What Changes
+
+- **Kanban Swimlane View**: Replace the static flat table layout in the Leads Pipeline sub-panel with a horizontal board of four swimlane columns: `New`, `Contacted`, `Converted`, and `Closed`.
+- **Lead Cards**: Render each lead as an interactive card displaying the lead's name, email, phone, inquiry date, and excerpt message.
+- **Card Action Movements**: Allow administrators to update a lead's pipeline status via interactive movement controls on cards to advance or regress their status.
+- **Conversion and Details Overlays**: Ensure clicking a card triggers the Lead Inspection Modal, allowing logging notes and converting status.
+
+## Capabilities
+
+### New Capabilities
+- `leads-swimlane`: Introduces a kanban-style swimlane board UI for tracking inquiry leads by status, adding column groupings, status change actions, and visual status update animations.
+
+### Modified Capabilities
+<!-- No modified capabilities -->
+
+## Impact
+
+- Modifies `index.html` to update the structure of the Leads Pipeline tab from a `table` to a column-based swimlane wrapper.
+- Modifies `index.css` to add grid/flexbox styles for horizontal kanban swimlanes, card designs, hover effects, and modern drag/move animations.
+- Modifies `app.js` to render the swimlane columns dynamically, manage the card interactions, update statuses in LocalStorage database, and refresh the UI upon updates.
+````
+
+## File: openspec/changes/convert-leads-pipeline-to-swimlane/specs/leads-swimlane/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Kanban Swimlane Board Visualisation
+The system SHALL display the inquiry leads pipeline inside the Admin Console as a Kanban board containing four distinct columns: `New`, `Contacted`, `Converted`, and `Closed`, replacing the flat tabular format.
+
+#### Scenario: Admin opens leads pipeline
+- **WHEN** the administrator logs in and clicks on the "Leads Pipeline" panel tab
+- **THEN** the system SHALL render four columns representing pipeline status stages side-by-side, sorting active leads chronologically by date descending within each column.
+
+### Requirement: Interactive Lead Cards
+The system SHALL render each lead as a visual card within its designated status swimlane column, displaying the lead's name, email, phone number, formatted inquiry date, and message excerpt.
+
+#### Scenario: Admin views lead details on card
+- **WHEN** the leads pipeline board loads
+- **THEN** the system SHALL show cards displaying prospective client name, contact details, DD-MM-YYYY formatted date, and a snippet of their query.
+
+### Requirement: Status Transition Actions
+The system SHALL provide interactive controls on each lead card to allow moving the lead to adjacent swimlane columns, updating the lead's status in LocalStorage and dynamically refreshing the UI.
+
+#### Scenario: Admin shifts lead status
+- **WHEN** the administrator clicks the status transition control on a lead card to update its status from "New" to "Contacted"
+- **THEN** the system SHALL persist the status change in LocalStorage and immediately move the card to the "Contacted" swimlane column without page reload.
+
+### Requirement: Lead Details Overlay Integration
+The system SHALL display the detailed inquiry logs and inspection actions inside the Lead Inspection Modal when a lead card is clicked.
+
+#### Scenario: Admin inspects lead card
+- **WHEN** the administrator clicks on a lead card's inspect action or body area
+- **THEN** the system SHALL open the Lead Inspection Modal pre-populated with the lead's logs, message, and conversion options.
+````
+
+## File: openspec/changes/convert-leads-pipeline-to-swimlane/tasks.md
+````markdown
+## 1. UI Structure & CSS Styling
+
+- [x] 1.1 Replace the flat HTML leads table inside `index.html` with a horizontal swimlane board element.
+- [x] 1.2 Implement CSS grid layout, scroll parameters, and hover visual animations for columns and cards in `index.css`.
+
+## 2. Dynamic Board Rendering
+
+- [x] 2.1 Rewrite the leads pipeline rendering function in `app.js` to partition and display lead cards in four columns: `New`, `Contacted`, `Converted`, and `Closed`.
+- [x] 2.2 Add action transition controls on cards to increment/decrement statuses in LocalStorage and refresh the UI layout.
+- [x] 2.3 Integrate card triggers to open the detailed Lead Inspection Modal on click.
+
+## 3. Search & Filter Integration
+
+- [x] 3.1 Connect search bar filters to search queries across all columns, filtering matching cards dynamically.
+- [x] 3.2 Update status filter inputs to isolate or collapse columns when a single status filter is selected.
+
+## 4. Verification & Testing
+
+- [x] 4.1 Verify card placement and status column sorting inside the browser.
+- [x] 4.2 Test card moves and verify that modifications persist in LocalStorage correctly.
+````
+
+## File: openspec/changes/convert-to-india-locale/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-14
+````
+
+## File: openspec/changes/convert-to-india-locale/design.md
+````markdown
+## Context
+
+Currently, the Quantum Yoga dashboard operates with a fixed USD ($) currency format, US-standard YYYY-MM-DD date presentation for text displays, and basic phone format validation. To scale operations in India, these visual markers, formats, and validators must be converted to the Indian local standard (₹ currency, DD-MM-YYYY dates, and 10-digit mobile phone numbers).
+
+## Goals / Non-Goals
+
+**Goals:**
+- Convert currency displays to INR (₹) across the student profile billing history, admin invoice ledgers, and dashboard metrics.
+- Display dates for check-ins, invoices, and scheduling feeds in the standard Indian layout (`DD-MM-YYYY`).
+- Validate phone numbers in inquiry capture forms to match standard 10-digit Indian mobile formats.
+
+**Non-Goals:**
+- Converting the internal LocalStorage database values (we will keep date values stored in standard YYYY-MM-DD to preserve comparisons, but display them localized).
+- Real-time timezone conversions of live stream times (live countdown times will remain localized to the system clock).
+
+## Decisions
+
+### 1. Currency Presentation Layout
+- **Decision**: Update all DOM bindings of `$` in `index.html` and logic templates in `app.js` to use `₹` directly.
+- **Rationale**: Direct string formatting replacement provides immediate localization with zero overhead or dependency additions.
+
+### 2. Localization Date Helper
+- **Decision**: Introduce a `formatDateToIndian(dateStr)` helper function in `app.js` to parse `YYYY-MM-DD` dates and return `DD-MM-YYYY` string representations for UI rendering.
+- **Rationale**: Preserves the native `YYYY-MM-DD` ISO format inside LocalStorage databases for easy date calculations (e.g. `date < todayStr`), while displaying localized dates to the user.
+
+### 3. Indian Mobile Validation RegEx
+- **Decision**: Utilize the regular expression `/^(?:\+91|0)?[6-9]\d{9}$/` inside the inquiry form validation check.
+- **Rationale**: Covers standard Indian mobile carrier prefixes (starting with 6, 7, 8, or 9) and accounts for optional country prefixes (`+91` or `0`).
+
+## Risks / Trade-offs
+
+- **[Risk]** HTML5 `<input type="date">` displays a native date selector that expects values in `YYYY-MM-DD` format. Setting its value in `DD-MM-YYYY` format will cause browser errors or fail to select dates.
+  - *Mitigation*: Only apply the `formatDateToIndian` helper for text rendering (like table columns and history feeds). Keep date inputs (like appointment booking and invoice due dates) using the browser's native date format `YYYY-MM-DD` for values.
+````
+
+## File: openspec/changes/convert-to-india-locale/proposal.md
+````markdown
+## Why
+
+Quantum Yoga is expanding its services to students and studios in India. The current system is hardcoded to USD ($) and US-centric date and phone number formats, which creates confusion for local Indian members and administrators.
+
+## What Changes
+
+- **Currency Conversion**: Convert all pricing display symbols, invoice records, total revenue widgets, and invoice creation forms from USD ($) to INR (₹).
+- **Date Format Localisation**: Standardise displays for session dates, invoices, and registration expirations to the Indian date format (`DD-MM-YYYY`).
+- **Indian Phone Number Validation**: Update the public leads capture and inquiry forms to support and validate 10-digit Indian phone numbers (optionally starting with +91).
+- **Default Timezone displays**: Ensure countdowns and schedules reflect Indian Standard Time (IST).
+
+## Capabilities
+
+### New Capabilities
+- `india-locale-conversion`: Localises the entire website's user interface, input validation forms, database stores, and metrics counters to use Indian currency (₹), Indian date formats (DD-MM-YYYY), and Indian phone number formats.
+
+### Modified Capabilities
+<!-- No modified capabilities -->
+
+## Impact
+
+- Modifies `index.html` to update labels, forms, inputs, and tables (converting $ to ₹).
+- Modifies `app.js` to process currency formatting, update date representation parsing, validate Indian phone formats, and update mock data seeding values to Rupees.
+- Modifies `data.js` if necessary for routine currency representations.
+````
+
+## File: openspec/changes/convert-to-india-locale/specs/india-locale-conversion/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Currency Localization to INR
+The system SHALL display all monetary values in Indian Rupees (INR) using the `₹` symbol instead of US Dollars (`$`), including user dashboard invoices, total revenue statistics, daily KPIs, and payment forms.
+
+#### Scenario: User inspects invoice details
+- **WHEN** the student logs in and navigates to the Billing section of their profile
+- **THEN** the system SHALL render the invoice list with prices prefixed by `₹` (e.g., `₹79` instead of `$79`).
+
+#### Scenario: Administrator issues a manual invoice
+- **WHEN** the administrator fills in the amount `500` and submits the manual invoice form
+- **THEN** the system SHALL save the invoice and display it with a value of `₹500` in the transaction ledger.
+
+### Requirement: Date Format Localization
+The system SHALL display dates in the Indian local standard format (`DD-MM-YYYY`) for invoices, check-ins, scheduled appointments, and cohort batch details.
+
+#### Scenario: Student checks active batch timing
+- **WHEN** the student checks their active batch countdown timer
+- **THEN** the system SHALL calculate the next class date and display dates formatted as `DD-MM-YYYY`.
+
+### Requirement: Indian Phone Number Validation
+The public leads capture form SHALL validate that the entered phone number matches a valid 10-digit Indian mobile number (e.g., starting with digits 6, 7, 8, or 9, with optional `+91` or `0` prefix).
+
+#### Scenario: Guest submits inquiry with valid Indian phone number
+- **WHEN** a guest enters phone number `+91 9876543210` in the inquiry form and clicks "Submit Inquiry"
+- **THEN** the system SHALL accept the submission, save the lead, and display a success validation message.
+````
+
+## File: openspec/changes/convert-to-india-locale/tasks.md
+````markdown
+## 1. UI Currency & Label Conversion
+
+- [x] 1.1 Convert all currency placeholders and prefix labels from `$` to `₹` inside `index.html`.
+- [x] 1.2 Update currency formatting symbols to `₹` inside the dynamically rendered template strings of `app.js` (including invoices, receipts, and KPI metrics).
+
+## 2. Date Formatting & Parsing
+
+- [x] 2.1 Implement the YYYY-MM-DD to DD-MM-YYYY date formatter helper function `formatDateToIndian(dateStr)` in `app.js`.
+- [x] 2.2 Update chronological session timelines, administrative users tables, and profile billing table rows to use `formatDateToIndian` for display purposes.
+
+## 3. Indian Phone Number Validation
+
+- [x] 3.1 Implement a regular expression validator `/^(?:\+91|0)?[6-9]\d{9}$/` inside the public leads capture form handler in `app.js`.
+- [x] 3.2 Update HTML validation attributes and error messages on the inquiry phone number input inside `index.html`.
+
+## 4. Verification & Seeding Updates
+
+- [x] 4.1 Update initial mock data seeding prices and invoice values to reflect Rupees (INR) values in `app.js`.
+- [x] 4.2 Verify currency displays, date displays, and phone input validation function and persist correctly in the browser.
+````
+
+## File: openspec/changes/custom-client-pages/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/custom-client-pages/design.md
+````markdown
+## Context
+
+With multiple pending features (class batch scheduling, private coaching appointments, and payment invoices) entering the system, the user profile section needs to be transformed into a unified, personalized client dashboard. This dashboard will serve as the single source of truth for members to view their batch details, track upcoming classes, manage appointments, and review their billing histories.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Redesign the student profile tab (`#profile-section`) into a multi-panel personalized client page.
+- Display the member's assigned yoga batch details (schedule, timing, coach).
+- Consolidate scheduled batch classes and private appointments into a chronological "Upcoming Classes & Sessions" timeline.
+- Integrate the client's invoice logs and receipt history with print features.
+- Provide inline actions for session check-ins, cancellations, or rescheduling directly from the client feed.
+
+**Non-Goals:**
+- Creating a separate login section or portal; the dashboard resides directly within the existing authenticated profile page.
+- Processing real-time electronic payments or card processing (simulated invoice updates only).
+
+## Decisions
+
+### 1. Multi-Tab Profile Navigation
+- **Decision**: Divide the profile section into two tabs:
+  1. **My Studio Dashboard**: Home to batch overviews, upcoming classes, and billing/payment history.
+  2. **My Practice Log**: Displays favorited yoga poses and completed routine history.
+- **Rationale**: Prevents vertical page bloating and keeps administrative studio info separate from practice statistics.
+
+### 2. Live Chronological Session Timeline
+- **Decision**: Query the user's batch timetable (`qy_batches` mapped via `user.batchId`) and their individual appointments (`qy_appointments` matched by user email). Merge these sources, sort them chronologically, and render them as a unified upcoming timetable feed.
+- **Rationale**: Simplifies client planning by avoiding separate schedules for classes and private sessions.
+
+### 3. Integrated Action Triggers
+- **Decision**: Connect "Cancel" and "Reschedule" buttons in the upcoming classes list to the existing appointment/booking data functions, modifying `qy_appointments` or user batch status and refreshing the UI.
+- **Rationale**: Ensures the dashboard is highly interactive, self-contained, and matches the premium look of modern SaaS portals.
+
+## Risks / Trade-offs
+
+- **[Risk]** Empty states if a user is not enrolled in a batch or has no invoices.
+  - *Mitigation*: Render elegant placeholder cards with call-to-action buttons (e.g., "Join a Batch" or "Book your first session").
+- **[Risk]** Heavy DOM redraws on state changes.
+  - *Mitigation*: Use modular rendering functions (`renderClientDashboard()`, `renderClientBilling()`, `renderClientSchedule()`) to redraw only modified panels.
+````
+
+## File: openspec/changes/custom-client-pages/proposal.md
+````markdown
+## Why
+
+Currently, Quantum Yoga members do not have a unified, personalized hub to view their specific class schedules, batch assignments, and payment histories. Creating a customized client page simplifies the member experience by consolidating class previews, batch overviews, and billing logs into a single dedicated space, keeping clients connected and engaged with their wellness journey.
+
+## What Changes
+
+- **Personalized Client Hub**: Restructure the Profile section into a comprehensive client dashboard displaying upcoming classes, batch details, and billing logs alongside favorites and history.
+- **Batch & Class Previews**: Display details of the client's assigned batch (schedule, instructor, size) and highlight their next upcoming class sessions.
+- **Interactive Billing Log**: Provide a tabular view of the member's invoices and subscription records with download/print functionality for receipts.
+- **Class Actions**: Allow members to check-in, reschedule, or cancel bookings directly from their dashboard.
+
+## Capabilities
+
+### New Capabilities
+- `custom-client-pages`: Provides each yoga student with a dedicated, personalized dashboard within their profile containing upcoming classes, batch details, and billing history.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to expand the student profile tab layout with sections for batch info, schedule previews, and invoice lists.
+- Modifies `app.js` to load, filter, and render relational client data (batches, classes, invoices) from LocalStorage based on the current user's profile.
+````
+
+## File: openspec/changes/custom-client-pages/specs/custom-client-pages/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Personalized Student Dashboard Hub
+The system SHALL provide logged-in members with a unified, personalized dashboard within their Profile view, acting as a dedicated client hub.
+
+#### Scenario: Member views their personalized hub
+- **WHEN** a logged-in user navigates to the "Profile" section
+- **THEN** the system SHALL dynamically load and render their personalized client hub containing upcoming classes, active batch overviews, and billing history in addition to their favorites and routine history.
+
+### Requirement: Upcoming Class Previews
+The system SHALL query and show previews of the member's upcoming scheduled classes and private sessions.
+
+#### Scenario: Member reviews upcoming sessions
+- **WHEN** a member views their client hub
+- **THEN** the system SHALL display a chronological list of their upcoming classes or private sessions, showing the session name, date, time, and instructor.
+
+### Requirement: Batch Overviews
+The system SHALL display detailed overview metrics about the member's assigned yoga batch.
+
+#### Scenario: Member checks batch schedule details
+- **WHEN** a member views their client hub and inspects the batch card
+- **THEN** the system SHALL display their active batch name, schedule timings, instructor name, and current batch capacity.
+
+### Requirement: Unified Billing History
+The system SHALL aggregate and display the member's billing, invoice history, and payment status.
+
+#### Scenario: Member views invoice list and receipts
+- **WHEN** a member checks the billing section in their client hub
+- **THEN** the system SHALL render a list of invoices showing invoice number, billing period, amount, status (Paid/Pending/Overdue), and a download receipt trigger.
+````
+
+## File: openspec/changes/custom-client-pages/tasks.md
+````markdown
+## 1. UI Structure Restructuring
+
+- [x] 1.1 Restructure `#profile-section` in `index.html` to introduce a sub-tab navigation bar with "My Studio Dashboard" and "My Practice Log" options.
+- [x] 1.2 Design and inject container elements for the Batch Overview card, the Upcoming Session timeline feed, and the Billing Log list inside the Dashboard view.
+- [x] 1.3 Move the existing favorites grid and completion history list under the Practice Log panel container.
+
+## 2. CSS Styling & Premium UI Polish
+
+- [x] 2.1 Write styling in `index.css` for sub-tab navigation buttons, active batch info cards, session timelines, and billing tables.
+- [x] 2.2 Apply glassmorphic borders, hover transitions, flex/grid responsiveness, and matching visual accents (Midnight Aura, Ethereal Light, Zen Sunset).
+
+## 3. Dashboard Logic & Relational Data Rendering
+
+- [x] 3.1 Implement dashboard controller logic in `app.js` to run on tab switch or page loading, reading user session state.
+- [x] 3.2 Implement `renderClientBatchDetails()` to find the active batch in `qy_batches` using `user.batchId` and populate the batch details block.
+- [x] 3.3 Implement `renderClientSessionsFeed()` to combine upcoming batch sessions and appointments from `qy_appointments` into a sorted chronological feed.
+- [x] 3.4 Implement inline interaction handlers for class check-ins, cancellations, or rescheduling requests, modifying LocalStorage entries and triggering UI refreshes.
+- [x] 3.5 Implement `renderClientBillingHistory()` to query payments from `qy_payments` for the user and render invoices with download triggers.
+
+## 4. Verification & Testing
+
+- [x] 4.1 Perform verification by logging in as a member, checking batch details, checking upcoming classes, and interacting with schedule items.
+- [x] 4.2 Verify invoice listings render correctly and receipts open print dialogue sheets properly.
+````
+
+## File: openspec/changes/fix-lead-conversion-users-sync/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-15
+````
+
+## File: openspec/changes/fix-lead-conversion-users-sync/design.md
+````markdown
+## Context
+
+The front-end application saves different data slices (users, leads, payments, appointments) separately. Each slice has its own helper (e.g., `saveUsers`, `saveLeads`) which updates `localStorage` and then triggers `saveToServer()`. `saveToServer()` reads all keys from `localStorage`, creates a consolidated database payload, and makes a POST request to `/api/db` to update `db.json`.
+
+When events update multiple database slices consecutively (e.g. lead conversion updates `users` and `leads` lists; appointment scheduling updates `appointments` and `payments` lists), multiple asynchronous POST requests are fired in parallel. On the server side, these requests write to `db.json` concurrently. Whichever request finishes last overwrites the file, leading to the loss of data written by other concurrent requests.
+
+## Goals / Non-Goals
+
+**Goals:**
+* Ensure that all data saved to `localStorage` is reliably and sequentially persisted in `db.json`.
+* Prevent race conditions where concurrent network updates overwrite each other.
+* Keep the data synchronization model simple and lightweight.
+
+**Non-Goals:**
+* Implementing complex server-side transactional locking or database management systems.
+* Refactoring the entire front-end state management.
+
+## Decisions
+
+### 1. In-Flight Save Queue Lock in `saveToServer`
+We will implement a simple concurrency lock queue in `saveToServer()` in `app.js` using state flags:
+* `isSaving`: A boolean flag indicating a save request is in-progress.
+* `hasPendingSave`: A boolean flag indicating another save request was triggered while one was in-flight.
+
+If `saveToServer()` is called while `isSaving` is true, we set `hasPendingSave = true` and return early. When the active request finishes (in a `finally` block), we check `hasPendingSave`. If true, we reset the flag and call `saveToServer()` again. Because `saveToServer()` constructs the database payload by reading `localStorage` synchronously at the start of execution, the queued request will always fetch the most up-to-date client state.
+
+### 2. Consolidated UI Saves
+In handlers that perform multiple updates in a single user transaction (such as `convertLeadBtn` click handler and private coaching appointment scheduling), we will write the changes to `localStorage` synchronously and then invoke `saveToServer()` once at the end, minimizing redundant network calls.
+
+## Risks / Trade-offs
+
+* **[Risk]** If a network request hangs indefinitely, the lock might remain active and block future saves.
+  * **[Mitigation]** The `finally` block will guarantee that `isSaving` is set to `false`. We will also ensure errors are caught and logged appropriately so the queue doesn't lock up on network failures.
+````
+
+## File: openspec/changes/fix-lead-conversion-users-sync/proposal.md
+````markdown
+## Why
+
+When converting a lead to a member or scheduling batched appointments, the app performs multiple sequential asynchronous database save requests to the server in a very short duration. Because the Mock DB middleware writes to `db.json` asynchronously, these concurrent POST requests create a race condition where earlier requests can overwrite later ones, resulting in newly converted users or billing records being missing from the persistent storage.
+
+## What Changes
+
+* **Sequential Database Save Queue**:
+  * Introduce a concurrency lock queue pattern inside the `saveToServer()` function in `app.js` to ensure only one database save request is in-flight at any given time. Any concurrent save requests will be deferred and executed sequentially using the latest `localStorage` state.
+* **Consolidated UI Event Handlers**:
+  * Modify `convertLeadBtn` click event handler to commit all updates (users list and leads list) to `localStorage` before initiating a single `saveToServer()` request.
+  * Modify private appointment scheduling handler to commit both appointments and billing payments updates to `localStorage` before triggering `saveToServer()`.
+
+## Capabilities
+
+### New Capabilities
+* None
+
+### Modified Capabilities
+* None
+
+## Impact
+
+* **`app.js`**: Core state persistence logic (`saveToServer`) and handlers for lead conversion and appointment scheduling will be updated.
+* **`db.json`**: Persistence behavior will become reliable and free of race conditions.
+````
+
+## File: openspec/changes/fix-lead-conversion-users-sync/specs/db-sync-reliability/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Reliable sequential database synchronization
+The system SHALL ensure that multiple consecutive database save operations are written to the backend server reliably and sequentially without race conditions or data overwrites.
+
+#### Scenario: Lead conversion synchronization
+- **WHEN** a lead is converted to a member, updating both users and leads lists in rapid succession
+- **THEN** the server-side database (db.json) is updated with both the new user profile and the converted lead status
+
+#### Scenario: Private coaching session appointment scheduling synchronization
+- **WHEN** a private coaching session appointment is scheduled, updating both appointments and billing payments lists in rapid succession
+- **THEN** the server-side database (db.json) is updated with both the new appointment and the billing payment records
+````
+
+## File: openspec/changes/fix-lead-conversion-users-sync/tasks.md
+````markdown
+## 1. Core Implementation
+
+- [x] 1.1 Implement concurrency lock queue variables (`isSaving`, `hasPendingSave`) and sequential execution queue in `saveToServer()` in `app.js`
+- [x] 1.2 Modify lead conversion click event handler (`convertLeadBtn`) in `app.js` to commit both updates to `localStorage` before calling `saveToServer()` once
+- [x] 1.3 Modify private coaching appointment scheduling logic in `app.js` to commit both updates to `localStorage` before calling `saveToServer()` once
+
+## 2. Verification
+
+- [x] 2.1 Verify lead conversion updates are successfully saved to `db.json` and new member account can successfully log in
+- [x] 2.2 Verify private coaching session scheduling successfully saves both the new appointment and the billing payment records to `db.json`
+````
+
+## File: openspec/changes/force-password-change-on-temp-login/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-15
+````
+
+## File: openspec/changes/force-password-change-on-temp-login/design.md
+````markdown
+## Context
+
+The application creates temporary passwords when converting leads. Allowing users to use temporary passwords indefinitely is insecure. We will track whether a user is using a temporary password using a boolean flag `mustChangePassword` and enforce a password change at first login using a fullscreen overlay gate.
+
+## Goals / Non-Goals
+
+**Goals:**
+* Track temporary password state on user profiles.
+* Update lead conversion to initialize `mustChangePassword` to `true`.
+* Intercept session verification on startup and successful login to show a fullscreen "Force Change Password" overlay if the flag is `true`.
+* Implement form validation and database persistence for password updates.
+
+**Non-Goals:**
+* Implementing email verification or password reset links (handled in a separate change).
+
+## Decisions
+
+### 1. Database Schema Extension
+* **Flag:** Add `mustChangePassword: true` on user objects created during lead conversion.
+* **Initialization:** Update the lead conversion handler in `app.js` to set:
+  ```javascript
+  const convertedUser = {
+    ...
+    mustChangePassword: true,
+    ...
+  };
+  ```
+
+### 2. Fullscreen Interrupt Overlay
+* **HTML Element:** Add `#force-change-password-overlay` to `index.html`. It will behave like `#auth-gate-fullscreen`.
+* **Flow Interception:** In `checkSession()` and the login form submit handler:
+  - If a user successfully authenticates and has `mustChangePassword === true`:
+    - Hide the main dashboard (`#dashboard-app`).
+    - Hide the login screen (`#auth-gate-fullscreen`).
+    - Show the `#force-change-password-overlay`.
+    - Block access until they submit a valid new password.
+
+### 3. Change Password Submission Logic
+* **Validation:** New password must be at least 6 characters.
+* **Saving:** Upon validation success:
+  - Update password in the user record.
+  - Set `mustChangePassword = false`.
+  - Save to `localStorage` and invoke `saveToServer()`.
+  - Hide the overlay, show `#dashboard-app`, and call `updateUIForLogin()`.
+
+## Risks / Trade-offs
+
+* **[Risk]** A user could reload the page to bypass the gate.
+  * **[Mitigation]** `checkSession()` executes on page load and checks `mustChangePassword` on the loaded profile, re-enforcing the gate immediately.
+````
+
+## File: openspec/changes/force-password-change-on-temp-login/proposal.md
+````markdown
+## Why
+
+When a lead is converted to a member, they are registered with a temporary password. Currently, they can use this temporary password indefinitely, which poses a security risk. To secure user accounts, converted members must be forced to change their temporary password to a custom secure password upon their first login before they can access any platform dashboard features.
+
+## What Changes
+
+* **Temporary Password Tracking**: Add a `mustChangePassword` flag to the user account object. When a lead is converted to a member, this flag is set to `true`.
+* **Forced Password Change Screen**: Upon login, if `mustChangePassword` is `true`, display a fullscreen change password overlay blocking all other sections.
+* **Forced Password Update Logic**: The user must enter a new custom password (minimum 6 characters). Upon successful submission, update their password, set `mustChangePassword` to `false`, commit the update to the server (`db.json`), and grant dashboard access.
+
+## Capabilities
+
+### New Capabilities
+
+- `force-password-change`: Enforce password change on first login with a temporary password.
+
+### Modified Capabilities
+
+- None
+
+## Impact
+
+* `index.html`: Add a fullscreen "Force Change Password" overlay `#force-change-password-overlay` with a form for entering the new password, a password confirmation field, validation messages, and a submit button.
+* `app.js`: Update the lead conversion handler to set `mustChangePassword: true` on the new member record. Modify `checkSession` and `loginForm` submission logic to check this flag and intercept routing by showing the overlay. Add a submit handler for the change password form.
+````
+
+## File: openspec/changes/force-password-change-on-temp-login/specs/force-password-change/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Mandatory Password Change Gate
+The system SHALL intercept user login or session restoration if the user account has `mustChangePassword` set to `true`, presenting a fullscreen "Force Change Password" screen and blocking all other application views.
+
+#### Scenario: First login redirect to Change Password screen
+- **WHEN** a user logs in (or their page loads with an active session) and their user object has `mustChangePassword` set to `true`
+- **THEN** the system SHALL display the fullscreen "Force Change Password" overlay, disable background scrolling, hide the dashboard, and block access to the rest of the application.
+
+### Requirement: Password Update Enforcement
+The system SHALL require the user to input a new password (minimum 6 characters), update their password in the database, set `mustChangePassword` to `false`, commit changes to the server, and load their dashboard.
+
+#### Scenario: Successful password change
+- **WHEN** the user submits a new password of at least 6 characters in the change password form
+- **THEN** the system SHALL update the password, set `mustChangePassword` to `false` in their user profile, save updates to the server via `saveToServer()`, hide the change password screen, and load the student dashboard view.
+
+#### Scenario: Password change attempt with short password
+- **WHEN** the user attempts to submit a new password that is shorter than 6 characters
+- **THEN** the system SHALL display a validation error message "Password must be at least 6 characters" and prevent form submission.
+````
+
+## File: openspec/changes/force-password-change-on-temp-login/tasks.md
+````markdown
+## 1. UI Implementation
+
+- [x] 1.1 Add the `#force-change-password-overlay` fullscreen container with new password inputs, confirmation field, validation feedback block, and submit button in `index.html`
+
+## 2. Core Implementation
+
+- [x] 2.1 Update the lead conversion user registration logic in `app.js` to assign `mustChangePassword: true` to the created member account
+- [x] 2.2 Update the `checkSession` and login form submission logic in `app.js` to intercept authentication, display the force change password overlay, and block standard dashboard visibility if `mustChangePassword === true`
+- [x] 2.3 Implement the change password form submit listener in `app.js` to validate the new password (minimum 6 characters), update the password field in the user database, set `mustChangePassword: false`, execute `saveToServer()`, and proceed to the dashboard
+
+## 3. Verification
+
+- [x] 3.1 Verify that logging in with a newly converted lead's temporary password immediately triggers the fullscreen password change gate
+- [x] 3.2 Verify that trying to save a password shorter than 6 characters yields a proper validation error message and keeps the gate active
+- [x] 3.3 Verify that submitting a valid password correctly updates the user profile, updates the mock server (`db.json`), and redirects to the student dashboard
+````
+
+## File: openspec/changes/force-user-login/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/force-user-login/design.md
+````markdown
+## Context
+
+Currently, the Quantum Yoga SPA allows guest users to see the landing page, poses directory, and guided routines directory without logging in. We need to introduce an authentication gate where unauthenticated users can only see a login/registration view, and cannot access the main application dashboard until they log in.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Hide all dashboard layout elements (header, main, hero, footer) when there is no active user session.
+- Render a fullscreen authentication card in the center of the viewport for unauthenticated users.
+- Toggle between fullscreen login/registration and regular dashboard seamlessly upon authentication state changes (login, registration, logout).
+
+**Non-Goals:**
+- Modifying authentication logic or stored user structure in LocalStorage.
+
+## Decisions
+
+### 1. Fullscreen Gate View vs Modal Hack
+- **Decision**: Introduce a wrapper `#dashboard-app` around all standard layout elements, and a separate `#auth-gate-fullscreen` container. Show only one of them based on authentication state.
+- **Rationale**: Completely hides dashboard components from unauthenticated view, preventing guest users from inspecting or interacting with the page.
+- **Alternative considered**: Forcing the existing `#auth-modal` to remain open and disabling the close button. Rejected because the guest can still see the background page behind the overlay.
+
+### 2. Styling Approach
+- **Decision**: Style `#auth-gate-fullscreen` as a full-viewport layout using flex centering with the glassmorphic card design matching the rest of the application.
+- **Rationale**: Provides a premium first impression upon landing, aligning with the visual identity.
+
+## Risks / Trade-offs
+
+- **[Risk]** Autocomplete credentials or session check causing a flicker on load.
+  - *Mitigation*: The session check (`checkSession()`) is executed synchronously on script initialization to set layout display before rendering frames.
+````
+
+## File: openspec/changes/force-user-login/proposal.md
+````markdown
+## Why
+
+Currently, the Quantum Yoga SPA allows guest users to see the landing page, poses directory, and guided routines directory without logging in. To ensure user privacy and enforce customized experiences, guest users should not be allowed to access any dashboard layout, directories, or headers. The application must display only a full-page login/registration view until authentication succeeds.
+
+## What Changes
+
+- Modify layout rendering behavior: if the user is unauthenticated, hide the landing page, header navigation, control panels, view toggle pills, and content section directories.
+- Display a dedicated full-page authentication card (Login/Register tabs) in the center of the viewport for unauthenticated users.
+- Upon successful registration or login, transition immediately to display the main header, nav, dashboard controls, and show the default content directory.
+- Upon logging out, immediately tear down the dashboard components and return the viewport to the full-page authentication screen.
+
+## Capabilities
+
+### New Capabilities
+- `force-user-login`: Enforces that unauthenticated users are presented only with a full-page login/registration view, restricting access to the dashboard until successful login.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to restructure the `#auth-modal` or create a new dedicated `#auth-fullscreen` view.
+- Modifies `app.js` to control visibility of layout wrappers based on the existence of an active user session.
+- Modifies `index.css` to introduce styling rules for the full-screen authentication gate layout.
+````
+
+## File: openspec/changes/force-user-login/specs/force-user-login/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Fullscreen Login Gate Visibility
+If the user session is unauthenticated, the system SHALL hide the main layout (header, hero, controls, toggle tab pills, content panels, footer) and display ONLY a centered, fullscreen login/registration card.
+
+#### Scenario: Guest opens the website
+- **WHEN** the guest user visits the homepage and there is no active session
+- **THEN** the system SHALL display only the fullscreen login/registration card and hide all other dashboard page elements.
+
+### Requirement: Fullscreen Authentication Controls
+The fullscreen authentication card SHALL allow users to toggle between Login and Registration forms.
+
+#### Scenario: Toggling authentication forms
+- **WHEN** the guest user clicks on the "Register" tab in the fullscreen gate
+- **THEN** the system SHALL hide the login form and reveal the registration form inputs.
+
+### Requirement: Post-Authentication Dashboard Disclosure
+Upon successful login or registration, the system SHALL immediately close the authentication gate and render all normal dashboard content.
+
+#### Scenario: Successful guest login
+- **WHEN** the guest user inputs valid credentials and submits the login form
+- **THEN** the system SHALL hide the fullscreen gate, show the navigation header and active pose directory, and greet the logged-in user.
+
+### Requirement: Unauthenticated Redirect on Logout
+When the logged-in user clicks "Log Out", the system SHALL clear the active user session and transition back to show ONLY the fullscreen login gate.
+
+#### Scenario: User logging out
+- **WHEN** the authenticated user clicks the "Log Out" button in the header
+- **THEN** the system SHALL destroy the session, hide all dashboard views, and present only the login/registration card.
+````
+
+## File: openspec/changes/force-user-login/tasks.md
+````markdown
+## 1. HTML Layout Restructuring
+
+- [x] 1.1 Wrap header, main, and footer layout sections inside `#dashboard-app` in `index.html`.
+- [x] 1.2 Create `#auth-gate-fullscreen` container outside the dashboard wrapper containing the tabbed login and registration forms in `index.html`.
+
+## 2. Authentication Gate Logic
+
+- [x] 2.1 Bind JS variables for `#dashboard-app` and `#auth-gate-fullscreen` in `app.js`.
+- [x] 2.2 Update session initialization and check flows to show/hide layout wrappers accordingly in `app.js`.
+- [x] 2.3 Refactor registration, login, and logout submit handlers to transition views on auth state change in `app.js`.
+
+## 3. Styling & Verification
+
+- [x] 3.1 Design fullscreen flex layout styles and glassmorphic card overlays for `#auth-gate-fullscreen` in `index.css`.
+- [x] 3.2 Verify login enforcement, regular logins, and logout redirects in the browser.
+````
+
+## File: openspec/changes/forgot-password-remember-me/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-15
+````
+
+## File: openspec/changes/forgot-password-remember-me/design.md
+````markdown
+## Context
+
+Users who forget their password currently have no self-service recovery mechanism. We will add a "Forgot Password" trigger in the login card that opens a modal dialog, letting users submit their email to get a new temporary password on screen. Additionally, the application currently persists sessions indefinitely in `localStorage`. We will add a "Remember Me" checkbox to allow storing sessions in `sessionStorage` instead when persistence is not wanted.
+
+## Goals / Non-Goals
+
+**Goals:**
+* Implement a "Forgot Password" modal and link on the login screen.
+* Generate and store temporary passwords in the user array and sync with the mock server (`db.json`).
+* Introduce a "Remember Me" checkbox to toggle session storage between `localStorage` (persistent) and `sessionStorage` (temporary).
+* Support clean logout by purging session tokens from both storages.
+
+**Non-Goals:**
+* Building actual email sending backend endpoints (temporary passwords will be shown in the UI modal).
+
+## Decisions
+
+### 1. Forgot Password Modal Overlay
+* **UI Trigger:** A small anchor link placed directly inside `#login-form` (adjacent to the password label/input).
+* **Modal Structure:** Add `#forgot-password-modal` into `index.html`. It will match existing overlay modals (`#appointment-modal`, `#pose-modal`) using glassmorphism styling.
+* **Flow:** 
+  - Submit email → search the client-side users database.
+  - If email is found: generate an 8-character password using the existing `generateRandomPassword(8)` function, update user records, commit to `localStorage`, execute `saveToServer()` once, and show a success message containing the temporary password.
+  - If email is not found: render a styled error message.
+
+### 2. Dual-Storage Session Architecture
+* **Checking Session:** Modify `checkSession()` to look up the session token (`qy_session`) in both `localStorage` and `sessionStorage`:
+  ```javascript
+  const data = localStorage.getItem("qy_session") || sessionStorage.getItem("qy_session");
+  ```
+* **Saving Session:**
+  - If "Remember Me" checkbox (`#login-remember`) is checked: save token in `localStorage`, remove from `sessionStorage`.
+  - If unchecked: save token in `sessionStorage`, remove from `localStorage`.
+* **Clearing Session:** On logout, remove `qy_session` from both `localStorage` and `sessionStorage`.
+
+## Risks / Trade-offs
+
+* **[Risk]** User could manually inject values into storage.
+  * **[Mitigation]** The server database `/api/db` remains the source of truth, and startup session checking loads fresh data from the server.
+* **[Risk]** Showing temporary passwords directly on-screen is a security bad practice.
+  * **[Mitigation]** We will add a visual notice in the UI explaining that this is a simulated local test reset flow.
+````
+
+## File: openspec/changes/forgot-password-remember-me/proposal.md
+````markdown
+## Why
+
+Currently, users who forget their passwords have no self-service option to reset them or retrieve a temporary one, which creates a friction point requiring direct administrator intervention. Additionally, visitors must manually log in every time they visit the website because there is no "Remember Me" option to persist their session across browser restarts.
+
+## What Changes
+
+* **Forgot Password Link & Modal**: Add a "Forgot Password" link on the login form that opens a temporary password reset modal.
+* **Temporary Password Reset**: Allow users to input their registered email in the forgot password modal to receive/display a new generated temporary password, updating the user record in `db.json` and logging the action.
+* **Remember Me Checkbox**: Introduce a "Remember Me" checkbox in the login form. If checked, the session token will be saved in `localStorage` persistently. If unchecked, the session token will be stored in `sessionStorage` instead, meaning it expires when the browser tab/session is closed.
+
+## Capabilities
+
+### New Capabilities
+
+- `forgot-password`: Allow self-service password reset with temporary password generation.
+- `remember-me-session`: Allow users to persist their login session across browser restarts.
+
+### Modified Capabilities
+
+- None
+
+## Impact
+
+* `index.html`: Add a "Forgot Password" link, a "Forgot Password" modal overlay with email input and success messaging, and a "Remember Me" checkbox in the login form.
+* `app.js`: Implement event handlers for modal display, temporary password reset submission, and update session storage logic to toggle between `localStorage` and `sessionStorage` depending on the "Remember Me" checkbox.
+````
+
+## File: openspec/changes/forgot-password-remember-me/specs/forgot-password/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Forgot Password Modal Display
+The system SHALL provide a "Forgot Password" link on the login screen that opens a dedicated modal containing an email input field and submit button.
+
+#### Scenario: Open forgot password modal
+- **WHEN** the guest visitor clicks the "Forgot Password" link on the auth screen
+- **THEN** the system SHALL display the forgot password modal.
+
+### Requirement: Self-Service Temporary Password Generation
+The system SHALL generate an 8-character random temporary password and update the user record in persistent storage when a valid registered email address is submitted.
+
+#### Scenario: Successful temporary password reset
+- **WHEN** the user submits a valid registered email address in the forgot password form
+- **THEN** the system SHALL generate a random 8-character temporary password, update the corresponding user account password, save the consolidated database to the server, and display the new temporary password within the modal's success feedback message.
+
+#### Scenario: Password reset request for unregistered email
+- **WHEN** the user submits an email address that is not found in the users database
+- **THEN** the system SHALL display an error message stating that the email address is not registered and make no modifications to any data.
+````
+
+## File: openspec/changes/forgot-password-remember-me/specs/remember-me-session/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Persist session based on Remember Me checkbox
+The login form SHALL feature a "Remember Me" checkbox. The system SHALL store the active session token in `localStorage` if the checkbox is checked upon login, and in `sessionStorage` if it is unchecked.
+
+#### Scenario: Login with Remember Me checked
+- **WHEN** the user checks the "Remember Me" checkbox and logs in successfully
+- **THEN** the system SHALL save the session token in `localStorage` under `qy_session` and clear `sessionStorage`.
+
+#### Scenario: Login with Remember Me unchecked
+- **WHEN** the user leaves the "Remember Me" checkbox unchecked and logs in successfully
+- **THEN** the system SHALL save the session token in `sessionStorage` under `qy_session` and clear `localStorage`.
+
+### Requirement: Active Session Initialization Check
+On startup, the system SHALL verify if there is an active session token in either `localStorage` or `sessionStorage` and restore the user's logged-in session accordingly.
+
+#### Scenario: Startup with active session in localStorage
+- **WHEN** the page is loaded and `localStorage` contains a valid session token
+- **THEN** the system SHALL automatically restore the logged-in session.
+
+#### Scenario: Startup with active session in sessionStorage
+- **WHEN** the page is loaded and `sessionStorage` contains a valid session token
+- **THEN** the system SHALL automatically restore the logged-in session.
+
+#### Scenario: Startup with no session token
+- **WHEN** the page is loaded and no session token exists in either `localStorage` or `sessionStorage`
+- **THEN** the system SHALL display the fullscreen auth gate.
+````
+
+## File: openspec/changes/forgot-password-remember-me/tasks.md
+````markdown
+## 1. UI Implementation
+
+- [x] 1.1 Add a "Forgot Password?" text link element in `index.html` within the login form
+- [x] 1.2 Add the forgot password modal overlay (`#forgot-password-modal`) structure to `index.html` matching existing modal layouts
+- [x] 1.3 Add a "Remember Me" checkbox input (`#login-remember`) inside the login form in `index.html`
+
+## 2. Logical Core Implementation
+
+- [x] 2.1 Bind modal toggling event listeners to control display and closure of the forgot password modal in `app.js`
+- [x] 2.2 Implement the forgot password submission event listener in `app.js` to process email verification, generate temporary passwords, update database records, and call `saveToServer()`
+- [x] 2.3 Modify the login form submit handler to verify the "Remember Me" checkbox and conditionally save the session to either `localStorage` or `sessionStorage`
+- [x] 2.4 Update session initialization (`checkSession`) and logout (`updateUIForLogout`) to correctly check and clear session tokens from both storages
+
+## 3. Verification
+
+- [x] 3.1 Verify that the forgot password modal successfully resets registered user passwords, updates `db.json`, and allows logging in with the new credentials
+- [x] 3.2 Verify that submitting an unregistered email address displays a proper "Email address not found" validation message
+- [x] 3.3 Verify that logging in with "Remember Me" checked persists the session token in `localStorage`, whereas logging in with it unchecked stores it in `sessionStorage` only
+````
+
+## File: openspec/changes/glassmorphic-ux/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-12
+````
+
+## File: openspec/changes/glassmorphic-ux/design.md
+````markdown
+## Context
+
+The Quantum Yoga website is currently a premium, dark-themed Single Page Application (SPA). It uses basic glassmorphism in styling (via backdrop-filter and transparency), but it does not support multiple layers of glassmorphic surfaces, dynamic spotlight highlights matching cursor coordinates, or border glow transitions. We want to implement a comprehensive glassmorphic design language to make the dashboard look extremely interactive and premium.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Implement Tiered Glassmorphism Design Tokens in pure CSS (`index.css`), specifying Light, Medium, and Dark glass tiers.
+- Implement a JavaScript-based mouse move event listener in `app.js` that tracks cursor coordinates and updates custom CSS properties (`--mouse-x`, `--mouse-y`) on glass cards to generate a dynamic radial gradient spotlight.
+- Enhance card border styling, card background reflections, details modals, and media player controls using the new glassmorphism tier rules.
+- Keep performance fluid (target 60FPS) by adding hardware-accelerated properties (`transform: translateZ(0)`) and optimizing backdrop-filter redraws.
+
+**Non-Goals:**
+- Redesigning the core layout structure or changing page routing.
+- Adding a backend database or user session tracking.
+- Implementing video guides/posters other than the CDN placeholders.
+
+## Decisions
+
+### 1. CSS Variables for Glass Tiers
+- **Decision**: Define three dedicated CSS variable sets for Light Glass, Medium Glass, and Dark Glass in `:root` inside `index.css`.
+- **Rationale**: Keeps styling consistent and makes it extremely simple to apply uniform overlays.
+- **Alternative considered**: Implementing ad-hoc styling for each card/container. Rejected because it leads to design inconsistency and code duplication.
+
+### 2. Coordinate-Based Radial Gradient for Spotlight Effect
+- **Decision**: Bind a `mousemove` handler in `app.js` for elements with a class `.card` that updates `--mouse-x` and `--mouse-y` percentages. The cards will use a background overlay containing `radial-gradient(circle 180px at var(--mouse-x) var(--mouse-y), rgba(167, 139, 250, 0.15), transparent 80%)` combined with their glass backdrop.
+- **Rationale**: Creates a very realistic, hardware-accelerated illumination reflection on the cards without extra DOM nodes.
+- **Alternative considered**: Using an absolutely positioned glowing dot inside each card. Rejected because it adds extra DOM nodes and complex overflow/clipping logic.
+
+### 3. Glass Shimmer Effect
+- **Decision**: Use a CSS pseudo-element (`::after`) with a diagonal linear-gradient shimmer on interactive elements. On hover, translate this pseudo-element across the container using a smooth transition.
+- **Rationale**: Highly performant transition computed directly by the browser's render compositor.
+- **Alternative considered**: JavaScript-driven canvas or SVG-based light path sweep. Rejected due to unnecessary CPU overhead.
+
+## Risks / Trade-offs
+
+- **Risk**: Heavy backdrop-filter rendering on older GPU/CPU architectures causing layout lag.
+  - *Mitigation*: Apply `transform: translateZ(0)` or `will-change: backdrop-filter, transform` to trigger GPU compositing layers, and limit blurs to a maximum of 24px.
+- **Risk**: Spotlight gradient jitter during rapid cursor movements.
+  - *Mitigation*: Let the browser handle standard coordinate mapping, and apply `will-change` on card backgrounds or use standard CSS custom properties.
+````
+
+## File: openspec/changes/glassmorphic-ux/proposal.md
+````markdown
+## Why
+
+To elevate the visual premium feel and user interaction of Quantum Yoga, we need a complete, highly immersive glassmorphic design system. Currently, the interface has basic backdrop filters, but lacks dynamic light reflections, tiered opacity levels, cursor-responsive lighting effects, and performance optimizations for modern glassmorphism. Enhancing the design system with these principles will deliver a state-of-the-art interactive experience.
+
+## What Changes
+
+- Introduce tiered glassmorphism variables in CSS (Light, Medium, and Dark Glass overlays).
+- Implement a cursor-following spotlight reflection in JS that interacts with glass containers to simulate real-world glass refraction and light play.
+- Apply the glassmorphic styling enhancements to cards, navigation headers, control panels, and details modals.
+- Optimize rendering performance by adding hardware acceleration styles (`transform: translateZ(0)`) for backdrop filters.
+- Add micro-animations on hover, such as glass shimmer reflections and glowing border gradients.
+
+## Capabilities
+
+### New Capabilities
+- `glass-ux`: Establishes the tiered glassmorphism design tokens, dynamic cursor-responsive lighting reflections, and interactive micro-animations.
+
+### Modified Capabilities
+<!-- No modified capabilities -->
+
+## Impact
+
+- Updates to `index.css` and `app.js` to integrate the new design tokens and JS event listeners.
+- No impact on core business logic or data structures.
+````
+
+## File: openspec/changes/glassmorphic-ux/specs/glass-ux/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Tiered Glassmorphic Styling
+The system SHALL support three tiers of glassmorphic styles with responsive translucent borders, backdrop filters, and hardware acceleration:
+- **Light Glass**: A highly transparent frosting (e.g., 20% opacity card backdrop) for inner sections.
+- **Medium Glass**: The standard frosted glass effect (e.g., 40% opacity) with backdrop blur (12px to 20px) for layout cards, header, and controls.
+- **Dark Glass**: A deep, low-transparency frosted glass backdrop (e.g., 70% opacity) for detail modals and the custom video player interface.
+
+#### Scenario: Displaying Tiered Glass Layouts
+- **WHEN** the user views the dashboard
+- **THEN** the header, card grid, controls card, and overlay modals SHALL render using their respective tiered glass backdrop filters and translucent borders.
+
+### Requirement: Interactive Cursor Spotlight Reflection
+The system SHALL calculate the cursor position relative to glassmorphic containers (such as pose cards) and update their styling dynamically to render a moving radial spotlight highlight, simulating a light beam reflecting off the glass surface.
+
+#### Scenario: Interactive Hover Spotlight
+- **WHEN** the user moves the cursor over a pose card
+- **THEN** the system SHALL dynamically update the background gradient origin point matching the cursor coordinate on the hovered card.
+
+### Requirement: Glass Shimmer and Glowing Border Animations
+The system SHALL animate the border color opacity and background refraction layer of glassmorphic containers during hover states to show a frosted reflection shimmer and glowing border effect.
+
+#### Scenario: Card Hover Animation
+- **WHEN** the user hovers over a pose card
+- **THEN** the card's border color SHALL transition from a muted white border to a glowing lavender border, and a subtle shimmer transition SHALL pass across the card background.
+````
+
+## File: openspec/changes/glassmorphic-ux/tasks.md
+````markdown
+## 1. Glassmorphism CSS Design Tokens
+
+- [x] 1.1 Define custom CSS variables for tiered glassmorphism (light, medium, and dark glass) inside `index.css`, including backdrops, border colors, and GPU composite layers.
+- [x] 1.2 Update the dashboard headers, search/controls card, and footers to use the new medium glassmorphism tokens.
+- [x] 1.3 Update detail modal bodies, player overlays, and inner card contents to use dark and light glassmorphic styles respectively.
+
+## 2. Dynamic Spotlight Interaction
+
+- [x] 2.1 Implement a mousemove event listener in `app.js` to calculate client coordinates relative to hovered cards and set `--mouse-x` and `--mouse-y` CSS properties.
+- [x] 2.2 Add a responsive background radial-gradient layer in `index.css` that follows the custom CSS variables to create the interactive cursor reflection.
+
+## 3. Shimmer and Border Glow Animations
+
+- [x] 3.1 Add a CSS pseudo-element shimmer reflection sweep animation in `index.css` triggered by hover on cards and action buttons.
+- [x] 3.2 Implement smooth transitions for border-color and box-shadow glows on all glassmorphic components on hover.
+
+## 4. Verification and Performance Testing
+
+- [x] 4.1 Verify spotlight tracking alignment and card interactivity in the browser.
+- [x] 4.2 Validate backdrop filter rendering performance, ensuring overlays animate smoothly at 60FPS without visual layout lag.
+````
+
+## File: openspec/changes/gmail-email-integration/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-16
+````
+
+## File: openspec/changes/gmail-email-integration/design.md
+````markdown
+## Context
+
+Quantum Yoga is a single-page vanilla JS/HTML/CSS dashboard application (no backend server) that stores all data in `db.json` via a local Vite dev server for development. The app has a well-established admin panel (with sub-tabs for Users, Payments, Leads, Batches, Appointments, Reports, Settings) and a student Profile section (with sub-tabs for Dashboard, Practice Log, Wellness, Appointments). There is currently no in-app communication mechanism; all communications are done outside the application.
+
+The Gmail REST API allows browser-based OAuth2 flows (Authorization Code + PKCE or Implicit Grant), but for a client-side SPA without a backend, we will use the **Google Identity Services (GIS) library** with the `token` model (implicit grant) to get short-lived access tokens. To avoid requiring users to re-authorize on every page load, we persist the access token and its expiry in `db.json` (admin-side) and `localStorage` (student-side mirror). Since refresh tokens cannot be obtained without a backend redirect URI handler, the admin will need to periodically re-authorize (token TTL is 1 hour).
+
+## Goals / Non-Goals
+
+**Goals:**
+- Allow admin to connect a Gmail account via Google OAuth2 from the System Settings tab
+- Provide admin with an "Email" sub-tab: inbox list, compose modal, conversation thread view, and send email capability
+- Provide students with an "Email" sub-tab in their Profile: view emails from the studio, reply to threads
+- Mirror email metadata (sender, recipient, subject, snippet, timestamp, read status, threadId, messageId) in `db.json` under an `emails` array for offline/cached display
+- Trigger automated notification emails on key events: invoice issued, appointment confirmed/cancelled, batch enrollment
+- Display unread count badge on the Email tab for both admin and student
+- Use the existing glassmorphic design system for all new UI elements
+
+**Non-Goals:**
+- Full backend OAuth2 server with refresh token management (no server component)
+- Sending attachments (initial version: text/HTML body only)
+- Push notifications or real-time email polling (manual refresh only in v1)
+- Supporting multiple connected Gmail accounts simultaneously
+- Email threading reconstructed from Gmail API (v1 shows flat list; threaded view is enhancement)
+- Storing full email body content in `db.json` (only snippet + metadata; full body fetched on demand from Gmail API)
+
+## Decisions
+
+### Decision 1: Client-side OAuth2 with Google Identity Services (GIS)
+
+**Chosen**: GIS `tokenClient` (implicit grant) loaded via `accounts.google.com/gsi/client` CDN script.
+
+**Rationale**: The app has no backend server, so Authorization Code flow with refresh tokens is not viable without a redirect endpoint. The GIS library's `tokenClient` provides a popup-based consent flow that delivers a short-lived access token directly to the browser. The token is stored in `db.json` (for admin) with its expiry timestamp and re-requested when expired via a silent prompt attempt (which auto-renews if the user has a valid Google session).
+
+**Alternative considered**: Firebase Auth with Gmail scope — rejected because it adds a large dependency and requires Firebase project setup, which is overkill for a local studio management app.
+
+### Decision 2: Email metadata mirrored in `db.json`
+
+**Chosen**: On each "fetch inbox" call, we sync the latest N (default 20) message metadata objects into `db.json.emails`. Full bodies are fetched on demand from the Gmail API when a message is opened.
+
+**Rationale**: Prevents UI from showing empty state on every load while waiting for API. Allows filtering/searching the inbox locally. Keeps `db.json` as the single source of truth for the app's local state — consistent with how invoices, appointments, and batches are already stored.
+
+**Alternative considered**: Purely API-driven with no local cache — rejected because any network latency or token expiry would leave the UI blank.
+
+### Decision 3: Scopes — Gmail API read/write
+
+**Chosen**: Request `https://www.googleapis.com/auth/gmail.modify` scope for admin (allows read, send, modify labels/read status) and display a read-only mirror for students (student emails are fetched by admin API and stored in `db.json`).
+
+**Rationale**: `gmail.modify` gives full send+read access without requiring the more sensitive `gmail` scope. Students do not need a separate OAuth connection — their emails are persisted in `db.json` by the admin's connection and they "reply" by the system sending an email on their behalf via the admin's Gmail account (reply-to addressed to the student's stored email).
+
+**Alternative considered**: Separate OAuth for each student — rejected because it massively complicates the UX and requires each student to have a Google account.
+
+### Decision 4: Single `emails` collection in `db.json`
+
+**Schema**:
+```json
+{
+  "emails": [
+    {
+      "id": "msg_abc123",
+      "threadId": "thread_xyz",
+      "from": "studio@gmail.com",
+      "to": "student@example.com",
+      "subject": "Your Appointment Confirmation",
+      "snippet": "Hi Priya, your appointment on...",
+      "body": "",
+      "timestamp": "2026-06-16T10:30:00Z",
+      "isRead": false,
+      "direction": "sent",
+      "studentEmail": "student@example.com",
+      "type": "manual | transactional",
+      "triggerEvent": "appointment_confirmed | invoice_issued | batch_enrolled | null"
+    }
+  ],
+  "gmailSettings": {
+    "connectedEmail": "studio@gmail.com",
+    "accessToken": "ya29...",
+    "tokenExpiry": 1718530000,
+    "clientId": "xxxx.apps.googleusercontent.com"
+  }
+}
 ```
 
-## File: sample_ledger.csv
+**Rationale**: Flat collection is simple to filter by `studentEmail` for the student's inbox view and by `direction` for admin sent/received.
+
+### Decision 5: Student "reply" via admin Gmail account
+
+**Chosen**: When a student clicks "Reply" on an email, a compose modal pre-fills with the thread details. On submit, the admin's Gmail account sends the reply. The student does not need their own Gmail OAuth.
+
+**Rationale**: Keeps OAuth complexity to one account. This models the studio as the sole communicating entity.
+
+## Risks / Trade-offs
+
+- **Access token expiry (1 hr TTL)** → Mitigation: Show a "Reconnect Gmail" banner in the Email tab if the token is expired; prompt re-authorization with one click. Silent re-auth attempt first.
+- **Gmail API rate limits** → Mitigation: Cache inbox in `db.json`, only re-fetch on explicit user refresh or on page load if cache is >5 min old.
+- **Google OAuth requires a real domain or `localhost` registered in GCP Console** → Mitigation: Document setup steps in tasks; admin must create a GCP project and add `http://localhost` as authorized origin. In production, update to the real domain.
+- **No server-side token storage = token visible in localStorage/db.json** → Mitigation: Acceptable risk for a local studio management app. Document that `db.json` should not be committed to public repos with live tokens.
+- **Students can only see emails via the studio's account mirror** → Mitigation: Clearly label the student email tab as "Studio Emails" to set expectations. If student replies, it goes through admin Gmail.
+
+## Migration Plan
+
+1. Admin navigates to System Settings → "Gmail Integration" card
+2. Enters their Google Cloud OAuth2 Client ID
+3. Clicks "Connect Gmail Account" → GIS popup appears → admin grants consent
+4. Access token saved to `db.json.gmailSettings`
+5. Email tab appears in both Admin and Student Profile panels
+6. Existing data unaffected — `db.json` `emails` array starts empty and populates on first sync
+7. Rollback: Admin clicks "Disconnect Gmail" in settings → token and emails array cleared
+````
+
+## File: openspec/changes/gmail-email-integration/proposal.md
+````markdown
+## Why
+
+Quantum Yoga studio currently has no in-app communication channel between the admin and students. Critical communications — such as payment receipts, appointment confirmations, batch enrollment notices, and personalized announcements — must be handled outside the app, breaking the studio management workflow. Integrating Gmail (via the Gmail API / OAuth2) gives the studio a first-class, authenticated email channel so that transactional emails can be sent and received directly from the dashboard for both admin and students.
+
+## What Changes
+
+- **New "Email" tab in the Admin panel**: Admins can compose, send, and read emails to/from students via a connected Gmail account. Supports inbox view, compose modal, and conversation threads.
+- **New "Email" tab in the Student Profile section**: Students can view emails received from the studio and reply to them from within the app.
+- **Gmail OAuth2 connection flow**: Admin can connect their studio Gmail account via OAuth2 (Google Sign-In consent screen). Access tokens are persisted in `db.json` / localStorage.
+- **Email data model in `db.json`**: A new `emails` array stored locally mirrors sent/received email metadata (sender, recipient, subject, body snippet, timestamp, read status, thread ID).
+- **Transactional email triggers**: System events (invoice issued, appointment booked/cancelled, batch enrollment) automatically compose and send notification emails via the connected Gmail account.
+- **Email notification badge**: Unread email counts appear on the tab badge for both student and admin.
+
+## Capabilities
+
+### New Capabilities
+
+- `gmail-oauth-connect`: Admin can authorize the app with their Gmail account using Google OAuth2, receive and persist access/refresh tokens, and disconnect at any time from System Settings.
+- `admin-email-inbox`: Admin email tab showing inbox list of received messages, compose button for new emails to any student, and conversation thread view.
+- `student-email-inbox`: Student email tab in Profile showing emails received from the studio admin, with ability to reply within the thread.
+- `transactional-email-triggers`: Automated email sending on key system events: invoice created, appointment confirmed/cancelled, batch enrollment confirmation.
+
+### Modified Capabilities
+
+- (none — no existing spec-level behavior changes)
+
+## Impact
+
+- **`index.html`**: Add new "Email" sub-tab buttons in both the Admin panel (`admin-sub-tabs`) and the Student Profile panel (`profile-sub-tabs`), and corresponding panel content sections.
+- **`app.js`**: New Gmail API integration module (OAuth flow, token management, send/read email functions); event listeners for transactional triggers; email tab UI rendering logic.
+- **`index.css`**: Styles for email inbox list, compose modal, thread view, unread badge, and connection status card.
+- **`db.json`**: New `emails` array and `gmailSettings` object (access token, refresh token, connected account).
+- **External dependency**: Google Identity Services (`accounts.google.com/gsi/client`) and Gmail REST API (`https://gmail.googleapis.com`). Requires a Google Cloud project with Gmail API enabled and OAuth2 credentials (Client ID).
+- **No backend required**: All OAuth and API calls are made from the browser using client-side JavaScript with the Gmail REST API. Refresh tokens are stored in `db.json` (local persistence).
+````
+
+## File: openspec/changes/gmail-email-integration/specs/admin-email-inbox/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Admin can view inbox email list
+The system SHALL provide an "Email" sub-tab in the Admin panel that displays a list of emails (both sent and received) associated with the connected Gmail account. Each list item SHALL show: sender/recipient name or email, subject line, snippet (first ~100 chars of body), timestamp, and an unread indicator dot. The list SHALL be sorted by timestamp descending (newest first). A manual "Refresh Inbox" button SHALL trigger a fresh fetch from the Gmail API and update the `db.json.emails` cache.
+
+#### Scenario: Admin opens Email tab with connected account
+- **WHEN** admin clicks the "Email" sub-tab and a valid Gmail token exists
+- **THEN** the system displays the cached email list from `db.json.emails` immediately, then triggers a background refresh from the Gmail API and updates the list
+
+#### Scenario: No emails cached
+- **WHEN** admin opens the Email tab for the first time (empty cache)
+- **THEN** the system shows a loading state while fetching from Gmail API, then renders the inbox list or an empty state message if no emails exist
+
+#### Scenario: Admin clicks a message to open it
+- **WHEN** admin clicks on an email list item
+- **THEN** the system fetches the full message body from Gmail API, displays it in a side panel or modal, marks it as read in `db.json`, and removes the unread indicator
+
+### Requirement: Admin can compose and send an email
+The system SHALL provide a "Compose" button in the Email tab that opens a compose modal. The modal SHALL include: To (student email picker from the users list), Subject, and Body (textarea, plain text). On send, the system SHALL call the Gmail API to send the email, save the message metadata to `db.json.emails`, and close the modal.
+
+#### Scenario: Admin sends an email to a student
+- **WHEN** admin clicks "Compose", selects a student email, enters subject and body, and clicks "Send"
+- **THEN** the system sends the email via Gmail API, adds the sent email record to `db.json.emails` with `direction: "sent"`, shows a success toast, and the compose modal closes
+
+#### Scenario: Gmail API send fails
+- **WHEN** sending fails due to network error or expired token
+- **THEN** the system displays an error toast "Failed to send email. Please check your Gmail connection." and keeps the compose modal open with the drafted content
+
+#### Scenario: Admin replies to a received email
+- **WHEN** admin opens a received email and clicks "Reply"
+- **THEN** a pre-filled compose modal opens with the subject prefixed with "Re: " and the "To" field set to the sender's address; on send, the reply is threaded via Gmail API
+
+### Requirement: Unread email count badge on admin Email tab
+The system SHALL display a numeric badge on the "Email" admin sub-tab button showing the count of emails in `db.json.emails` where `isRead === false` and `direction === "received"`. The badge SHALL update in real-time as emails are read.
+
+#### Scenario: Admin has unread emails
+- **WHEN** the Email tab is not active and `db.json.emails` contains unread received emails
+- **THEN** the "Email" tab button shows a colored badge with the unread count (e.g., "3")
+
+#### Scenario: All emails read
+- **WHEN** all emails have `isRead === true`
+- **THEN** no badge is shown on the Email tab button
+````
+
+## File: openspec/changes/gmail-email-integration/specs/gmail-oauth-connect/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Admin can connect a Gmail account via OAuth2
+The system SHALL allow an admin to connect their studio Gmail account by entering a Google OAuth2 Client ID and initiating the Google Identity Services consent flow. Upon successful authorization, the access token, token expiry timestamp, and connected email address SHALL be stored in `db.json.gmailSettings`. The Gmail integration features (Email tab in admin and student views) SHALL become visible only after a valid token is stored.
+
+#### Scenario: Admin connects Gmail successfully
+- **WHEN** admin navigates to System Settings and enters a valid Google OAuth2 Client ID, then clicks "Connect Gmail Account"
+- **THEN** the Google Identity Services consent popup appears, and upon granting consent, the system stores the access token in `db.json.gmailSettings` and displays the connected email address with a green "Connected" badge
+
+#### Scenario: Admin disconnects Gmail
+- **WHEN** admin clicks "Disconnect Gmail" in System Settings
+- **THEN** the system clears `db.json.gmailSettings` (token, expiry, connectedEmail), hides the Email tabs from both admin and student panels, and displays a "Not Connected" status
+
+#### Scenario: Access token is expired on app load
+- **WHEN** the app loads and `db.json.gmailSettings.tokenExpiry` is in the past
+- **THEN** the system displays a "Gmail session expired – Reconnect" banner in the Email tab and marks the connection as invalid; no API calls are made until the admin re-authorizes
+
+#### Scenario: Admin saves Client ID without connecting
+- **WHEN** admin saves a Client ID but has not yet clicked "Connect Gmail Account"
+- **THEN** the system persists the Client ID in `db.json.gmailSettings.clientId` but does NOT show the Email tab yet; a "Not Connected" status is shown
+
+### Requirement: Gmail settings persist across sessions
+The system SHALL persist `gmailSettings` (clientId, connectedEmail, accessToken, tokenExpiry) in `db.json` so that admin does not need to reconnect on every page load, provided the access token has not expired.
+
+#### Scenario: Page reload with valid token
+- **WHEN** admin reloads the page within 1 hour of connecting Gmail
+- **THEN** the Email tab is shown immediately without requiring re-authorization, using the cached access token
+````
+
+## File: openspec/changes/gmail-email-integration/specs/student-email-inbox/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Student can view emails from the studio
+The system SHALL provide an "Email" sub-tab in the student's Profile panel that displays a list of emails sent to that student's registered email address. The list SHALL be filtered from `db.json.emails` by `studentEmail === currentUser.email`. Each item SHALL show: subject, snippet, timestamp, and an unread indicator. The Email sub-tab SHALL only be visible to logged-in students when a Gmail connection is active (`db.json.gmailSettings.accessToken` is valid).
+
+#### Scenario: Student opens Email tab
+- **WHEN** a logged-in student clicks the "Email" tab in their Profile section
+- **THEN** the system displays all emails in `db.json.emails` where `studentEmail` matches the student's registered email, sorted by timestamp descending
+
+#### Scenario: No emails for student
+- **WHEN** the student has no emails in `db.json.emails` matching their email
+- **THEN** the system displays an empty state: "No messages from the studio yet."
+
+#### Scenario: Student opens a specific email
+- **WHEN** student clicks on an email list item
+- **THEN** the system displays the full email body (fetched from Gmail API or from stored body if cached), marks the email as read in `db.json`, and removes the unread indicator
+
+### Requirement: Student can reply to a studio email
+The system SHALL allow a student to reply to an email received from the studio. Clicking "Reply" on an opened email SHALL open a compose panel pre-filled with the original subject (prefixed "Re: "). On submission, the system SHALL send the reply via the admin's connected Gmail account (from the studio email, with the reply-to set to the student's email for reference), and save the outgoing record to `db.json.emails`.
+
+#### Scenario: Student sends a reply
+- **WHEN** student opens an email, clicks "Reply", writes a response, and clicks "Send"
+- **THEN** the system sends the reply via the admin's Gmail API connection, adds a record to `db.json.emails` with `direction: "sent"` and `studentEmail` set to the student's email, and shows a success message "Reply sent!"
+
+#### Scenario: Student tries to reply without active Gmail connection
+- **WHEN** the Gmail access token is expired or not set, and the student clicks "Reply"
+- **THEN** the system displays an error: "Email service is currently unavailable. Please contact the admin."
+
+### Requirement: Unread email count badge on student Email tab
+The system SHALL display a numeric badge on the student "Email" profile sub-tab button showing the count of emails where `isRead === false` and `studentEmail === currentUser.email`.
+
+#### Scenario: Student has unread emails
+- **WHEN** student is logged in and has unread emails from the studio
+- **THEN** the "Email" profile sub-tab button shows a badge with the unread count
+
+#### Scenario: Student reads all emails
+- **WHEN** student opens all unread emails
+- **THEN** the badge disappears from the Email tab button
+````
+
+## File: openspec/changes/gmail-email-integration/specs/transactional-email-triggers/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: System sends email on invoice creation
+The system SHALL automatically send an email notification to the student when an admin creates and issues a new invoice. The email SHALL include: invoice ID, description, amount (in INR), and due date. The email SHALL be sent via the connected Gmail account, and a record SHALL be added to `db.json.emails` with `type: "transactional"` and `triggerEvent: "invoice_issued"`.
+
+#### Scenario: Admin creates an invoice with Gmail connected
+- **WHEN** admin submits the "Issue Manual Invoice" form and a valid Gmail token exists
+- **THEN** the system creates the invoice in `db.json.invoices`, sends an email to the student with invoice details, and adds the email record to `db.json.emails`
+
+#### Scenario: Admin creates an invoice without Gmail connected
+- **WHEN** admin submits the invoice form and no valid Gmail token exists
+- **THEN** the system creates the invoice normally and shows a warning toast: "Invoice created. Email notification skipped – Gmail not connected."
+
+### Requirement: System sends email on appointment confirmation
+The system SHALL automatically send an email to the student when an appointment is booked or confirmed (status changed to "Confirmed"). The email SHALL include: appointment date, time slot, yoga routine name, and fee amount.
+
+#### Scenario: Appointment booked with Gmail connected
+- **WHEN** admin books a new appointment or updates status to "Confirmed" and Gmail is connected
+- **THEN** the system sends a confirmation email to the student's registered email and saves the record to `db.json.emails` with `triggerEvent: "appointment_confirmed"`
+
+#### Scenario: Appointment cancelled with Gmail connected
+- **WHEN** admin cancels an appointment (status changed to "Cancelled") and Gmail is connected
+- **THEN** the system sends a cancellation email to the student and saves the record with `triggerEvent: "appointment_cancelled"`
+
+### Requirement: System sends email on batch enrollment
+The system SHALL automatically send an email to a student when the admin assigns them to a batch (sets `batchId` on the user record). The email SHALL include: batch name, instructor name, timetable schedule, and session fee.
+
+#### Scenario: Admin assigns student to a batch with Gmail connected
+- **WHEN** admin assigns a student to a batch via the User Management panel and Gmail is connected
+- **THEN** the system sends a batch enrollment email to the student and saves the record to `db.json.emails` with `triggerEvent: "batch_enrolled"`
+
+#### Scenario: Admin assigns batch without Gmail connected
+- **WHEN** admin assigns a batch and no valid Gmail token exists
+- **THEN** the batch assignment proceeds normally and a warning toast: "Batch assigned. Email notification skipped – Gmail not connected." is shown
+
+### Requirement: Transactional emails are visible in both admin and student Email inboxes
+All transactional emails (invoice, appointment, batch) saved to `db.json.emails` SHALL appear in:
+- The admin's Email tab (in the sent emails view)
+- The student's Email tab (filtered by their email address)
+
+#### Scenario: Transactional email appears in student inbox
+- **WHEN** a transactional email is sent to a student
+- **THEN** the email record is immediately visible in the student's Email tab list with `type: "transactional"` label/badge
+````
+
+## File: openspec/changes/gmail-email-integration/tasks.md
+````markdown
+## 1. Project Setup & Google Cloud Configuration
+
+- [x] 1.1 Document steps to create a Google Cloud project, enable Gmail API, and set up an OAuth2 Client ID (Web Application type) with `http://localhost:5173` as authorized origin
+- [x] 1.2 Add Google Identity Services CDN script tag to `index.html` (`accounts.google.com/gsi/client`)
+- [x] 1.3 Add `emails` array and `gmailSettings` object schema to `db.json` (with empty defaults: `{ "emails": [], "gmailSettings": { "clientId": "", "connectedEmail": "", "accessToken": "", "tokenExpiry": 0 } }`)
+
+## 2. Gmail OAuth2 Connect Module (app.js)
+
+- [x] 2.1 Implement `initGmailClient()` function that loads GIS `tokenClient` with `gmail.modify` scope using the stored `clientId` from `db.json.gmailSettings`
+- [x] 2.2 Implement `connectGmail()` function that calls `tokenClient.requestAccessToken()`, handles the callback, saves token + expiry to `db.json.gmailSettings`, and updates UI connection status
+- [x] 2.3 Implement `disconnectGmail()` function that clears `db.json.gmailSettings` (token, expiry, connectedEmail) and hides Email tabs
+- [x] 2.4 Implement `isGmailConnected()` helper that checks if a valid (non-expired) access token exists in `db.json.gmailSettings`
+- [x] 2.5 Implement `getGmailAccessToken()` function that returns the current token or attempts silent re-auth; displays "Reconnect Gmail" banner if token is expired
+
+## 3. Gmail API Service Layer (app.js)
+
+- [x] 3.1 Implement `gmailFetchInbox(maxResults = 20)` — calls `GET /gmail/v1/users/me/messages?maxResults=N`, then fetches metadata (headers: From, To, Subject, Date) for each message ID, maps to the `db.json.emails` schema, and merges into the local cache
+- [x] 3.2 Implement `gmailGetMessageBody(messageId)` — calls `GET /gmail/v1/users/me/messages/{id}?format=full`, decodes base64url body, returns HTML/plain text
+- [x] 3.3 Implement `gmailSendEmail(to, subject, body, threadId = null)` — constructs RFC 2822 message, base64url encodes it, calls `POST /gmail/v1/users/me/messages/send`, saves sent record to `db.json.emails`
+- [x] 3.4 Implement `gmailMarkAsRead(messageId)` — calls `POST /gmail/v1/users/me/messages/{id}/modify` with `removeLabelIds: ["UNREAD"]` and updates `isRead` in `db.json.emails`
+- [x] 3.5 Add `refreshEmailCache()` orchestrator that calls `gmailFetchInbox()`, updates `db.json.emails`, and re-renders the email list UI
+
+## 4. Admin System Settings – Gmail Connection Card (index.html + app.js)
+
+- [x] 4.1 Add a "Gmail Integration" card to the System Settings sub-panel in `index.html` with: Client ID input field, "Connect Gmail Account" button, connection status badge ("Connected ✓" / "Not Connected"), connected email address display, and "Disconnect" button
+- [x] 4.2 Wire the "Save Client ID" action to persist `clientId` to `db.json.gmailSettings` via `saveData()`
+- [x] 4.3 Wire "Connect Gmail Account" button to call `connectGmail()`
+- [x] 4.4 Wire "Disconnect" button to call `disconnectGmail()`
+- [x] 4.5 On admin panel load, call `isGmailConnected()` and render the correct connection status in the Gmail settings card
+- [x] 4.6 Pre-populate the Client ID input field from `db.json.gmailSettings.clientId` on settings panel open
+
+## 5. Admin Email Tab UI (index.html)
+
+- [x] 5.1 Add "Email" button to the admin sub-tabs bar (`admin-sub-tabs`) with ID `admin-email-tab-btn` and an unread count badge span
+- [x] 5.2 Add admin email panel content div `admin-email-panel` with a two-column layout: left = compose + sent, right = inbox
+- [x] 5.3 Build the inbox with search, filter buttons, and scrollable list container
+- [x] 5.4 Build the email preview overlay: subject header, from/date fields, full body area, and "Reply" button
+- [x] 5.5 Build the compose form: To field, Subject input, Template dropdown, Body textarea, Send button
+- [x] 5.6 Add CSS styles for: email list item cards (with unread indicator dot), preview overlay, connection status badge, filter buttons, loading spinner
+
+## 6. Admin Email Tab Logic (app.js)
+
+- [x] 6.1 Implement `renderAdminInbox()` — reads `db.json.emails`, renders all received emails sorted by timestamp descending; shows empty state with context-aware messages
+- [x] 6.2 Implement `openAdminEmailPreview(emailId)` — fetches full message body via `gmailGetMessageBody()`, renders in preview overlay, calls `gmailMarkAsRead()` and updates badge
+- [x] 6.3 Wire "Refresh" button to call `refreshEmailCache()` then `renderAdminEmailTab()`
+- [x] 6.4 Wire "Compose" button (template dropdown) to auto-fill subject
+- [x] 6.5 Wire compose form "Send" button to call `gmailSendEmail()`, reset form, and refresh sent list
+- [x] 6.6 Wire "Reply" button in preview overlay to pre-fill compose form with "Re: " subject and sender address
+- [x] 6.7 Implement `updateAdminUnreadBadge()`: count unread received emails, update badge on `admin-email-tab-btn`
+- [x] 6.8 On admin Email tab activation, call `renderAdminEmailTab()` which checks connection and renders inbox
+- [x] 6.9 Show/hide Email tab button based on `clientId` presence; show/hide student tab based on `isGmailConnected()`
+
+## 7. Student Email Tab UI (index.html)
+
+- [x] 7.1 Add "Email" button to the student profile sub-tabs (`profile-sub-tabs`) with ID `profile-email-tab-btn`
+- [x] 7.2 Add student email panel content div `profile-email-panel` with two-column layout
+- [x] 7.3 Build student inbox list container with expandable inline detail view on click
+- [x] 7.4 Build student compose form: Subject input, Body textarea, Send button
+- [x] 7.5 Inline email detail expand on item click (toggle behavior)
+- [x] 7.6 CSS reuses all admin email styles (`.email-list-item`, `.email-unread-dot`, etc.)
+
+## 8. Student Email Tab Logic (app.js)
+
+- [x] 8.1 Implement `renderStudentInbox()` — filters `db.json.emails` by `to` field matching current user email
+- [x] 8.2 Inline detail expansion loads full body via `gmailGetMessageBody()` on click
+- [x] 8.3 Click-to-expand toggles inline detail panel
+- [x] 8.4 Wire student compose "Send Message" button to call `gmailSendEmail()` addressed to admin's connected email
+- [x] 8.5 Handle Gmail-not-connected case: show informational empty state with disabled compose form
+- [x] 8.6 Implement `updateStudentUnreadBadge()`: count unread emails addressed to current user
+- [x] 8.7 On student Email tab activation, call `renderStudentEmailTab()`
+- [x] 8.8 Show/hide student Email tab based on `isGmailConnected()` — checked on `updateGmailStatusUI()` call
+
+## 9. Transactional Email Triggers (app.js)
+
+- [x] 9.1 Add transactional email send call to the "Issue Manual Invoice" form submission handler
+- [x] 9.2 Add transactional email send call to the appointment booking confirmation flow
+- [x] 9.3 Add transactional email send call to the appointment cancellation flow — send cancellation email when appointment status changes to "Cancelled"
+- [x] 9.4 Add transactional email send call to the batch enrollment flow — send enrollment email when admin assigns `batchId` to a student in User Management
+- [x] 9.5 Implement `buildTransactionalEmailBody(type, data)` — returns HTML email body string for each trigger type with Quantum Yoga branding
+
+## 10. Polish & Integration
+
+- [x] 10.1 Email tabs are hidden on app init if `isGmailConnected()` returns false, and shown dynamically after connect
+- [x] 10.2 Add "Email" option to admin sub-tab keyboard navigation and accessibility (aria-selected, role="tab")
+- [x] 10.3 Loading spinners added to email list and detail view during API fetch operations
+- [x] 10.4 Test the full flow: connect Gmail → compose email to student → student sees it in their Email tab → student replies → admin sees reply in inbox
+- [x] 10.5 Test all transactional triggers: invoice, appointment confirm, appointment cancel, batch enrollment
+- [x] 10.6 All new UI elements use existing CSS design tokens (glassmorphic styles, `--accent-primary`, `--glass-medium-bg`, etc.)
+````
+
+## File: openspec/changes/implement-supabase-json/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-17
+````
+
+## File: openspec/changes/implement-supabase-json/design.md
+````markdown
+## Context
+
+The system currently reads and writes database state via `/api/db` to `db.json` on disk.
+To support cloud persistence, we want to migrate this to Supabase. Since refactoring the whole codebase to use SQL tables requires rewriting all queries and schemas in the client-side SPA, a simpler approach is to store the unified `db.json` structure directly in a single row/table inside Supabase using a JSONB column (e.g., table `quantum_yoga_db` with key `database_state`), preserving backend compatibility without rewriting frontend API interactions.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Connect the server backend to Supabase using `@supabase/supabase-js`.
+- Store the application database state in a Postgres table using a JSONB field.
+- Maintain a fully backward-compatible `/api/db` endpoint so the frontend client requires zero modifications.
+
+**Non-Goals:**
+- Mapping all JSON collections to fully relational SQL tables.
+- Directly connecting the client-side browser to Supabase (all queries are proxied via the server to protect keys).
+
+## Decisions
+
+### 1. Unified JSONB Document Table vs Relational Tables
+- **Choice:** Use a single table `quantum_yoga_db` containing a single row of JSONB data storing the entire database state.
+- **Rationale:** Minimizes structural modifications. The frontend is coupled to requesting the entire DB via `/api/db` and modifying it locally before posting back. A single JSONB state matches this paradigm and requires hours instead of weeks of refactoring.
+- **Alternative:** Creating relational SQL tables. Rejected due to the massive refactoring required in `app.js` (thousands of lines of client-side filtering, joins, and queries).
+
+## Risks / Trade-offs
+
+- **[Risk]** Large payload sizes over time if database grows.
+  - *Mitigation:* The total database state size for a yoga studio is very small (typically < 1MB), which easily fits in a single PostgreSQL row. If it grows larger, we can split into collections (users, payments, appointments) while keeping the same `/api/db` payload format.
+- **[Risk]** Concurrency collisions if multiple admins edit simultaneously.
+  - *Mitigation:* Utilize Supabase's built-in transaction queries or a last-write-wins pattern on the Node/Express server.
+````
+
+## File: openspec/changes/implement-supabase-json/proposal.md
+````markdown
+## Why
+
+Currently, the application stores data client-side in localStorage and server-side in a local `db.json` file. This local file storage lacks durability, security, and scalability, and can lead to data loss or concurrency issues. Migrating to Supabase provides a hosted, robust cloud data store while preserving the flexible JSON/NoSQL document structure by utilizing PostgreSQL's native JSONB capabilities.
+
+## What Changes
+
+- **Cloud Synchronization:** Replace local file-based `db.json` read/write operations with async queries to Supabase.
+- **JSONB Tables:** Set up Supabase tables using PostgreSQL's native `jsonb` column types to store existing JSON document structures (users, payments, appointments).
+- **Secure Endpoints:** Update the Express server backend to interact with Supabase secure APIs, keeping client keys hidden and maintaining backend compatibility.
+
+## Capabilities
+
+### New Capabilities
+- `supabase-json-storage`: Integration of Supabase Client and cloud persistence using PostgreSQL JSONB schema.
+
+### Modified Capabilities
+
+## Impact
+
+- **Affected Files:**
+  - `server.js` (Express endpoints updated to fetch/save from/to Supabase instead of local fs reading/writing `db.json`).
+  - `package.json` (Add `@supabase/supabase-js` dependency).
+  - `.env` / Environment variables (Supabase URL and Service Role / Anon API Key).
+````
+
+## File: openspec/changes/implement-supabase-json/specs/supabase-json-storage/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Supabase Data Storage Integration
+The server backend MUST initialize a Supabase client using the `SUPABASE_URL` and `SUPABASE_KEY` environment variables, and persist/retrieve the application data using a hosted PostgreSQL database table.
+
+#### Scenario: Retrieve database state
+- **WHEN** a GET request is made to `/api/db`
+- **THEN** the system SHALL fetch the application state JSON document from Supabase and return it with a 200 status code
+
+#### Scenario: Update database state
+- **WHEN** a POST request is made to `/api/db` with a valid JSON body representing the updated database state
+- **THEN** the system SHALL overwrite the stored state in Supabase and return a success JSON response
+````
+
+## File: openspec/changes/implement-supabase-json/tasks.md
+````markdown
+## 1. Setup & Environment Configuration
+
+- [x] 1.1 Add `@supabase/supabase-js` dependency to `package.json` and install
+- [x] 1.2 Configure database connection keys `SUPABASE_URL` and `SUPABASE_KEY` (Service role or Anon Key)
+- [x] 1.3 Setup the SQL schema in Supabase (`quantum_yoga_db` table with a `state` JSONB column)
+
+## 2. Server Implementation
+
+- [x] 2.1 Initialize the Supabase client in `server.js` using config credentials
+- [x] 2.2 Refactor the GET `/api/db` endpoint to fetch the `state` JSONB document from the `quantum_yoga_db` table
+- [x] 2.3 Refactor the POST `/api/db` endpoint to update/upsert the `state` JSONB document in the `quantum_yoga_db` table
+- [x] 2.4 Implement a server-side migration fallback (if Supabase table is empty on startup, seed it with the contents of local `db.json`)
+````
+
+## File: openspec/changes/indian-phone-format/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-15
+````
+
+## File: openspec/changes/indian-phone-format/design.md
+````markdown
+## Context
+
+Currently, the Quantum Yoga platform seeds mock leads with US-style phone numbers ("555-0199"), but performs Indian phone validation on the inquiry form submission. When displaying leads in the administrative panels (Kanban boards and Inspection modals), the raw inputted strings are printed without formatting.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Update mock seed data in `app.js` to conform to Indian phone number formats.
+- Implement a helper function `formatIndianPhone(phoneStr)` to format phone number inputs into `+91 XXXXX XXXXX`.
+- Standardize phone displays in the Leads Swimlane board and Lead Inspection modals.
+- Align `index.html` input placeholders, titles, and patterns with this formatting standard.
+
+**Non-Goals:**
+- Storing international (non-Indian) phone numbers.
+- Automated SMS notifications or verification services (only UI validation/formatting is in scope).
+
+## Decisions
+
+### 1. Unified Phone Formatting Helper
+- **Decision**: Define `formatIndianPhone(phoneStr)` in `app.js` to sanitize the string (strip spaces/hyphens), verify it contains a valid 10-digit mobile number starting with 6-9, and output a formatted string: `+91 XXXXX XXXXX`.
+- **Rationale**: Standardizes formatting rules for display, storage, and validation in one place.
+- **Alternatives considered**: Format on render only. Rejected because formatting during form submission allows storing standardized data, reducing performance overhead during grid rendering.
+
+### 2. Update Seed Data Records
+- **Decision**: Replace `555-0199` with `+91 98765 00199` and `555-0144` with `+91 98765 00144` in `seedMockData()` within `app.js`.
+- **Rationale**: Prevents layout inconsistencies and rendering issues with pre-existing or seeded data on first load.
+
+## Risks / Trade-offs
+
+- **[Risk]** Legacy browser support for HTML5 `pattern` regex validation in `index.html`.
+  - *Mitigation*: Combined HTML5 validation with JavaScript validation on form submit as a fallback.
+- **[Risk]** Parsing existing invalid phone numbers in LocalStorage.
+  - *Mitigation*: `formatIndianPhone` returns the input string unmodified as a fallback if it doesn't match the standard 10-digit Indian mobile layout, preventing runtime errors for legacy items.
+````
+
+## File: openspec/changes/indian-phone-format/proposal.md
+````markdown
+## Why
+
+Currently, phone numbers in the system are inconsistent; seeded mock leads use US-style placeholders (e.g., "555-0199"), while input validations expect Indian phone numbers. Standardizing on the Indian mobile phone format (+91 XXXXX XXXXX) ensures consistency, conforms to the India locale, and improves readability across student directories, admin Kanban boards, and lead details.
+
+## What Changes
+
+- **Indian Format Seed Data**: Update the default mock leads' phone numbers in `app.js` to standard Indian mobile formats.
+- **Unified Validation & Formatting**: Introduce a helper function in `app.js` to sanitize, validate, and format any valid Indian mobile number input (e.g. `9876543210`, `09876543210`, or `+919876543210`) into the standard display format: `+91 XXXXX XXXXX`.
+- **Kanban & Inspect View Updates**: Format phone numbers displayed on Kanban swimlane cards and the Lead Inspection profile modal to follow this standard.
+
+## Capabilities
+
+### New Capabilities
+- `indian-phone-format`: Validation, formatting, and display logic for Indian phone numbers across forms, data layers, and dashboards.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+- **app.js**: Update seed data records, insert standard phone formatting helper, modify inquire form submission logic, and update render methods for lead cards and modals.
+- **index.html**: Ensure input placeholders and patterns align with the standard Indian phone number format.
+````
+
+## File: openspec/changes/indian-phone-format/specs/indian-phone-format/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Indian Mobile Phone Number Validation
+The system SHALL validate and accept only valid Indian mobile phone numbers in the contact inquiry forms. A valid Indian mobile number starts with an optional "+91" or "0", followed by a digit from 6 to 9, and exactly 9 more digits. Optional spaces and hyphens SHALL be allowed in the input and stripped for validation.
+
+#### Scenario: Valid phone number submission
+- **WHEN** the user submits the inquiry form with a valid number like "9876543210", "+91 98765-43210", or "09876543210"
+- **THEN** the system SHALL successfully validate the phone number
+
+#### Scenario: Invalid phone number submission
+- **WHEN** the user submits the inquiry form with an invalid number like "555-0199", "1234567890", or "98765"
+- **THEN** the system SHALL reject the submission and show a validation alert specifying that a valid 10-digit Indian mobile number is required
+
+### Requirement: Uniform Phone Number Display Format
+The system SHALL format all displayed and stored phone numbers into a standard `+91 XXXXX XXXXX` format (e.g. `+91 98765 43210`).
+
+#### Scenario: Formatting input for storage
+- **WHEN** a valid number "+919876543210" or "09876543210" is submitted via the inquiry form
+- **THEN** the system SHALL format it to "+91 98765 43210" and save it in the LocalStorage leads list
+
+#### Scenario: Displaying formatted numbers in Admin Panels
+- **WHEN** the administrator opens the Leads Swimlane board or the Lead Inspection modal
+- **THEN** the system SHALL display the lead's phone number formatted as "+91 XXXXX XXXXX"
+````
+
+## File: openspec/changes/indian-phone-format/tasks.md
+````markdown
+## 1. Core Verification and Helper Setup
+
+- [x] 1.1 Update default mock lead seed data in `app.js` to use standard Indian phone formats
+- [x] 1.2 Implement the helper function `formatIndianPhone(phoneStr)` in `app.js` to standardize phone numbers to "+91 XXXXX XXXXX"
+
+## 2. Inquire Form and Validation Integration
+
+- [x] 2.1 Update validation checks in `app.js` inquire form submit listener to leverage sanitized validation logic
+- [x] 2.2 Format the phone number string using `formatIndianPhone` before saving a new lead to LocalStorage
+- [x] 2.3 Align patterns, placeholders, and tooltips in `index.html` for the `#inquire-phone` input field
+
+## 3. UI Display Standardization
+
+- [x] 3.1 Update the lead card DOM rendering in `app.js` (`renderLeadsTable`) to format phone numbers via `formatIndianPhone` before rendering
+- [x] 3.2 Update the Lead Inspection profile modal rendering in `app.js` (`openInspectLeadModal`) to format phone numbers via `formatIndianPhone` before rendering
+
+## 4. Verification
+
+- [x] 4.1 Verify form validation rejects invalid numbers and formats valid ones correctly on submit
+- [x] 4.2 Verify formatted phone numbers display correctly in Leads Kanban columns and Inspect Lead details modal
+````
+
+## File: openspec/changes/lead-conversion-password/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-15
+````
+
+## File: openspec/changes/lead-conversion-password/design.md
+````markdown
+## Context
+
+When converting a lead to a member account in the Admin Panel Leads Kanban board, the system assigns a static default password ("welcome123") to the newly registered user. The user request asks to generate a unique random password for each converted member to make account access secure.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Replace the static password with a generated 8-character random alphanumeric password during lead conversion.
+- Display the generated password clearly in the inspect modal's success notification.
+- Save the generated password to the lead history logs for future reference.
+
+**Non-Goals:**
+- Setting up automated email delivery of credentials.
+- Implementing cryptographic hashing for stored plain-text passwords (the application uses mock plain-text passwords in `db.json`/LocalStorage).
+
+## Decisions
+
+### 1. Password Generation Utility
+- **Decision**: Define a helper function `generateRandomPassword(length = 8)` in `app.js` that selects random characters from an alphanumeric alphabet string (`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`).
+- **Rationale**: Minimalist, requires no dependencies, and provides sufficient randomness for mock client access.
+
+### 2. Success Message UI Formatting
+- **Decision**: Change `inspectLeadSuccessMsg.textContent` to `inspectLeadSuccessMsg.innerHTML` inside the conversion event listener to display the generated password wrapped in a styled `<code>` block.
+- **Rationale**: Enables the administrator to copy the password easily from the UI.
+- **Alternatives considered**: Using `alert()`. Rejected because standard alerts are disruptive and detract from the premium dashboard experience.
+
+### 3. Lead Log Audit Trail
+- **Decision**: Prepend the generated password directly to the lead conversion log note: `"Lead converted to registered user account successfully. Temporary Password: [password]"`.
+- **Rationale**: Ensures the administrator can retrieve the password if they close the inspect modal before copying it.
+
+## Risks / Trade-offs
+
+- **[Risk]** The success message text resets after 3 seconds, meaning the admin could lose the password if they don't look at it in time.
+- **Mitigation**: Storing the credentials inside the lead's logs history solves this, as logs are persistent and display permanently in the Inspect modal timeline.
+````
+
+## File: openspec/changes/lead-conversion-password/proposal.md
+````markdown
+## Why
+
+Currently, when converting a lead into a member account, the system sets a static default password ("welcome123"). This represents a security vulnerability and lacks user specificity. Generating a random, high-entropy password for each converted member, presenting it directly to the administrator, and recording it in the lead history logs ensures security and provides a robust workflow for administrators to share credentials with new members.
+
+## What Changes
+
+- **Random Password Generation**: Replace the static default password with a dynamically generated random string (8-10 characters, mixed case and numbers) when a lead is converted.
+- **Visual Credential Presentation**: Update the conversion success message in the Lead Inspection modal to display the newly generated password to the administrator.
+- **Credential Log Archival**: Include the generated password in the lead's history log record so that it can be retrieved by an administrator if needed.
+
+## Capabilities
+
+### New Capabilities
+- `lead-conversion-password`: Generates secure random credentials for converted leads, logs them in the lead history, and renders them in the conversion success UI.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+- **app.js**: Implement a random password generator function, modify the lead conversion event listener, update the success status message element, and log the generated password to the lead's log comments.
+````
+
+## File: openspec/changes/lead-conversion-password/specs/lead-conversion-password/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Random Password Generation on Conversion
+When converting a lead to a member account, the system SHALL dynamically generate a secure random password (containing 8 alphanumeric characters) rather than using a static default value.
+
+#### Scenario: Lead conversion generates secure password
+- **WHEN** an administrator clicks "Convert to Member" for a lead
+- **THEN** the system SHALL generate a unique random password, assign it to the new user account, and save the record in the users database
+
+### Requirement: Display Generated Password to Administrator
+The system SHALL display the newly generated password to the administrator inside the success notification toast/message upon successful lead conversion.
+
+#### Scenario: Display password in success modal notification
+- **WHEN** the conversion process succeeds
+- **THEN** the system SHALL display a success notification detailing the generated password (e.g., "Generated Password: XXXXXXXX")
+
+### Requirement: Audit Log Recording of Generated Credentials
+The system SHALL append the generated password details into the lead history logs for future reference.
+
+#### Scenario: Log entries have generated password details
+- **WHEN** a lead is successfully converted
+- **THEN** the system SHALL write a log message to the lead log history specifying that the account was created and include the generated password
+````
+
+## File: openspec/changes/lead-conversion-password/tasks.md
+````markdown
+## 1. Password Generation Helper Setup
+
+- [x] 1.1 Implement the `generateRandomPassword(length)` utility function in `app.js`
+
+## 2. Lead Conversion Flow Integration
+
+- [x] 2.1 Update `convertLeadBtn` click event listener in `app.js` to call `generateRandomPassword()` and assign it to the new user account password
+- [x] 2.2 Update the success message output in the Lead Inspection modal (element `inspectLeadSuccessMsg`) to render the generated password within a formatted HTML snippet
+- [x] 2.3 Update the lead conversion history log note to record the newly generated password
+
+## 3. Verification
+
+- [x] 3.1 Verify converting a lead successfully generates a random password, displays it in the success notification, and logs it to the timeline
+- [x] 3.2 Verify the converted member can successfully log in using their email and the generated password
+````
+
+## File: openspec/changes/lead-email-triggers/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-17
+````
+
+## File: openspec/changes/lead-email-triggers/design.md
+````markdown
+## Context
+
+Quantum Yoga Studio's `app.js` has an established transactional email infrastructure:
+
+- `sendTransactionalEmail(template, data, toEmail)` — provider-agnostic dispatcher that routes to either `gmailSendEmail()` or `resendSendEmail()` depending on `emailSettings.provider`
+- `buildTransactionalEmailBody(template, data)` — returns branded HTML for a given template key (`welcome`, `invoice`, `appointment`)
+- Existing triggers: invoice issuance, appointment booking, appointment cancellation, batch enrollment
+
+The two new triggers follow the exact same pattern. No new infrastructure is needed.
+
+**Inquiry form** (`inquireForm` submit handler, line ~2365 in `app.js`): currently saves a lead and shows a success message — no email.
+
+**Lead conversion** (`convertLeadBtn` click handler, line ~4959): creates a new user with a generated temporary password and logs the conversion — no email.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Fire `sendTransactionalEmail("inquiry-received", …)` after the new lead is saved in the inquiry form handler
+- Fire `sendTransactionalEmail("lead-converted", …)` after the user account is created in the lead conversion handler, passing the generated temporary password
+- Add `"inquiry-received"` and `"lead-converted"` branches to `buildTransactionalEmailBody()` with Quantum Yoga branded HTML
+- Both sends are gracefully silent if no email provider is configured
+
+**Non-Goals:**
+- Admin notification email when a new inquiry arrives (admin sees the lead in the pipeline UI)
+- Email re-send button in the UI
+- Storing email send status on the lead/user record
+
+## Decisions
+
+### 1. Template keys: `"inquiry-received"` and `"lead-converted"`
+
+**Decision**: Use these exact string keys in `buildTransactionalEmailBody()` and `sendTransactionalEmail()` subject map.
+
+**Rationale**: Consistent with existing snake-case pattern. Short and self-documenting.
+
+---
+
+### 2. Pass `generatedPassword` in the `lead-converted` email data
+
+**Decision**: The conversion handler already generates `generatedPassword` and logs it in the lead timeline. The same value is passed as `data.tempPassword` to the email template.
+
+**Risk**: Temporary password appears in email in plaintext. This is intentional — the member must receive it to log in. `mustChangePassword: true` ensures they change it on first login.
+
+---
+
+### 3. Inquiry email recipient is the **submitter's email** (not the admin)
+
+**Decision**: `sendTransactionalEmail("inquiry-received", …, newLead.email)` — the confirmation goes to the prospect.
+
+**Rationale**: The admin already sees the new lead appear in the Leads Pipeline; they don't need a separate email. The prospect needs the acknowledgement to know their message was received.
+
+---
+
+### 4. `buildTransactionalEmailBody` for `lead-converted` includes login link
+
+**Decision**: Include a direct link to the app (`window.location.origin` or a hardcoded anchor) so the new member can navigate straight to login. Since this is a client-side SPA without a backend URL config, use a generic "Visit our website" CTA that resolves to the current origin.
+
+---
+
+### 5. Fire-and-forget — no await blocking the UI
+
+**Decision**: Both `sendTransactionalEmail` calls use `await` (matching existing callers) but the UI flow (success message, form reset, modal refresh) is not gated on the email result.
+
+**Rationale**: Email delivery failure should never block the lead/conversion save. The data is already persisted before the email attempt.
+
+## Risks / Trade-offs
+
+| Risk | Mitigation |
+|---|---|
+| Email provider not configured — sends silently skipped | `sendTransactionalEmail()` already handles this gracefully with a console warning |
+| Prospect enters a fake email address in the inquiry form | Email bounces silently; no change needed — this is acceptable |
+| `lead-converted` email exposes temp password | Expected and necessary for member onboarding; `mustChangePassword` enforces immediate change |
+| Duplicate inquiry submission sends duplicate emails | Existing form has no deduplication; a second submission creates a second lead, both get emails — acceptable for now |
+````
+
+## File: openspec/changes/lead-email-triggers/proposal.md
+````markdown
+## Why
+
+When a prospective student submits the landing-page inquiry form, or when the admin converts a lead into a member account, no confirmation email is sent. The inquiry submitter receives no acknowledgement, and the newly-converted member has no way of knowing their temporary password or next steps unless the admin communicates manually. Adding automated transactional emails at both these moments closes the communication gap and improves the first impression of the studio.
+
+## What Changes
+
+- **New**: `inquiry-received` email template — sent to the prospect immediately after they submit the landing-page inquiry form, confirming receipt and setting expectations
+- **New**: `lead-converted` email template — sent to the new member immediately after admin converts the lead, containing their temporary password and a prompt to log in and change it
+- **Modified**: Inquiry form submit handler — fires `sendTransactionalEmail("inquiry-received", …)` after saving the new lead
+- **Modified**: Lead conversion handler (`convertLeadBtn` click) — fires `sendTransactionalEmail("lead-converted", …)` after the user account is created
+- **Modified**: `buildTransactionalEmailBody()` — adds rendering for the two new template types
+
+## Capabilities
+
+### New Capabilities
+- `inquiry-email-trigger`: Auto-send a confirmation email to the prospect on inquiry form submission
+- `conversion-email-trigger`: Auto-send a welcome + credentials email to the newly converted member on lead conversion
+
+### Modified Capabilities
+*(None — requirements of existing capabilities are unchanged; these are additive hooks)*
+
+## Impact
+
+- **`app.js`**: Two `sendTransactionalEmail()` call sites added; `buildTransactionalEmailBody()` extended with two new branches
+- **No new HTML or CSS** — UI is unchanged; emails are fire-and-forget side effects
+- **No new dependencies** — uses the existing provider-agnostic `sendTransactionalEmail()` which routes through whichever email provider (Gmail or Resend) is configured
+- **Requires email provider configured** — if neither Gmail is connected nor Resend is set up, the sends are gracefully skipped (matching existing transactional email behaviour)
+````
+
+## File: openspec/changes/lead-email-triggers/specs/conversion-email-trigger/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Lead conversion welcome email
+When an admin converts a lead into a member account, the system SHALL send a transactional welcome email to the new member's email address. The email SHALL include their temporary password and a prompt to log in and change it immediately. The email SHALL be sent via `sendTransactionalEmail("lead-converted", { name, tempPassword }, email)`. If no email provider is configured, the send SHALL be silently skipped without affecting the conversion flow or the success notification shown in the modal.
+
+#### Scenario: Provider configured — welcome email sent on conversion
+- **WHEN** admin clicks "Convert to Member" for a lead that has not yet been converted
+- **THEN** the new user account is created with `mustChangePassword: true`
+- **THEN** `sendTransactionalEmail("lead-converted", { name: lead.name, tempPassword: generatedPassword }, lead.email)` is called
+- **THEN** the conversion success message (including the generated password) is shown in the modal regardless of email send outcome
+
+#### Scenario: Provider not configured — conversion still succeeds
+- **WHEN** admin converts a lead and no email provider is configured
+- **THEN** the user account is still created and the modal still shows the generated password
+- **THEN** `sendTransactionalEmail` logs a console warning and returns without sending
+
+#### Scenario: Conversion email body contains credentials and login prompt
+- **WHEN** `buildTransactionalEmailBody("lead-converted", { name, tempPassword })` is called
+- **THEN** the returned HTML includes: the Quantum Yoga header, a welcome greeting with the member's name, their temporary password displayed clearly, a strong prompt to change the password on first login, and a call-to-action to visit the studio website
+
+#### Scenario: Already-converted lead does not trigger email
+- **WHEN** the convert button is hidden (lead status is already "Converted")
+- **THEN** the click handler does not fire and no email is sent
+````
+
+## File: openspec/changes/lead-email-triggers/specs/inquiry-email-trigger/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Inquiry confirmation email
+When a visitor submits the landing-page inquiry form, the system SHALL send a transactional email to the submitter's email address confirming receipt of their inquiry. The email SHALL be sent using the active email provider (Gmail or Resend) via `sendTransactionalEmail("inquiry-received", data, email)`. If no email provider is configured, the send SHALL be silently skipped without affecting form submission or the success message shown to the user.
+
+#### Scenario: Provider configured — email sent on valid inquiry submission
+- **WHEN** a visitor submits the inquiry form with a valid name, email, phone, and message
+- **THEN** the lead is saved to the leads list
+- **THEN** `sendTransactionalEmail("inquiry-received", { name, message }, email)` is called with the submitter's email
+- **THEN** the inquiry success message is shown to the visitor regardless of email send outcome
+
+#### Scenario: Provider not configured — submission still succeeds
+- **WHEN** a visitor submits the inquiry form and no email provider is configured
+- **THEN** the lead is still saved and the success message is still shown
+- **THEN** `sendTransactionalEmail` logs a console warning and returns without sending
+
+#### Scenario: Inquiry email body contains studio branding and submitter name
+- **WHEN** `buildTransactionalEmailBody("inquiry-received", { name, message })` is called
+- **THEN** the returned HTML includes the Quantum Yoga logo/header, a greeting with the submitter's name, and confirmation that their inquiry was received
+````
+
+## File: openspec/changes/lead-email-triggers/tasks.md
+````markdown
+## 1. Email Templates — `buildTransactionalEmailBody` (app.js)
+
+- [x] 1.1 Add `"inquiry-received"` branch to `buildTransactionalEmailBody(template, data)` — return a branded HTML email with: Quantum Yoga header, greeting using `data.name`, confirmation message that their inquiry was received and the studio will be in touch within 24–48 hours, and a footer with the studio name
+- [x] 1.2 Add `"lead-converted"` branch to `buildTransactionalEmailBody(template, data)` — return a branded HTML email with: Quantum Yoga welcome header, greeting using `data.name`, temporary password displayed in a styled code block (`data.tempPassword`), clear instruction to log in and change the password immediately, and a CTA button/link to the studio website
+
+## 2. Subject Lines (app.js)
+
+- [x] 2.1 Add `"inquiry-received"` key to the `subjects` map inside `sendTransactionalEmail()` — value: `"Thank you for your inquiry — Quantum Yoga"`
+- [x] 2.2 Add `"lead-converted"` key to the `subjects` map — value: `"Welcome to Quantum Yoga — Your Account is Ready 🧘"`
+
+## 3. Inquiry Form Trigger (app.js)
+
+- [x] 3.1 In the `inquireForm` submit handler, after `saveLeads(leads)` and before `inquireForm.reset()`, call `sendTransactionalEmail("inquiry-received", { name, message }, email)` — use `await` inside the handler (make the handler `async`)
+
+## 4. Lead Conversion Trigger (app.js)
+
+- [x] 4.1 In the `convertLeadBtn` click handler, after `saveToServer()` and before the modal success message block, call `sendTransactionalEmail("lead-converted", { name: lead.name, tempPassword: generatedPassword }, lead.email)` — use `await` inside the handler (make the handler `async`)
+
+## 5. Verification
+
+- [x] 5.1 Confirm that `buildTransactionalEmailBody("inquiry-received", { name: "Test User", message: "Hello" })` returns a non-empty HTML string containing "Thank you" and the name
+- [x] 5.2 Confirm that `buildTransactionalEmailBody("lead-converted", { name: "Test User", tempPassword: "abc123XY" })` returns HTML containing the temporary password
+- [x] 5.3 Confirm that the `inquireForm` submit handler is `async` after the change and that the `sendTransactionalEmail` call appears after `saveLeads` in the code
+- [x] 5.4 Confirm that the `convertLeadBtn` click handler is `async` after the change and that the `sendTransactionalEmail` call appears after `saveToServer()` in the code
+````
+
+## File: openspec/changes/leads-management/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/leads-management/design.md
+````markdown
+## Context
+
+The Quantum Yoga platform needs a mechanism to capture interest from prospective members and manage follow-ups. We will introduce a new public tab on the landing gate for inquiries and a lead management portal for administrators, supporting status transitions, follow-up logging, and auto-conversion to user accounts.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Add an "Inquire" tab and form inside the public fullscreen auth gate card.
+- Persist captured inquiries in LocalStorage under the key `qy_leads`.
+- Add a "Leads Pipeline" sub-tab and dashboard table in the Admin Console.
+- Allow administrators to log follow-up notes, update pipeline statuses, and auto-register leads as members.
+
+**Non-Goals:**
+- Sending email/SMS notifications directly (handled as local simulations/logs).
+
+## Decisions
+
+### 1. Inquire Tab on Auth Gate
+- **Decision**: Add an "Inquire" tab switcher to the public `#auth-gate-fullscreen` container next to the "Login" and "Register" switchers.
+- **Rationale**: Reuses the existing glassmorphic auth card, keeps public options integrated, and avoids launching a separate contact page.
+
+### 2. Flat Log History Structure
+- **Decision**: Store a dated `logs` history array inside each lead object: `logs: [{ timestamp, note }]`.
+- **Rationale**: Provides a chronological history of client nurturing steps directly on the lead record.
+
+### 3. Automated Registration Conversion
+- **Decision**: Clicking "Convert to Member" will auto-create a user record in `qy_users` with password `"welcome123"`. The lead's status is shifted to `"converted"`.
+- **Rationale**: Drastically reduces administrative entry friction by moving lead details directly into the student table.
+
+## Risks / Trade-offs
+
+- **[Risk]** Spammers submitting empty/blank inquiry forms.
+  - *Mitigation*: Enforce browser-native HTML5 input validation (`required` attribute) on name, email, and message inputs.
+````
+
+## File: openspec/changes/leads-management/proposal.md
+````markdown
+## Why
+
+Currently, Quantum Yoga lacks any capability for prospective students to submit inquiries or for administrators to manage business leads. Adding a public lead capture form on the landing gate and a centralized leads management dashboard in the Admin Console allows the studio to capture interest, track follow-ups, and convert leads into registered members.
+
+## What Changes
+
+- **Public Lead Capture Form**: Add an inquiry form on the public fullscreen landing/login page to capture name, email, phone number, and inquiry message.
+- **Admin Leads Dashboard**: Add a new "Leads Management" sub-tab and panel inside the Admin section to list, search, filter, and inspect incoming inquiries.
+- **Lead Status & Notes**: Allow administrators to log follow-up notes and update lead statuses through a pipeline (New, Contacted, Converted, Closed).
+- **Auto-Conversion**: Provide an action button to instantly register/convert a lead into a standard student account, pre-populating their details.
+
+## Capabilities
+
+### New Capabilities
+- `leads-management`: Enables public inquiry capture and provides administrators with a tracking dashboard to manage lead pipelines, log follow-up notes, and convert inquiries into registered user accounts.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to add the lead capture form on the landing gate and the leads management panel in the Admin dashboard.
+- Modifies `app.js` to process lead submissions, persist leads data in LocalStorage under the key `qy_leads`, manage pipeline transitions, and auto-register converted users.
+````
+
+## File: openspec/changes/leads-management/specs/leads-management/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Public Inquiry Form
+The system SHALL display an inquiry capture form on the landing gate for prospective students to submit contact information and messages.
+
+#### Scenario: Successful inquiry submission
+- **WHEN** a guest user fills in name "Sarah Lead", email "sarah@inquiry.com", phone "123-456-7890", message "Interested in Zen Sunset theme routines", and clicks "Submit Inquiry"
+- **THEN** the system SHALL save the submission, display a success confirmation message, and clear the inquiry form inputs.
+
+### Requirement: Admin Leads Pipeline Table
+The system SHALL provide an administrative leads dashboard sub-panel listing all submitted inquiries, displaying email, date, and current pipeline status.
+
+#### Scenario: Listing leads in the dashboard
+- **WHEN** the administrator logs in and opens the "Leads Management" sub-tab in the Admin Console
+- **THEN** the system SHALL render a table listing all leads dynamically loaded from LocalStorage.
+
+### Requirement: Pipeline Status and Follow-up Notes
+The system SHALL allow administrators to update a lead's pipeline status (New, Contacted, Converted, Closed) and append dated follow-up logs.
+
+#### Scenario: Logging a follow-up conversation
+- **WHEN** the administrator opens the lead inspection panel, changes status to "Contacted", writes a follow-up note "Sent Ethereal Light details", and clicks "Save Follow-up"
+- **THEN** the system SHALL persist the updated status and prepend the follow-up note with a timestamp to the lead's log history.
+
+### Requirement: Lead Account Conversion
+The system SHALL provide a button to convert a lead into a registered member, auto-creating a standard user account with pre-filled details.
+
+#### Scenario: Auto-registering a converted user
+- **WHEN** the administrator inspects a lead with email "sarah@inquiry.com" and clicks "Convert to Member"
+- **THEN** the system SHALL register "Sarah Lead" as a standard user in the users database with password "welcome123", update the lead's pipeline status to "Converted", and refresh the tables.
+````
+
+## File: openspec/changes/leads-management/tasks.md
+````markdown
+## 1. UI Implementation
+
+- [x] 1.1 Add the "Inquire" tab button `#auth-inquire-tab-btn` and the inquiry form container `#auth-inquire-form-wrapper` to the public fullscreen login gate in `index.html`.
+- [x] 1.2 Add the "Leads Pipeline" sub-tab button `#admin-leads-tab-btn` and leads panel `#admin-leads-panel` to the admin section of `index.html`.
+- [x] 1.3 Implement the lead inspection modal `#admin-inspect-lead-modal` (containing log displays, follow-up inputs, status dropdowns, and conversion triggers) in `index.html`.
+
+## 2. Logic & Controller Integration
+
+- [x] 2.1 Bind DOM variables for inquiry tab controls, inquiry forms, leads panel buttons, and inspect lead modal fields in `app.js`.
+- [x] 2.2 Extend the auth gate switcher function `switchAuthTab` in `app.js` to handle switching to the inquiry tab.
+- [x] 2.3 Implement storage functions (`loadLeads()`, `saveLeads()`) and submit handlers for public inquiries to persist entries to LocalStorage under the key `qy_leads`.
+- [x] 2.4 Extend `setAdminSubTab` in `app.js` to support tab-switching for the `"leads"` panel and rendering the leads pipeline table.
+- [x] 2.5 Implement handlers in `app.js` to inspect leads, add follow-up notes, transition pipeline statuses, and auto-register converted users.
+
+## 3. Verification
+
+- [x] 3.1 Verify public lead submission forms, validation checks, and success messages in the browser.
+- [x] 3.2 Verify admin-facing lead pipeline logs, status changes, and user conversions save and persist correctly in the browser.
+````
+
+## File: openspec/changes/member-management/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/member-management/design.md
+````markdown
+## Context
+
+Currently, the student profiles are limited to name, email, and completion histories. There is no central tracking of membership levels or student wellness logs. We need to design a member management system mapping tiers, statuses, expiration dates, goals, and health logs directly to user accounts in LocalStorage.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Extend the user model structure in LocalStorage to include membership metadata, goals, and health logs.
+- Add a wellness goals and health history form on the student Profile tab.
+- Integrate membership tier selects, status toggles, expiry inputs, and coaching logs inside the Admin inspect modal.
+
+**Non-Goals:**
+- Integrating payment processing APIs or recurring subscription gateways.
+
+## Decisions
+
+### 1. User Model Schema Extension
+- **Decision**: Extend each user object in `qy_users` to include a nested `membership` object (`tier`, `status`, `expiryDate`, `notes`) and flat string parameters `goals` and `healthNotes`.
+- **Rationale**: Keeps the student profile records consolidated, preventing multi-table lookup delay in mockups.
+
+### 2. Auto-Seeding Membership Details on Registration
+- **Decision**: Automatically seed newly registered users with a `Basic` membership tier, `Active` status, an expiry date calculated at `current date + 30 days`, and blank wellness fields.
+- **Rationale**: Establishes a predictable starting state for all new accounts without forcing immediately complex administrative configuration.
+
+## Risks / Trade-offs
+
+- **[Risk]** Data model incompatibility for legacy test accounts created prior to this change.
+  - *Mitigation*: Fallback default parameters dynamically inside the `loadUsers()` and session checks if membership parameters are missing.
+````
+
+## File: openspec/changes/member-management/proposal.md
+````markdown
+## Why
+
+Currently, Quantum Yoga lacks any capability for managing membership tiers (e.g. Basic, Premium) or recording student-specific profiles such as personal yoga goals and injury history. Adding a member management system allows administrators to track membership statuses and personalize student experiences, building stronger community relationships.
+
+## What Changes
+
+- **Membership Tier & Status Tracking**: Add fields to define membership levels (Basic, Premium, VIP) and status (Active, Paused, Expired) for each student.
+- **Personal Yoga Goals & Health Logs**: Allow students to record and update their personal wellness goals and physical/injury notes inside their Profile tab.
+- **Admin Member Customization**: Enhance the Admin User Management panel to let administrators edit student membership tiers, change expiry dates, and write instructor-facing notes.
+
+## Capabilities
+
+### New Capabilities
+- `member-management`: Allows tracking membership tiers, status, and expiry, while enabling students to set personal yoga goals and instructors to log coaching notes.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to inject membership badges, goals forms in student Profile cards, and membership settings in the Admin user inspect modal.
+- Modifies `app.js` to store membership data (status, tier, expiry, goals, notes) within user profile objects in LocalStorage.
+````
+
+## File: openspec/changes/member-management/specs/member-management/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Student Profile Membership Info View
+The system SHALL display the authenticated user's membership tier (Basic, Premium, Unlimited VIP), status (Active, Paused, Expired), and expiration date in their Profile view.
+
+#### Scenario: Student views profile membership details
+- **WHEN** the student is logged in and navigates to the Profile tab
+- **THEN** the system SHALL display their membership tier, status, and expiration details in a stylized card.
+
+### Requirement: Student Health and Goals Customization
+The system SHALL provide text fields inside the student Profile view to enter, save, and update personal yoga goals and health/injury logs.
+
+#### Scenario: Student updates personal yoga goals
+- **WHEN** the student writes "Increase core strength and hamstring flexibility" in the goals textarea and clicks "Save Personal Details"
+- **THEN** the system SHALL save the text in LocalStorage under the user's details and show a success confirmation message.
+
+### Requirement: Admin Membership Editor
+The system SHALL provide fields in the admin user inspection modal to modify a user's membership tier, status, expiration date, and add coaching notes.
+
+#### Scenario: Administrator modifies user membership level
+- **WHEN** the administrator inspects the user "john@example.com", selects membership tier "Unlimited VIP", status "Active", sets expiration date to "2027-06-30", writes a note "Referred by trainer", and clicks "Save Membership Settings"
+- **THEN** the system SHALL update the user's membership parameters in LocalStorage, updating their profile instantly.
+````
+
+## File: openspec/changes/member-management/tasks.md
+````markdown
+## 1. UI Implementation
+
+- [x] 1.1 Add membership indicators (tier, status, expiration) and student goals/health log textareas to the Profile section in `index.html`.
+- [x] 1.2 Inject membership configuration inputs (tier selects, status dropdowns, expiry inputs, and coaching note textareas) to the Admin inspect user detail modal in `index.html`.
+
+## 2. Logic & Controller Integration
+
+- [x] 2.1 Bind DOM variables for profile membership displays, wellness goal forms, admin inspect selector inputs in `app.js`.
+- [x] 2.2 Seed newly registered user records with default membership properties (tier Basic, status Active, expiry current date + 30 days) in `app.js`.
+- [x] 2.3 Implement legacy fallbacks in `loadUsers()` within `app.js` to auto-populate missing membership schemas dynamically for older test profiles.
+- [x] 2.4 Implement the Profile wellness forms save listener in `app.js` to store goals and physical notes updates.
+- [x] 2.5 Update administrative user inspection modal handlers in `app.js` to render and save updated membership tier, status, dates, and coaching logs.
+
+## 3. Verification
+
+- [x] 3.1 Verify student wellness goals, health logs, and membership level listings update and save correctly in the browser.
+- [x] 3.2 Verify administrator controls for membership status, levels, expiration dates, and logs sync and save in the browser.
+````
+
+## File: openspec/changes/multiple-ux-themes/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/multiple-ux-themes/design.md
+````markdown
+## Context
+
+Currently, the Quantum Yoga website features a static premium dark glassmorphic theme. We need to introduce a customizable theme selection system, allowing users to transition between Midnight Aura (dark), Ethereal Light (light), and Zen Sunset (warm sunset) modes.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Define color, border, and blur CSS variables on the root document level for Midnight, Light, and Sunset palettes.
+- Add a theme selector dropdown in the user's Profile card view.
+- Persist the chosen theme in LocalStorage within the user's profile database (`qy_users`).
+- Dynamically toggle root CSS classes (e.g., `.theme-light` and `.theme-sunset`) to shift colors immediately when selected.
+
+**Non-Goals:**
+- Changing structural layout markup, elements, or functionality.
+
+## Decisions
+
+### 1. Root Variable Cascade
+- **Decision**: Define colors and gradients as CSS variables on `:root` (defaulting to Midnight Aura), and override them inside `.theme-light` and `.theme-sunset` selectors.
+- **Rationale**: Leverages native CSS variable cascading, making dynamic switches fast and preventing page redraw layout shifts.
+- **Alternative considered**: Swapping stylesheet links. Rejected because it slows down transitions and adds file request latency.
+
+### 2. Database Integration
+- **Decision**: Store a `theme` field in the user object structure. If absent, fallback to `midnight` on user load/session check.
+- **Rationale**: Keeps customization bound to the specific user profile, supporting personalization across restarts.
+
+## Risks / Trade-offs
+
+- **[Risk]** Theme variables not applying to dynamic cards or modals.
+  - *Mitigation*: Ensure all borders, shadows, blur cards, and alerts use the defined theme variables (e.g., `var(--glass-medium-bg)`) instead of hardcoded hex values.
+````
+
+## File: openspec/changes/multiple-ux-themes/proposal.md
+````markdown
+## Why
+
+Currently, Quantum Yoga features a static premium dark glassmorphic theme. While visually striking, some users prefer alternative themes, such as a crisp light glassmorphic theme or a warm sunset/zen theme, to match different times of day or personal aesthetic preferences. Adding a selectable theme manager enhances personal customizability and UX accessibility.
+
+## What Changes
+
+- Provide a "Theme Selector" control panel within the user's Profile tab dashboard.
+- Support at least three distinct visual themes:
+  - **Midnight Aura**: Default dark glassmorphism theme.
+  - **Ethereal Light**: Soft light glassmorphism theme with high-contrast text and warm-gray backdrops.
+  - **Zen Sunset**: Sunset aesthetic theme featuring rose and amber gradients.
+- Save the selected theme persistently under the user's settings profile in LocalStorage (so the theme loads immediately on page load and session checks).
+- Dynamically apply theme transitions by modifying CSS variables defined on the root element.
+
+## Capabilities
+
+### New Capabilities
+- `theme-selector`: Introduces user-specific visual theme customization settings, letting users choose, save, and dynamically transition between Midnight, Light, and Sunset palettes.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to add the Theme Selection layout controls in the Profile panel.
+- Modifies `app.js` to manage user theme states, handle selector change events, update LocalStorage user details, and apply stylesheet variable shifts.
+- Modifies `index.css` to define root CSS variables for light, dark, and sunset themes, and support smooth transitions.
+````
+
+## File: openspec/changes/multiple-ux-themes/specs/theme-selector/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Theme Customization Controls
+The system SHALL display a visual theme selector dropdown (Midnight Aura, Ethereal Light, Zen Sunset) inside the user's Profile tab panel for logged-in users.
+
+#### Scenario: Navigating to Profile to change theme
+- **WHEN** the user switches to the "Profile" tab
+- **THEN** the system SHALL render a dropdown selector populated with the available theme options.
+
+### Requirement: Active Theme Swapping
+When the user selects an alternative theme from the selector, the system SHALL dynamically update the CSS variables on the root document element and persist the selection inside the user's data object in LocalStorage.
+
+#### Scenario: Swapping to Ethereal Light theme
+- **WHEN** the user selects "Ethereal Light" from the dropdown list
+- **THEN** the system SHALL add the `theme-light` class to the HTML/body element and update the color variable mapping.
+
+### Requirement: Session Theme Initialization
+Upon successful user login or page refresh with an active session, the system SHALL read the user's saved theme option from LocalStorage and automatically apply the corresponding CSS variables on page load.
+- If no selection is found (e.g. guest or new user), the system SHALL default to Midnight Aura.
+
+#### Scenario: Application startup with Ethereal Light selection
+- **WHEN** the user starts the application with a saved session whose theme preference is "Ethereal Light"
+- **THEN** the system SHALL immediately apply the Ethereal Light styles on startup.
+````
+
+## File: openspec/changes/multiple-ux-themes/tasks.md
+````markdown
+## 1. UI Control Injection
+
+- [x] 1.1 Add the theme selection dropdown control `#profile-theme-select` inside the user profile header card in `index.html`.
+
+## 2. Controller & Persistence Logic
+
+- [x] 2.1 Bind theme selector DOM references and event listeners in `app.js`.
+- [x] 2.2 Implement the `applyTheme()` helper function to toggle root CSS classes in `app.js`.
+- [x] 2.3 Refactor session check, login, and registration logic to load and save theme settings in LocalStorage.
+
+## 3. Styling & Verification
+
+- [x] 3.1 Add root override CSS rules for `.theme-light` (Ethereal Light) in `index.css`.
+- [x] 3.2 Add root override CSS rules for `.theme-sunset` (Zen Sunset) in `index.css`.
+- [x] 3.3 Verify theme switching, user saving, and session persistence in the browser.
+````
+
+## File: openspec/changes/payments-reminders-receipts/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-13
+````
+
+## File: openspec/changes/payments-reminders-receipts/design.md
+````markdown
+## Context
+
+Quantum Yoga needs to display membership bills, send due alerts, and manage invoices centrally. We will introduce a payments tracking system that logs invoices in LocalStorage, warns users about overdue dues via landing headers, generates printable receipt modals, and adds a payment dashboard in the Admin Console.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Add a "Billing & Receipts" sub-section inside the student's Profile section.
+- Persist invoice records under the LocalStorage key `qy_payments`.
+- Support manual invoicing, reminder alerts, and payment recording in the Admin Console.
+- Render warning banners on student dashboards for overdue invoices.
+- Display a print-ready transaction receipt modal overlay.
+
+**Non-Goals:**
+- Performing real-time credit card processing or banking transfers (modeled as simulated records).
+
+## Decisions
+
+### 1. Data Schema & Model
+- **Decision**: Store invoice objects under `qy_payments` containing invoice ID, user email, description (e.g. "Monthly Gold Membership"), amount (USD), due date (YYYY-MM-DD), status (`paid`, `pending`, `overdue`), lastReminderSent date, and paymentDate.
+- **Rationale**: Relational linking via user email matches existing design structures.
+
+### 2. Overdue Warning Banner Placement
+- **Decision**: Position the overdue payment alert banner as a sticky layout block directly below the header navbar, inside the `#dashboard-app` container.
+- **Rationale**: Ensures maximum visual urgency upon dashboard access while remaining clean and responsive.
+
+### 3. Print-Ready CSS Overlay
+- **Decision**: Implement a dedicated receipt modal overlay `#receipt-modal` with standard HTML structure, using print media queries (`@media print`) to hide headers and menus and print only the receipt block.
+- **Rationale**: Reuses the browser's native print capabilities to save receipts as PDFs without third-party libraries.
+
+## Risks / Trade-offs
+
+- **[Risk]** Data model bloat from generating logs of past receipts.
+  - *Mitigation*: Cap invoice histories to the last 12 entries per user.
+````
+
+## File: openspec/changes/payments-reminders-receipts/proposal.md
+````markdown
+## Why
+
+Currently, Quantum Yoga provides no financial or membership payment management. Introducing billing capabilities, invoice tracking, automated due reminders, and downloadable payment receipts helps administrators track studio revenue and keeps students informed of their active invoice details without administrative overhead.
+
+## What Changes
+
+- **Student Billing Panel**: Add a "Billing & Receipts" section inside the student Profile view to display invoice lists (due amount, status, date) and download receipts.
+- **Overdue Payment Alerts**: Display a high-visibility header banner alert for logged-in students if they have pending or overdue subscription payments.
+- **Admin Invoicing & Reminders**: Add a new "Payments & Billing" sub-tab in the Admin dashboard showing studio-wide transaction lists.
+- **Reminders & Receipts Control**: Allow administrators to manually trigger reminder alerts, record payments to transition status, and auto-generate receipts.
+
+## Capabilities
+
+### New Capabilities
+- `payments-reminders-receipts`: Enables billing tracking, receipt generation, automated overdue notifications, and administrative invoice recording.
+
+### Modified Capabilities
+
+## Impact
+
+- Modifies `index.html` to inject student billing summaries, invoice lists, warning banners, and the administrative payments tracking panel.
+- Modifies `app.js` to manage billing entries, trigger alerts, process payment logs, and persist finance entries under `qy_payments` in LocalStorage.
+````
+
+## File: openspec/changes/payments-reminders-receipts/specs/payments-reminders-receipts/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Student Billing Ledger
+The system SHALL display the student's personal invoice ledger inside their Profile dashboard, showing invoice description, amount, due date, status (Paid, Pending, Overdue), and receipt actions.
+
+#### Scenario: Student checks billing status
+- **WHEN** the student is logged in and switches to the "Billing" tab in their profile
+- **THEN** the system SHALL render a table of their personal invoices loaded from LocalStorage.
+
+### Requirement: Overdue Invoice Dashboard Alert
+Upon student login or dashboard load, if the student has any invoice marked as "Overdue", the system SHALL render a high-visibility warning banner at the top of the dashboard.
+
+#### Scenario: Logged-in user has an outstanding balance
+- **WHEN** a student with an overdue invoice of $50.00 logs in to the dashboard
+- **THEN** the system SHALL display a persistent top banner saying "Action Required: You have an outstanding overdue payment of $50.00."
+
+### Requirement: Mockup Receipt View
+The system SHALL allow students and administrators to open and print a detailed receipt overlay for any invoice marked as "Paid".
+
+#### Scenario: User requests invoice receipt
+- **WHEN** the user clicks "Download Receipt" on a paid invoice in the billing list
+- **THEN** the system SHALL open a modal dialog displaying a print-ready receipt mockup showing the transaction reference, date, user details, amount paid, and studio stamp.
+
+### Requirement: Admin Studio Financial Console
+The system SHALL provide administrators with a centralized billing panel to list all invoices, record client payments, send due reminders, and issue new manual invoices.
+
+#### Scenario: Admin records payment for a pending invoice
+- **WHEN** the administrator inspects the dashboard, clicks "Record Payment" on a pending $50.00 invoice for user "default_tester@quantumyoga.com"
+- **THEN** the system SHALL update the status to "Paid", save the transaction timestamp, and generate a downloadable receipt for the student.
+
+#### Scenario: Admin triggers a manual payment reminder
+- **WHEN** the administrator clicks "Send Reminder" for a pending or overdue invoice
+- **THEN** the system SHALL log the reminder date on the invoice and display a confirmation message indicating that a notification alert has been sent.
+````
+
+## File: openspec/changes/payments-reminders-receipts/tasks.md
+````markdown
+## 1. UI Implementation
+
+- [x] 1.1 Add the "Billing & Receipts" card and invoice list table inside `#profile-section` of `index.html`.
+- [x] 1.2 Inject the overdue payment notification banner `#overdue-payment-banner` to the main viewport area of `index.html`.
+- [x] 1.3 Add the detailed receipt modal `#receipt-modal` overlay (including print styling classes) in `index.html`.
+- [x] 1.4 Add the "Payments & Billing" sub-tab button `#admin-payments-tab-btn` and panel `#admin-payments-panel` to the admin section of `index.html`.
+
+## 2. Logic & Controller Integration
+
+- [x] 2.1 Bind DOM variables for invoice summaries, warning banners, receipt views, and admin billing selectors in `app.js`.
+- [x] 2.2 Extend `setAdminSubTab(panelName)` in `app.js` to support switching to the `"payments"` panel and loading transaction tables.
+- [x] 2.3 Implement storage functions (`loadPayments()`, `savePayments()`) and dynamic mockup invoice seeder logic inside user startup checks in `app.js`.
+- [x] 2.4 Integrate overdue payment alert checks inside `updateUIForLogin()` to display the header warning banner dynamically.
+- [x] 2.5 Implement the receipt overlay modal details display, print handler, and admin triggers for manual payments and alerts in `app.js`.
+
+## 3. Verification
+
+- [x] 3.1 Verify student-facing billing summaries, overdue alerts, and PDF receipt downloads display correctly in the browser.
+- [x] 3.2 Verify admin-facing billing pipeline actions (recording payments, creating invoices, sending reminders) sync and persist in the browser.
+````
+
+## File: openspec/changes/persistent-data-storage/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-15
+````
+
+## File: openspec/changes/persistent-data-storage/design.md
+````markdown
+## Context
+
+The Quantum Yoga platform is a static Vite dashboard app that persists state using browser LocalStorage. This means data is not shared between different browsers, and is lost if the browser profile is cleared or if the dev server runs in a temporary container. We want to implement a backend synchronization mechanism that saves state to a local `db.json` file.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Create a `db.json` file on the filesystem to serve as the persistent database.
+- Create a `vite.config.js` file and implement custom server middleware inside it to handle GET/POST requests at `/api/db`.
+- Fetch the server database state on application boot and sync it into browser LocalStorage.
+- Add client-side hooks to send background POST requests to `/api/db` whenever user data, appointments, leads, payments, or UPI settings are saved.
+
+**Non-Goals:**
+- Moving to a heavy external database (e.g. MongoDB or PostgreSQL).
+- Implementing JWT auth or server-side validation; the client-side logic remains the source of truth for validations.
+
+## Decisions
+
+### 1. Dev Server Custom Middleware (Vite config)
+- **Decision**: Create a `vite.config.js` configuration file and implement a custom server middleware utilizing Vite's `configureServer` development hook. The middleware will map requests for `/api/db` to file read/write operations on a local `db.json` file.
+- **Rationale**: Keeps the codebase simple without needing a separate backend server process. It works seamlessly within the existing `npm run dev` script.
+- **Alternatives considered**: Setting up a concurrent Express server. Rejected because it adds port overhead, process management complexity, and requires changing the start scripts.
+
+### 2. Full State Serialization
+- **Decision**: The `/api/db` payload will consist of a single JSON object containing all database tables: `users`, `leads`, `payments`, `appointments`, `upi_settings`, and `batches`.
+- **Rationale**: State is relatively small (less than 1MB). Serializing the entire database object prevents table-level conflict-resolution code and is straightforward to implement.
+- **Alternatives considered**: Defining individual REST endpoints for each entity. Rejected because it creates excessive boilerplate and requires multiple fetch integrations.
+
+### 3. Background Sync (Fire-and-forget POST)
+- **Decision**: Client modifications to LocalStorage will continue to execute synchronously to ensure zero UI delay, and will then execute a non-blocking asynchronous `fetch` POST to `/api/db` in the background to commit changes to the backend.
+- **Rationale**: Keeps client UI interactions fast while guaranteeing background filesystem persistence.
+
+## Risks / Trade-offs
+
+- **[Risk]** Data model mismatches on the first load of an empty `db.json` file.
+  - *Mitigation*: If `/api/db` returns an empty object or is missing keys, the client's `seedMockData()` will populate defaults and save them back to the server to establish a base state.
+- **[Risk]** Multiple active browser tabs overwriting each other.
+  - *Mitigation*: For local developer/admin usage, simple overwrite on write is acceptable.
+````
+
+## File: openspec/changes/persistent-data-storage/proposal.md
+````markdown
+## Why
+
+Currently, the Quantum Yoga platform operates purely as a static site using client-side browser LocalStorage for data persistence. This creates a data loss vulnerability when users access the site from clean browser profiles, different browsers, or when the development server is restarted or updated. Standardizing data persistence on a local backend JSON file synchronized with LocalStorage ensures data consistency, prevents data loss, and guarantees persistent state across server restarts and user logins.
+
+## What Changes
+
+- **Backend Persistence API**: Add a mock database middleware to the Vite dev server configuration that writes the system state to a local JSON file (`db.json`).
+- **Data Synchronization on Load**: Fetch the persistent state from the server on application boot and seed it into browser LocalStorage if present.
+- **Data Synchronization on Write**: Send POST requests to the backend API whenever the client-side state (users, appointments, leads, payments, settings) is mutated, ensuring instant persistence to the local file.
+
+## Capabilities
+
+### New Capabilities
+- `persistent-data-storage`: Handles server-side file persistence via mock API endpoints and client-side database synchronization with browser LocalStorage.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+- **vite.config.js**: Add a custom dev server plugin middleware to serve a `/api/db` endpoint supporting GET and POST requests for a local `db.json` database.
+- **db.json**: Store the serialized application state (users, appointments, payments, leads, and UPI settings).
+- **app.js**: Integrate asynchronous fetch and POST synchronization calls into storage wrappers (`loadUsers`, `saveUsers`, `saveAppointments`, `savePayments`, etc.).
+````
+
+## File: openspec/changes/persistent-data-storage/specs/persistent-data-storage/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Server-side Persistence REST Endpoint
+The development server SHALL expose a REST API endpoint at `/api/db` that supports fetching (`GET`) and updating (`POST`) the persistent database file (`db.json`) on the backend filesystem.
+
+#### Scenario: Fetching the database state
+- **WHEN** a client performs a GET request to `/api/db`
+- **THEN** the server SHALL return the JSON payload stored inside `db.json` with a 200 OK status code
+
+#### Scenario: Saving the database state
+- **WHEN** a client performs a POST request to `/api/db` with updated state JSON in the body
+- **THEN** the server SHALL overwrite `db.json` on the filesystem with the body content and return a success JSON confirmation
+
+### Requirement: Client-side LocalStorage and Backend Synchronization
+The application client-side logic SHALL load the database state from `/api/db` on startup and sync it into browser LocalStorage. The client SHALL also automatically send a POST request to `/api/db` whenever user data, lead data, payments, appointments, or theme/system settings are modified.
+
+#### Scenario: Client synchronization on app load
+- **WHEN** the application is booted in the browser
+- **THEN** the system SHALL perform a GET request to `/api/db` and override local storage keys (`qy_users`, `qy_leads`, `qy_payments`, `qy_batches`, `qy_appointments`, `qy_upi_settings`) with the backend state if database records are present
+
+#### Scenario: Client synchronization on state mutation
+- **WHEN** a user registers, toggles a favorite, creates an appointment, or an administrator updates a lead status
+- **THEN** the system SHALL write the updated state locally and immediately send a POST request to `/api/db` containing the updated dataset
+````
+
+## File: openspec/changes/persistent-data-storage/tasks.md
+````markdown
+## 1. Backend API Endpoint Setup
+
+- [x] 1.1 Create `vite.config.js` in the project root with the connect middleware registered at `/api/db` to serve GET/POST requests and interact with `db.json`
+- [x] 1.2 Create an empty `db.json` file in the project root to store serialized JSON database data
+
+## 2. Client-side Synchronization Logic
+
+- [x] 2.1 Implement `loadFromServer()` and `saveToServer()` background fetch helpers in `app.js` to get and post entire state snapshots
+- [x] 2.2 Update `DOMContentLoaded` startup process in `app.js` to call `loadFromServer()` and overwrite local storage keys before initializing dashboard state
+- [x] 2.3 Update client save functions (`saveUsers`, `saveAppointments`, `savePayments`, `saveLeads`, etc.) in `app.js` to trigger background POST synchronization to `/api/db`
+
+## 3. Verification
+
+- [x] 3.1 Verify registering a new user creates a new record in `db.json` on the filesystem
+- [x] 3.2 Verify restarting the server or reloading the browser displays the registered user and their session persistently
+````
+
+## File: openspec/changes/resend-email-provider/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-17
+````
+
+## File: openspec/changes/resend-email-provider/design.md
+````markdown
+## Context
+
+Quantum Yoga Studio is a vanilla JS / HTML / CSS single-page application backed by a Vite dev server that exposes a `db.json` persistence layer. Email sending was introduced via the `gmail-email-integration` change, which wired the Gmail OAuth2 (GIS `tokenClient`) flow into the app. The current implementation has a single send path: `gmailSendEmail()` → Gmail REST API. All transactional triggers (`sendTransactionalEmail()`) delegate to this function.
+
+Resend is a transactional email API that accepts an HTTP `POST` to `https://api.resend.com/emails` with a `Bearer <api_key>` header and a JSON body `{ from, to, subject, html }`. It requires no OAuth flow — just a static API key that admins generate once in the Resend dashboard. The key is stored server-side (in `db.json` via the Vite middleware) and never exposed in client HTML.
+
+Current storage shape:
+```json
+"gmailSettings": {
+  "clientId": "",
+  "connectedEmail": "",
+  "accessToken": "",
+  "tokenExpiry": 0
+}
 ```
+
+## Goals / Non-Goals
+
+**Goals:**
+- Add a `resendSendEmail()` function that calls the Resend REST API from the browser using a stored API key
+- Extend `gmailSettings` → `emailSettings` with `provider` ("gmail" | "resend"), `resendApiKey`, and `resendFromAddress` fields
+- Route `sendTransactionalEmail()` through the active provider automatically
+- Give admins a UI card in System Settings to select the provider and configure Resend credentials
+- Update the Email tab's connection-status card to display which provider is active
+- Maintain full backward compatibility: existing Gmail-connected installations continue working unchanged
+
+**Non-Goals:**
+- Server-side email relay / proxy (all API calls remain browser → Resend/Gmail)
+- Resend webhook ingestion or incoming email support (Resend sends only)
+- Multi-provider fan-out (emails go through exactly one provider at a time)
+- Email open/click tracking display in the inbox UI
+
+## Decisions
+
+### 1. Extend `gmailSettings` vs. create a new `emailSettings` key
+
+**Decision**: Extend `gmailSettings` in place, renaming only the conceptual name in code to `emailSettings` (the localStorage key stays `qy_gmail_settings` for backward compat).
+
+**Rationale**: Changing the localStorage key would break existing installs that already have Gmail connected. New fields (`provider`, `resendApiKey`, `resendFromAddress`) are added alongside the existing Gmail fields. Default `provider` is `"gmail"` so existing setups fall through unchanged.
+
+**Alternative considered**: New `qy_email_settings` key with migration — rejected because it adds a migration step and risk of losing the connected Gmail state during the transition.
+
+---
+
+### 2. Provider routing in `sendTransactionalEmail()` vs. at each call site
+
+**Decision**: Centralise routing inside `sendTransactionalEmail()`. Neither the invoice handler nor the appointment handler needs to know which provider is active.
+
+**Rationale**: Single place to change routing logic. Keeps call sites clean.
+
+---
+
+### 3. Resend API called from browser vs. Vite proxy
+
+**Decision**: Direct browser → `https://api.resend.com` fetch with the API key in the `Authorization` header.
+
+**Rationale**: The app already makes direct browser calls to the Gmail REST API. The Vite middleware is only used for `db.json` persistence, not as a security proxy. Resend API keys are low-risk (send-only, can be scoped per domain in the Resend dashboard). Keeping calls client-side avoids adding any server-side Node code.
+
+**Risk**: API key is visible in localStorage / memory. Mitigated by storing it only in `db.json` (served locally, not embedded in source) and instructing admins to use a domain-scoped key.
+
+---
+
+### 4. `resendFromAddress` field
+
+**Decision**: Admins configure a `from` address (e.g., `Quantum Yoga <studio@yourdomain.com>`) that is included in every Resend send. This is required by Resend (unlike Gmail OAuth, which always uses the authenticated account's address).
+
+---
+
+### 5. UI: radio buttons vs. toggle vs. dropdown for provider selection
+
+**Decision**: A styled two-option toggle (`Gmail` / `Resend`) that visually highlights the active provider. Below it, conditional configuration sections collapse/expand based on selection (Gmail section shows connect/disconnect; Resend section shows API key + from address inputs).
+
+**Rationale**: Two options makes a toggle the clearest affordance. A dropdown would be overkill for two choices.
+
+---
+
+### 6. Status display on Admin Email tab
+
+**Decision**: Replace the current `adminGmailConnectedLabel` / `adminGmailDisconnectedLabel` pair with a single `emailProviderStatusCard` that shows the active provider name and its connectivity state.
+
+**Rationale**: The inbox tab should be provider-agnostic in its language. "Gmail Connected" is wrong when Resend is the active provider.
+
+## Risks / Trade-offs
+
+| Risk | Mitigation |
+|---|---|
+| Resend API key stored in browser localStorage | Use a send-scoped, domain-restricted Resend API key; document this in the UI help text |
+| Resend has no inbox — the "Inbox" tab only shows emails fetched via Gmail | When Resend is the active provider, the inbox is disabled with an explanatory message; the compose form remains active for sending |
+| Breaking existing Gmail setups on upgrade | Default `provider = "gmail"`, new fields are optional — existing code paths unchanged |
+| Admin enters wrong Resend API key | `resendSendEmail()` surfaces the API error in the compose form's send message area |
+| CORS — Resend API must allow browser requests | Resend's public API supports CORS for browser sends; this is documented in their API reference |
+
+## Migration Plan
+
+1. On first load after update, `loadEmailSettings()` reads existing `gmailSettings` from localStorage, adds defaults for new fields (`provider: "gmail"`, `resendApiKey: ""`, `resendFromAddress: ""`), and writes back — transparent to the user.
+2. No data migration needed in `db.json` — the new fields simply appear as empty strings on first `saveToServer()`.
+3. Rollback: if the feature is reverted, Gmail-connected state is preserved because we never removed those fields.
+
+## Open Questions
+
+- None — implementation is straightforward given the existing Gmail integration as a pattern to follow.
+````
+
+## File: openspec/changes/resend-email-provider/proposal.md
+````markdown
+## Why
+
+Quantum Yoga Studio currently sends emails exclusively through Gmail OAuth2, which requires the admin to connect a personal Gmail account and keep it authenticated. This creates friction for studios that want programmatic, reliable transactional email delivery (invoices, appointment confirmations, enrollment notices) without OAuth re-authentication headaches. [Resend](https://resend.com) is a modern developer-focused email API that uses a simple API key — no OAuth flow needed — and provides delivery analytics and a generous free tier, making it a natural complement to Gmail for transactional sends. Admins should be able to choose whichever provider fits their workflow.
+
+## What Changes
+
+- **New**: `emailSettings` configuration in `db.json` / `gmailSettings` extended with `provider` field (`"gmail"` | `"resend"`) and `resendApiKey` field
+- **New**: `resendSendEmail(to, subject, bodyHtml, bodyText)` service function that calls the Resend REST API (`https://api.resend.com/emails`) using a stored API key
+- **New**: Admin Settings card — **Email Provider** — lets admin choose between Gmail and Resend and configure the Resend API key
+- **Modified**: `sendTransactionalEmail()` routes to either `gmailSendEmail()` or `resendSendEmail()` based on the configured provider
+- **Modified**: Admin Email Inbox tab connection status card shows the active provider and its configuration state
+- **Modified**: `updateGmailStatusUI()` → renamed/refactored to `updateEmailProviderStatusUI()` to reflect provider-agnostic logic
+
+## Capabilities
+
+### New Capabilities
+- `resend-provider`: Resend API integration — API key storage, `resendSendEmail()` service function, transactional email routing
+- `email-provider-selector`: Admin UI card that lets admin select the active email provider (Gmail or Resend) and configure provider-specific settings (Resend API key); shows active provider badge on the Email tab
+
+### Modified Capabilities
+- `admin-email-inbox`: Connection/status card updated to reflect active provider instead of always showing Gmail status; connect/disconnect controls shown conditionally
+
+## Impact
+
+- **`app.js`**: New `resendSendEmail()` function; `sendTransactionalEmail()` routing logic; extended `loadGmailSettings()` / `saveGmailSettings()` (or new `loadEmailSettings()` / `saveEmailSettings()`) to include `provider` + `resendApiKey`; `updateGmailStatusUI()` refactored
+- **`db.json`**: `gmailSettings` extended with `provider: "gmail"` and `resendApiKey: ""`
+- **`index.html`**: New "Email Provider" settings card in Admin Settings panel; new Resend API key input field; provider selector radio/toggle
+- **`index.css`**: Minor additions for provider selector toggle and Resend status badge
+- **No new npm dependencies** — Resend is called via the browser's native `fetch()` against `https://api.resend.com`
+````
+
+## File: openspec/changes/resend-email-provider/specs/admin-email-inbox/spec.md
+````markdown
+## MODIFIED Requirements
+
+### Requirement: Admin email inbox status card
+The admin Email tab's connection/status card SHALL display the active email provider (Gmail or Resend) rather than always showing Gmail-specific controls. When `emailSettings.provider === "gmail"`, behaviour is identical to before this change. When `emailSettings.provider === "resend"`, the Gmail-specific elements (connect button, disconnect button, refresh button, connected-email label) SHALL be hidden and replaced with a Resend status row.
+
+#### Scenario: Gmail provider — connected state
+- **WHEN** `provider === "gmail"` and `isGmailConnected()` returns true
+- **THEN** the connected label, connected email address, disconnect button, and refresh button are shown
+- **THEN** the connect button is hidden
+
+#### Scenario: Gmail provider — disconnected state
+- **WHEN** `provider === "gmail"` and `isGmailConnected()` returns false
+- **THEN** the connect button is shown
+- **THEN** the connected label, disconnect button, and refresh button are hidden
+
+#### Scenario: Resend provider — configured
+- **WHEN** `provider === "resend"` and `resendApiKey` is non-empty
+- **THEN** a "Resend Active ✓" badge is shown with the configured from-address
+- **THEN** Gmail controls (connect, disconnect, refresh) are hidden
+- **THEN** the inbox list displays an informational notice that inbox is unavailable with Resend
+
+#### Scenario: Resend provider — unconfigured
+- **WHEN** `provider === "resend"` and `resendApiKey` is empty
+- **THEN** a warning badge "Resend: API key not configured — go to Settings" is shown
+- **THEN** Gmail controls are hidden
+````
+
+## File: openspec/changes/resend-email-provider/specs/email-provider-selector/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Provider selector UI
+The Admin System Settings panel SHALL include an "Email Provider" card with a two-option toggle (`Gmail` | `Resend`) that persists the selected provider to `emailSettings.provider`. Below the toggle, provider-specific configuration sections SHALL be shown conditionally: selecting Gmail shows the existing Gmail Client ID and connect/disconnect controls; selecting Resend shows the API key input and from-address input with a Save button.
+
+#### Scenario: Default state shows Gmail selected
+- **WHEN** admin opens System Settings and no provider has been previously chosen
+- **THEN** the Gmail option is selected in the toggle
+- **THEN** the Gmail configuration section is visible
+- **THEN** the Resend configuration section is hidden
+
+#### Scenario: Switching to Resend shows Resend config
+- **WHEN** admin clicks the Resend toggle option
+- **THEN** `emailSettings.provider` is set to `"resend"`
+- **THEN** the Resend API key and from-address inputs become visible
+- **THEN** the Gmail configuration section is hidden
+
+#### Scenario: Switching back to Gmail restores Gmail config
+- **WHEN** admin clicks the Gmail toggle option after Resend was selected
+- **THEN** `emailSettings.provider` is set to `"gmail"`
+- **THEN** the Gmail configuration section is visible again
+
+---
+
+### Requirement: Resend credentials save
+The Resend configuration section SHALL include an API Key input (type password, placeholder `re_…`), a From Address input (placeholder `Quantum Yoga <studio@yourdomain.com>`), a Save button, and a success/error message area. Clicking Save SHALL persist both values to `emailSettings` and display a success message.
+
+#### Scenario: Admin saves valid Resend credentials
+- **WHEN** admin enters a non-empty API key and from address and clicks Save
+- **THEN** `resendApiKey` and `resendFromAddress` are saved to `emailSettings`
+- **THEN** a success message "Resend settings saved ✓" appears for 3 seconds
+
+#### Scenario: Save is blocked when API key is empty
+- **WHEN** admin clicks Save with an empty API key field
+- **THEN** the save operation is prevented
+- **THEN** an error message "API key is required" is shown
+
+---
+
+### Requirement: Active provider status on Email tab
+The Admin Email Inbox panel's connection-status card SHALL display the currently active provider (`Gmail` or `Resend`) and its configuration state. When Resend is the active provider, the Gmail-specific connect/disconnect/refresh controls SHALL be hidden. When Resend is active and configured, the status SHALL show "Resend Active ✓" with the configured from-address. When Resend is active but unconfigured, it SHALL show "Resend: API key not set".
+
+#### Scenario: Email tab shows Gmail status when Gmail is active
+- **WHEN** `emailSettings.provider === "gmail"` and admin opens the Email tab
+- **THEN** the Gmail connection card is shown (connect/disconnect/refresh buttons)
+- **THEN** the Resend status indicator is hidden
+
+#### Scenario: Email tab shows Resend status when Resend is active
+- **WHEN** `emailSettings.provider === "resend"` and admin opens the Email tab
+- **THEN** the Resend status indicator shows "Resend Active ✓" and the configured from-address
+- **THEN** the Gmail connect/disconnect controls are hidden
+- **THEN** the inbox list shows a notice "Inbox not available with Resend provider (send-only)"
+
+#### Scenario: Resend active but unconfigured
+- **WHEN** `emailSettings.provider === "resend"` but `resendApiKey` is empty
+- **THEN** the status shows "Resend: API key not configured" in a warning style
+````
+
+## File: openspec/changes/resend-email-provider/specs/resend-provider/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Resend API send
+The system SHALL be able to send emails via the Resend REST API (`https://api.resend.com/emails`) using a stored API key and a configured `from` address. The function SHALL return `{ success: true, messageId }` on success and `{ success: false, error }` on failure.
+
+#### Scenario: Successful send via Resend
+- **WHEN** Resend is the active provider, a valid API key and from-address are configured, and `resendSendEmail()` is called
+- **THEN** a `POST` request is made to `https://api.resend.com/emails` with `Authorization: Bearer <apiKey>` and JSON body `{ from, to, subject, html }`
+- **THEN** the function returns `{ success: true, messageId: <id from response> }`
+
+#### Scenario: Send fails with invalid API key
+- **WHEN** Resend is the active provider and the API key is invalid or expired
+- **THEN** the Resend API responds with a non-2xx status
+- **THEN** the function returns `{ success: false, error: <error message from response> }`
+
+#### Scenario: Send skipped when API key is missing
+- **WHEN** Resend is the active provider but `resendApiKey` is empty
+- **THEN** `resendSendEmail()` returns `{ success: false, error: "Resend API key not configured." }` without making a network request
+
+---
+
+### Requirement: Provider-agnostic transactional routing
+The `sendTransactionalEmail(template, data, toEmail)` function SHALL route to either `gmailSendEmail()` or `resendSendEmail()` based on the value of `emailSettings.provider`. If `provider` is `"gmail"` it routes to Gmail; if `"resend"` it routes to Resend. If neither provider is properly configured it SHALL log a warning and return without sending.
+
+#### Scenario: Route to Gmail when provider is "gmail"
+- **WHEN** `emailSettings.provider === "gmail"` and Gmail is connected
+- **THEN** `sendTransactionalEmail()` calls `gmailSendEmail()` with the rendered body
+
+#### Scenario: Route to Resend when provider is "resend"
+- **WHEN** `emailSettings.provider === "resend"` and a Resend API key is configured
+- **THEN** `sendTransactionalEmail()` calls `resendSendEmail()` with the rendered body
+
+#### Scenario: Graceful skip when provider is unconfigured
+- **WHEN** `emailSettings.provider === "resend"` but `resendApiKey` is empty, OR `provider === "gmail"` but Gmail is not connected
+- **THEN** `sendTransactionalEmail()` logs a console warning and returns without attempting to send
+
+---
+
+### Requirement: Email settings data model extension
+The `emailSettings` (persisted under the existing `gmailSettings` key in localStorage and `db.json`) SHALL include three new fields: `provider` (string, `"gmail"` | `"resend"`, default `"gmail"`), `resendApiKey` (string, default `""`), and `resendFromAddress` (string, default `""`). On first load, if existing settings lack these fields, defaults SHALL be applied transparently.
+
+#### Scenario: Backward-compatible migration on first load
+- **WHEN** the app loads and `gmailSettings` in localStorage has no `provider` field
+- **THEN** `loadEmailSettings()` adds `provider: "gmail"`, `resendApiKey: ""`, `resendFromAddress: ""` to the returned object
+- **THEN** existing Gmail-connected state is preserved unchanged
+
+#### Scenario: Settings persist across page reloads
+- **WHEN** admin saves provider settings (provider, API key, from address)
+- **THEN** values are written to localStorage and synced to `db.json` via `saveToServer()`
+- **THEN** the values are present after a full page reload
+````
+
+## File: openspec/changes/resend-email-provider/tasks.md
+````markdown
+## 1. Data Model Extension (db.json + app.js)
+
+- [x] 1.1 Add `provider` (default `"gmail"`), `resendApiKey` (default `""`), and `resendFromAddress` (default `""`) fields to `gmailSettings` in `db.json`
+- [x] 1.2 Update `loadEmailSettings()` (alias of `loadGmailSettings()`) to apply defaults for the three new fields if missing, ensuring backward compatibility with existing Gmail-connected installs
+- [x] 1.3 Update `saveEmailSettings()` (alias of `saveGmailSettings()`) to persist the three new fields alongside existing Gmail fields; update `saveToServer()` payload to include them in `db.json`
+
+## 2. Resend API Service Layer (app.js)
+
+- [x] 2.1 Implement `resendSendEmail({ to, subject, bodyHtml, bodyText })` — reads `resendApiKey` and `resendFromAddress` from `loadEmailSettings()`; if either is empty returns `{ success: false, error: "Resend API key not configured." }`; otherwise POSTs to `https://api.resend.com/emails` with `Authorization: Bearer <apiKey>` and body `{ from, to, subject, html: bodyHtml }`; returns `{ success: true, messageId }` on HTTP 2xx or `{ success: false, error }` on failure
+- [x] 2.2 Update `sendTransactionalEmail(template, data, toEmail)` to route to `resendSendEmail()` when `emailSettings.provider === "resend"` and to `gmailSendEmail()` when `"gmail"`; log a console warning and return if the active provider is unconfigured
+
+## 3. Admin Settings UI — Email Provider Card (index.html + CSS)
+
+- [x] 3.1 Add an "Email Provider" card to the Admin System Settings panel with a two-button toggle: `Gmail` button (id `email-provider-gmail-btn`) and `Resend` button (id `email-provider-resend-btn`); active button gets `.active` class
+- [x] 3.2 Add a Gmail configuration section (id `gmail-config-section`) containing the existing Gmail Client ID input and connect/disconnect controls — visible when Gmail is the active provider
+- [x] 3.3 Add a Resend configuration section (id `resend-config-section`) containing: API key input (id `resend-api-key-input`, type password, placeholder `re_…`), from-address input (id `resend-from-address-input`, placeholder `Quantum Yoga <studio@yourdomain.com>`), Save button (id `resend-settings-save-btn`), success/error message span (id `resend-settings-msg`) — hidden when Gmail is the active provider
+- [x] 3.4 Add CSS for the provider toggle (`.email-provider-toggle`, `.email-provider-btn`, `.email-provider-btn.active`), the Resend status badge (`.resend-active-badge`), and the Resend warning badge (`.resend-unconfigured-badge`)
+
+## 4. Admin Settings Logic — Email Provider Card (app.js)
+
+- [x] 4.1 Declare DOM variables for all new provider-selector elements: `emailProviderGmailBtn`, `emailProviderResendBtn`, `gmailConfigSection`, `resendConfigSection`, `resendApiKeyInput`, `resendFromAddressInput`, `resendSettingsSaveBtn`, `resendSettingsMsg`
+- [x] 4.2 Implement `renderEmailProviderSettings()` — reads active provider from `loadEmailSettings()`, sets `.active` on the correct toggle button, shows/hides `gmailConfigSection` and `resendConfigSection`, pre-populates `resendApiKeyInput` and `resendFromAddressInput` with stored values
+- [x] 4.3 Wire `email-provider-gmail-btn` click → set `provider: "gmail"` in settings, call `renderEmailProviderSettings()` and `updateEmailProviderStatusUI()`
+- [x] 4.4 Wire `email-provider-resend-btn` click → set `provider: "resend"` in settings, call `renderEmailProviderSettings()` and `updateEmailProviderStatusUI()`
+- [x] 4.5 Wire `resend-settings-save-btn` click → validate API key non-empty; if empty show error; otherwise save `resendApiKey` and `resendFromAddress` to settings, show success message for 3 s, call `updateEmailProviderStatusUI()`
+- [x] 4.6 Call `renderEmailProviderSettings()` when the Settings sub-tab is activated (inside `setAdminSubTab("settings")`)
+
+## 5. Admin Email Tab — Provider-Agnostic Status Card (index.html + app.js)
+
+- [x] 5.1 Add a Resend status row to the admin Email panel connection card: a `.resend-active-badge` span (id `admin-resend-active-label`) and a `.resend-unconfigured-badge` span (id `admin-resend-unconfigured-label`); both hidden by default
+- [x] 5.2 Declare DOM variables for the two new Resend status elements: `adminResendActiveLabel`, `adminResendUnconfiguredLabel`
+- [x] 5.3 Refactor `updateGmailStatusUI()` → `updateEmailProviderStatusUI()`: when `provider === "gmail"` keep existing logic; when `provider === "resend"` hide Gmail controls and show the correct Resend badge based on whether `resendApiKey` is set
+- [x] 5.4 Update all call sites of `updateGmailStatusUI()` in `app.js` to call `updateEmailProviderStatusUI()` instead
+- [x] 5.5 When Resend is the active provider, render an informational notice inside `adminInboxEmailList`: "Inbox is not available with the Resend provider (send-only). Switch to Gmail in Settings to view inbox."
+
+## 6. Admin Compose Form — Provider-Aware Send (app.js)
+
+- [x] 6.1 Update the admin compose form submit handler to route through `sendTransactionalEmail()` (or call the correct send function directly) when Resend is the active provider, using `resendFromAddress` as the sender; keep existing Gmail path unchanged
+- [x] 6.2 Update the "Gmail not connected" error message in the compose submit handler to be provider-aware: if `provider === "resend"` and `resendApiKey` is empty, show "Resend API key not configured. Go to Settings to add it."
+
+## 7. Polish & Integration
+
+- [x] 7.1 Verify end-to-end Resend send: set provider to Resend, enter a valid API key and from address, compose an email, confirm `resendSendEmail()` is called and returns success
+- [x] 7.2 Verify backward compatibility: with provider set to Gmail and an existing Gmail connection, all existing transactional triggers still route to `gmailSendEmail()`
+- [x] 7.3 Verify provider persists across page reload: set provider to Resend, reload, confirm Resend is still selected and the API key is pre-populated in the settings form
+````
+
+## File: openspec/changes/restrict-admin-client-features/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-14
+````
+
+## File: openspec/changes/restrict-admin-client-features/design.md
+````markdown
+## Context
+
+Currently, the Quantum Yoga platform has an administrator account (`admin@quantumyoga.com`) that handles dashboard metrics, lead workflows, scheduling, and billing settings. However, the system does not differentiate navigation visibility cleanly in certain areas, allowing the admin account to access student profile panels and attempt class enrollments. This design introduces strict UI visibility rules and checks to keep admin activity centered solely on dashboard operations.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Hide header profile tabs and student sub-menus for administrative logins.
+- Block client-only DOM renderers from running or seeding favorite checklists for administrative logins.
+- Restrict mock booking event submissions from accepting admin credentials.
+
+**Non-Goals:**
+- Creating a complex user permission control list (RBAC) database schema; role restrictions will be determined using the unique administrator email check (`admin@quantumyoga.com`).
+
+## Decisions
+
+### 1. Header Navigation Display
+- **Decision**: Update `updateUIForLogin()` to toggle visibility of `#nav-profile` to `display: none` and `#nav-admin` to `display: inline-block` when logged in as the admin. Regular users will experience the inverse.
+- **Rationale**: Aligns UI layout with role capabilities immediately upon login.
+
+### 2. Client View Render Bypass
+- **Decision**: Bypass executing client rendering operations (`renderClientDashboard`, `renderStudentAppointments`, `renderClientBillingHistory`) if the active user is `admin@quantumyoga.com`.
+- **Rationale**: Prevents DOM element lookup errors and redundant computation.
+
+### 3. Student Action Gatekeeping
+- **Decision**: Throw alert notifications or return early inside `saveAppointmentBtn` click handlers and batch change submissions if the active account email matches `admin@quantumyoga.com`.
+- **Rationale**: Prevents dirtying database lists with non-student records.
+
+## Risks / Trade-offs
+
+- **[Risk]** If the admin manually types `#profile-section` in the URL, they might trigger the profile view container.
+  - *Mitigation*: In the router hash change listener, redirect the admin to `#admin-section` if the hash is `#profile-section`.
+````
+
+## File: openspec/changes/restrict-admin-client-features/proposal.md
+````markdown
+## Why
+
+Currently, when the administrative user (`admin@quantumyoga.com`) logs in, they are shown student-facing UI elements such as class scheduling, practice logs, wellness trackers, and goals. Since the administrator's sole role is platform management (and they do not enroll in classes or track personal yoga practice), showing these panels is redundant and cluttering. This change ensures that the admin view is focused purely on administrative capabilities.
+
+## What Changes
+
+- Hide the **Profile** tab in the main header for the administrator.
+- Exclude student-specific sub-panels (My Practice Log, Wellness Center, Appointments) from being accessed by the admin.
+- Restrict scheduling features, favorites list seeding, and class/batch enrollments from operating on the admin email address.
+- Keep the interface clean and targeted only to dashboard settings, metrics, and administration panels.
+
+## Capabilities
+
+### New Capabilities
+- `admin-client-restrictions`: Excludes client-facing logs, schedules, and dashboards for the administrative user role.
+
+### Modified Capabilities
+- None
+
+## Impact
+
+- **index.html**: Navbar display logic for header tabs when admin logs in.
+- **app.js**: DOM initializations and renderers (`updateUIForLogin`, `renderClientDashboard`, etc.) that handle layout logic based on the user's role.
+````
+
+## File: openspec/changes/restrict-admin-client-features/specs/admin-client-restrictions/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Exclude Header Profile Link
+The system SHALL hide the "Profile" navigation link in the application header for the administrator user account (`admin@quantumyoga.com`).
+
+#### Scenario: Admin logs in and header is rendered
+- **WHEN** the administrative user logs in successfully
+- **THEN** the system SHALL hide the "Profile" tab navigation link in the header actions, while keeping the "Admin Panel" and "Log Out" links visible.
+
+### Requirement: Exclude Student Sub-panels
+The system SHALL prevent rendering or displaying client-facing sub-panels (My Practice Log, Wellness Center, Appointments) in any views when the logged-in user is the administrator.
+
+#### Scenario: Admin attempts to navigate to student panels
+- **WHEN** the logged-in user is `admin@quantumyoga.com`
+- **THEN** the system SHALL hide or disable access to the client-only profile panels and default the admin view strictly to the administrative panels (Overview, Settings, Payments, Leads, Scheduling).
+
+### Requirement: Restrict Student Enrollments and Favorites
+The system SHALL NOT allow scheduling appointments, enrolling in batches, or registering favorites for the administrative user account.
+
+#### Scenario: Admin attempts to book an appointment
+- **WHEN** the active user is `admin@quantumyoga.com`
+- **THEN** the system SHALL restrict the user from executing any booking/enrollment requests and ensure the administrative email address is excluded from client activity logs.
+````
+
+## File: openspec/changes/restrict-admin-client-features/tasks.md
+````markdown
+## 1. UI Adjustments
+
+- [x] 1.1 Hide the Profile tab navigation link in `index.html` and `updateUIForLogin` in `app.js` for admin logins.
+- [x] 1.2 Prevent the admin from manually opening the profile section via URL hash routing.
+
+## 2. Logic Safeguards
+
+- [x] 2.1 Bypass student profile panel renders (practice logs, appointments, billing) when the logged-in email is `admin@quantumyoga.com`.
+- [x] 2.2 Implement checks in `app.js` scheduling and batch selection handlers to reject admin credentials and return early.
+
+## 3. Verification & Testing
+
+- [x] 3.1 Test admin navigation, route restrictions, and action gates in the browser to ensure profile elements are not displayed.
+````
+
+## File: openspec/changes/session-expiry-idle-redirect/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-15
+````
+
+## File: openspec/changes/session-expiry-idle-redirect/design.md
+````markdown
+## Context
+
+The Quantum Yoga application currently relies on a persistent session stored in `localStorage` under the key `qy_session`. This session has no expiration, meaning users remain logged in indefinitely unless they explicitly click "Logout". Additionally, visitors can manually type protected URL hashes like `#admin-section` or `#profile-section` to navigate to those views, and if they lack a session, the app does not properly redirect them to the authentication gate.
+
+## Goals / Non-Goals
+
+**Goals:**
+* Implement automatic session expiration after 15 minutes of user inactivity (idle time).
+* Prevent direct access to protected URL hashes (`#admin-section` and `#profile-section`) for unauthenticated visitors by redirecting them to the login form.
+* Ensure explicit logouts redirect users cleanly and clear any active protected URL hashes.
+* Provide a testable mechanism to verify idle timeouts quickly (e.g., via a query parameter `?idleTest=1` reducing the timeout to 10 seconds).
+
+**Non-Goals:**
+* Implementing server-side session expiration or token validation (as this is a mock database frontend client).
+* Changing how user profiles or membership data are managed.
+
+## Decisions
+
+### 1. Inactivity Monitoring Event Listeners
+We will attach global event listeners at the `document` level to track user activity.
+* **Events to listen to:** `mousemove`, `mousedown`, `keypress`, `scroll`, `click`, `touchstart`.
+* **Behavior:** Any of these events will update a `qy_last_activity` timestamp stored in `localStorage`. Using `localStorage` ensures that idle tracking works consistently across page refreshes.
+* **Interval Checker:** A periodic `setInterval` check running every 5 seconds will compare `Date.now()` against `qy_last_activity`. If the delta exceeds 15 minutes (or 10 seconds if `?idleTest=1` is present in the URL), the session will be terminated.
+
+### 2. Route Guarding via URL Hash Checks
+We will implement route guards by checking `window.location.hash` and the `hashchange` event.
+* **Initialization Check:** During initialization (after checking the session), we check if `window.location.hash` contains `#admin-section` or `#profile-section`.
+* **Guard Action:** If a protected route hash is present but `localStorage.getItem("qy_session")` is null/empty, we:
+  1. Clear the hash using `window.location.hash = ""` or `history.replaceState(null, null, " ")`.
+  2. Call `openAuthModal()` to display the login screen and lock the dashboard.
+* **Hash Change Listener:** Add an event listener for `hashchange` to handle manual URL edits during a browsing session.
+
+### 3. Clean Redirection on Logout
+Modify the logout click handler and the automatic session expiration function to:
+1. Clear the active session token from `localStorage`.
+2. Clear the active URL hash so the user is not left on a protected hash.
+3. Open the auth modal to display the login screen.
+
+## Risks / Trade-offs
+
+* **[Risk]** Heavy CPU overhead from frequent activity listeners (e.g., `mousemove` fires continuously).
+  * **[Mitigation]** Throttle/debounce the activity handler so that it only writes to `localStorage` at most once every 2 seconds.
+* **[Risk]** Testing a 15-minute timeout is slow and tedious during verification.
+  * **[Mitigation]** Implement a query parameter check `?idleTest=1` that sets the idle timeout limit to 10 seconds, enabling fast automated or manual testing.
+````
+
+## File: openspec/changes/session-expiry-idle-redirect/proposal.md
+````markdown
+## Why
+
+The current application keeps the user logged in indefinitely because the session token stored in `localStorage` (`qy_session`) does not have an expiration. If a user is inactive/idle, their session remains active, creating a security risk. Furthermore, there is no route-level check on startup to enforce that direct links to protected views (like member profile/dashboard or admin sections) redirect unauthenticated users to the login/auth gate.
+
+## What Changes
+
+* **Session Expiry on Inactivity/Idle**: Automatically log out the user and redirect them to the auth gate if there has been no user activity (mouse movement, clicks, key presses, touch events) for a configurable duration of inactivity (e.g. 15 minutes).
+* **Direct Access Route Guarding**: Check for an active session immediately on page load, and if the user attempts to directly access protected sections (e.g., `#admin-section` or `#profile-section`) without an active session, redirect them to the fullscreen auth gate and reset the URL hash.
+* **Auto-redirect on Logout**: When a session expires or when the user logs out, clear the URL hash and redirect them to the login screen.
+
+## Capabilities
+
+### New Capabilities
+
+- `session-management`: Covers idle session tracking, automatic logout, and route guarding for direct link access without a valid session.
+
+### Modified Capabilities
+
+- None
+
+## Impact
+
+* `app.js`: Implement activity listeners (mousemove, mousedown, keypress, scroll, click, touchstart) to track active state, update last-activity timestamp in `localStorage` or memory, and log out users when the idle duration is exceeded. Update initialization logic to check route hash and redirect to auth gate if no session is active.
+````
+
+## File: openspec/changes/session-expiry-idle-redirect/specs/session-management/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Idle Session Expiration
+The system SHALL automatically expire a user's active session and log them out if they remain inactive (no mouse movement, key press, scroll, click, or touch action) for 15 minutes.
+
+#### Scenario: Idle timeout triggers automatic logout
+- **WHEN** the user is logged in and performs no interactions for 15 minutes
+- **THEN** the system SHALL delete the active session token from local storage, clear the URL hash, redirect them to the fullscreen auth gate, and show a notification alert that the session has expired due to inactivity.
+
+#### Scenario: User activity resets the idle timer
+- **WHEN** the user is logged in and performs any interaction (such as mouse move, click, keydown, scroll, or touchstart) before the 15-minute idle limit is reached
+- **THEN** the system SHALL reset the idle timer countdown.
+
+### Requirement: Protected Route Direct Access Guard
+The system SHALL prevent direct access to protected views (such as the admin panel or user profile dashboard) if the visitor does not have an active authenticated session.
+
+#### Scenario: Direct page access without active session redirects to login
+- **WHEN** a visitor navigates directly to a URL with a protected hash (such as `#admin-section` or `#profile-section`) and there is no active session stored in `localStorage`
+- **THEN** the system SHALL redirect the user to the fullscreen auth gate, display the login form, and clear the protected hash from the URL.
+
+### Requirement: Redirect on Explicit Logout
+The system SHALL redirect the user and clear the URL hash upon explicit logout.
+
+#### Scenario: Logout clears state and redirects
+- **WHEN** a logged-in user clicks the logout button
+- **THEN** the system SHALL delete the session token from local storage, clear the URL hash, and display the fullscreen auth gate.
+````
+
+## File: openspec/changes/session-expiry-idle-redirect/tasks.md
+````markdown
+## 1. Core Implementation
+
+- [x] 1.1 Implement route guard checking on startup in `app.js` to redirect unauthenticated users accessing protected hashes (`#admin-section` or `#profile-section`) to the login screen and clear the URL hash
+- [x] 1.2 Add a `hashchange` event listener on `window` to enforce the route guard if a visitor manually edits the URL hash in the browser address bar
+- [x] 1.3 Modify the explicit logout button event handler to clear the URL hash when logging out
+- [x] 1.4 Attach global activity event listeners (`mousemove`, `mousedown`, `keypress`, `scroll`, `click`, `touchstart`) inside `app.js` that update a throttled `qy_last_activity` timestamp in `localStorage`
+- [x] 1.5 Implement a periodic `setInterval` check (every 5 seconds) that triggers session expiry, clears the hash, and redirects to the login screen when the user is idle for more than 15 minutes (or 10 seconds if the query string `?idleTest=1` is present)
+
+## 2. Verification
+
+- [x] 2.1 Verify that attempting to visit `#admin-section` or `#profile-section` directly without an active session redirects to the login screen and resets the URL hash
+- [x] 2.2 Verify that clicking the explicit logout button clears the active URL hash and redirects to the login screen
+- [x] 2.3 Verify that logging in with `?idleTest=1` in the URL automatically logs out the user and redirects them to the auth screen after 10 seconds of complete inactivity
+````
+
+## File: openspec/changes/upi-qr-payments/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-14
+````
+
+## File: openspec/changes/upi-qr-payments/design.md
+````markdown
+## Context
+
+Currently, the Quantum Yoga platform has mock billing invoices but lacks an actual payment method. To localized payments for Indian students, we need to offer UPI payments. This change introduces administrator settings to configure the studio VPA and payee name, dynamic QR code generation inside client invoice rows, reference logging, and an admin validation interface.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Add VPA and payee name input configurations inside Admin Settings.
+- Display a "Pay via UPI" trigger next to pending invoices in the student profile.
+- Generate a dynamic QR code using the configured VPA, invoice amount, description, and invoice ID.
+- Provide a payment confirmation step allowing the student to enter their UPI transaction reference (UTR) code, transitioning the invoice to an "Under Review" state.
+- Add validation options inside the admin billing ledger to approve or reject pending validation requests.
+
+**Non-Goals:**
+- Real-time API integration with Indian bank settlement networks (we will use manual UTR/UPI Ref verification by administrators).
+
+## Decisions
+
+### 1. Dynamic QR Code Rendering Method
+- **Decision**: Use the free QRServer API (`https://api.qrserver.com/v1/create-qr-code/`) to render the QR code inside an HTML `<img>` element instead of loading and parsing an external client-side QR JavaScript library.
+- **Rationale**: Keeps the codebase lightweight and dependencies minimal. Utilizing a direct image URL containing the URL-encoded UPI deep-link schema (`upi://pay?...`) is fully responsive and loads immediately with zero JS library overhead.
+
+### 2. State & Database Updates
+- **Decision**: Introduce a new status state `"review"` for invoices that have been submitted by the student with a reference UTR number. Update `qy_payments` schema dynamically:
+  - Add `utr` (string) for storing validation references.
+- **Rationale**: Keeps database changes backward-compatible while tracking verification pipeline status transitions cleanly.
+
+### 3. Payment UI Placement
+- **Decision**: Create a dedicated payment modal overlay (`#upi-payment-modal`) in `index.html` styled with glassmorphism tokens.
+- **Rationale**: Keeps the user focused on the active transaction step, listing the payee name, amount, generated QR code, and UTR input form clearly in a single view.
+
+## Risks / Trade-offs
+
+- **[Risk]** If the admin has not configured a UPI ID, dynamic QR code generation will fail.
+  - *Mitigation*: Fall back to a default studio UPI address (e.g. `quantumyoga@upi`) if no custom configuration is found in LocalStorage, and print a warning console message.
+````
+
+## File: openspec/changes/upi-qr-payments/proposal.md
+````markdown
+## Why
+
+To support seamless digital transactions for members in India, the system needs a local payment integration. Standard credit card processors are often not preferred or accessible for Indian students, whereas Unified Payments Interface (UPI) is the dominant payment method. Adding a dynamic UPI QR code generation system configured by administrators allows students to pay invoices instantly using standard mobile payment apps (GPay, PhonePe, Paytm).
+
+## What Changes
+
+- **Admin UPI Configuration**: Introduce a form in the Admin System Settings sub-panel allowing administrators to configure the studio's merchant UPI ID (VPA) and payee name.
+- **Dynamic QR Code Display**: In the student's profile billing panel, replace the static invoice listings or manual overlays with a dynamic "Pay via UPI" interface that generates a QR code representing the UPI payment URL (`upi://pay?pa=...&pn=...&am=...&tn=...`).
+- **Student Payment Submission**: Allow students to submit the transaction reference number (UTR/UPI Ref) after scanning the QR code, transitioning the invoice status to "Under Review".
+- **Admin Validation Ledger**: Update the administrator's payments ledger to highlight invoices that are "Under Review", displaying the student-submitted UTR and allowing the admin to record the payment as "Paid" or reject it.
+
+## Capabilities
+
+### New Capabilities
+- `upi-qr-payments`: Introduces administrative configuration settings for a UPI ID, dynamic UPI QR payment link generation in the client billing panel, student reference submission, and admin payment confirmation dashboards.
+
+### Modified Capabilities
+<!-- No modified capabilities -->
+
+## Impact
+
+- Modifies `index.html` to add the UPI config form in Admin Settings, a UPI reference submission form in the Client Billing panel, and references to a QR code generator library (e.g., QRCode.js or similar API).
+- Modifies `index.css` to add styles for the QR code overlay, column layouts for payment screens, and status badges for "Under Review" states.
+- Modifies `app.js` to handle saving the UPI VPA configuration in LocalStorage, rendering QR codes dynamically on payment triggers, saving student UPI transaction reference logs, and processing admin validation triggers.
+````
+
+## File: openspec/changes/upi-qr-payments/specs/upi-qr-payments/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Administrative UPI Configuration
+The system SHALL provide configuration input fields in the administrator's System Settings sub-panel to specify and save the merchant UPI ID (VPA) and payee name, persisting them in LocalStorage.
+
+#### Scenario: Admin configures studio UPI details
+- **WHEN** the administrator enters "quantumyoga@upi" in the UPI VPA field, "Quantum Yoga Studio" in the Payee Name field, and clicks "Save Settings"
+- **THEN** the system SHALL save these configurations in LocalStorage and display a settings saved confirmation message.
+
+### Requirement: Dynamic UPI QR Code Generation
+The system SHALL dynamically render a scan-to-pay QR code for pending invoices in the student's billing profile. The QR code SHALL encode a valid UPI payment deep-link schema (`upi://pay?pa=<vpa>&pn=<payee>&am=<amount>&tn=<invoice_id>`) using the configured administrator VPA details.
+
+#### Scenario: Student triggers payment modal for invoice
+- **WHEN** a logged-in student clicks "Pay via UPI" on a pending invoice of ₹2499 (Invoice #INV-10029)
+- **THEN** the system SHALL show an overlay containing a dynamically generated QR code representing the UPI pay URL for ₹2499 to the configured studio UPI address.
+
+### Requirement: Transaction Reference Submission
+The system SHALL allow students to enter a 12-digit transaction reference number (UTR/UPI Ref) after scanning the QR code, updating the invoice status to "Under Review".
+
+#### Scenario: Student submits payment confirmation reference
+- **WHEN** the student enters transaction ID "612345678901" in the reference field and clicks "Confirm Payment"
+- **THEN** the system SHALL save the UTR reference, transition the invoice status to "Under Review", and refresh the client billing history table.
+
+### Requirement: Admin Verification Ledger
+The system SHALL display all "Under Review" invoices inside the administrator's Payments ledger, showing the student-submitted transaction reference number and buttons to approve or reject the payment.
+
+#### Scenario: Admin verifies and approves payment
+- **WHEN** the administrator checks the pending verification lists, locates Invoice #INV-10029 with UTR "612345678901", and clicks "Approve Payment"
+- **THEN** the system SHALL transition the invoice status to "Paid", record the current timestamp as the paymentDate, and refresh the administrator KPI widgets.
+````
+
+## File: openspec/changes/upi-qr-payments/tasks.md
+````markdown
+## 1. UI Elements
+
+- [x] 1.1 Add merchant VPA settings inputs to the Admin System Settings sub-panel inside `index.html`.
+- [x] 1.2 Add the client `#upi-payment-modal` overlay container inside `index.html` including transaction UTR fields.
+- [x] 1.3 Implement styles in `index.css` for the QR modal and dynamic state badges.
+
+## 2. Admin Settings Configuration
+
+- [x] 2.1 Add event handlers in `app.js` to store payee details and merchant UPI IDs in LocalStorage.
+- [x] 2.2 Load and pre-populate UPI parameters upon dashboard initialization.
+
+## 3. Dynamic Student Payment Flow
+
+- [x] 3.1 Insert "Pay via UPI" triggers next to pending invoices in the student profile billing grid.
+- [x] 3.2 Build the dynamic QR URL generator overlay using the QRServer API.
+- [x] 3.3 Add UTR submit forms to update status to "review" and log reference codes.
+
+## 4. Admin Validation Ledger
+
+- [x] 4.1 Update the admin payments ledger to display UTR details and confirm actions for review states.
+- [x] 4.2 Program approval/rejection event listeners to commit status changes.
+
+## 5. Verification & Testing
+
+- [x] 5.1 Test settings inputs, student payment flows, and admin confirmations in the browser.
+````
+
+## File: openspec/changes/user-auth-profile/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-12
+````
+
+## File: openspec/changes/user-auth-profile/design.md
+````markdown
+## Context
+
+The Quantum Yoga website is currently a client-side Single Page Application (SPA). To support registration, authentication, favoriting poses, and tracking completed routines, we need to introduce user state management. A backend system is out of scope, so all data storage and sessions must live entirely on the client (using browser LocalStorage). We must design HTML modal panels for authentication, a custom Profile view tab, and Javascript bindings to load and save user data structures.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Implement client-side user registration, login, and logout state flows in `app.js`.
+- Persist multiple registered users and their session data (history and favorites) in LocalStorage.
+- Add an interactive "Favorite" heart icon button on pose cards that toggles active favorites.
+- Add a new "Profile" navigation tab and container displaying user metrics, favorites, and routine history.
+- Update the navigation header layout dynamically to toggle login/logout buttons.
+
+**Non-Goals:**
+- Integrating a backend database or authentication server.
+- Implementing production-grade security measures like password hashing, tokens, or OAuth.
+- Modifying video playbacks or media assets.
+
+## Decisions
+
+### 1. Client-Side Data Schema
+- **Decision**: Define a local user database under key `qy_users` and session under `qy_session`.
+  - User structure: `{ name, email, password, favorites: [], routineHistory: [] }`
+- **Rationale**: Simple client-side JSON serialization that offers persistent favorites and history.
+- **Alternative considered**: Memory-only session state. Rejected because it would clear user settings and history on page refresh.
+
+### 2. Profile Navigation Integration
+- **Decision**: Add a new navigation link `nav-profile` and tab pill `tab-profile-btn`, extending `app.js`'s existing SPA tab controller (`setTab("profile")`).
+- **Rationale**: Maximizes code reuse of the SPA tab selector already built.
+- **Alternative considered**: Redirecting to a separate page. Rejected because it breaks the single-page flow and disrupts any active custom video overlays.
+
+### 3. Star/Heart Toggle on Poses Cards
+- **Decision**: Place an absolutely positioned heart button `.pose-fav-btn` inside `.card-badge-group` of each pose card.
+- **Rationale**: Fits natively within the layout and provides instant client-side feedback.
+
+## Risks / Trade-offs
+
+- **Risk**: Storing passwords in cleartext in browser LocalStorage.
+  - *Mitigation*: This is a prototype/demonstration application; we will not use real-world passwords. A warning comment will be added to the code.
+- **Risk**: Dynamic elements (like favorites toggle) being clicked before authentication.
+  - *Mitigation*: Clicking the favorite icon when logged out will automatically trigger and open the registration/login modal.
+````
+
+## File: openspec/changes/user-auth-profile/proposal.md
+````markdown
+## Why
+
+Currently, Quantum Yoga operates with static views and a global database of poses and routines. To make the application personal and interactive, users need a way to register an account, log in securely, and view/customize their profile (such as tracking completed routines, setting layout preferences, and saving favorite poses). Introducing authentication and profiles will make the website dynamic and user-centric.
+
+## What Changes
+
+- Add a glassmorphic User Registration and Login modal window.
+- Implement client-side session management and user data persistence using browser LocalStorage.
+- Add a dedicated "Profile" view and navigation tab in the main layout.
+- Introduce interactive "Favorite" toggle controls on pose cards.
+- Display personalized metrics on the Profile tab, including routine completion history and total active minutes.
+
+## Capabilities
+
+### New Capabilities
+- `user-auth-profile`: Establishes the user authentication workflows (register, login, logout), dynamic session state handling, and customized user profiles.
+
+### Modified Capabilities
+<!-- No modified capabilities -->
+
+## Impact
+
+- Modifies `index.html` to include navigation links, the Profile section panel, and modal auth forms.
+- Modifies `app.js` to handle registration, login/logout, state variables, pose favoriting, and local storage updates.
+- Modifies `index.css` to styling authentication forms, buttons, and user profile panels.
+````
+
+## File: openspec/changes/user-auth-profile/specs/user-auth-profile/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: User Authentication Forms
+The system SHALL provide a modal view containing login and registration forms for users to authenticate.
+- **Registration**: Accepts name, email, and password. It SHALL save credentials in LocalStorage.
+- **Login**: Authenticates email and password against stored LocalStorage data. It SHALL set active user session state.
+- **Logout**: Clears the active session state.
+
+#### Scenario: Registering a New Account
+- **WHEN** the user inputs a name, email, and password in the registration form and clicks "Register"
+- **THEN** the system SHALL create the user account in LocalStorage, log them in automatically, and close the modal.
+
+#### Scenario: Successful Login
+- **WHEN** the user inputs correct credentials in the login form and clicks "Log In"
+- **THEN** the system SHALL initialize an active session and update the header navigation to display "Log Out".
+
+### Requirement: Navigation Header Profile Integration
+The system SHALL display the authenticated user's name in the header navigation, along with a "Profile" tab to switch views to the user dashboard. If the user is unauthenticated, a "Log In" button SHALL be displayed.
+
+#### Scenario: Displaying Header for Authenticated User
+- **WHEN** there is an active logged-in user session
+- **THEN** the system SHALL display the user's name and a "Profile" nav-link in the header.
+
+### Requirement: Personal Profile View
+The system SHALL display a personal Profile panel when the "Profile" tab is active. The Profile view SHALL contain:
+- User details (name, email).
+- Routine history (a list of completed routines with timestamps).
+- Favorited Poses list.
+
+#### Scenario: Viewing Profile Dashboard
+- **WHEN** the user clicks on the "Profile" tab
+- **THEN** the system SHALL render the user's profile info, routine completions count, and custom favorites list.
+
+### Requirement: Interactive Pose Favoriting
+The system SHALL display a "Favorite" button (e.g., a heart icon) on every pose card. Clicking the button SHALL toggle the pose's favorited state for the authenticated user and sync it with LocalStorage.
+
+#### Scenario: Toggling Pose Favorite
+- **WHEN** an authenticated user clicks the heart icon on a pose card
+- **THEN** the system SHALL toggle the favorite state and update the list of favorited poses in the profile.
+````
+
+## File: openspec/changes/user-auth-profile/tasks.md
+````markdown
+## 1. UI Layout Updates
+
+- [x] 1.1 Add a glassmorphic login/registration overlay modal `#auth-modal` inside `index.html`.
+- [x] 1.2 Add a dedicated "Profile" view container `#profile-section` in `index.html` containing profile details and placeholders for history and favorites.
+- [x] 1.3 Update the navigation header in `index.html` with a Profile link and authentication toggle controls.
+
+## 2. Authentication Logic
+
+- [x] 2.1 Implement LocalStorage user initialization, registration validation, and session states in `app.js`.
+- [x] 2.2 Bind form submit listener functions to registration and login forms, handling validations and overlay transitions.
+- [x] 2.3 Add dynamic UI state updates to the header on login/logout state changes.
+
+## 3. Favorites & History Features
+
+- [x] 3.1 Dynamically render heart buttons on pose cards, tracking and highlighting active favorites.
+- [x] 3.2 Add click handlers to heart icons to toggle the pose inside the logged-in user's favorites array.
+- [x] 3.3 Track completed routines (e.g., when a guided routine video completes or a complete button is pressed) and push them into the user's routine history.
+
+## 4. Styling & Verification
+
+- [x] 4.1 Design glassmorphic forms, buttons, and user profile panels in `index.css` matching the tiered system.
+- [x] 4.2 Validate persistent user registration, authentication, favorites, and completion metrics in the browser.
+````
+
+## File: openspec/changes/yoga-website/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-12
+````
+
+## File: openspec/changes/yoga-website/design.md
+````markdown
+## Context
+
+The workspace currently contains no frontend codebase. We will build a premium, highly responsive, single-page application (SPA) styled with Vanilla CSS and animated using Vanilla JS. The website will provide yoga poses and structured routines, accompanied by high-quality illustrations/pictures and video guides.
+
+## Goals / Non-Goals
+
+**Goals:**
+- **Premium Dark Aesthetics**: Establish a sleek, dark-themed, glassmorphic UI using standard CSS variables and backdrop filters.
+- **Pose & Routine Database**: Provide structured poses (with step-by-step instructions, benefits, categories) and routines.
+- **Search & Filters**: Allow instantaneous client-side filtering by difficulty level (Beginner, Intermediate, Advanced) and category (Vinyasa, Hatha, Restorative), as well as keyword searching.
+- **Interactive Media Player**: Implement a custom HTML5 video overlay player with custom controls (play, pause, timeline scrub, mute, volume).
+- **Responsive Layout**: Support mobile, tablet, and desktop viewports with a fluid grid/flexbox system.
+
+**Non-Goals:**
+- **Database/Backend integration**: A backend database is out of scope. Data will be defined in a clean client-side JavaScript object/JSON module.
+- **User Authentication**: Creating accounts or tracking user logins is excluded from this iteration.
+- **Live Video Streaming**: Real-time streaming is not required; standard HTML5 video elements loading stock/placeholder video sources will be used.
+
+## Decisions
+
+### 1. Architectural Pattern: Single Page Application (SPA) with Vanilla JS
+- **Decision**: Build the application as a client-side SPA with standard DOM-rendering views (Home, Poses Directory, Routines Detail, and Video Overlay).
+- **Rationale**: Keeps the codebase lightweight and highly responsive without setup/build complexity. Allows for smooth page transitions and seamless audio/video overlay playback.
+- **Alternative considered**: Multi-page HTML files. Rejected because transitioning between pages interrupts the custom video playback state and prevents sleek CSS transition animations.
+
+### 2. Styling: Vanilla CSS with Custom Properties (Variables)
+- **Decision**: Avoid utility classes/Tailwind and write pure, semantic CSS with custom properties for theme colors, spacing, and font sizes.
+- **Rationale**: Follows the workspace styling rules and provides maximum control over gradients, complex hover transition curves, and glassmorphic styling (`backdrop-filter`).
+- **Theme Variables**:
+  - Background: `#09070f` (Midnight Purple)
+  - Card Background: `rgba(25, 18, 38, 0.4)` with `backdrop-filter: blur(12px)`
+  - Accent Primaries: `#9061f9` (Deep lavender) and `#e02424` (Crimson rose)
+  - Typography: Google Font 'Inter' or 'Cabinet Grotesk' (via CDN link)
+
+### 3. Media Assets Integration
+- **Decision**: Incorporate a mock asset set. Pictures will use high-quality vector SVGs or generated images showing correct alignments. Videos will use standard high-definition, royalty-free MP4 loops (such as peaceful nature landscapes, ocean waves, or yoga poses) loaded via free CDN links.
+- **Rationale**: Avoids bloating the repository with massive binary files while delivering a realistic and stunning visual experience.
+
+## Risks / Trade-offs
+
+- **Risk**: Video elements loading slowly on lower bandwidth connections.
+  - *Mitigation*: Enable preloading (`preload="metadata"`), specify `poster` images for every video, and display a smooth loading spinner until the video can play (`canplay` event).
+- **Risk**: Maintaining structured yoga data in pure JS code.
+  - *Mitigation*: Organize the data in a dedicated module `data.js` containing clean, typed arrays of Poses and Routines.
+````
+
+## File: openspec/changes/yoga-website/proposal.md
+````markdown
+## Why
+
+Users looking to learn and practice yoga need an immersive, high-quality website that offers easily accessible instructional yoga content. Currently, there is no centralized, visually premium platform in this workspace to browse yoga poses, view routines, watch instructional videos, and inspect details of various poses. Providing this content in a responsive, beautifully designed modern web app will enhance their wellness journey.
+
+## What Changes
+
+- Create a brand new responsive, interactive, and visually stunning web application for Quantum Yoga.
+- Add a Yoga Poses and Routines Directory with detailed descriptions, difficulty levels, and benefits.
+- Add a Media Gallery containing high-quality images and instructional video playback.
+- Implement filter and search capabilities to allow users to quickly find specific poses, categories (e.g., Vinyasa, Hatha, Yin), or difficulty levels (Beginner, Intermediate, Advanced).
+- Create a modern, dark-themed, glassmorphic UI with smooth micro-animations and transition effects.
+
+## Capabilities
+
+### New Capabilities
+- `yoga-content`: Core content directory including yoga poses, classifications, benefits, detailed instructions, and routines.
+- `media-viewer`: Interactive image gallery and embedded custom HTML5 video player for guided routines and pose instructions.
+
+### Modified Capabilities
+<!-- No modified capabilities since this is a new project -->
+
+## Impact
+
+- Creates a new frontend application in the workspace root.
+- Introduces HTML/CSS/JS files, along with image/video asset structures.
+- No impact on existing code as this is a fresh setup.
+````
+
+## File: openspec/changes/yoga-website/specs/media-viewer/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive Picture Gallery
+The system SHALL provide high-resolution images representing correct yoga pose alignments and postures, structured as a responsive gallery.
+
+#### Scenario: Displaying Pose Alignment Image
+- **WHEN** the user opens the detail view for a specific pose (e.g., "Downward-Facing Dog")
+- **THEN** the system SHALL render a high-quality, responsive image showing the correct alignment for that posture
+
+### Requirement: Integrated Video Player
+The system SHALL support instructional video playbacks for both individual poses and full routines via an overlay custom video player.
+
+#### Scenario: Playing Pose Video Tutorial
+- **WHEN** the user clicks the "Play Guide" button on a pose detail modal
+- **THEN** the system SHALL open a custom modal overlay containing a video player and begin playing the tutorial video
+
+#### Scenario: Controllable Routine Video Playback
+- **WHEN** the user is watching a routine video in the overlay player
+- **THEN** the system SHALL allow the user to play, pause, seek, and toggle fullscreen mode
+````
+
+## File: openspec/changes/yoga-website/specs/yoga-content/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Yoga Pose Directory
+The system SHALL display a directory of yoga poses featuring structural details, descriptions, benefits, step-by-step execution guides, and difficulty levels.
+
+#### Scenario: Filtering Poses by Difficulty
+- **WHEN** the user selects "Intermediate" from the difficulty filter dropdown
+- **THEN** the system SHALL update the displayed list to show only poses labeled as "Intermediate"
+
+#### Scenario: Filtering Poses by Category
+- **WHEN** the user selects "Vinyasa" from the category filter dropdown
+- **THEN** the system SHALL update the displayed list to show only poses labeled as "Vinyasa"
+
+#### Scenario: Searching for Poses
+- **WHEN** the user types "Warrior" in the search input field
+- **THEN** the system SHALL display poses that contain "Warrior" in their name or description
+
+### Requirement: Yoga Routines
+The system SHALL present structured yoga routines containing sequence info, estimated durations, and step-by-step guides.
+
+#### Scenario: Selecting a Guided Routine
+- **WHEN** the user clicks on a specific routine (e.g., "Morning Energizing Flow")
+- **THEN** the system SHALL display the routine details, estimated duration, sequence of poses, and button to begin the flow
+````
+
+## File: openspec/changes/yoga-website/tasks.md
+````markdown
+## 1. Project Setup and Foundation
+
+- [x] 1.1 Create index.html containing basic markup structure, responsive meta tags, Google Fonts reference, and SEO metadata
+- [x] 1.2 Create index.css with custom variables for color scheme, core typographic styles, responsive grid layout, and base layout settings
+- [x] 1.3 Create data.js with static database of yoga poses (e.g., Mountain Pose, Warrior II, Downward-Facing Dog, Bridge Pose, Child's Pose) and structured routines
+
+## 2. Poses and Routines Directory UI
+
+- [x] 2.1 Implement the main responsive layout with search and filter controls in the navbar/hero section
+- [x] 2.2 Implement rendering logic for pose cards with high-quality SVG layouts representing poses
+- [x] 2.3 Implement rendering logic for routine cards with clear duration and difficulty labels
+
+## 3. Detail Views and Custom Media Player
+
+- [x] 3.1 Build the interactive Pose Details overlay modal displaying pose alignment images, steps, categories, and a button to view the video guide
+- [x] 3.2 Build the custom HTML5 overlay video player with custom-styled buttons (Play, Pause, Progress Slider, Fullscreen, Mute/Unmute, and Volume Slider)
+- [x] 3.3 Connect custom video buttons to HTML5 player APIs and handle modal open/close lifecycle and ESC key presses
+
+## 4. Search, Filtering, and UX Interactions
+
+- [x] 4.1 Implement keyup listener for the search bar to filter poses/routines instantly
+- [x] 4.2 Implement change/click listeners for category and difficulty filters to update displayed cards
+- [x] 4.3 Add glassmorphism styling, hover state scale-ups, and smooth fade-in transitions for modal displays
+
+## 5. Verification
+
+- [ ] 5.1 Perform manual verification of search and filters across categories and difficulties
+- [ ] 5.2 Test video play, pause, progress scrubbing, and mute functionality in the overlay media player
+````
+
+## File: openspec/specs/class-scheduling/spec.md
+````markdown
+# Class Scheduling & Batches Spec
+
+## Overview
+This capability handles class scheduling, weekly timetable displays, countdowns to upcoming sessions, and member appointments management (booking, rescheduling, cancellation, and scheduling fees).
+
+## Data Structures
+
+### Batches Schema (`batches`)
+- `id` (string): Unique identifier (e.g., `"batch-vinyasa-mornings"`).
+- `name` (string): Title of the batch.
+- `instructor` (string): Assigned yoga instructor.
+- `capacity` (number): Maximum student size.
+- `sessionFee` (number): Price per private session.
+- `timetable` (array of objects): Weekly class times. Each slot has:
+  - `day` (string): Day of the week (e.g., `"Monday"`).
+  - `time` (string): Session start time (e.g., `"08:00 AM"`).
+
+### Appointments Schema (`appointments`)
+- `id` (string): Unique booking ID.
+- `studentEmail` (string): Email of the member.
+- `selectedRoutine` (string): Selected yoga routine for the private session.
+- `date` (string): Booking date (YYYY-MM-DD).
+- `time` (string): Start time slot.
+- `status` (string): `Scheduled`, `Completed`, or `Cancelled`.
+- `fee` (number): Private class fee charged.
+
+---
+
+## Member Workflows
+
+### 1. Batch Schedule & Countdown Timer
+- Under the profile dashboard, the member sees their assigned batch name and timetable.
+- A **live countdown timer** calculates the remaining days, hours, minutes, and seconds until the next scheduled batch class.
+- The countdown updates every second. When a class is currently active, it displays a "Class in progress" status.
+
+### 2. Appointment Booking
+- Members click "Book Appointment" to open the scheduling modal.
+- Input fields: Date, Time Slot, and Target Yoga Routine.
+- Automatically calculates and charges the `appointment_fee` (defaulting to 800 INR), issuing a corresponding invoice.
+- Validates that the appointment date is in the future.
+
+### 3. Rescheduling & Cancellation
+- Members can cancel or reschedule upcoming appointments.
+- Cancellation updates status to `Cancelled` and refunds/adjusts associated invoice logs if applicable.
+
+---
+
+## Admin Workflows
+
+### 1. Batch Creator
+- Create new batches specifying Name, Instructor, and Capacity limits.
+- Manage weekly timetables by adding weekday/time pairs.
+
+### 2. Appointments Directory
+- A master list of all student appointments.
+- Supports search by student email.
+- Admins can book appointments on behalf of any student, choose custom times, adjust pricing fees, and edit statuses directly.
+````
+
+## File: openspec/specs/core-yoga/spec.md
+````markdown
+# Core Yoga Directory Spec
+
+## Overview
+The Core Yoga capability provides users with a comprehensive directory of yoga poses and pre-defined yoga routines. It includes search, filter, and detailed walkthroughs of poses alongside a video player to guide practice.
+
+## Directory Structure & Properties
+
+### Yoga Poses (`YOGA_POSES`)
+Each pose object has the following properties:
+- `id` (string): Unique identifier (e.g., `"mountain-pose"`).
+- `name` (string): Common English name.
+- `sanskrit` (string): Sanskrit translation of the pose name.
+- `category` (string): Yoga style/category (e.g., `Hatha`, `Vinyasa`, `Restorative`, `Yin`).
+- `difficulty` (string): Skill level needed (`Beginner`, `Intermediate`, `Advanced`).
+- `duration` (string): Recommended duration to hold the pose (e.g., `"60s"`).
+- `benefits` (array of strings): Health/physiological benefits of the pose.
+- `instructions` (array of strings): Step-by-step instructions.
+- `videoUrl` (string): URL to the video demonstration file.
+- `posterUrl` (string): URL to the cover image for video preview.
+- `description` (string): Brief introduction/description of the pose.
+- `svgMarkup` (string): SVG markup containing line-art illustration of the pose structure.
+
+### Yoga Routines (`YOGA_ROUTINES`)
+Routines bundle multiple poses into guided practice flows:
+- `id` (string): Unique identifier (e.g., `"morning-energizer"`).
+- `name` (string): Routine title.
+- `duration` (string): Total estimated routine time.
+- `difficulty` (string): Overall difficulty rating (`Beginner`, `Intermediate`, `Advanced`).
+- `focus` (string): Purpose/focus of the routine.
+- `videoUrl` (string): Demo/guided flow video url.
+- `posterUrl` (string): Poster preview image url.
+- `description` (string): Explanatory text summarizing the routine's focus.
+- `poses` (array of objects): Sequence of poses, where each item contains:
+  - `poseId` (string): Reference to a pose's ID.
+  - `duration` (string): Custom hold duration for this step.
+
+---
+
+## User Interactions
+
+### 1. Poses Directory Tab
+- **Search bar**: Performs case-insensitive matching against a pose's `name`, `sanskrit`, `category`, and `description`.
+- **Category Filter**: Dropdown menu filtering poses by category or "all".
+- **Difficulty Filter**: Dropdown menu filtering poses by difficulty or "all".
+- **Empty State**: Displays a helper button to reset all search queries and filters when no poses match.
+- **Pose Cards**:
+  - Displays difficulty badge and category badge.
+  - Interactive "Favorite" button (requires authenticated user).
+  - "Details" button opens the detailed view modal.
+
+### 2. Pose Details Modal
+- Displays SVG illustration alongside complete metadata (Sanskrit, Category, Duration).
+- Lists key benefits and step-by-step instructions.
+- Provides a **"Play Guide"** button that launches the custom HTML5 video overlay with the pose's demo video.
+
+### 3. Routines Directory Tab
+- Displays card list showing title, poster image, difficulty, focus, overall duration, and step count.
+- **"Start Routine"** button opens the Routine modal.
+
+### 4. Routine Modal & Sequence Flow
+- Displays step-by-step sequence listing each pose name, category, and step duration in chronological order.
+- **"Start Guided Flow"** opens the custom video player.
+- **"Complete"** button records routine completion in user's profile history (requires user login).
+
+### 5. Custom HTML5 Video Player Overlay
+- Overlaid video container with support for:
+  - Play/Pause controls.
+  - Custom progress bar reflecting elapsed time and buffered range.
+  - Mute/Unmute toggle and volume slider.
+  - Current time / total duration display.
+  - Fullscreen expansion.
+  - Automatically handles routine completion when the video plays to the end.
+````
+
+## File: openspec/specs/email-communication/spec.md
+````markdown
+# Email Communication Spec
+
+## Overview
+This capability handles the messaging inbox and compose tools for both students and administrators. It supports dual integration providers (Resend API key and OAuth-based Gmail connector), template selection, and synchronized messaging.
+
+## Data Structures
+
+### Email Log Schema (`emails`)
+Each message record in the database contains:
+- `id` (string): Unique email identifier.
+- `threadId` (string, optional): Gmail-provided thread ID.
+- `from` (string): Sender address.
+- `to` (string): Recipient address.
+- `subject` (string): Email header subject.
+- `date` (string): Date and time of dispatch.
+- `snippet` (string): Truncated preview text of the email body.
+- `bodyHtml` (string): Message content formatted in HTML.
+- `bodyText` (string): Message content formatted in raw text.
+- `isRead` (boolean): Unread status indicator.
+- `folder` (string): Active directory location (`inbox` or `sent`).
+- `direction` (string): Messaging flow direction (`sent` or `received`).
+- `connectedEmail` (string): Email account associated with the credentials.
+
+---
+
+## Email Integration Providers
+
+### 1. Resend API Integration
+- Uses API Keys (`RESEND_API_KEY`) and configured sender addresses (`RESEND_FROM_ADDRESS`).
+- Integrates via backend endpoints (`/api/send-email` and `/api/resend-emails`).
+- Displays active badges in the admin settings when API keys are configured and functional.
+
+### 2. Gmail OAuth Integration
+- Allows linking individual Gmail accounts using client credentials.
+- Supports authorization connect/disconnect toggle controls.
+- Fetches synchronized message threads from the connected Gmail account when refreshed.
+
+---
+
+## Messaging Interfaces
+
+### 1. Admin Email Center
+- **Folder Tabs**: Split into Inbox (received) and Sent mail.
+- **Unread Badging**: Displays count of unread incoming messages.
+- **Email Preview Overlay**: Opens selected messages to read the full body, displaying sender, date, and subject.
+- **Reply Action**: Auto-populates recipient fields to respond to selected messages.
+- **Composer & Templates**:
+  - Send custom emails to any student email.
+  - Dropdown selector containing template layouts (e.g., "Welcome Email", "Inquiry Reply", "Invoice Reminder", "Appointment Confirmation").
+  - Auto-fills subject and body variables with preformatted professional copywriting.
+
+### 2. Student Inbox
+- Accessible via the member's profile portal.
+- Displays incoming messages sent by administrators.
+- Allows students to compose and send feedback/inquiry emails directly to `admin@quantumyoga.xyz`.
+````
+
+## File: openspec/specs/leads-crm/spec.md
+````markdown
+# Lead Management & CRM Spec
+
+## Overview
+This capability governs lead capture, swimlane (Kanban) boards, status tracking, logging sales/contact notes, and converting prospects to registered members with automated account creation.
+
+## Data Structures
+
+### Leads Schema (`leads`)
+Each lead has the following properties:
+- `id` (string): Unique identifier (e.g., `"lead-1"`).
+- `name` (string): Full name of the lead.
+- `email` (string): Primary email address.
+- `phone` (string): Contact number (supports Indian phone formatting: `+91 XXXXX XXXXX`).
+- `message` (string): Original message/question from the landing page.
+- `date` (string): Submission date (YYYY-MM-DD).
+- `status` (string): CRM column status (`New`, `Contacted`, `Nurturing`, `Converted`, `Archived`).
+- `logs` (array of objects): History of interactions. Each log has:
+  - `timestamp` (string): Date and time of entry.
+  - `note` (string): Detailed logs notes.
+
+---
+
+## Kanban Swimlane Board
+- Located in the Admin Leads tab.
+- Renders 5 visual columns corresponding to lead status levels:
+  - **New**
+  - **Contacted**
+  - **Nurturing**
+  - **Converted**
+  - **Archived**
+- Features cards displaying lead names, dates, snippets of messages, and quick buttons to inspect.
+- Supports drag-and-drop or modal status selector tools to transition leads between swimlanes.
+- Search input filters the board by lead name, email, or message contents.
+
+---
+
+## CRM Actions
+
+### 1. Log Interactions
+- Admins can add customized timestamped contact notes to any lead.
+- These notes accumulate in the Lead Logs history timeline.
+
+### 2. Lead Conversion Flow
+- Admins click **"Convert Lead"** to register the prospect as an active member.
+- **Automated Registration**:
+  - Automatically creates a new user account in the `users` collection.
+  - Generates a secure, temporary password.
+  - Sets `mustChangePassword` to `true` to require a reset on first login.
+  - Adds a log entry stating: `"Lead converted to registered user account successfully. Temporary Password: [TEMP_PASS]"`
+  - Sends a welcome email containing their temporary password.
+  - Switches lead status to `Converted`.
+````
+
+## File: openspec/specs/user-auth-profile/spec.md
+````markdown
+# User Authentication & Profile Spec
+
+## Overview
+This specification details the user membership lifecycle, authentication system, member profile portal, and wellness logging features.
+
+## Data Structures
+
+### User Schema (`users`)
+Each user object is defined within the root state's `users` array:
+- `name` (string): Full name of the user.
+- `email` (string): Unique email address acting as username.
+- `password` (string): Password string (cleartext or hash).
+- `favorites` (array of strings): List of favored pose IDs.
+- `routineHistory` (array of objects): History of completed routines. Each log contains:
+  - `routineId` (string): Completed routine ID.
+  - `date` (string): ISO timestamp of completion.
+- `theme` (string): User-customized UI theme (`light`, `dark`, `glassmorphism`, `violet`, etc. or empty string to inherit site default).
+- `batchId` (string): ID of the assigned class batch (e.g., `"batch-vinyasa-mornings"`).
+- `membership` (object): Membership metadata details:
+  - `tier` (string): `Basic`, `Premium`, or `Gold`.
+  - `status` (string): `Active`, `Inactive`, or `Suspended`.
+  - `expiryDate` (string): YYYY-MM-DD expiration date.
+  - `notes` (string): Administrative coaching or member notes.
+- `goals` (string): Personal health or yoga objectives.
+- `healthNotes` (string): Active medical alerts or physical limitations.
+- `mustChangePassword` (boolean): Flag requiring password change on login.
+
+---
+
+## Authentication Features
+
+### 1. Unified Authentication Gate
+- An overlay blocking application dashboards until logged in.
+- Supports three primary tabs: **Login**, **Register**, and **Inquiry**.
+
+### 2. Login Flow
+- Validates credentials against the user database state.
+- **Remember Me**: Saves credentials in localStorage/cookies if selected.
+- **Forgot Password**: Form initiating password retrieval/reset instructions.
+- **Force Password Change**: If `mustChangePassword` is `true`, blocks application access and displays a forced password reset form, requiring the user to change their password before proceeding.
+
+### 3. Registration Flow
+- Allows new members to sign up with unique emails.
+- Automates default membership creation (`Basic` tier, `Active` status, 30-day default expiry).
+
+### 4. Wellness Inquiry Form
+- Anonymous landing page inquiries. Captures Name, Email, Phone, and Inquiry Message.
+- Saves inquiries as new items in the `leads` table and triggers notifications.
+
+---
+
+## Member Profile Portal
+
+### 1. Profile Dashboard Tab
+- **Key Metrics**: Displays totals for routines completed and favorite poses.
+- **Routines History Feed**: Cronological feed of practice sessions completed.
+- **Favorites Grid**: Interactive list of user-favorited poses with click-through details.
+- **Batch Schedule**: Displays details of the assigned class batch (Batch title, Weekly timetable, and an active countdown timer to the next scheduled session).
+
+### 2. Practice Tab
+- Quick access to launch poses and routines.
+
+### 3. Wellness & Coaching Panel
+- Form allowing members to update their yoga goals and health notes.
+- Submissions update user fields, visible to administrators during coaching reviews.
+
+### 4. Personal Theme Configuration
+- Dropdown permitting users to set personal UI skins. Saves option to user object, instantly updating CSS root variables.
+````
+
+## File: sample_ledger.csv
+````
 Transaction Date,UTR / Transaction Ref,Transaction Description,Amount,Status
 2026-06-20,901123456789,UPI/Sarah Jenkins/Vinyasa,1500,SUCCESS
 2026-06-21,901123456790,UPI/John Doe/Coaching,1999,SUCCESS
 2026-06-21,901123456791,UPI/Jane Smith/Private,2499,SUCCESS
-```
+````
 
 ## File: schema.sql
-```sql
+````sql
 -- SQL schema for Supabase
 -- Creates a table 'quantum_yoga_db' to store the unified database state as a JSONB document.
 
@@ -3488,10 +10079,10 @@ DROP POLICY IF EXISTS "Allow all actions for everyone" ON quantum_yoga_db;
 -- Create policies to allow select and modify operations
 CREATE POLICY "Allow select for everyone" ON quantum_yoga_db FOR SELECT USING (true);
 CREATE POLICY "Allow all actions for everyone" ON quantum_yoga_db FOR ALL USING (true) WITH CHECK (true);
-```
+````
 
 ## File: scratch/check_ids.js
-```javascript
+````javascript
 const fs = require('fs');
 const path = require('path');
 
@@ -3527,10 +10118,10 @@ for (const id of jsIds) {
 if (missingCount === 0) {
   console.log("None! All IDs matched.");
 }
-```
+````
 
 ## File: scratch/test_fetch.js
-```javascript
+````javascript
 const http = require('http');
 
 http.get('http://localhost:80/api/db', (res) => {
@@ -3553,10 +10144,10 @@ http.get('http://localhost:80/api/db', (res) => {
 }).on('error', (err) => {
   console.error('Error fetching db:', err.message);
 });
-```
+````
 
 ## File: tst.json
-```json
+````json
 {
     "users": [
         {
@@ -3778,10 +10369,196 @@ http.get('http://localhost:80/api/db', (res) => {
     ],
     "site_default_theme": "midnight"
 }
+````
+
+## File: wiki/Core-Yoga-Directory.md
+````markdown
+# Core Yoga Directory
+
+The Core Yoga module serves as the primary wellness repository for studio members, offering curated paths to inspect alignment, study benefits, and flow through sequences.
+
+---
+
+## 🧘 Posture Directory Schema (`YOGA_POSES`)
+
+Each pose contains properties mapped out to optimize instruction and UI layouts:
+
+*   **Identifiers:** Common English `name` and translation `sanskrit` keys.
+*   **Taxonomy:** `category` (*Hatha*, *Vinyasa*, *Restorative*, *Yin*) and `difficulty` level (*Beginner*, *Intermediate*, *Advanced*).
+*   **Guides:** Recommended hold `duration`, a list of physiological `benefits`, step-by-step `instructions`.
+*   **Media Assets:** `videoUrl` for demo clips, `posterUrl` for thumbnail images, and `svgMarkup` which renders the posture's vector wireframe illustration directly in the UI.
+
+---
+
+## 📅 Guided Practice Sequences (`YOGA_ROUTINES`)
+
+Routines structure poses into logical practice runs:
+
+*   Displays difficulty, overall duration, target focus, and descriptive introductory summaries.
+*   Maps a chronological sequence array containing referenced `poseId` fields alongside customized step-hold durations.
+*   Tracking completes by posting records directly to the member's profile completions log.
+
+---
+
+## 🎥 Custom HTML5 Video Player
+
+To avoid relying on generic external players, Quantum Yoga implements a customized HTML5 media overlay:
+
+*   **Controls:** Clean custom progress scrubber bar, buffered media ranges, and Volume Sliders.
+*   **Synchronization:** Displays elapsed duration vs total track runtime.
+*   **Automated Events:** Listens to video termination handlers to instantly trigger routine completion records without requiring manual button clicks.
+````
+
+## File: wiki/Email-Communication.md
+````markdown
+# Email Communication Systems
+
+Quantum Yoga hosts a dual-provider email client allowing both scheduled transactional emails and direct interactive mail threads.
+
+---
+
+## ⚙️ Core Configuration
+
+The communication module runs under two separate operational modes:
+
+### 1. Resend API Client (Transactional)
+*   **Purpose:** Best for automated alerts, receipts, welcome letters, and system-triggered notifications.
+*   **Variable Required:** `RESEND_API_KEY` and `RESEND_FROM_ADDRESS` set in `.env`.
+*   **Endpoints:** 
+    *   `POST /api/send-email`: Send a customized HTML format email.
+    *   `GET /api/resend-emails`: Retrieve email log responses.
+
+### 2. Gmail OAuth2 Integration (Interactive Chat)
+*   **Purpose:** Real-time communications between active studio students and administrators.
+*   **Google Cloud Setup:**
+    1. Create a project at [Google Cloud Console](https://console.cloud.google.com).
+    2. Enable the Gmail API.
+    3. Setup OAuth Consent Screen and configure web application client credentials.
+    4. Authorize redirect origins (e.g. `http://localhost`).
+    5. Add the generated Client ID in **Admin > System Settings**.
+
+---
+
+## 📧 Interfaces
+
+### Admin Email Hub
+*   Renders Inbox and Sent tabs.
+*   Supports live unread badge counters.
+*   Includes preformatted templates for *Welcomes*, *Invoice Reminders*, and *Appointment Confirmations*.
+
+### Student Support Inbox
+*   Accessible within the member's profile portal.
+*   Shows all official notifications sent from the studio.
+*   Enables students to draft feedback/inquiries that go straight to the admin inbox.
+````
+
+## File: wiki/Lead-Management-and-CRM.md
+````markdown
+# Lead CRM & Kanban Pipeline
+
+Quantum Yoga features an integrated Customer Relationship Management (CRM) dashboard designed to capture visitor inquiries and convert them to active students.
+
+---
+
+## 📋 Leads Pipeline Schema (`leads`)
+
+*   `id`: Unique identifier (e.g. `lead-1`).
+*   `name` / `email`: Contact details.
+*   `phone`: Validated Indian formatting number (+91 XXXXX XXXXX).
+*   `message`: Freeform text from the landing page.
+*   `date`: Initial inquiry submission date.
+*   `status`: Kanban column status (`New`, `Contacted`, `Nurturing`, `Converted`, `Archived`).
+*   `logs`: Timestamped chronological list of sales/coaching interactions.
+
+---
+
+## 🗂️ Kanban Swimlane Board
+
+The Admin panel provides a multi-stage visual board to move prospects through the conversion funnel:
+
+```
++------------+     +------------+     +------------+     +------------+     +------------+
+|    New     | ──> | Contacted  | ──> | Nurturing  | ──> | Converted  | ──> |  Archived  |
++------------+     +------------+     +------------+     +------------+     +------------+
+| Lead A     |     | Lead B     |     | Lead C     |     | Lead D     |     | Lead E     |
+| [Details]  |     | [Notes]    |     | [Details]  |     | [Registered|     | [Closed]   |
++------------+     +------------+     +------------+     +------------+     +------------+
 ```
 
-## File: package.json
+*   Admins can drag cards or use quick actions to update a lead's status.
+*   The search bar enables instant filtering by name, email, or message text.
+
+---
+
+## ⚡ Single-Click Active Member Conversion
+
+The conversion process automates user setup to reduce onboarding friction:
+
+1.  **Account Provisioning:** Inserts a new user record in the database using the lead's email and name.
+2.  **Credentials Generation:** Creates a secure random temporary password.
+3.  **Forced Reset Flag:** Sets `mustChangePassword` to `true` to ensure the member establishes a private password on their first login.
+4.  **Welcome Email:** Automatically drafts and sends an email containing login instructions and their temporary password via the active email service.
+5.  **Status Sync:** Moves the lead state to `Converted`.
+````
+
+## File: wiki/WhatsApp-Integration.md
+````markdown
+# WhatsApp Integration & Alerts
+
+Quantum Yoga supports automated notifications and direct admin-student communication links via WhatsApp.
+
+---
+
+## ⚙️ Administrative Configuration
+
+Admins can configure settings under the **Admin > System Settings** panel:
+
+- **Enable Automated Alerts:** A global toggle to switch auto-notifications on or off.
+- **API Key / Token:** Auth credentials for your messaging provider.
+- **Gateway URL:** The HTTP REST endpoint (e.g. `https://api.provider.com/send`) where message payloads are forwarded.
+- **Custom Templates:** Editable message templates containing placeholder fields.
+
+### Database Settings Structure (`whatsappSettings`)
+
+Configuration is stored securely inside the global database state under the following schema:
+
 ```json
+"whatsappSettings": {
+  "enabled": false,
+  "apiKey": "",
+  "gatewayUrl": "",
+  "templates": {
+    "welcome": "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
+    "invoice": "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
+    "booking": "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}."
+  }
+}
+```
+
+---
+
+## 🔔 Automated Notification Triggers
+
+Whenever critical transactions or scheduling actions occur, the backend checks settings and dispatches HTTP requests via the `/api/send-whatsapp` endpoint:
+
+1. **New Invoice Notices:** Sends invoice ID, amount, due date, and profile portal link upon invoice generation.
+2. **Coaching Bookings:** Confirms session dates, times, and selected routines when scheduled.
+3. **Rescheduling Alerts:** Informs the student of rescheduled class parameters.
+4. **Cancellations:** Notifies the student if a private session is cancelled.
+
+---
+
+## 💬 WhatsApp Direct Chat Shortcuts
+
+To enable zero-cost, manual communication between admins and users/leads, Quantum Yoga integrates custom redirect actions using the standard `https://wa.me/` protocol:
+
+* **Trigger Actions:** Quick-chat buttons next to phone numbers in the CRM Kanban cards, Member profiles, Invoices table, and Appointment lists.
+* **Auto-sanitization:** Phone strings are sanitized (stripping formatting spaces and prepending country code prefixes) to ensure redirection URLs parse successfully.
+* **Pre-populated Templates:** Launches a WhatsApp Web browser tab pre-populated with customized greetings.
+````
+
+## File: package.json
+````json
 {
   "name": "quantum-yoga-website",
   "version": "1.0.0",
@@ -3810,10 +10587,10 @@ http.get('http://localhost:80/api/db', (res) => {
     "ws": "^8.21.0"
   }
 }
-```
+````
 
 ## File: repomix.config.json
-```json
+````json
 {
   "output": {
     "style": "markdown",
@@ -3827,17 +10604,126 @@ http.get('http://localhost:80/api/db', (res) => {
       "*.jpg",
       "*.png",
       "*.svg",
-      "repomix-output.*",
-      "**/*.md",
-      "wiki/**",
-      "openspec/**"
+      "repomix-output.*"
     ]
   }
 }
+````
+
+## File: wiki/Architecture.md
+````markdown
+# System Architecture & Database Setup
+
+Quantum Yoga utilizes a clean, decoupled design featuring a responsive SPA frontend and a proxy-enabled API backend.
+
+```
++-------------------------------------------------------------+
+|                         Vite Client                         |
+|  - Midnight Aura (Dark), Zen Sunset, Ethereal Light Themes  |
+|  - Custom SPA Navigation Router                             |
++-------------------------------------------------------------+
+                              │
+                              ▼ (API Requests & Proxying)
++-------------------------------------------------------------+
+|                     Express API Server                      |
+|  - Static content serving                                   |
+|  - Resend, Google Gmail OAuth & WhatsApp Proxy Endpoints    |
++-------------------------------------------------------------+
+                              │
+       ┌──────────────────────┼──────────────────────┐
+       ▼ (if DATABASE_URL)    ▼ (if SUPABASE keys)   ▼ (fallback)
++──────────────+       +──────────────+       +──────────────+
+| PostgreSQL   |       | Supabase DB  |       | Local JSON   |
+| Pool         |       | Client (Real)|       | (db.json)    |
++──────────────+       +──────────────+       +──────────────+
 ```
 
-## File: .gitignore
+---
+
+## 💾 Unified Database Adapters
+
+Quantum Yoga features a **Unified Storage Manager** inside `server.js` that checks for database availability in the following order:
+
+1. **PostgreSQL Pool:** If `DATABASE_URL` is found in the environment, a `pg.Pool` handles persistent queries.
+2. **Supabase Client:** If no `DATABASE_URL` is configured, but `SUPABASE_URL` and `SUPABASE_KEY` are present, it initializes the `@supabase/supabase-js` client.
+3. **Local Fallback (`db.json`):** If no environment parameters are detected, the app automatically reads and writes states locally to `db.json` in the project root.
+
+### PostgreSQL Table Schema
+
+If setting up your production PostgreSQL server, run the following setup script (`schema.sql`):
+
+```sql
+CREATE TABLE IF NOT EXISTS quantum_yoga_db (
+    id VARCHAR(50) PRIMARY KEY,
+    state JSONB NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 ```
+
+---
+
+## ⚙️ Environment Configuration
+
+Define the following parameters in your `.env` configuration file:
+
+| Variable | Description | Example |
+|---|---|---|
+| `PORT` | The port the Express production server binds to. | `8080` |
+| `DATABASE_URL` | PostgreSQL connection URI. | `postgresql://user:pass@127.0.0.1:5432/db` |
+| `SUPABASE_URL` | Supabase project API gateway url. | `https://project.supabase.co` |
+| `SUPABASE_KEY` | Supabase project anonymized public key. | `sb_secret_key...` |
+| `RESEND_API_KEY` | Authorization key for the Resend Email Client. | `re_ApiKey...` |
+| `RESEND_FROM_ADDRESS` | Configured sender address in Resend dashboard. | `admin@quantumyoga.xyz` |
+
+---
+
+## 🛠️ Build and Deploy Commands
+
+### Development Setup
+Start the Vite dev server with Hot Module Replacement (HMR):
+```bash
+npm run dev
+```
+
+### Production Build & Launch
+Build client-side assets and spin up the Express server:
+```bash
+npm run build
+npm run start
+```
+````
+
+## File: wiki/Home.md
+````markdown
+# Welcome to the Quantum Yoga Wiki!
+
+Quantum Yoga is a premium, fully-integrated platform designed for yoga studio management, student coaching, and guided routines. 
+
+This wiki contains comprehensive guides on the project's architecture, data models, integration guides, and core capabilities.
+
+## 🧭 Navigation
+
+### 1. [System Architecture & Database Setup](Architecture.md)
+Learn about the technologies powering Quantum Yoga, deployment steps, and configuring Supabase, PostgreSQL, or local fallback storage.
+
+### 2. [Core Yoga Capabilities](Core-Yoga-Directory.md)
+Discover the pose directories, guided routines, interactive SVG alignment maps, and the custom HTML5 video player framework.
+
+### 3. [Billing & Payments Flow](Billing-and-Payments.md)
+Read about automated invoicing, outstanding fee warning banners, standard merchant UPI QR Code generation, and client-submitted UTR validations.
+
+### 4. [Lead CRM & Kanban Pipeline](Lead-Management-and-CRM.md)
+Details on landing page wellness inquiry ingestion, lead pipeline swimlanes (Kanban), sales logging, and the single-click active member conversion logic.
+
+### 5. [Email Communication Systems](Email-Communication.md)
+A setup guide for the dual-integration engine supporting transactional emails via the Resend API and full inbox capabilities via Gmail OAuth2.
+
+### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
+Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.
+````
+
+## File: .gitignore
+````
 # Dependencies
 node_modules/
 /.pnp
@@ -3873,10 +10759,97 @@ db.json
 *.sw?
 .DS_Store
 Thumbs.db
-```
+````
+
+## File: openspec/specs/billing-payments/spec.md
+````markdown
+# Billing, Invoices & Payments Spec
+
+## Overview
+This capability handles the issuance of member invoices, overdue payments notification banners, unified UPI QR code generation, transaction tracking via UTR (Unique Transaction Reference) codes, automatic UPI payment reconciliation against an uploaded bank statement ledger, and PDF/HTML receipt generation.
+
+## Data Structures
+
+### Payments Schema (`payments`)
+Each payment record contains:
+- `id` (string): Unique invoice ID prefixed with `INV-` (e.g., `"INV-10029"`).
+- `userEmail` (string): Email of the member assigned to the invoice.
+- `description` (string): Purpose of charge (e.g., `"Monthly subscription fee"`).
+- `amount` (string): Invoice cost in Rupees (INR).
+- `dueDate` (string): YYYY-MM-DD due date.
+- `status` (string): `pending`, `paid`, `review` (Under Review), `discrepancy`, or `overdue`.
+- `paymentDate` (string, optional): Date payment was processed.
+- `lastReminderSent` (string, optional): Timestamp of last automated warning.
+- `utr` (string, optional): User-submitted UPI Unique Transaction Reference.
+- `verifiedAt` (string, optional): Timestamp of reconciliation.
+- `verificationSource` (string, optional): Reconciliation method (e.g., `"ledger"`).
+- `verificationError` (string, optional): Error details if reconciliation is flagged as discrepancy.
+
+### UPI Settings Schema (`upi_settings`)
+Admin-configured receiver credentials:
+- `vpa` (string): Virtual Payment Address (e.g., `merchant@okicici`).
+- `name` (string): Merchant Name (e.g., `Quantum Yoga Ltd.`).
+
+### UPI Ledger Schema (`upi_ledger`)
+Trusted bank transaction entries loaded via admin statement uploads:
+- `utr` (string): Cleaned transaction reference code.
+- `amount` (string): Received transaction amount.
+- `date` (string): Transaction timestamp or date from statement.
+- `senderName` (string): Name of sender / payer.
+- `details` (string): Transaction descriptions/remarks.
+- `importedAt` (string): Timestamp of the CSV import.
+
+---
+
+## Workflows & Interfaces
+
+### 1. Overdue Payment Warning Banner
+- Displays an alert banner at the top of the client dashboard if the logged-in user has *any* invoices marked as `overdue`.
+- The banner displays the overdue invoice ID and description, and includes a **"Pay Now"** shortcut link.
+
+### 2. Member Invoice Table
+- Listed under the member's Profile Billing tab.
+- Categorizes payments into status-colored rows.
+- Paid invoices show a **"View Receipt"** action.
+- Pending or Overdue invoices show a **"Pay via UPI"** action.
+
+### 3. UPI QR Code Modal & Submission
+- Initiated when clicking "Pay via UPI".
+- Displays recipient details (Merchant Name and UPI VPA).
+- Generates a **live UPI QR Code** using the standard scheme:
+  `upi://pay?pa={vpa}&pn={name}&am={amount}&tn={description}`
+- Displays a form to input the **UTR (Unique Transaction Reference)** after scanning and paying.
+- Submitting the UTR triggers the auto-verification check.
+
+### 4. Receipt Modal
+- Populated dynamically with invoice metadata.
+- Renders a clean printable receipt format featuring:
+  - Yoga studio branding logo.
+  - Payment details (Invoice ID, Date, Amount).
+  - Payer and Payee details.
+  - Transaction confirmation checkmark and reference logs.
+
+### 5. Admin Invoicing Tool
+- Admin-facing panel to issue new invoices manually.
+- Fields: Member Email, Description, Amount (INR), and Due Date.
+- Updates the payment list and triggers notification streams.
+
+### 6. Automated UPI Reconciliation & Ledger Upload
+- **Admin Statement Upload:** Admins can upload CSV bank statement ledgers via the Admin Settings panel. The system parses headers to extract UTR, amount, date, and sender details, filter duplicates, and append new transactions to the database's `upi_ledger` cache.
+- **Auto-Verification Matching:** When a UTR is submitted by a student:
+  - Exact Match (UTR + Amount): Automatically approves payment to `paid`, logs UTR, and triggers confirmation notifications.
+  - UTR Match + Amount Mismatch: Flags payment status as `discrepancy` for administrative action.
+  - UTR Not Found: Puts status under `review` (Under Review) to await manual reconcile or statement sync.
+
+### 7. Planned Reconciliation Enhancements
+- **Fuzzy Amount Matching:** The system SHALL support matching within a configurable tolerance margin (e.g. ±₹0.05) to accommodate minor banking rounding discrepancies.
+- **Date Window Verification:** The system SHALL validate that user-submitted UTR match dates fall within an acceptable range (e.g. within 30 days) of the invoice creation or due date to prevent fraudulent reuse of old transaction IDs.
+- **Statement Schema Mapping:** The system SHALL allow administrators to dynamically define custom CSV header mapping configurations in the settings panel (e.g., linking custom columns to `utr`, `amount`, and `date`).
+- **Reconciliation Log Audit:** The system SHALL maintain an administrative log of all verification activities, matching attempts, discrepancies found, and manual resolutions for compliance audits.
+````
 
 ## File: vite.config.js
-```javascript
+````javascript
 import { defineConfig } from 'vite';
 import fs from 'fs';
 import path from 'path';
@@ -4290,10 +11263,10 @@ export default defineConfig({
     port: 80
   }
 });
-```
+````
 
 ## File: app.js
-```javascript
+````javascript
 /* ==========================================================================
    Quantum Yoga - Application logic
    ========================================================================== */
@@ -11999,10 +18972,10 @@ Please verify and update my status. Thank you!`);
     console.error("FATAL ERROR IN DOMContentLoaded:", err, err.stack);
   }
 });
-```
+````
 
 ## File: index.html
-```html
+````html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13614,10 +20587,406 @@ Please verify and update my status. Thank you!`);
   <script type="module" src="app.js"></script>
 </body>
 </html>
+````
+
+## File: openspec/changes/auto-review-upi-payments/design.md
+````markdown
+## Context
+
+Currently, Quantum Yoga lacks automated transaction matching, requiring manual verification of UTR numbers. The introduction of an automated verification flow speeds up confirmations by checking student inputs against a verified bank transaction ledger imported manually by administrators from Excel or CSV files.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement an automated matching process comparing student-submitted UTRs and invoice amounts against a local bank transaction ledger (`upi_ledger` in database state).
+*   Transition payment status to `"paid"` instantly if a match is successfully identified.
+*   Provide an administrative UI to upload bank statements (.xlsx, .xls, .csv formats) containing transaction details (UTR, amount, date, etc.).
+*   Retain administrative manual approval as a fallback if automatic matching fails.
+
+**Non-Goals:**
+*   Integrating with live third-party bank APIs or external API-based synchronizations.
+*   Automated refund handling or payment reversals.
+
+## Decisions
+
+### 1. Database Schema Extension
+*   **Approach:** Maintain a `upi_ledger` array in the global state (`db.json` / Supabase state) to serve as the local cache of verified UPI payments.
+*   **Structure:**
+    ```json
+    "upi_ledger": [
+      { 
+        "utr": "123456789012", 
+        "amount": "1500", 
+        "date": "2026-06-21", 
+        "senderName": "Sarah Jenkins", 
+        "details": "UPI/987654321/Vinyasa Coaching",
+        "importedAt": "2026-06-21T18:00:00Z" 
+      }
+    ]
+    ```
+
+### 2. Auto-Review REST Endpoint
+*   **Approach:** Add an API endpoint `POST /api/verify-upi` in `server.js`.
+*   **Payload:** `{ invoiceId: string, utr: string, amount: string }`
+*   **Logic:**
+    *   Compare the UTR and amount against `upi_ledger`.
+    *   If matched, update payment status to `"paid"`, save the transaction date, and trigger emails/WhatsApp messages. Return `{ success: true, status: 'paid' }`.
+    *   If the UTR matches but the amount is different, update payment status to `"discrepancy"`.
+    *   If no UTR match is found, update payment status to `"review"`. Return `{ success: false, status: 'review' }`.
+
+### 3. Excel/CSV Ledger Upload API
+*   **Approach:** Add a `POST /api/admin/upload-ledger` endpoint to process Excel/CSV bank statement files.
+*   **Parsing Utility:** Use a basic CSV text parser in `server.js` to parse CSV data. It reads column headers to locate the UTR and Transaction Amount.
+*   **Deduplication:** When merging new transactions, query existing `upi_ledger` records by UTR to prevent duplicating imported transaction references.
+
+### 4. Planned Reconciliation Enhancements
+*   **Fuzzy Amount Matching:** The endpoint comparison checks whether `Math.abs(ledgerAmount - invoiceAmount) < tolerance` where the tolerance is configurable (defaulting to ±₹0.05) to protect against rounding anomalies.
+*   **Date Window Verification:** When a match is found in the `upi_ledger`, the system validates if `Math.abs(new Date(ledgerMatch.date) - new Date(invoice.date)) <= maxAgeMs` (defaulting to 30 days) before auto-approving.
+*   **Statement Schema Mapping:** An administrative configuration object `upi_ledger_mapping` is saved to settings, allowing the parser to match dynamic header indices (e.g., column index 4 maps to `utr`, index 2 maps to `amount`).
+*   **Reconciliation Log Audit:** A schema collection `upi_reconciliation_logs` is implemented to record matches, failures, invoice IDs, and timestamps.
+
+## Risks / Trade-offs
+
+*   **Risk:** Sync latency (students paying after the latest upload will not auto-verify until the next upload).
+    *   *Mitigation:* Clearly notify the student during UTR submission that auto-verification runs against imported statements and may take time to verify, leaving the manual admin override active.
+*   **Risk:** Spoofing or fake UTR guessing attacks.
+    *   *Mitigation:* Once a UTR in the ledger is successfully matched and linked to an invoice, mark it as "linked" or prevent double-claiming by checking if the UTR was already associated with a paid invoice.
+*   **Risk:** Re-use of old UTRs or stale statements.
+    *   *Mitigation:* Apply the 30-day date window validation to ensure UTR claims are linked only to current transaction timelines.
+````
+
+## File: openspec/changes/auto-review-upi-payments/proposal.md
+````markdown
+## Why
+
+Currently, when a student submits a payment reference (UTR), the status is set to "Under Review". Administrators must then manually verify the UTR and amount, and approve the payment to transition it to "Paid". Automating this verification by comparing student-submitted UTRs and transaction amounts against a trusted ledger of received UPI transactions will reduce administrative workload and speed up confirmation times.
+
+## What Changes
+
+*   **Automated UTR Matching Engine:** Integrate an Excel/CSV bank statement ledger uploader. Administrators can upload their raw UPI transaction statements containing columns for UTR, Transaction Amount, Transaction Date, and other transaction details to construct the internal trusted verification store.
+*   **Auto-Approve Action:** If a submitted UTR matches an unlinked entry in the received UPI transactions ledger with the exact same amount:
+    *   Transition the payment status directly from `pending`/`review` to `paid`.
+    *   Automatically link the transaction and record the payment date.
+    *   Directly trigger `payment-approved` email and WhatsApp notifications containing the verified UTR.
+*   **Flag Discrepancies:** If the UTR matches but the amount is different, flag the payment as `"discrepancy"` (or keep as `"review"` with a warning flag) and notify the administrator.
+*   **Reconciliation Enhancements:**
+    *   **Fuzzy Amount Matching:** Reconcile transaction differences within a small tolerance margin (e.g. ±₹0.05).
+    *   **Date Window Verification:** Enforce that matched transaction dates are within a 30-day window to prevent reuse of old references.
+    *   **Schema Mapping:** Support dynamic header mappings for CSV statement uploads.
+    *   **Audit Logging:** Keep logs of matching matches, discrepancies, and resolutions.
+*   **Manual/Fallback Interface:** Retain the administrative override tools to manually approve payments if automated verification fails or cannot find the UTR.
+
+## Capabilities
+
+### New Capabilities
+<!-- None -->
+
+### Modified Capabilities
+- `billing-payments`: Automates transaction verification and approval triggers upon student UTR submission.
+
+## Impact
+
+*   **Database Schema:** Extend payment records to store verification metadata (e.g. `verifiedAt`, `verificationSource`). Add a schema model for stored bank statement transaction ledger entries and a model for reconciliation audit logs.
+*   **Frontend logic (`app.js`):** Modify UTR submission callbacks to invoke the local verification logic and instantly show success if auto-approved, or show it is under review if no match is found. Add an administrative dashboard interface to upload bank statement files (.xlsx, .xls, .csv) and configure CSV column maps.
+*   **Backend server (`server.js`):** Add a POST `/api/verify-upi` endpoint to process UTR and amount comparisons, and a POST `/api/admin/upload-ledger` endpoint to parse Excel/CSV statements, apply dynamic column mapping, and log activities to the audit log.
+````
+
+## File: openspec/changes/auto-review-upi-payments/specs/billing-payments/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Automated UPI Payment Verification
+The system SHALL verify student-submitted UTR and transaction amount values against a trusted bank transaction ledger.
+
+#### Scenario: Transaction matches ledger exactly
+- **WHEN** a student submits a 12-digit UTR and amount for an invoice
+- **AND** the UTR and amount match an unlinked entry in the trusted bank transaction ledger
+- **THEN** the system SHALL update the payment status to "paid" and link the UTR record automatically
+
+#### Scenario: Transaction matches UTR but amount differs
+- **WHEN** a student submits a UTR and amount for an invoice
+- **AND** the UTR matches an entry in the ledger but the amount differs
+- **THEN** the system SHALL mark the payment status as "discrepancy" and notify administrators
+
+#### Scenario: Transaction UTR not found in ledger
+- **WHEN** a student submits a UTR for an invoice
+- **AND** the UTR does not exist in the trusted ledger
+- **THEN** the system SHALL update the payment status to "review" and flag it for manual review
+
+### Requirement: Bank Statement Ledger Import
+The system SHALL support manual file uploads (CSV, XLS, XLSX) to import received transaction rows into the internal trusted ledger pool.
+
+#### Scenario: Admin uploads a valid CSV bank statement
+- **WHEN** an admin uploads a CSV bank statement containing transaction columns
+- **THEN** the system SHALL parse the document, extract valid UTRs, amounts, transaction dates, and descriptions, and insert new records into the database ledger without creating duplicates
+
+### Requirement: Planned Reconciliation Enhancements
+
+#### Scenario: Configurable fuzzy matching for rounding differences
+- **WHEN** reconciling a UTR entry
+- **AND** the ledger amount matches the invoice amount within a configurable tolerance margin (e.g. ±₹0.05)
+- **THEN** the system SHALL treat it as an exact match and approve the payment automatically
+
+#### Scenario: UTR date window verification
+- **WHEN** a student submits a UTR for reconciliation
+- **AND** the matched ledger transaction date falls outside a 30-day window of the invoice date
+- **THEN** the system SHALL block auto-approval and flag the invoice as a discrepancy to prevent reuse of old transaction references
+
+#### Scenario: Dynamic statement schema configuration
+- **WHEN** an administrator uploads a CSV statement
+- **THEN** the system SHALL permit mapping target columns dynamically to the required fields (UTR, amount, date) from the UI settings panel
+
+#### Scenario: Reconciliation audit log recording
+- **WHEN** any automatic verification or manual reconciliation action is performed
+- **THEN** the system SHALL write a date-stamped activity log record recording the match status, invoice ID, reference UTR, and user ID for auditing purposes
+````
+
+## File: wiki/Billing-and-Payments.md
+````markdown
+# Billing & Payments
+
+Quantum Yoga incorporates a transparent invoicing and transactions manager tailored for standard Indian merchant configurations.
+
+---
+
+## 🧾 Invoice Ledger Schema (`payments`)
+
+Every student payment transaction maps to the following record structure:
+
+*   `id`: Unique invoice identifier prefixed with `INV-` (e.g. `INV-10029`).
+*   `userEmail`: Linked studio member email.
+*   `description` / `amount`: Purpose of charge and value in INR (₹).
+*   `dueDate` / `paymentDate`: Timeline dates.
+*   `status`: Current state, transitioning between `pending`, `review` (Under Review), `paid` (Approved), and `cancelled`.
+*   `utr`: User-submitted UPI Unique Transaction Reference (12-digit code).
+
+---
+
+## 📲 UPI QR Code Gateway Flow
+
+To keep transaction processing cost-free, the platform leverages direct peer-to-peer UPI payments:
+
+```
+[Member clicks "Pay via UPI"]
+               │
+               ▼
+[Generate standard UPI URI]
+"upi://pay?pa={vpa}&pn={name}&am={amount}&tn={description}"
+               │
+               ▼
+[Render live QR Code on Modal]
+               │
+               ▼
+[Member scans & transfers on UPI App]
+               │
+               ▼
+[Member inputs 12-digit UTR code on form]
+               │
+               ▼
+[Status updates to 'review' (Under Review) & logs UTR reference]
+               │
+               ├──────────────────────────────────────────┐
+               ▼                                          ▼
+[Triggers 'payment-under-review' Email]   [Triggers 'payment-under-review' WhatsApp]
+(includes Invoice, Amount, and UTR)       (includes Invoice, Amount, and UTR)
+               │                                          │
+               └────────────────────┬─────────────────────┘
+                                    │
+                                    ▼
+                 [Admin reviews & approves payment]
+                                    │
+               ┌────────────────────┴─────────────────────┐
+               ▼                                          ▼
+ [Status updates to 'paid']              [Triggers 'payment-approved' WhatsApp]
+ (includes Invoice, Amount, and UTR)     (includes Invoice, Amount, and UTR)
+               │
+               ▼
+ [Triggers 'payment-approved' Email]
+ (includes Invoice, Amount, and UTR)
 ```
 
+---
+
+## 🏢 System Notifications & Receipts
+
+1.  **Overdue Banners:** If a logged-in member has *any* invoices past their due dates, a sticky global banner warns them of overdue fees and links directly to the invoice page.
+2.  **Dynamic Receipts:** Fully responsive HTML invoice receipt layouts are generated on-demand with options to save or print. Contains transactional audit checkmarks, payment logs, and company branding.
+3.  **Manual Invoices:** Administrators can quickly generate ad-hoc fee demands against any student account via the admin control panel.
+4.  **Notifications:** Both email and WhatsApp notifications keep students informed about invoice status updates.
+
+---
+
+## 🤖 Automated UPI Reconciliation (Bank Ledger Sync)
+
+To expedite approvals while preserving cost-free direct UPI transaction lanes, Quantum Yoga supports automated payment verification:
+
+1.  **Manual CSV Statement Upload:** Administrators can manually upload bank statements in CSV formats via the Admin Settings panel to parse UTRs, transaction amounts, transaction dates, and payer names into the trusted `upi_ledger` cache.
+2.  **Auto-Approval Matching:** When a student submits a UTR code:
+    *   The system compares the UTR and amount against the cached `upi_ledger` entries.
+    *   If a match is found, the system **automatically approves** the payment, transitioning status directly to `paid` and triggering Gmail and WhatsApp payment confirmation notifications containing the verified UTR.
+    *   If the UTR matches but the amount differs, it flags the record as a `discrepancy` for manual administrative review.
+    *   If the UTR is not found (due to statement upload latency), it is set to `review` (Under Review) for manual admin audit or subsequent statement uploads.
+````
+
+## File: openspec/changes/auto-review-upi-payments/tasks.md
+````markdown
+## 1. Database & Server Setup
+
+- [x] 1.1 Extend the state model in `server.js` and `db.json` to include a `upi_ledger` cache representing received UPI bank transactions.
+- [x] 1.2 Implement the POST `/api/verify-upi` API endpoint on the Express server in `server.js` to process auto-verification matching against the `upi_ledger`.
+- [x] 1.3 Add a POST `/api/admin/upload-ledger` file upload endpoint to parse CSV and Excel bank statement files, extracting transaction details (UTR, amount, date, and other descriptions).
+
+## 2. Client Integration & Form Callbacks
+
+- [x] 2.1 Update the UPI payment submission handler in `app.js` to invoke the verification API endpoint upon student UTR entry.
+- [x] 2.2 Add alert indicators in the student UI to notify that verification is in progress (due to statement upload delays) or if it has been auto-approved.
+- [x] 2.3 Ensure email and WhatsApp triggers are instantly dispatched with UTR metadata if auto-approved.
+
+## 3. Administrative Interface Updates
+
+- [x] 3.1 Update the Admin Billing view to display transaction statuses properly (e.g. flagging unmatched/review items or showing automated approval details).
+- [x] 3.2 Add a ledger upload widget to the Admin settings tab to allow admins to upload CSV/Excel bank statements manually.
+- [x] 3.3 Ensure the ledger upload widget shows parsing summaries (e.g. "X transactions imported, Y duplicates ignored").
+
+## 4. Planned Reconciliation Enhancements
+
+- [ ] 4.1 Implement configurable fuzzy amount matching tolerance (default ±₹0.05) in `/api/verify-upi` verification logic.
+- [ ] 4.2 Add the 30-day date window validation check to block auto-approvals of outdated UTR submissions.
+- [ ] 4.3 Add a dynamic CSV column mapping configurations panel to the Admin Settings UI and update `/api/admin/upload-ledger` to map headers dynamically.
+- [ ] 4.4 Design and build a database audit log schema and render a Reconciliation Log Audit view on the Admin Dashboard.
+````
+
+## File: README.md
+````markdown
+# 🧘 Quantum Yoga - Premium Studio Management & Practice Dashboard
+
+Welcome to **Quantum Yoga**, a premium static and interactive dashboard website designed for modern yoga studio management, coaching interaction, and guided practices. Powered by a responsive single-page application (SPA) frontend and a modular Node.js/Express backend, Quantum Yoga integrates scheduling, payments, communications, and customer relations into a unified glassmorphic portal.
+
+---
+
+## 🌟 Key Features & Capabilities
+
+Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Quantum Yoga is organized into six core capability modules:
+
+### 1. [Core Yoga Directory](file:///d:/QuantumYogaWebsite/openspec/specs/core-yoga/spec.md)
+*   **Postures Directory:** Categorized and searchable index of master postures with detailed metadata (Sanskrit translations, difficulty, duration, benefits, and step-by-step instructions).
+*   **SVG Pose Illustrations:** High-fidelity line-art illustrations embedded dynamically to guide body alignment.
+*   **Guided Practice Flows:** Sequential yoga routines tracking total duration, focus areas, and pose steps.
+*   **Custom HTML5 Video Player:** Bespoke overlay player with custom playback controls, volume sliders, progress buffers, and automatic routine completion logging.
+
+### 2. [User Authentication & Profile Portal](file:///d:/QuantumYogaWebsite/openspec/specs/user-auth-profile/spec.md)
+*   **Unified Auth Gate:** Seamless login, registration, and inquiry gates supporting modern features like "Remember Me" and "Forgot Password."
+*   **Forced Password Reset:** Supports secure administrative conversions by forcing members to reset temporary passwords upon their first login.
+*   **Personal Studio Dashboard:** Visualizes member stats (routines completed, favorites list, practice logs) and houses private wellness goals & health notes.
+*   **UI Skin Selection:** Members can personalize their dashboard with themes like *Midnight Aura (Dark)*, *Ethereal Light*, or *Zen Sunset*.
+
+### 3. [Class Scheduling & Batches](file:///d:/QuantumYogaWebsite/openspec/specs/class-scheduling/spec.md)
+*   **Weekly Timetables:** Automatically maps assigned cohort schedules with a live countdown timer ticking down to the next live session.
+*   **Coaching Appointments:** Members can book private sessions directly with instructors, select target routines, and reschedule or cancel existing appointments.
+*   **Admin Scheduling Directory:** Master schedule manager permitting administrators to book appointments on behalf of students, change timetables, and customize session fees.
+
+### 4. [Billing, Invoices & Payments](file:///d:/QuantumYogaWebsite/openspec/specs/billing-payments/spec.md)
+*   **Outstanding Payment Banners:** Prominently alerts members of pending or overdue invoices right at the top of their dashboard.
+*   **UPI QR Code Generator:** Generates a live merchant UPI QR code (`upi://pay?pa=...`) for instant scanned payments.
+*   **UTR Verification:** Users submit their Unique Transaction Reference (UTR) code to confirm UPI transactions, automatically transitioning invoice statuses to "Paid" via automated reconciliation matching against a trusted bank statement ledger uploaded manually by administrators (as a CSV file), falling back to manual "Under Review" status if matching fails.
+*   **Dynamic Receipts:** Printable branded billing receipts detailing invoice metadata, merchant payment addresses, and reference UTRs.
+
+### 5. [Lead Management & CRM Pipeline](file:///d:/QuantumYogaWebsite/openspec/specs/leads-crm/spec.md)
+*   **Kanban Swimlane Board:** Renders an interactive multi-column board (`New`, `Contacted`, `Nurturing`, `Converted`, `Archived`) to manage incoming inquiries.
+*   **sales Notes & Logs:** Allows admins to record date-stamped interaction history for each prospective lead.
+*   **Automated Conversion Flow:** Converts a lead into an active studio member with a single click—automatically registering the account, generating a temporary password, and dispatching a welcoming email.
+
+### 6. [Email Communication Center](file:///d:/QuantumYogaWebsite/openspec/specs/email-communication/spec.md)
+*   **Dual Integration System:** Supports high-scale transactional emails via the **Resend API proxy** and personalized client interactions via **Gmail OAuth2 flow**.
+*   **Admin Inbox & Outbox:** An administrative dashboard folder to view, preview, and directly reply to messages.
+*   **Pre-made Email Templates:** One-click email templates (e.g., *Welcome Email*, *Invoice Reminders*, *Appointment Confirmations*) auto-filled with variables.
+
+### 7. [WhatsApp Notifications & Direct Chat Shortcuts](file:///d:/QuantumYogaWebsite/openspec/changes/add-whatsapp-functionality/specs/whatsapp-communication/spec.md)
+*   **Automated Alert Dispatches:** Triggers immediate WhatsApp alert messages to student telephone numbers upon booking, rescheduling, and cancellation events or new/overdue billing creation.
+*   **Direct Chat Shortcuts:** Displays chat launch actions (`https://wa.me/`) next to student profiles, appointment lists, invoices, and Kanban leads to start immediate conversations with pre-filled greeting templates.
+*   **System settings:** Incorporates toggles, provider gateway endpoints, credentials keys, and template editors in the Admin Settings panel.
+
+---
+
+## 🛠️ Technology Stack
+
+*   **Frontend:** HTML5, Vanilla JavaScript, CSS3 (Custom Glassmorphism styling with support for multiple themes).
+*   **Build Tooling:** [Vite](https://vitejs.dev/) for quick HMR and optimal client-side bundling.
+*   **Backend:** [Express](https://expressjs.com/) server acting as a database router, static asset hosting, email integration proxy, and WhatsApp provider proxy.
+*   **Storage & Database:** Supports fallback local file database storage (`db.json`) and connects seamlessly to either a **PostgreSQL** pool or **Supabase Client JSON storage** when variables are set.
+*   **Testing Suite:** [Jest](https://jestjs.io/) for backend/unit tests and [Playwright](https://playwright.dev/) for robust end-to-end testing.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+*   Node.js (v18 or higher recommended)
+*   npm (v9 or higher)
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone <repository-url>
+    cd QuantumYogaWebsite
+    ```
+2.  Install the required dependencies:
+    ```bash
+    npm install
+    ```
+
+### Configuration (`.env`)
+
+Configure your environment by duplicating the active environment variables or editing the existing `.env` file in the root directory:
+
+```env
+# Server configuration
+PORT=8080
+
+# Database Configuration (PostgreSQL / Supabase)
+# Fallback to local db.json if database connection is omitted
+DATABASE_URL=postgresql://postgres:password@127.0.0.1:5432/quantum_yoga
+
+# Email Integrations (Resend)
+RESEND_API_KEY=re_your_api_key_here
+RESEND_FROM_ADDRESS=admin@quantumyoga.xyz
+```
+
+### Running the Application
+
+*   **Development Mode (Frontend HMR):**
+    ```bash
+    npm run dev
+    ```
+*   **Production Build:**
+    ```bash
+    npm run build
+    ```
+*   **Start Production Server:**
+    ```bash
+    npm run start
+    ```
+
+---
+
+## 🧪 Testing
+
+To run the test suite:
+
+*   **Unit Tests (Jest):**
+    ```bash
+    npm run test
+    ```
+*   **End-to-End Tests (Playwright):**
+    ```bash
+    npm run e2e
+    ```
+````
+
 ## File: server.js
-```javascript
+````javascript
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
@@ -14127,4 +21496,4 @@ app.listen(PORT, async () => {
   console.log(`Production server running on port ${PORT}`);
   await seedDbIfNeeded();
 });
-```
+````
