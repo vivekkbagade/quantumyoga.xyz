@@ -10589,27 +10589,6 @@ To enable zero-cost, manual communication between admins and users/leads, Quantu
 }
 ````
 
-## File: repomix.config.json
-````json
-{
-  "output": {
-    "style": "markdown",
-    "filePath": "repomix-output.md"
-  },
-  "ignore": {
-    "customPatterns": [
-      "dist/**",
-      "node_modules/**",
-      "package-lock.json",
-      "*.jpg",
-      "*.png",
-      "*.svg",
-      "repomix-output.*"
-    ]
-  }
-}
-````
-
 ## File: wiki/Architecture.md
 ````markdown
 # System Architecture & Database Setup
@@ -10846,6 +10825,27 @@ Trusted bank transaction entries loaded via admin statement uploads:
 - **Date Window Verification:** The system SHALL validate that user-submitted UTR match dates fall within an acceptable range (e.g. within 30 days) of the invoice creation or due date to prevent fraudulent reuse of old transaction IDs.
 - **Statement Schema Mapping:** The system SHALL allow administrators to dynamically define custom CSV header mapping configurations in the settings panel (e.g., linking custom columns to `utr`, `amount`, and `date`).
 - **Reconciliation Log Audit:** The system SHALL maintain an administrative log of all verification activities, matching attempts, discrepancies found, and manual resolutions for compliance audits.
+````
+
+## File: repomix.config.json
+````json
+{
+  "output": {
+    "style": "markdown",
+    "filePath": "repomix-output.md"
+  },
+  "ignore": {
+    "customPatterns": [
+      "dist/**",
+      "node_modules/**",
+      "package-lock.json",
+      "*.jpg",
+      "*.png",
+      "*.svg",
+      "repomix-output.*"
+    ]
+  }
+}
 ````
 
 ## File: vite.config.js
