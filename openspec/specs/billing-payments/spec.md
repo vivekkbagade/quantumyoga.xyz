@@ -76,3 +76,10 @@ Trusted bank transaction entries loaded via admin statement uploads:
   - UTR Match + Amount Mismatch: Flags payment status as `discrepancy` for administrative action.
   - UTR Not Found: Puts status under `review` (Under Review) to await manual reconcile or statement sync.
 
+### 7. Planned Reconciliation Enhancements
+- **Fuzzy Amount Matching:** The system SHALL support matching within a configurable tolerance margin (e.g. ±₹0.05) to accommodate minor banking rounding discrepancies.
+- **Date Window Verification:** The system SHALL validate that user-submitted UTR match dates fall within an acceptable range (e.g. within 30 days) of the invoice creation or due date to prevent fraudulent reuse of old transaction IDs.
+- **Statement Schema Mapping:** The system SHALL allow administrators to dynamically define custom CSV header mapping configurations in the settings panel (e.g., linking custom columns to `utr`, `amount`, and `date`).
+- **Reconciliation Log Audit:** The system SHALL maintain an administrative log of all verification activities, matching attempts, discrepancies found, and manual resolutions for compliance audits.
+
+
