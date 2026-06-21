@@ -18,8 +18,9 @@
 
 ## 4. Planned Reconciliation Enhancements
 
-- [ ] 4.1 Implement configurable fuzzy amount matching tolerance (default ±₹0.05) in `/api/verify-upi` verification logic.
-- [ ] 4.2 Add the 30-day date window validation check to block auto-approvals of outdated UTR submissions.
-- [ ] 4.3 Add a dynamic CSV column mapping configurations panel to the Admin Settings UI and update `/api/admin/upload-ledger` to map headers dynamically.
-- [ ] 4.4 Design and build a database audit log schema and render a Reconciliation Log Audit view on the Admin Dashboard.
+- [x] 4.1 Implement configurable fuzzy amount matching tolerance (default ±₹0.05) in `/api/verify-upi` verification logic.
+- [x] 4.2 Add the 30-day date window validation check to block auto-approvals of outdated UTR submissions.
+- [x] 4.3 Add a dynamic CSV column mapping configurations panel to the Admin Settings UI and update `/api/admin/upload-ledger` to map headers dynamically.
+- [x] 4.4 Design and build a database audit log schema and render a Reconciliation Log Audit view on the Admin Dashboard.
+
 
