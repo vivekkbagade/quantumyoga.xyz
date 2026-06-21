@@ -3,7 +3,7 @@
 - [ ] 1.1 Extend the state model in `server.js` and `db.json` to include a `upi_ledger` cache representing received UPI bank transactions.
 - [ ] 1.2 Implement the POST `/api/verify-upi` API endpoint on the Express server in `server.js` to process auto-verification matching against the `upi_ledger`.
 - [ ] 1.3 Add a POST `/api/admin/upload-ledger` file upload endpoint to parse CSV bank statement files and import transactions.
-- [ ] 1.4 Implement a recurring scheduler in `server.js` to fetch new statement transaction logs from corporate bank APIs (e.g. ICICI/Setu) at regular hourly/daily intervals.
+- [ ] 1.4 Implement a recurring scheduler in `server.js` to fetch new statement transaction logs from Setu's bank statement API at regular hourly/daily intervals.
 
 ## 2. Client Integration & Form Callbacks
 
@@ -15,4 +15,4 @@
 
 - [ ] 3.1 Update the Admin Billing view to display transaction statuses properly (e.g. flagging unmatched/review items or showing automated approval details).
 - [ ] 3.2 Add a ledger upload widget to the Admin settings tab to allow admins to upload CSV/Excel bank statements manually.
-- [ ] 3.3 Add configuration inputs under Admin settings to define API endpoints, auth keys, and certificates for corporate bank statement retrieval.
+- [ ] 3.3 Add configuration inputs under Admin settings to define Client ID, Client Secret, and Product Key parameters for Setu API integration.

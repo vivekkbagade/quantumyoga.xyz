@@ -4,7 +4,7 @@ Currently, when a student submits a payment reference (UTR), the status is set t
 
 ## What Changes
 
-*   **Automated UTR Matching Engine:** Integrate a real UPI transaction ledger sync mechanism, allowing automated hourly/daily ledger file imports (CSV/JSON/Excel bank statements) or direct API hooks to verify UTR and amount matches.
+*   **Automated UTR Matching Engine:** Integrate Setu's Bank Statement API using active API credentials (client ID, client secret, and product keys) to fetch and verify UPI UTR and amount details on a regular scheduled basis (hourly/daily).
 *   **Auto-Approve Action:** If a submitted UTR matches an unlinked entry in the received UPI transactions ledger with the exact same amount:
     *   Transition the payment status directly from `pending`/`review` to `paid`.
     *   Automatically link the transaction and record the payment date.
@@ -23,5 +23,5 @@ Currently, when a student submits a payment reference (UTR), the status is set t
 ## Impact
 
 *   **Database Schema:** Extend payment records to store verification metadata (e.g. `verifiedAt`, `verificationSource`). Add a model for imported bank UPI ledger entries.
-*   **Frontend logic (`app.js`):** Modify UTR submission callbacks to invoke the auto-review endpoint and instantly show success if auto-approved, or prompt that it's under review if no match is found. Add an admin interface to upload ledger files (CSV/Excel) manually.
-*   **Backend server (`server.js`):** Add a POST `/api/verify-upi` endpoint to process UTR and amount comparisons, a POST `/api/admin/upload-ledger` endpoint for manual ledger imports, and a background cron scheduler to sync ledger inputs periodically (hourly/daily).
+*   **Frontend logic (`app.js`):** Modify UTR submission callbacks to invoke the auto-review endpoint and instantly show success if auto-approved, or prompt that it's under review if no match is found. Add an admin interface to upload ledger files (CSV/Excel) manually. Add configuration fields in Admin Settings for Setu API credentials.
+*   **Backend server (`server.js`):** Add a POST `/api/verify-upi` endpoint to process UTR and amount comparisons, a POST `/api/admin/upload-ledger` endpoint for manual ledger imports, and a background cron scheduler to sync ledger inputs periodically (hourly/daily) via Setu API endpoints.

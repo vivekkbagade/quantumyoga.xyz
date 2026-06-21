@@ -38,7 +38,7 @@ Currently, Quantum Yoga lacks automated transaction matching, requiring manual v
 ### 3. Ledger Synchronization & Upload API
 *   **Approach:** Add `POST /api/admin/upload-ledger` to process CSV/Excel file uploads.
 *   **Parsing Utility:** Write a parser function in `server.js` that maps bank-specific CSV rows (e.g., matching "UTR", "Ref No", or "Transaction ID" columns and "Amount" columns) into standard ledger JSON objects and merges them into `upi_ledger` without duplicates.
-*   **Cron Synchronization:** Implement a background synchronization task in `server.js` (running hourly or daily) that queries the corporate bank statement API (e.g., ICICI Corporate API Banking or Setu Bank Statement API) using configured OAuth tokens/client certificates, extracts new incoming UPI UTR and amount records, and merges them into the `upi_ledger` cache.
+*   **Cron Synchronization:** Implement a background synchronization task in `server.js` (running hourly or daily) that queries Setu's Bank Statement / Transaction List API using configured credentials (`SETU_CLIENT_ID`, `SETU_CLIENT_SECRET`, and `SETU_PRODUCT_KEY` or sandbox secrets). It will fetch the latest transaction ledger records, map them to our internal model format, and merge new entries into the local database `upi_ledger` array.
 
 ## Risks / Trade-offs
 

@@ -26,9 +26,10 @@ The system SHALL support manual file uploads (CSV/Excel) to import received tran
 - **THEN** the system SHALL parse the document, extract valid UTRs and amounts, and insert new records into the database ledger without creating duplicates
 
 ### Requirement: Scheduled Bank Ledger Sync
-The system SHALL run a recurring background sync process at regular intervals (hourly/daily) to fetch and import new ledger records from external repositories.
+The system SHALL run a recurring background sync process at regular intervals (hourly/daily) to fetch and import new ledger records from Setu's bank statement API.
 
 #### Scenario: Hourly cron sync runs
 - **WHEN** the hourly background cron trigger fires
-- **THEN** the system SHALL query the configured external storage repository, download new transaction ledger files, and merge them into the local ledger cache
+- **THEN** the system SHALL query Setu's bank statement API using the configured client credentials (ID, Secret, and Product Key), fetch new transaction records, and merge them into the local ledger cache
+
 
