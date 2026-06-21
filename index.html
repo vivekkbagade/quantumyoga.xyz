@@ -941,6 +941,18 @@
             </form>
           </div>
 
+          <!-- UPI Bank Ledger CSV/Excel Upload widget -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📂 Import UPI Bank Statement</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label for="admin-ledger-file-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Select CSV Statement File:</label>
+              <input type="file" id="admin-ledger-file-input" accept=".csv" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.8rem; outline: none; width: 100%;">
+              <p style="font-size:0.7rem; color:var(--text-muted); margin:0;">Upload a CSV bank ledger statement containing columns for UTR/Reference and transaction Amount to auto-verify student claims.</p>
+              <button type="button" id="admin-ledger-upload-btn" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; width: 100%;">Upload & Parse Ledger</button>
+              <div id="admin-ledger-upload-msg" style="display: none; font-size: 0.78rem; font-weight: 600; text-align: center; margin-top: 0.3rem;"></div>
+            </div>
+          </div>
+
         </div>
         </div>
 

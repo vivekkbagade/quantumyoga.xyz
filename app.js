@@ -84,6 +84,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       ]));
     }
+    if (!localStorage.getItem("qy_upi_ledger")) {
+      localStorage.setItem("qy_upi_ledger", JSON.stringify([]));
+    }
     const users = JSON.parse(localStorage.getItem("qy_users") || "[]");
     const memberIndex = users.findIndex(u => u.email === "member@quantumyoga.xyz");
     if (memberIndex > -1) {
@@ -1160,6 +1163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (db.batches) localStorage.setItem("qy_batches", JSON.stringify(db.batches));
            if (db.payments) localStorage.setItem("qy_payments", JSON.stringify(db.payments));
           if (db.appointments) localStorage.setItem("qy_appointments", JSON.stringify(db.appointments));
+          if (db.upi_ledger) localStorage.setItem("qy_upi_ledger", JSON.stringify(db.upi_ledger));
           
           // Auto-sync any old/historically mismatched cancelled appointments with their billing records
           syncCancelledAppointmentsWithBilling();
@@ -1237,6 +1241,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         site_default_theme: localStorage.getItem("qy_site_default_theme") || "midnight",
         appointment_fee: Number(localStorage.getItem(STORAGE_KEY_APPOINTMENT_FEE) || 0),
         emails: JSON.parse(localStorage.getItem(STORAGE_KEY_EMAILS) || "[]"),
+        upi_ledger: JSON.parse(localStorage.getItem("qy_upi_ledger") || "[]"),
         gmailSettings: gmailSettingsForDb,
         whatsappSettings: whatsappSettingsParsed
       };
@@ -7104,6 +7109,73 @@ Please verify and update my status. Thank you!`);
     });
   }
 
+  // UPI Bank Ledger File Upload Listener
+  const adminLedgerUploadBtn = document.getElementById("admin-ledger-upload-btn");
+  const adminLedgerFileInput = document.getElementById("admin-ledger-file-input");
+  const adminLedgerUploadMsg = document.getElementById("admin-ledger-upload-msg");
+
+  if (adminLedgerUploadBtn && adminLedgerFileInput) {
+    adminLedgerUploadBtn.addEventListener("click", async () => {
+      const file = adminLedgerFileInput.files[0];
+      if (!file) {
+        alert("Please select a CSV statement file first.");
+        return;
+      }
+
+      adminLedgerUploadBtn.textContent = "Uploading...";
+      adminLedgerUploadBtn.disabled = true;
+      if (adminLedgerUploadMsg) {
+        adminLedgerUploadMsg.style.display = "none";
+      }
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const fileContent = event.target.result;
+        try {
+          const response = await fetch('/api/admin/upload-ledger', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fileContent })
+          });
+
+          if (!response.ok) {
+            let errMsg = `Server returned status ${response.status}`;
+            try { const errObj = await response.json(); errMsg = errObj.error || errMsg; } catch (_) {}
+            throw new Error(errMsg);
+          }
+
+          const result = await response.json();
+          if (result.success) {
+            // Re-load state from server (includes the newly updated ledger cache)
+            await loadFromServer();
+            
+            if (adminLedgerUploadMsg) {
+              adminLedgerUploadMsg.style.color = "#10B981";
+              adminLedgerUploadMsg.textContent = `✓ ${result.summary}`;
+              adminLedgerUploadMsg.style.display = "block";
+            }
+            alert(`Ledger statement processed successfully!\n${result.summary}`);
+            adminLedgerFileInput.value = ""; // clear input
+          } else {
+            alert(`Failed to import ledger: ${result.error || 'Unknown error'}`);
+          }
+        } catch (err) {
+          console.error("Error uploading ledger:", err);
+          alert(`Error uploading statement: ${err.message}`);
+        } finally {
+          adminLedgerUploadBtn.textContent = "Upload & Parse Ledger";
+          adminLedgerUploadBtn.disabled = false;
+        }
+      };
+      reader.onerror = () => {
+        alert("Failed to read the local file.");
+        adminLedgerUploadBtn.textContent = "Upload & Parse Ledger";
+        adminLedgerUploadBtn.disabled = false;
+      };
+      reader.readAsText(file);
+    });
+  }
+
   // UPI QR Payment Modal logic
   function closeUpiPaymentModal() {
     if (upiPaymentModal) {
@@ -7168,31 +7240,82 @@ Please verify and update my status. Thank you!`);
         alert("Please enter a valid 12-digit UPI Transaction Ref / UTR number.");
         return;
       }
+
+      const submitBtn = upiPaymentUtrForm.querySelector("button[type=submit]");
+      if (submitBtn) {
+        submitBtn.textContent = "Verifying...";
+        submitBtn.disabled = true;
+      }
       
-      const payments = loadPayments();
-      const idx = payments.findIndex(p => p.id === invoiceId);
-      if (idx > -1) {
-        payments[idx].status = "review";
-        payments[idx].utr = utr;
-        savePayments(payments);
-        
-        try {
-          await sendTransactionalEmail("payment-under-review", {
-            invoiceId: payments[idx].id,
-            amount: payments[idx].amount,
-            utr: payments[idx].utr
-          }, payments[idx].userEmail);
-        } catch (err) {
-          console.error("Failed to send payment under review email:", err);
+      try {
+        const payments = loadPayments();
+        const payment = payments.find(p => p.id === invoiceId);
+        if (!payment) {
+          alert("Invoice not found.");
+          if (submitBtn) {
+            submitBtn.textContent = "Submit Reference";
+            submitBtn.disabled = false;
+          }
+          return;
         }
-        
-        closeUpiPaymentModal();
-        renderClientBillingHistory();
-        renderClientDashboard();
-        
-        alert("Payment reference submitted! Your payment is now Under Review.");
-      } else {
-        alert("Invoice not found.");
+
+        const response = await fetch('/api/verify-upi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ invoiceId, utr, amount: payment.amount })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server returned status ${response.status}`);
+        }
+
+        const result = await response.json();
+        if (result.success) {
+          // Sync database from server to get updated state
+          await loadFromServer();
+          
+          closeUpiPaymentModal();
+          renderClientBillingHistory();
+          renderClientDashboard();
+
+          if (result.status === 'paid') {
+            alert("✓ Payment auto-approved! Your invoice has been marked as paid.");
+            // Send transactional notifications (Note: server doesn't send them, app.js usually triggers or server does? Let's check: the spec/proposal says: "Directly trigger payment-approved email and WhatsApp notifications containing the verified UTR.")
+            try {
+              await sendTransactionalEmail("payment-approved", {
+                invoiceId: payment.id,
+                amount: payment.amount,
+                utr: utr,
+                paymentDate: new Date().toISOString().split('T')[0]
+              }, payment.userEmail);
+            } catch (err) {
+              console.error("Failed to send transactional email:", err);
+            }
+          } else if (result.status === 'discrepancy') {
+            alert("⚠️ Payment discrepancy flagged! UTR matched but amount differs. Admin notified.");
+          } else {
+            alert("ℹ️ UTR not found in bank ledger. Payment submitted under review.");
+            try {
+              await sendTransactionalEmail("payment-under-review", {
+                invoiceId: payment.id,
+                amount: payment.amount,
+                utr: utr
+              }, payment.userEmail);
+            } catch (err) {
+              console.error("Failed to send transactional email:", err);
+            }
+          }
+        } else {
+          alert(`Verification failed: ${result.error || 'Unknown error'}`);
+        }
+      } catch (err) {
+        console.error("Error verifying UPI payment:", err);
+        alert(`Error communicating with verification server: ${err.message}. Your payment was not submitted.`);
+      } finally {
+        if (submitBtn) {
+          submitBtn.textContent = "Submit Reference";
+          submitBtn.disabled = false;
+        }
       }
     });
   }

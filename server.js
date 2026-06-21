@@ -67,8 +67,13 @@ async function getDbState() {
     if (error) throw error;
     state = data ? data.state : null;
   }
-  if (state && !state.whatsappSettings) {
-    state.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+  if (state) {
+    if (!state.whatsappSettings) {
+      state.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+    }
+    if (!state.upi_ledger) {
+      state.upi_ledger = [];
+    }
   }
   return state;
 }
@@ -320,6 +325,177 @@ app.post('/api/send-whatsapp', async (req, res) => {
   
   // Fallback to mock success
   res.json({ success: true, mock: true });
+});
+
+// POST /api/verify-upi
+app.post('/api/verify-upi', async (req, res) => {
+  const { invoiceId, utr, amount } = req.body;
+  if (!invoiceId || !utr || !amount) {
+    return res.status(400).json({ error: 'Missing invoiceId, utr, or amount' });
+  }
+
+  try {
+    const dbState = await getDbState();
+    if (!dbState) {
+      return res.status(500).json({ error: 'Database state could not be loaded' });
+    }
+
+    const upiLedger = dbState.upi_ledger || [];
+    const payments = dbState.payments || [];
+    
+    const payment = payments.find(p => p.id === invoiceId);
+    if (!payment) {
+      return res.status(404).json({ error: 'Invoice not found' });
+    }
+
+    // Clean inputs
+    const submittedUtr = String(utr).trim();
+    const submittedAmount = parseFloat(amount);
+
+    // Look for matching ledger entry
+    const ledgerMatch = upiLedger.find(entry => String(entry.utr).trim() === submittedUtr);
+
+    let status = 'review';
+    let matchedEntry = null;
+
+    if (ledgerMatch) {
+      const entryAmount = parseFloat(ledgerMatch.amount);
+      if (Math.abs(entryAmount - submittedAmount) < 0.01) {
+        status = 'paid';
+        matchedEntry = ledgerMatch;
+      } else {
+        status = 'discrepancy';
+      }
+    }
+
+    // Update payment record
+    payment.status = status;
+    payment.utr = submittedUtr;
+    if (status === 'paid') {
+      payment.paymentDate = matchedEntry?.date || new Date().toISOString().split('T')[0];
+      payment.verifiedAt = new Date().toISOString();
+      payment.verificationSource = 'ledger';
+    } else {
+      payment.verificationError = status === 'discrepancy' ? 'Amount mismatch' : 'UTR not found in ledger';
+    }
+
+    await setDbState(dbState);
+    res.json({ success: true, status, payment });
+  } catch (err) {
+    console.error('Error in /api/verify-upi:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/admin/upload-ledger
+app.post('/api/admin/upload-ledger', async (req, res) => {
+  const { fileContent } = req.body; // Expect base64 or plaintext CSV
+  if (!fileContent) {
+    return res.status(400).json({ error: 'No file content provided' });
+  }
+
+  try {
+    const dbState = await getDbState();
+    if (!dbState) {
+      return res.status(500).json({ error: 'Database state could not be loaded' });
+    }
+
+    // Simple CSV parser
+    const lines = fileContent.split(/\r?\n/);
+    if (lines.length < 2) {
+      return res.status(400).json({ error: 'Invalid CSV format or empty file' });
+    }
+
+    const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
+    
+    // Find column indices
+    const utrIdx = headers.findIndex(h => /utr|ref|transaction\s*id|reference/i.test(h));
+    const amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
+    const dateIdx = headers.findIndex(h => /date/i.test(h));
+    const senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
+    const detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
+
+    if (utrIdx === -1 || amountIdx === -1) {
+      return res.status(400).json({ error: `Could not identify required columns. Found headers: ${headers.join(', ')}. Need columns mapping to UTR/Ref and Amount.` });
+    }
+
+    const imported = [];
+    let duplicates = 0;
+    const existingUtrs = new Set((dbState.upi_ledger || []).map(entry => String(entry.utr).trim()));
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+
+      // Basic comma split handling simple quotes
+      const cols = [];
+      let current = '';
+      let inQuotes = false;
+      for (let j = 0; j < line.length; j++) {
+        const char = line[j];
+        if (char === '"' || char === "'") {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          cols.push(current.trim().replace(/^["']|["']$/g, ''));
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      cols.push(current.trim().replace(/^["']|["']$/g, ''));
+
+      if (cols.length < Math.max(utrIdx, amountIdx) + 1) continue;
+
+      const utr = cols[utrIdx]?.trim();
+      const amountStr = cols[amountIdx]?.trim();
+      if (!utr || !amountStr) continue;
+
+      // clean UTR: must be alphanumeric (12 digit typically, but let's grab the raw string minus spaces)
+      const cleanUtr = utr.replace(/\s+/g, '');
+      if (cleanUtr.length < 6) continue; // safety check for header-like/empty values
+
+      if (existingUtrs.has(cleanUtr)) {
+        duplicates++;
+        continue;
+      }
+
+      const amount = parseFloat(amountStr.replace(/[^0-9.-]/g, ''));
+      if (isNaN(amount)) continue;
+
+      const date = dateIdx !== -1 ? cols[dateIdx]?.trim() : new Date().toISOString().split('T')[0];
+      const senderName = senderIdx !== -1 ? cols[senderIdx]?.trim() : '';
+      const details = detailsIdx !== -1 ? cols[detailsIdx]?.trim() : '';
+
+      const newEntry = {
+        utr: cleanUtr,
+        amount: String(amount),
+        date: date || new Date().toISOString().split('T')[0],
+        senderName: senderName || 'Unknown',
+        details: details || 'Imported via CSV',
+        importedAt: new Date().toISOString()
+      };
+
+      imported.push(newEntry);
+      existingUtrs.add(cleanUtr);
+    }
+
+    if (!dbState.upi_ledger) {
+      dbState.upi_ledger = [];
+    }
+    dbState.upi_ledger.push(...imported);
+
+    await setDbState(dbState);
+
+    res.json({
+      success: true,
+      importedCount: imported.length,
+      duplicateCount: duplicates,
+      summary: `${imported.length} transactions imported, ${duplicates} duplicates ignored`
+    });
+  } catch (err) {
+    console.error('Error in /api/admin/upload-ledger:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Catch-all route to serve index.html for spa routing
