@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import https from 'node:https';
+import http from 'node:http';
 import { createClient } from '@supabase/supabase-js';
 import ws from 'ws';
 import pg from 'pg';
@@ -40,11 +41,23 @@ if (!pgPool && !supabase) {
   console.warn("WARNING: Neither DATABASE_URL nor Supabase keys are configured. Falling back to local db.json file.");
 }
 
+const DEFAULT_WHATSAPP_SETTINGS = {
+  enabled: false,
+  apiKey: "",
+  gatewayUrl: "",
+  templates: {
+    welcome: "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
+    invoice: "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
+    booking: "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}."
+  }
+};
+
 // Unified state helper functions
 async function getDbState() {
+  let state = null;
   if (pgPool) {
     const res = await pgPool.query("SELECT state FROM quantum_yoga_db WHERE id = $1", ['default']);
-    return res.rows[0] ? res.rows[0].state : null;
+    state = res.rows[0] ? res.rows[0].state : null;
   } else if (supabase) {
     const { data, error } = await supabase
       .from('quantum_yoga_db')
@@ -52,9 +65,12 @@ async function getDbState() {
       .eq('id', 'default')
       .maybeSingle();
     if (error) throw error;
-    return data ? data.state : null;
+    state = data ? data.state : null;
   }
-  return null;
+  if (state && !state.whatsappSettings) {
+    state.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+  }
+  return state;
 }
 
 async function setDbState(state) {
@@ -104,7 +120,11 @@ app.all('/api/db', async (req, res) => {
     try {
       const state = await getDbState();
       if (state === null) {
-        return res.json(fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {});
+        const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
+        if (!localState.whatsappSettings) {
+          localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+        }
+        return res.json(localState);
       }
       res.json(state);
     } catch (err) {
@@ -188,6 +208,59 @@ app.get('/api/resend-emails', (req, res) => {
   });
   proxyReq.on('error', err => res.status(500).json({ error: err.message }));
   proxyReq.end();
+});
+
+// 4. WhatsApp Proxy Endpoints
+app.post('/api/send-whatsapp', async (req, res) => {
+  const { to, message } = req.body;
+  console.log(`[WhatsApp Outbox] Send attempt to ${to}: "${message}"`);
+  
+  const dbState = await getDbState();
+  const settings = dbState?.whatsappSettings || DEFAULT_WHATSAPP_SETTINGS;
+  
+  if (settings.enabled && settings.apiKey && settings.gatewayUrl) {
+    try {
+      const url = new URL(settings.gatewayUrl);
+      const payload = JSON.stringify({
+        to,
+        message,
+        apiKey: settings.apiKey
+      });
+      
+      const options = {
+        hostname: url.hostname,
+        port: url.port || (url.protocol === 'https:' ? 443 : 80),
+        path: url.pathname + url.search,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload)
+        }
+      };
+      
+      const reqProto = url.protocol === 'https:' ? https : http;
+      const proxyReq = reqProto.request(options, proxyRes => {
+        let responseData = '';
+        proxyRes.on('data', chunk => { responseData += chunk; });
+        proxyRes.on('end', () => {
+          console.log(`[WhatsApp Production Link] Status: ${proxyRes.statusCode}`);
+          res.status(200).json({ success: true, mock: false, providerStatus: proxyRes.statusCode });
+        });
+      });
+      proxyReq.on('error', err => {
+        console.error('[WhatsApp Production Link Error]', err);
+        res.status(200).json({ success: true, mock: true, error: err.message });
+      });
+      proxyReq.write(payload);
+      proxyReq.end();
+      return;
+    } catch (e) {
+      console.error('[WhatsApp Config Gateway Error]', e);
+    }
+  }
+  
+  // Fallback to mock success
+  res.json({ success: true, mock: true });
 });
 
 // Catch-all route to serve index.html for spa routing

@@ -892,6 +892,31 @@
             </div>
           </div>
 
+          <!-- WhatsApp Settings card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">💬 WhatsApp Integration</h3>
+            <form id="admin-whatsapp-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <input type="checkbox" id="whatsapp-enabled-checkbox" style="cursor: pointer; width: 1.1rem; height: 1.1rem; border-radius: var(--radius-sm);">
+                <label for="whatsapp-enabled-checkbox" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); cursor: pointer;">Enable Automated Alerts</label>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="whatsapp-api-key" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">API Key / Token:</label>
+                <input type="password" id="whatsapp-api-key" placeholder="API Key / Credentials" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="whatsapp-gateway-url" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Gateway URL:</label>
+                <input type="text" id="whatsapp-gateway-url" placeholder="https://api.provider.com/send" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="whatsapp-template-booking" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Booking Template:</label>
+                <textarea id="whatsapp-template-booking" rows="2" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; resize: vertical;"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save WhatsApp Settings</button>
+              <div id="admin-whatsapp-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
+            </form>
+          </div>
+
         </div>
         </div>
 

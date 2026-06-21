@@ -1121,8 +1121,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   const STORAGE_KEY_APPOINTMENT_FEE = "qy_appointment_fee";
   const STORAGE_KEY_EMAILS = "qy_emails";
   const STORAGE_KEY_GMAIL_SETTINGS = "qy_gmail_settings";
+  const STORAGE_KEY_WHATSAPP_SETTINGS = "qy_whatsapp_settings";
   const DEFAULT_UPI_VPA = "quantumyoga@upi";
   const DEFAULT_UPI_NAME = "Quantum Yoga Studio";
+
+  function populateWhatsAppSettingsInputs(settings) {
+    const enabledCheckbox = document.getElementById("whatsapp-enabled-checkbox");
+    const apiKeyInput = document.getElementById("whatsapp-api-key");
+    const gatewayUrlInput = document.getElementById("whatsapp-gateway-url");
+    const templateBookingTextarea = document.getElementById("whatsapp-template-booking");
+    
+    if (enabledCheckbox) enabledCheckbox.checked = !!settings.enabled;
+    if (apiKeyInput) apiKeyInput.value = settings.apiKey || "";
+    if (gatewayUrlInput) gatewayUrlInput.value = settings.gatewayUrl || "";
+    if (templateBookingTextarea) {
+      templateBookingTextarea.value = settings.templates?.booking || "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}.";
+    }
+  }
 
   // Asynchronous database synchronization helpers
   async function loadFromServer() {
@@ -1163,6 +1178,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem(STORAGE_KEY_GMAIL_SETTINGS, JSON.stringify(merged));
           }
 
+          if (db.whatsappSettings) {
+            localStorage.setItem(STORAGE_KEY_WHATSAPP_SETTINGS, JSON.stringify(db.whatsappSettings));
+            populateWhatsAppSettingsInputs(db.whatsappSettings);
+          }
+
           // Trigger UI updates to reflect fresh database data
           renderStudentAppointments();
           renderAdminAppointments();
@@ -1196,6 +1216,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         resendFromAddress: gmailSettingsParsed.resendFromAddress || ""
       };
 
+      const whatsappSettingsRaw = localStorage.getItem(STORAGE_KEY_WHATSAPP_SETTINGS);
+      const whatsappSettingsParsed = whatsappSettingsRaw ? JSON.parse(whatsappSettingsRaw) : { enabled: false, apiKey: "", gatewayUrl: "", templates: { welcome: "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.", invoice: "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}", booking: "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}." } };
+
       const db = {
         users: JSON.parse(localStorage.getItem("qy_users") || "[]"),
         leads: JSON.parse(localStorage.getItem("qy_leads") || "[]"),
@@ -1206,7 +1229,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         site_default_theme: localStorage.getItem("qy_site_default_theme") || "midnight",
         appointment_fee: Number(localStorage.getItem(STORAGE_KEY_APPOINTMENT_FEE) || 0),
         emails: JSON.parse(localStorage.getItem(STORAGE_KEY_EMAILS) || "[]"),
-        gmailSettings: gmailSettingsForDb
+        gmailSettings: gmailSettingsForDb,
+        whatsappSettings: whatsappSettingsParsed
       };
       await fetch('/api/db', {
         method: 'POST',
@@ -3352,13 +3376,16 @@ Please verify and update my status. Thank you!`);
 
       alert("Appointment cancelled successfully.");
 
-      // Task 9.3 — send appointment cancellation transactional email
       sendTransactionalEmail("appointment", {
         appointmentId: appt.id,
         action: "Cancellation",
         date: appt.date,
         time: appt.time,
         routine: appt.selectedRoutine
+      }, appt.studentEmail);
+
+      sendWhatsAppNotification("cancellation", {
+        message: `Hi {{name}}, your private coaching for ${appt.selectedRoutine} on ${appt.date} at ${appt.time} has been cancelled.`
       }, appt.studentEmail);
 
       renderClientDashboard();
@@ -3786,8 +3813,12 @@ Please verify and update my status. Thank you!`);
 
       const feeLabel = `<span style="font-weight:600;color:var(--accent-primary);">\u20b9${apptFee}</span>`;
       
+      const usersList = loadUsers();
+      const studentUser = usersList.find(u => u.email === appt.studentEmail);
+      const waIcon = studentUser && studentUser.phone ? ` <a href="${getWhatsAppLink(studentUser.phone, studentUser.name)}" target="_blank" title="Chat on WhatsApp" style="text-decoration:none; font-size: 0.85rem; cursor: pointer;">💬</a>` : "";
+
       tr.innerHTML = `
-        <td><span style="font-weight: 500;">${appt.studentEmail}</span></td>
+        <td><span style="font-weight: 500;">${appt.studentEmail}</span>${waIcon}</td>
         <td>${appt.selectedRoutine}</td>
         <td>${formatDateToIndian(appt.date)}</td>
         <td>${appt.time}</td>
@@ -4048,12 +4079,14 @@ Please verify and update my status. Thank you!`);
         `;
       }
       
+      const waLink = userObj && userObj.phone ? ` <a href="${getWhatsAppLink(userObj.phone, userObj.name)}" target="_blank" title="Chat on WhatsApp" style="text-decoration:none; font-size: 0.85rem; cursor: pointer;">💬</a>` : "";
+      
       const row = document.createElement("tr");
       row.innerHTML = `
         <td><span style="font-weight: 600; font-family: monospace;">#${p.id}</span></td>
         <td>
           <div style="display: flex; flex-direction: column;">
-            <span style="font-weight: 500;">${userName}</span>
+            <span style="font-weight: 500;">${userName}${waLink}</span>
             <span style="font-size: 0.75rem; color: var(--text-muted);">${p.userEmail}</span>
           </div>
         </td>
@@ -4298,8 +4331,15 @@ Please verify and update my status. Thank you!`);
       payments.push(newInvoice);
       savePayments(payments);
       
-      // Task 9.1 — send transactional invoice email if Gmail connected
       sendTransactionalEmail("invoice", {
+        invoiceId: nextId,
+        description: desc,
+        amount: amount,
+        dueDate: due
+      }, email);
+      
+      // WhatsApp notification
+      sendWhatsAppNotification("invoice", {
         invoiceId: nextId,
         description: desc,
         amount: amount,
@@ -5392,6 +5432,83 @@ Please verify and update my status. Thank you!`);
     saveEmails(emails);
   }
 
+  async function sendWhatsAppNotification(type, data, userEmail) {
+    const rawSettings = localStorage.getItem(STORAGE_KEY_WHATSAPP_SETTINGS);
+    if (!rawSettings) return;
+    let settings;
+    try {
+      settings = JSON.parse(rawSettings);
+    } catch (e) {
+      return;
+    }
+    if (!settings || !settings.enabled) return;
+
+    // Fetch user or lead detail to get name & phone number
+    const users = JSON.parse(localStorage.getItem("qy_users") || "[]");
+    let recipient = users.find(u => u.email === userEmail);
+    if (!recipient) {
+      // Check leads
+      const leads = JSON.parse(localStorage.getItem("qy_leads") || "[]");
+      recipient = leads.find(l => l.email === userEmail);
+    }
+
+    const phone = recipient ? recipient.phone : null;
+    if (!phone) {
+      console.log(`[WhatsApp Trigger] No phone number found for ${userEmail}. Skipping.`);
+      return;
+    }
+
+    const name = recipient ? recipient.name : (userEmail || "Student");
+
+    // Build the message body using templates
+    let templateText = "";
+    if (type === "booking") {
+      templateText = settings.templates?.booking || "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}.";
+    } else if (type === "invoice") {
+      templateText = settings.templates?.invoice || "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}";
+    } else if (type === "welcome") {
+      templateText = settings.templates?.welcome || "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.";
+    } else {
+      templateText = data.message || "";
+    }
+
+    // Replace templates placeholders
+    let message = templateText
+      .replace(/{{name}}/g, name)
+      .replace(/{{routine}}/g, data.routine || "")
+      .replace(/{{date}}/g, data.date || "")
+      .replace(/{{time}}/g, data.time || "")
+      .replace(/{{invoiceId}}/g, data.invoiceId || "")
+      .replace(/{{amount}}/g, data.amount || "")
+      .replace(/{{dueDate}}/g, data.dueDate || "")
+      .replace(/{{tempPass}}/g, data.tempPass || "")
+      .replace(/{{link}}/g, window.location.origin + "/#profile-section");
+
+    try {
+      const response = await fetch('/api/send-whatsapp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ to: phone, message })
+      });
+      const result = await response.json();
+      console.log("[WhatsApp Dispatch Result]", result);
+    } catch (err) {
+      console.error("[WhatsApp Trigger Error]", err);
+    }
+  }
+
+  function getWhatsAppLink(phone, name = "") {
+    if (!phone) return "";
+    let clean = phone.replace(/\D/g, "");
+    if (clean.length === 10) {
+      clean = "91" + clean;
+    }
+    const text = encodeURIComponent(`Hello ${name}, warm greetings from Quantum Yoga!`);
+    return `https://wa.me/${clean}?text=${text}`;
+  }
+
   function format12HourTime(time24) {
     if (!time24) return "";
     const [hoursStr, minutesStr] = time24.split(":");
@@ -5596,7 +5713,8 @@ Please verify and update my status. Thank you!`);
         <td><span class="badge badge-category" style="font-size: 0.75rem; border-color: rgba(244, 63, 94, 0.25); color: var(--accent-secondary);">${compCount} Routines</span></td>
         <td>${batchDisplay}</td>
         <td style="text-align: right;">
-          <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+          <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
+            ${user.phone ? `<a href="${getWhatsAppLink(user.phone, safeName)}" target="_blank" class="btn btn-secondary btn-sm" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; text-decoration: none;" title="Chat on WhatsApp">💬</a>` : ""}
             <button class="btn btn-secondary btn-sm inspect-user-btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">View Profile</button>
             <button class="btn btn-primary btn-sm delete-user-btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.3); color: var(--accent-secondary);">Delete</button>
           </div>
@@ -5686,7 +5804,7 @@ Please verify and update my status. Thank you!`);
             </div>
             <div class="lead-card-details">
               <span>📧 ${safeEmail}</span>
-              <span>📞 ${safePhone}</span>
+              <span>📞 ${safePhone} <a href="${getWhatsAppLink(lead.phone, safeName)}" target="_blank" title="Chat on WhatsApp" style="text-decoration:none; margin-left: 0.25rem; font-size: 0.85rem; cursor: pointer;">💬</a></span>
               <p class="lead-card-msg">${safeMsg}</p>
             </div>
             <div class="lead-card-actions">
@@ -5764,7 +5882,14 @@ Please verify and update my status. Thank you!`);
     // Populate simple displays
     if (inspectLeadName) inspectLeadName.textContent = lead.name;
     if (inspectLeadEmail) inspectLeadEmail.textContent = lead.email;
-    if (inspectLeadPhone) inspectLeadPhone.textContent = "Phone: " + formatIndianPhone(lead.phone || "N/A");
+    if (inspectLeadPhone) {
+      const phoneFormatted = formatIndianPhone(lead.phone || "N/A");
+      if (lead.phone) {
+        inspectLeadPhone.innerHTML = `Phone: ${phoneFormatted} <a href="${getWhatsAppLink(lead.phone, lead.name)}" target="_blank" title="Chat on WhatsApp" style="text-decoration:none; margin-left: 0.25rem; font-size: 0.95rem; cursor: pointer;">💬</a>`;
+      } else {
+        inspectLeadPhone.textContent = "Phone: " + phoneFormatted;
+      }
+    }
     if (inspectLeadDate) inspectLeadDate.textContent = formatDateToIndian(lead.date) || "N/A";
     if (inspectLeadMessage) inspectLeadMessage.textContent = lead.message;
     
@@ -5969,6 +6094,7 @@ Please verify and update my status. Thank you!`);
         const convertedUser = {
           name: lead.name,
           email: lead.email,
+          phone: lead.phone || "",
           password: generatedPassword, // Set random generated password
           mustChangePassword: true,
           favorites: [],
@@ -6740,6 +6866,40 @@ Please verify and update my status. Thank you!`);
     });
   }
 
+  // Admin WhatsApp settings form submit listener
+  const adminWhatsAppSettingsForm = document.getElementById("admin-whatsapp-settings-form");
+  if (adminWhatsAppSettingsForm) {
+    adminWhatsAppSettingsForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const enabled = document.getElementById("whatsapp-enabled-checkbox").checked;
+      const apiKey = document.getElementById("whatsapp-api-key").value.trim();
+      const gatewayUrl = document.getElementById("whatsapp-gateway-url").value.trim();
+      const bookingTemplate = document.getElementById("whatsapp-template-booking").value.trim();
+      
+      const settings = {
+        enabled,
+        apiKey,
+        gatewayUrl,
+        templates: {
+          welcome: "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
+          invoice: "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
+          booking: bookingTemplate
+        }
+      };
+      
+      localStorage.setItem(STORAGE_KEY_WHATSAPP_SETTINGS, JSON.stringify(settings));
+      saveToServer();
+      
+      const successMsg = document.getElementById("admin-whatsapp-settings-success-msg");
+      if (successMsg) {
+        successMsg.style.display = "block";
+        setTimeout(() => {
+          successMsg.style.display = "none";
+        }, 3000);
+      }
+    });
+  }
+
   // Appointment fee save button listener
   const adminSaveApptFeeBtn = document.getElementById("admin-save-appointment-fee-btn");
   if (adminSaveApptFeeBtn) {
@@ -7051,6 +7211,13 @@ Please verify and update my status. Thank you!`);
           appointments[idx].status = "Rescheduled";
           saveAppointments(appointments);
           alert("Appointment rescheduled successfully.");
+          
+          sendWhatsAppNotification("booking", {
+            routine: routine,
+            date: date,
+            time: time,
+            message: `Hi {{name}}, your private coaching for {{routine}} has been rescheduled to {{date}} at {{time}}.`
+          }, studentEmail);
         }
       } else {
         const apptFee = loadAppointmentFee();
@@ -7092,6 +7259,12 @@ Please verify and update my status. Thank you!`);
           date: date,
           time: time,
           routine: routine
+        }, studentEmail);
+
+        sendWhatsAppNotification("booking", {
+          routine: routine,
+          date: date,
+          time: time
         }, studentEmail);
       }
       
