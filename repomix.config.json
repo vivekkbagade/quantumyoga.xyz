@@ -11,7 +11,10 @@
       "*.jpg",
       "*.png",
       "*.svg",
-      "repomix-output.*"
+      "repomix-output.*",
+      "**/*.md",
+      "wiki/**",
+      "openspec/**"
     ]
   }
 }
