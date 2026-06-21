@@ -33,3 +33,7 @@ db.json
 *.sw?
 .DS_Store
 Thumbs.db
+
+# Repomix output
+repomix-output.*
+
