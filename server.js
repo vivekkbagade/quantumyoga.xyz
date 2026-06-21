@@ -218,13 +218,17 @@ app.post('/api/send-whatsapp', async (req, res) => {
   const dbState = await getDbState();
   const settings = dbState?.whatsappSettings || DEFAULT_WHATSAPP_SETTINGS;
   
-  if (settings.enabled && settings.apiKey && settings.gatewayUrl) {
+  const enabled = settings.enabled || !!process.env.WHATSAPP_API_KEY;
+  const apiKey = process.env.WHATSAPP_API_KEY || settings.apiKey;
+  const gatewayUrl = process.env.WHATSAPP_GATEWAY_URL || settings.gatewayUrl;
+  
+  if (enabled && apiKey && gatewayUrl) {
     try {
-      const url = new URL(settings.gatewayUrl);
+      const url = new URL(gatewayUrl);
       const payload = JSON.stringify({
         to,
         message,
-        apiKey: settings.apiKey
+        apiKey: apiKey
       });
       
       const options = {
