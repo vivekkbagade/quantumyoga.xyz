@@ -28,7 +28,7 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 ### 4. [Billing, Invoices & Payments](file:///d:/QuantumYogaWebsite/openspec/specs/billing-payments/spec.md)
 *   **Outstanding Payment Banners:** Prominently alerts members of pending or overdue invoices right at the top of their dashboard.
 *   **UPI QR Code Generator:** Generates a live merchant UPI QR code (`upi://pay?pa=...`) for instant scanned payments.
-*   **UTR Verification:** Users submit their Unique Transaction Reference (UTR) code to confirm UPI transactions, automatically transitioning invoice statuses from pending to under review for administrative approval.
+*   **UTR Verification:** Users submit their Unique Transaction Reference (UTR) code to confirm UPI transactions, automatically transitioning invoice statuses to "Paid" via automated corporate bank ledger statement matching (ICICI/Setu) or manual CSV ledger reconciliation, falling back to manual "Under Review" status if matching fails.
 *   **Dynamic Receipts:** Printable branded billing receipts detailing invoice metadata, merchant payment addresses, and reference UTRs.
 
 ### 5. [Lead Management & CRM Pipeline](file:///d:/QuantumYogaWebsite/openspec/specs/leads-crm/spec.md)
