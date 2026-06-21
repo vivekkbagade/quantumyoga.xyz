@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Yoga | Elevate Your Body & Mind</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Embark on a transformative wellness journey with Quantum Yoga. Discover interactive pose alignment guides, instructional videos, and guided yoga routines in a premium dark dashboard.">
+  <meta name="keywords" content="yoga, vinyasa, hatha, yin, mindfulness, fitness, meditation, yoga poses, guided routines">
+  <meta name="author" content="Quantum Yoga">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%A7%98%3C/text%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+
+  <!-- Google Identity Services (GIS) for Gmail OAuth2 integration -->
+  <!-- SETUP: To enable Gmail integration, create a Google Cloud project at console.cloud.google.com,
+       enable the Gmail API, create OAuth2 credentials (Web Application type), and add
+       http://localhost as an authorized JavaScript origin. Enter the Client ID in Admin > Settings > Gmail Integration. -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+  <!-- Dashboard App Wrapper -->
+  <div id="dashboard-app" style="display: none;">
+
+  <!-- Decorative Background Glows -->
+  <div class="bg-glow bg-glow-1" id="glow-1"></div>
+  <div class="bg-glow bg-glow-2" id="glow-2"></div>
+  <div class="bg-glow bg-glow-3" id="glow-3"></div>
+
+  <!-- Header & Navigation -->
+  <header class="app-header">
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-icon">🧘</span>
+        <span class="logo-text">Quantum<span class="text-accent">Yoga</span></span>
+      </div>
+      <nav class="nav-links">
+        <a href="#poses-section" class="nav-link active" id="nav-poses">Poses</a>
+        <a href="#routines-section" class="nav-link" id="nav-routines">Routines</a>
+        <a href="#profile-section" class="nav-link" id="nav-profile" style="display: none;">Profile</a>
+        <a href="#admin-section" class="nav-link" id="nav-admin" style="display: none;">Admin Panel</a>
+      </nav>
+      <div class="nav-actions">
+        <div id="user-nav-panel" style="display: none; align-items: center; gap: 1rem; margin-right: 1rem;">
+          <span id="nav-user-greeting" style="font-size: 0.9rem; font-weight: 500;">Hello, <span id="nav-user-name"></span></span>
+          <button class="btn btn-secondary btn-sm" id="logout-btn">Log Out</button>
+        </div>
+        <button class="btn btn-primary btn-sm" id="login-nav-btn">Log In</button>
+        <span class="status-badge"><span class="pulse-dot"></span> Live Stream</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Overdue Payment Alert Banner -->
+  <div id="overdue-payment-banner" class="overdue-alert-banner" style="display: none;">
+    <div class="overdue-banner-content">
+      <span class="overdue-banner-icon">⚠️</span>
+      <span class="overdue-banner-text" id="overdue-payment-message">Action Required: You have an outstanding overdue payment of ₹0.00.</span>
+      <button class="overdue-banner-close" id="close-overdue-banner-btn" aria-label="Close banner">&times;</button>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <main class="app-main">
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <span class="hero-badge">Mindfulness & Motion</span>
+        <h1 class="hero-title">Harmonize Your <span class="gradient-text">Energy</span> & <span class="gradient-text-alt">Flow</span></h1>
+        <p class="hero-subtitle">
+          Explore our interactive directory of master yoga postures, structured alignment guidelines, and premium video tutorials. Elevate your practice today.
+        </p>
+      </div>
+    </section>
+
+    <!-- Search & Filters Container -->
+    <section class="controls-section">
+      <div class="controls-card">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search poses, benefits, or categories..." autocomplete="off">
+          <button id="clear-search" class="clear-button" style="display: none;">&times;</button>
+        </div>
+        <div class="filter-group">
+          <div class="select-wrapper">
+            <select id="filter-category" aria-label="Filter by Category">
+              <option value="all">All Categories</option>
+              <option value="vinyasa">Vinyasa</option>
+              <option value="hatha">Hatha</option>
+              <option value="yin">Yin</option>
+              <option value="restorative">Restorative</option>
+            </select>
+          </div>
+          <div class="select-wrapper">
+            <select id="filter-difficulty" aria-label="Filter by Difficulty">
+              <option value="all">All Difficulties</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Poses Grid Section -->
+    <section id="poses-section" class="content-section active">
+      <div class="grid-container" id="poses-grid">
+        <!-- Dynamic pose cards injected here -->
+      </div>
+      <div id="poses-empty-state" class="empty-state" style="display: none;">
+        <span class="empty-icon">🧘</span>
+        <h3>No Poses Found</h3>
+        <p>Try adjusting your search query or filters to find other yoga postures.</p>
+        <button id="reset-poses-btn" class="btn btn-primary">Reset Filters</button>
+      </div>
+    </section>
+
+    <!-- Routines Grid Section -->
+    <section id="routines-section" class="content-section">
+      <div class="grid-container" id="routines-grid">
+        <!-- Dynamic routine cards injected here -->
+      </div>
+    </section>
+
+    <!-- Profile Grid Section -->
+    <section id="profile-section" class="content-section">
+      <div class="profile-container">
+        
+        <!-- User Profile Header Info Card -->
+        <div class="profile-header-card">
+          <div class="profile-avatar">🧘</div>
+          <div class="profile-info-details">
+            <h2 id="profile-user-name">User Name</h2>
+            <p id="profile-user-email">user@email.com</p>
+            <div id="profile-membership-badge-wrap" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+              <span class="badge badge-category" id="profile-membership-tier" style="font-weight: 700;">Basic Member</span>
+              <span class="badge badge-category" id="profile-membership-status" style="font-weight: 700;">Active</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Expires: <span id="profile-membership-expiry">2026-07-13</span></span>
+            </div>
+            <div class="profile-theme-wrapper" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="profile-theme-select" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">UI Theme:</label>
+              <select id="profile-theme-select" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.35rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; cursor: pointer; outline: none; transition: var(--transition-fast);">
+                <option value="midnight">Midnight Aura (Dark)</option>
+                <option value="light">Ethereal Light (Light)</option>
+                <option value="sunset">Zen Sunset (Sunset)</option>
+              </select>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div class="stat-box">
+              <span class="stat-num" id="profile-stat-completed">0</span>
+              <span class="stat-label">Routines Completed</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" id="profile-stat-favorites">0</span>
+              <span class="stat-label">Favorites</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Sub-Navigation Tabs -->
+        <div class="profile-sub-tabs" style="display: flex; gap: 1rem; border-bottom: 1px solid var(--glass-medium-border); padding-bottom: 0.75rem; margin: 2rem 0 1.5rem 0;">
+          <button class="profile-sub-tab active" id="profile-dashboard-tab-btn">My Studio Dashboard</button>
+          <button class="profile-sub-tab" id="profile-practice-tab-btn">My Practice Log</button>
+          <button class="profile-sub-tab" id="profile-wellness-tab-btn">Wellness & Goals</button>
+          <button class="profile-sub-tab" id="profile-appointments-tab-btn">My Appointments</button>
+          <button class="profile-sub-tab" id="profile-email-tab-btn">📧 My Email</button>
+        </div>
+
+        <!-- My Studio Dashboard Sub-panel -->
+        <div class="profile-panel-content active-panel" id="profile-dashboard-panel">
+          <!-- Top Row: Batch Card & Upcoming Sessions -->
+          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Active Batch Card -->
+            <div class="profile-panel" id="profile-batch-card-wrapper">
+              <h3>🧘 My Batch & Schedule</h3>
+              <div id="profile-batch-details" style="margin-top: 1rem;">
+                <!-- Placeholders for batch title, timetable list, and live countdown timer -->
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                  <h4 id="profile-batch-title" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">No Active Batch</h4>
+                  <div style="background: rgba(0,0,0,0.15); border-radius: var(--radius-sm); padding: 0.75rem; border: 1px solid var(--glass-light-border);">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Timetable Schedule:</span>
+                    <div id="profile-timetable-list" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                      <p style="font-size: 0.8rem; color: var(--text-muted);">No timetable defined.</p>
+                    </div>
+                  </div>
+                  <div id="profile-batch-countdown-box" style="margin-top: 0.5rem; text-align: center; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15); border-radius: var(--radius-sm); padding: 0.75rem;">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Next Class Countdown:</span>
+                    <h4 id="profile-class-countdown" style="font-size: 1.25rem; font-weight: 800; color: var(--accent-primary); margin-top: 0.25rem;">00d 00h 00m 00s</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upcoming Scheduled Timeline -->
+            <div class="profile-panel">
+              <h3>📅 Upcoming Classes & Sessions</h3>
+              <div class="profile-sessions-feed" id="profile-sessions-feed" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 280px; overflow-y: auto; margin-top: 1rem;">
+                <!-- Dynamically loaded upcoming classes & appointments -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Billing & Payment History Log -->
+          <div class="profile-panel">
+            <h3>💳 Billing & Receipts</h3>
+            <div class="controls-card" style="margin-top: 1rem; margin-bottom: 1rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+              <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="student-billing-search-input" placeholder="Search by description or invoice ID..." autocomplete="off">
+              </div>
+              <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <label for="student-billing-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+                <div class="select-wrapper">
+                  <select id="student-billing-status-filter" aria-label="Filter by Status">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="review">Reviewing</option>
+                    <option value="paid">Paid</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="refund-initiated">Refund Initiated</option>
+                    <option value="refunded">Refunded</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="admin-table-wrapper" style="margin-top: 1rem;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Receipt</th>
+                  </tr>
+                </thead>
+                <tbody id="profile-billing-table-body">
+                  <!-- Dynamically loaded invoices -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Practice Log Sub-panel -->
+        <div class="profile-panel-content" id="profile-practice-panel" style="display: none;">
+          <div class="profile-content-grid">
+            <!-- Favorites List Panel -->
+            <div class="profile-panel">
+              <h3>❤️ Favorited Poses</h3>
+              <div class="profile-favorites-grid" id="profile-favorites-list">
+                <!-- Dynamically rendered favorites -->
+              </div>
+            </div>
+
+            <!-- History Panel -->
+            <div class="profile-panel">
+              <h3>⏱️ Routine History</h3>
+              <div class="profile-history-list" id="profile-history-list">
+                <!-- Dynamically rendered history -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wellness & Goals Sub-panel -->
+        <div class="profile-panel-content" id="profile-wellness-panel" style="display: none;">
+          <div class="profile-panel" style="max-width: 650px; margin: 0 auto;">
+            <h3>🧘 My Wellness Ledger</h3>
+            <form id="profile-wellness-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1.25rem;">
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                <label for="profile-goals-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Personal Yoga & Wellness Goals</label>
+                <textarea id="profile-goals-input" placeholder="What are you hoping to achieve in your yoga practice? (e.g. increase core strength, flexibility, mindfulness)" style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.95rem; outline: none; min-height: 100px; resize: vertical; transition: var(--transition-fast);"></textarea>
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                <label for="profile-health-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Physical & Injury Notes (Private)</label>
+                <textarea id="profile-health-input" placeholder="List any injuries, physical limitations, or health concerns we should be aware of to personalize your practice." style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.95rem; outline: none; min-height: 100px; resize: vertical; transition: var(--transition-fast);"></textarea>
+              </div>
+              
+              <div id="profile-wellness-success-msg" style="display: none; background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.85rem; text-align: center; font-weight: 500;">
+                �o" Wellness profile updated successfully.
+              </div>
+              
+              <button type="submit" class="btn btn-primary" id="save-wellness-btn" style="align-self: flex-start; padding: 0.75rem 1.5rem;">Save Personal Details</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Appointments Sub-panel -->
+        <div class="profile-panel-content" id="profile-appointments-section" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <h3>📅 Private Coaching Appointments</h3>
+            <button class="btn btn-primary" id="book-appointment-btn">Book New Session</button>
+          </div>
+          
+          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="student-appointments-search-input" placeholder="Search by routine name..." autocomplete="off">
+            </div>
+            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="student-appointments-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+              <div class="select-wrapper">
+                <select id="student-appointments-status-filter" aria-label="Filter by Status">
+                  <option value="all">All Statuses</option>
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="Rescheduled">Rescheduled</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <!-- Upcoming Sessions -->
+            <div class="profile-panel" style="display: flex; flex-direction: column; gap: 1rem;">
+              <h3>Upcoming Sessions</h3>
+              <div id="profile-upcoming-appointments" style="display: flex; flex-direction: column; gap: 1rem;">
+                <p class="empty-text" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No upcoming appointments scheduled.</p>
+              </div>
+            </div>
+            
+            <!-- Past / Cancelled Sessions -->
+            <div class="profile-panel" style="display: flex; flex-direction: column; gap: 1rem;">
+              <h3>History & Cancelled Sessions</h3>
+              <div id="profile-past-appointments" style="display: flex; flex-direction: column; gap: 1rem;">
+                <p class="empty-text" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No past sessions.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== STUDENT EMAIL PANEL ==================== -->
+        <div class="profile-panel-content" id="profile-email-panel" style="display:none;">
+          <!-- Gmail Connection Status (student sees read-only status) -->
+          <div id="student-gmail-status-card" class="gmail-status-card" style="margin-bottom:1.5rem;">
+            <div class="gmail-status-icon">📧</div>
+            <div class="gmail-status-info">
+              <div id="student-gmail-status-text" style="font-size:0.9rem; font-weight:600; color:var(--text-secondary);">Studio Email System</div>
+              <p id="student-gmail-hint" style="font-size:0.78rem; color:var(--text-muted); margin:0.25rem 0 0;">Send a message to the studio or view communications.</p>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:1.5rem;">
+            <!-- Left: Compose -->
+            <div class="admin-panel">
+              <h3>✏️ Message the Studio</h3>
+              <form id="student-compose-email-form" style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                  <label for="student-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
+                  <input type="text" id="student-email-subject" placeholder="How can we help?" required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                </div>
+                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                  <label for="student-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
+                  <textarea id="student-email-body" rows="6" placeholder="Type your message..." required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="student-send-email-btn" style="font-size:0.85rem;">Send Message</button>
+                <div id="student-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
+              </form>
+            </div>
+
+            <!-- Right: Inbox (messages from studio) -->
+            <div class="admin-panel" style="display:flex; flex-direction:column;">
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">
+                📥 My Inbox
+                <span id="student-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
+              </h3>
+              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; overflow-y:auto; max-height:420px;">
+                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">No messages received yet.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ==================== END STUDENT EMAIL PANEL ==================== -->
+
+      </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="admin-section" class="content-section">
+      <div class="admin-container">
+        
+        <!-- Admin Dashboard Header -->
+        <div class="admin-header-card">
+          <div class="admin-avatar">🛡️</div>
+          <div class="admin-info-details">
+            <h2>Administrative Control Panel</h2>
+            <p>Manage users, inspect metrics, and analyze yoga routines data.</p>
+          </div>
+        </div>
+
+        <!-- Admin Sub-Navigation tabs -->
+        <div class="admin-sub-tabs" role="tablist" aria-label="Admin panel sections">
+          <button class="admin-sub-tab active" id="admin-overview-tab-btn" role="tab" aria-selected="true" aria-controls="admin-overview-panel">Overview Dashboard</button>
+          <button class="admin-sub-tab" id="admin-users-tab-btn" role="tab" aria-selected="false" aria-controls="admin-users-panel">User Management</button>
+          <button class="admin-sub-tab" id="admin-payments-tab-btn" role="tab" aria-selected="false" aria-controls="admin-payments-panel">Payments & Billing</button>
+          <button class="admin-sub-tab" id="admin-leads-tab-btn" role="tab" aria-selected="false" aria-controls="admin-leads-panel">Leads Pipeline</button>
+          <button class="admin-sub-tab" id="admin-batches-tab-btn" role="tab" aria-selected="false" aria-controls="admin-batches-panel">Batches & Scheduling</button>
+          <button class="admin-sub-tab" id="admin-appointments-tab-btn" role="tab" aria-selected="false" aria-controls="admin-appointments-panel">Appointments Management</button>
+          <button class="admin-sub-tab" id="admin-reports-tab-btn" role="tab" aria-selected="false" aria-controls="admin-reports-panel">Reports & Analytics</button>
+          <button class="admin-sub-tab" id="admin-email-tab-btn" role="tab" aria-selected="false" aria-controls="admin-email-panel">📧 Email Inbox</button>
+          <button class="admin-sub-tab" id="admin-settings-tab-btn" role="tab" aria-selected="false" aria-controls="admin-settings-panel">System Settings</button>
+        </div>
+
+        <!-- Admin Overview Sub-panel -->
+        <div class="admin-panel-content active-panel" id="admin-overview-panel">
+          <!-- KPI Stats Grid -->
+          <div class="admin-stats-grid" style="margin-bottom: 2rem;">
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-kpi-members">0</span>
+              <span class="stat-label">Active Members</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-kpi-revenue">₹0</span>
+              <span class="stat-label">Total Revenue</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-kpi-sessions">0</span>
+              <span class="stat-label">Sessions Today</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-kpi-unpaid">0</span>
+              <span class="stat-label">Unpaid Invoices</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Daily Insights / Alerts -->
+          <div class="admin-panel" style="margin-bottom: 2rem;">
+            <h3>💡 Daily Insights & Recommendations</h3>
+            <div class="admin-insights-container" id="admin-insights-list">
+              <!-- Dynamically populated recommendations -->
+            </div>
+          </div>
+
+          <!-- Timeline Feeds Grid -->
+          <div class="admin-timeline-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <!-- Upcoming Schedule Timeline -->
+            <div class="admin-panel">
+              <h3>📅 Today's Studio Timeline</h3>
+              <div class="admin-timeline-feed" id="admin-timeline-feed">
+                <!-- Dynamically loaded upcoming appointments/classes -->
+              </div>
+            </div>
+
+            <!-- Recent Payments Updates -->
+            <div class="admin-panel">
+              <h3>💳 Recent Payment Activity</h3>
+              <div class="admin-payments-feed" id="admin-payments-feed">
+                <!-- Dynamically loaded recent payment records -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Management Sub-panel -->
+        <div class="admin-panel-content" id="admin-users-panel" style="display: none;">
+          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="admin-users-search-input" placeholder="Search users by name or email..." autocomplete="off">
+            </div>
+            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="admin-users-tier-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Tier:</label>
+              <div class="select-wrapper">
+                <select id="admin-users-tier-filter" aria-label="Filter by Tier">
+                  <option value="all">All Tiers</option>
+                  <option value="Basic">Basic</option>
+                  <option value="Premium">Premium</option>
+                  <option value="VIP">VIP</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="admin-users-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+              <div class="select-wrapper">
+                <select id="admin-users-status-filter" aria-label="Filter by Status">
+                  <option value="all">All Statuses</option>
+                  <option value="Active">Active</option>
+                  <option value="Paused">Paused</option>
+                  <option value="Expired">Expired</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Favorites Count</th>
+                  <th>Completions Count</th>
+                  <th>Batch / Fee</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-table-body">
+                <!-- Dynamically loaded user rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Reports & Analytics Sub-panel -->
+        <div class="admin-panel-content" id="admin-reports-panel" style="display: none;">
+          
+          <!-- Statistics Cards Grid -->
+          <div class="admin-stats-grid">
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-stat-total-users">0</span>
+              <span class="stat-label">Total Users</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-stat-total-completions">0</span>
+              <span class="stat-label">Total Completions</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-stat-popular-routine" style="font-size: 1.1rem; text-align: center; word-break: break-word; font-weight: 700; height: 2rem; display: flex; align-items: center;">None</span>
+              <span class="stat-label">Most Completed Routine</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-stat-popular-pose" style="font-size: 1.1rem; text-align: center; word-break: break-word; font-weight: 700; height: 2rem; display: flex; align-items: center;">None</span>
+              <span class="stat-label">Most Favorited Pose</span>
+            </div>
+          </div>
+
+          <!-- Chronological Completion History Logs Table -->
+          <div class="admin-panel" style="margin-top: 2rem;">
+            <h3>⏱️ Chronological Completion History</h3>
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Routine</th>
+                    <th>Completed At</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-reports-table-body">
+                  <!-- Dynamically loaded completion rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Payments & Billing Sub-panel -->
+        <div class="admin-panel-content" id="admin-payments-panel" style="display: none;">
+          <!-- Admin Billing Stats/KPI Grid -->
+          <div class="admin-stats-grid" style="margin-bottom: 2rem;">
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-billing-kpi-total-invoiced">₹0</span>
+              <span class="stat-label">Total Invoiced</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-billing-kpi-paid">₹0</span>
+              <span class="stat-label">Collected Revenue</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-billing-kpi-pending">₹0</span>
+              <span class="stat-label">Pending Dues</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-billing-kpi-overdue">₹0</span>
+              <span class="stat-label">Overdue Balance</span>
+            </div>
+          </div>
+
+          <!-- Tab Selectors -->
+          <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
+            <button class="admin-payments-sub-tab active" id="admin-payments-ledger-tab-btn" style="background: transparent; border: none; color: var(--text-muted); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: var(--transition-fast);">🗂️ Studio Invoice Ledger</button>
+            <button class="admin-payments-sub-tab" id="admin-payments-issue-tab-btn" style="background: transparent; border: none; color: var(--text-muted); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: var(--transition-fast);">📝 Issue Manual Invoice</button>
+          </div>
+
+          <!-- Tab 1: Ledger -->
+          <div id="admin-payments-ledger-tab-panel" class="admin-panel" style="display: block; margin-bottom: 2rem;">
+            <h3>🗂️ Studio Invoice Ledger</h3>
+            <div class="controls-card" style="margin-top: 1rem; margin-bottom: 1rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+              <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="admin-payments-search-input" placeholder="Search by student or description..." autocomplete="off">
+              </div>
+              <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <label for="admin-payments-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+                <div class="select-wrapper">
+                  <select id="admin-payments-status-filter" aria-label="Filter by Status">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="review">Reviewing</option>
+                    <option value="paid">Paid</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="refund-initiated">Refund Initiated</option>
+                    <option value="refunded">Refunded</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="admin-table-wrapper" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Student</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-payments-table-body">
+                  <!-- Dynamically populated invoices list -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 2: Issue Invoice Form -->
+          <div id="admin-payments-issue-tab-panel" class="admin-panel" style="display: none; max-width: 500px; margin-bottom: 2rem;">
+            <h3>📝 Issue Manual Invoice</h3>
+            <form id="admin-issue-invoice-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="admin-invoice-email" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Student Email</label>
+                <select id="admin-invoice-email" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); font-family: var(--font-sans); cursor: pointer; outline: none; transition: var(--transition-fast);">
+                  <!-- Dynamically populated with active student emails -->
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="admin-invoice-desc" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Description</label>
+                <input type="text" id="admin-invoice-desc" required placeholder="e.g. Monthly Gold Membership" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+              </div>
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="admin-invoice-amount" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Amount (INR)</label>
+                <input type="number" id="admin-invoice-amount" required min="1" placeholder="e.g. 79" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+              </div>
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="admin-invoice-due" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Due Date</label>
+                <input type="date" id="admin-invoice-due" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;">Create & Issue Invoice</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Leads Pipeline Sub-panel -->
+        <div class="admin-panel-content" id="admin-leads-panel" style="display: none;">
+          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="leads-search-input" placeholder="Search leads by name, email, or message..." autocomplete="off">
+            </div>
+            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="leads-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+              <div class="select-wrapper">
+                <select id="leads-status-filter" aria-label="Filter by Status">
+                  <option value="all">All Statuses</option>
+                  <option value="New">New</option>
+                  <option value="Contacted">Contacted</option>
+                  <option value="Converted">Converted</option>
+                  <option value="Closed">Closed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="leads-swimlane-board" id="leads-swimlane-board">
+            <!-- Dynamically populated columns and cards -->
+          </div>
+        </div>
+
+        <!-- Batches & Scheduling Sub-panel -->
+        <div class="admin-panel-content" id="admin-batches-panel" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-top: 1rem; margin-bottom: 2rem;">
+            <!-- Left Column: Forms -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <!-- Create Cohort Batch -->
+              <div class="admin-panel">
+                <h3>✨ Create New Cohort Batch</h3>
+                <form id="admin-create-batch-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-batch-name-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Batch Name</label>
+                    <input type="text" id="admin-batch-name-input" required placeholder="e.g. Sunrise Flow Batch" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-batch-instructor-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Instructor Name</label>
+                    <input type="text" id="admin-batch-instructor-input" placeholder="e.g. David Vance" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-batch-capacity-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Student Capacity</label>
+                    <input type="number" id="admin-batch-capacity-input" placeholder="e.g. 15" min="1" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-batch-fee-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Session Fee (&#8377;)</label>
+                    <input type="number" id="admin-batch-fee-input" placeholder="e.g. 1200" min="0" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  </div>
+                  <button type="submit" class="btn btn-primary" id="admin-create-batch-btn" style="margin-top: 0.5rem; width: 100%;">Create Batch</button>
+                </form>
+              </div>
+
+              <!-- Schedule Weekly Class -->
+              <div class="admin-panel">
+                <h3>📅 Schedule Weekly Class</h3>
+                <form id="admin-schedule-class-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-schedule-batch-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Select Batch</label>
+                    <select id="admin-schedule-batch-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; transition: var(--transition-fast);">
+                      <option value="">Choose a Batch...</option>
+                      <!-- Dynamically populated -->
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-schedule-weekday-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Day of Week</label>
+                    <select id="admin-schedule-weekday-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                      <option value="Monday">Monday</option>
+                      <option value="Tuesday">Tuesday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Thursday">Thursday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                      <option value="Sunday">Sunday</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-schedule-time-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Start Time</label>
+                    <input type="time" id="admin-schedule-time-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-schedule-routine-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Yoga Routine</label>
+                    <select id="admin-schedule-routine-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                      <option value="">Select Routine...</option>
+                      <!-- Dynamically populated -->
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-rose" id="admin-schedule-class-btn" style="margin-top: 0.5rem; width: 100%;">Schedule Class</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Right Column: Active Batch Cohorts -->
+            <div class="admin-panel" style="height: 100%; display: flex; flex-direction: column;">
+              <h3>🧘 Active Batch Cohorts</h3>
+              <div class="admin-table-wrapper" style="margin-top: 1rem; flex-grow: 1; max-height: 550px; overflow-y: auto;">
+                <table class="admin-table" id="admin-batches-table">
+                  <thead>
+                    <tr>
+                      <th>Batch Name</th>
+                      <th>Instructor</th>
+                      <th>Timetable Schedule</th>
+                      <th>Session Fee</th>
+                      <th style="text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-batches-table-body">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments Management Sub-panel -->
+        <div class="admin-panel-content" id="admin-appointments-panel" style="display: none;">
+          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="admin-appointments-search-input" placeholder="Search by student email or routine..." autocomplete="off">
+            </div>
+            <button class="btn btn-primary" id="admin-book-appt-btn" style="margin-bottom: 0;">Book Private Coaching</button>
+          </div>
+          
+          <div class="admin-table-wrapper">
+            <table class="admin-table" id="admin-appointments-table">
+              <thead>
+                <tr>
+                  <th>Student Email</th>
+                  <th>Yoga Routine</th>
+                  <th>Date</th>
+                  <th>Time Slot</th>
+                  <th>Fee</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-appointments-table-body">
+                <!-- Dynamically loaded appointments -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- System Settings Sub-panel -->
+        <div class="admin-panel-content" id="admin-settings-panel" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; align-items: start;">
+
+            <!-- Theme card -->
+            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">⚙️ Default Theme</h3>
+              <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                <label for="admin-default-theme-select" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Site Default Theme:</label>
+                <select id="admin-default-theme-select" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; cursor: pointer; outline: none;">
+                  <option value="midnight">Midnight Aura (Dark)</option>
+                  <option value="light">Ethereal Light (Light)</option>
+                  <option value="sunset">Zen Sunset (Sunset)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- UPI card -->
+            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">💳 UPI Payment Settings</h3>
+              <form id="admin-upi-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                  <label for="admin-upi-vpa" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">UPI VPA:</label>
+                  <input type="text" id="admin-upi-vpa" required placeholder="e.g. quantumyoga@upi" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                  <label for="admin-upi-name" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Payee Name:</label>
+                  <input type="text" id="admin-upi-name" required placeholder="e.g. Quantum Yoga Studio" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save UPI Settings</button>
+                <div id="admin-upi-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
+              </form>
+            </div>
+
+            <!-- Appointment fee card -->
+            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">🪙 Appointment Session Fee</h3>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-appointment-fee-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Default Fee per Appointment (&#8377;):</label>
+                <input type="number" id="admin-appointment-fee-input" min="0" placeholder="e.g. 1500" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <button id="admin-save-appointment-fee-btn" class="btn btn-primary" style="margin-top: 0.5rem; padding: 0.35rem 0.75rem; font-size: 0.8rem; width: 100%;">Save Fee Setting</button>
+              <div id="admin-appointment-fee-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; margin-top: 0.3rem; text-align: center;">&#x2713; Saved.</div>
+            </div>
+
+          <!-- Email Provider card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md); grid-column: span 2;">
+            <h3 style="margin: 0 0 0.75rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📨 Email Provider</h3>
+            <!-- Provider toggle -->
+            <div class="email-provider-toggle" style="margin-bottom: 1rem;">
+              <button class="email-provider-btn active" id="email-provider-gmail-btn">Gmail</button>
+              <button class="email-provider-btn" id="email-provider-resend-btn">Resend</button>
+            </div>
+            <!-- Gmail config section -->
+            <div id="gmail-config-section">
+              <p style="font-size:0.78rem; font-weight:600; color:var(--text-secondary); margin:0 0 0.5rem;">Gmail OAuth2</p>
+              <form id="admin-gmail-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                  <label for="admin-gmail-client-id" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">OAuth2 Client ID:</label>
+                  <input type="text" id="admin-gmail-client-id" placeholder="xxxx.apps.googleusercontent.com" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.75rem; outline: none;">
+                </div>
+                <p style="font-size:0.7rem; color:var(--text-muted); margin:0 0 0.25rem;">Create a project at <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent-primary);">Google Cloud Console</a>, enable Gmail API, create Web Application credentials, and paste the Client ID here.</p>
+                <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Client ID</button>
+                <div id="admin-gmail-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved. Go to Email Inbox tab to connect.</div>
+              </form>
+            </div>
+            <!-- Resend config section -->
+            <div id="resend-config-section" style="display:none;">
+              <p style="font-size:0.78rem; font-weight:600; color:var(--text-secondary); margin:0 0 0.5rem;">Resend API — <a href="https://resend.com" target="_blank" style="color:var(--accent-primary); font-weight:400;">resend.com</a></p>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                  <label for="resend-api-key-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">API Key:</label>
+                  <input type="password" id="resend-api-key-input" placeholder="re_…" autocomplete="off" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                  <label for="resend-from-address-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">From Address:</label>
+                  <input type="text" id="resend-from-address-input" placeholder="Quantum Yoga &lt;studio@quantumyoga.xyz&gt;" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+                </div>
+                <p style="font-size:0.7rem; color:var(--text-muted); margin:0;">Use a domain-scoped send-only API key from your <a href="https://resend.com/api-keys" target="_blank" style="color:var(--accent-primary);">Resend dashboard</a>.</p>
+                <button type="button" id="resend-settings-save-btn" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Resend Settings</button>
+                <span id="resend-settings-msg" style="display:none; font-size:0.78rem; font-weight:600;"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        </div>
+
+        <!-- ==================== ADMIN EMAIL PANEL ==================== -->
+        <div class="admin-panel-content" id="admin-email-panel" style="display: none;">
+          <!-- Email Provider Status Card -->
+          <div id="admin-gmail-status-card" class="gmail-status-card">
+            <div class="gmail-status-icon">📧</div>
+            <div class="gmail-status-info">
+              <div id="admin-gmail-connected-label" style="display:none;">
+                <span class="gmail-connected-badge">✓ Gmail Connected</span>
+                <span id="admin-gmail-connected-email" style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.5rem;"></span>
+              </div>
+              <div id="admin-gmail-disconnected-label">
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary);">Gmail not connected</span>
+              </div>
+              <!-- Resend status badges (shown when Resend is active provider) -->
+              <div id="admin-resend-active-label" style="display:none;">
+                <span class="resend-active-badge">✓ Resend Active</span>
+                <span id="admin-resend-from-display" style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.5rem;"></span>
+              </div>
+              <div id="admin-resend-unconfigured-label" style="display:none;">
+                <span class="resend-unconfigured-badge">⚠ Resend: API key not configured — go to Settings</span>
+              </div>
+              <p id="admin-gmail-status-detail" style="font-size: 0.78rem; color: var(--text-muted); margin: 0.25rem 0 0;">Connect your Gmail account to send &amp; receive emails directly from this panel.</p>
+            </div>
+            <div class="gmail-status-actions">
+              <button class="btn btn-primary btn-sm" id="admin-gmail-connect-btn" style="font-size: 0.8rem;">Connect Gmail</button>
+              <button class="btn btn-secondary btn-sm" id="admin-gmail-disconnect-btn" style="display:none; font-size: 0.8rem; color: #ef4444; border-color: rgba(239,68,68,0.3);">Disconnect</button>
+              <button class="btn btn-secondary btn-sm" id="admin-gmail-refresh-btn" style="display:none; font-size: 0.8rem;">🔄 Refresh</button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <!-- Left: Compose + Sent -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <!-- Compose Email -->
+              <div class="admin-panel">
+                <h3>✏️ Compose Email</h3>
+                <form id="admin-compose-email-form" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                    <label for="admin-email-to" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">To:</label>
+                    <input type="email" id="admin-email-to" placeholder="recipient@email.com" required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                    <label for="admin-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
+                    <input type="text" id="admin-email-subject" placeholder="Email subject..." required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                    <label for="admin-email-template" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Template:</label>
+                    <select id="admin-email-template" style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                      <option value="custom">Custom Message</option>
+                      <option value="welcome">Welcome Email</option>
+                      <option value="invoice">Invoice Notification</option>
+                      <option value="reminder">Payment Reminder</option>
+                      <option value="appointment">Appointment Confirmation</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                    <label for="admin-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
+                    <textarea id="admin-email-body" rows="6" placeholder="Type your message here..." style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+                  </div>
+                  <div style="display:flex; gap:0.75rem; align-items:center;">
+                    <button type="submit" class="btn btn-primary" id="admin-send-email-btn" style="flex:1; font-size:0.85rem;">Send Email</button>
+                  </div>
+                  <div id="admin-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
+                </form>
+              </div>
+
+              <!-- Sent Emails -->
+              <div class="admin-panel">
+                <h3 style="display:flex; align-items:center; justify-content:space-between;">📤 Sent Items <span id="admin-sent-count" class="badge badge-category" style="font-size:0.7rem;">0</span></h3>
+                <div id="admin-sent-email-list" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; max-height:320px; overflow-y:auto;">
+                  <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:1.5rem 0;">No sent emails yet.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Inbox -->
+            <div class="admin-panel" style="display:flex; flex-direction:column;">
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">
+                📥 Inbox
+                <span id="admin-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
+              </h3>
+
+              <div id="admin-inbox-filter" style="display:flex; gap:0.5rem; margin-bottom:0.75rem; flex-wrap:wrap;">
+                <button class="email-filter-btn active" data-filter="all" id="admin-filter-all">All</button>
+                <button class="email-filter-btn" data-filter="unread" id="admin-filter-unread">Unread</button>
+                <button class="email-filter-btn" data-filter="inbox" id="admin-filter-inbox">Inbox</button>
+              </div>
+              <div id="admin-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; flex:1; overflow-y:auto; max-height:520px;">
+                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">Connect Gmail to see your inbox messages.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email Preview Modal (inline) -->
+          <div id="admin-email-preview-overlay" class="email-preview-overlay" style="display:none;">
+            <div class="email-preview-card">
+              <div class="email-preview-header">
+                <div>
+                  <div id="admin-preview-subject" style="font-size:1rem; font-weight:700; color:var(--text-primary);"></div>
+                  <div id="admin-preview-from" style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;"></div>
+                  <div id="admin-preview-date" style="font-size:0.75rem; color:var(--text-muted);"></div>
+                </div>
+                <button class="modal-close" id="admin-close-email-preview" aria-label="Close preview">&times;</button>
+              </div>
+              <div id="admin-preview-body" class="email-preview-body"></div>
+              
+              <!-- Payment Verification Review Widget -->
+              <div id="admin-preview-payment-widget" style="display:none; margin: 1rem 0; padding: 1rem; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.25); border-radius: var(--radius-sm); flex-direction: column; gap: 0.75rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:0.85rem; font-weight:700; color:var(--accent-primary);">💳 Detected Payment Verification Request</span>
+                  <span id="admin-preview-payment-status-badge" class="feed-item-badge"></span>
+                </div>
+                <div style="font-size:0.82rem; color:var(--text-secondary); display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem 1rem;">
+                  <div><strong>Student:</strong> <span id="admin-preview-payment-student"></span></div>
+                  <div><strong>Amount:</strong> <span id="admin-preview-payment-amount"></span></div>
+                  <div><strong>Invoice/Appt:</strong> <span id="admin-preview-payment-id"></span></div>
+                  <div><strong>Extracted UTR:</strong> <code id="admin-preview-payment-tx" style="color:#fb923c; font-weight:700;"></code></div>
+                </div>
+                <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
+                  <button class="btn btn-primary btn-sm" id="admin-preview-payment-approve-btn" style="padding:0.35rem 0.75rem; font-size:0.78rem; background:#10b981; border:none; color:white;">Approve Payment</button>
+                  <button class="btn btn-secondary btn-sm" id="admin-preview-payment-decline-btn" style="padding:0.35rem 0.75rem; font-size:0.78rem; background:#ef4444; border:none; color:white;">Decline / Reject</button>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
+                <button class="btn btn-primary btn-sm" id="admin-preview-reply-btn" style="font-size:0.8rem;">↩ Reply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ==================== END ADMIN EMAIL PANEL ==================== -->
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>&copy; 2026 Quantum Yoga Platform. Designed for supreme alignment of mind, body, and code.</p>
+    </div>
+  </footer>
+
+  <!-- Detail Modal for Pose Details -->
+  <div class="modal-overlay" id="pose-modal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="close-pose-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-body" id="pose-modal-body">
+        <!-- Dynamic modal content injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom HTML5 Overlay Video Player Modal -->
+  <div class="modal-overlay" id="video-modal" aria-hidden="true">
+    <div class="video-player-container">
+      <button class="video-modal-close" id="close-video-modal" aria-label="Close video player">&times;</button>
+      
+      <!-- Video Element -->
+      <video id="custom-video-element" preload="metadata" poster="">
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+
+      <!-- Custom Player Controls Panel -->
+      <div class="custom-video-controls">
+        
+        <!-- Progress bar container -->
+        <div class="timeline-container">
+          <div class="timeline-track" id="video-timeline">
+            <div class="timeline-buffered" id="video-buffered-bar"></div>
+            <div class="timeline-progress" id="video-progress-bar"></div>
+            <div class="timeline-handle" id="video-timeline-handle"></div>
+          </div>
+        </div>
+
+        <div class="controls-row">
+          <div class="controls-left">
+            <button class="control-btn" id="video-play-pause-btn" aria-label="Play">
+              <!-- Play Icon -->
+              <svg class="play-icon" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M8 5v14l11-7z"/>
+              </svg>
+              <!-- Pause Icon (hidden initially) -->
+              <svg class="pause-icon" viewBox="0 0 24 24" width="20" height="20" style="display: none;">
+                <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+            </button>
+            <div class="time-display">
+              <span id="video-current-time">0:00</span> / <span id="video-duration">0:00</span>
+            </div>
+          </div>
+
+          <div class="controls-right">
+            <button class="control-btn" id="video-mute-btn" aria-label="Mute">
+              <!-- Speaker Icon -->
+              <svg class="speaker-icon" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+              </svg>
+              <!-- Muted Icon (hidden initially) -->
+              <svg class="muted-icon" viewBox="0 0 24 24" width="20" height="20" style="display: none;">
+                <path fill="currentColor" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+              </svg>
+            </button>
+            <input type="range" id="video-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" aria-label="Volume">
+            
+            <button class="control-btn" id="video-fullscreen-btn" aria-label="Toggle Fullscreen">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal is removed and replaced by fullscreen gate -->
+
+  <!-- Detailed Receipt Modal Overlay -->
+  <div class="modal-overlay" id="receipt-modal" aria-hidden="true">
+    <div class="modal-card receipt-modal-card" style="max-width: 550px; width: 90%;">
+      <button class="modal-close" id="close-receipt-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-body" id="receipt-modal-body" style="padding: 2.5rem;">
+        <!-- Dynamic receipt details will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointment Booking & Rescheduling Modal -->
+  <div class="modal-overlay" id="appointment-modal" aria-hidden="true" style="display: none;">
+    <div class="modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 id="appointment-modal-title">Book Private Coaching Session</h3>
+        <button class="modal-close" id="close-appointment-modal" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="appointment-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <!-- Admin-only Student Select Dropdown -->
+        <div class="form-group" id="appointment-student-group" style="display: none; flex-direction: column; gap: 0.35rem;">
+          <label for="appointment-student-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Select Student</label>
+          <select id="appointment-student-select" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+            <!-- Dynamically populated with active student emails -->
+          </select>
+        </div>
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label for="appointment-routine-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Designated Yoga Routine</label>
+          <select id="appointment-routine-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+            <option value="">Select a Routine...</option>
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label for="appointment-date-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Date</label>
+          <input type="date" id="appointment-date-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
+        </div>
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label for="appointment-time-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Time Slot</label>
+          <select id="appointment-time-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+            <option value="">Choose a Time...</option>
+            <option value="08:00 AM">08:00 AM</option>
+            <option value="09:00 AM">09:00 AM</option>
+            <option value="10:00 AM">10:00 AM</option>
+            <option value="11:00 AM">11:00 AM</option>
+            <option value="12:00 PM">12:00 PM</option>
+            <option value="01:00 PM">01:00 PM</option>
+            <option value="02:00 PM">02:00 PM</option>
+            <option value="03:00 PM">03:00 PM</option>
+            <option value="04:00 PM">04:00 PM</option>
+            <option value="05:00 PM">05:00 PM</option>
+            <option value="06:00 PM">06:00 PM</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id="save-appointment-btn" style="margin-top: 0.5rem; width: 100%;">Schedule Appointment</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Profile Inspection Modal for Administrator -->
+  <div class="modal-overlay" id="admin-inspect-modal" aria-hidden="true">
+    <div class="modal-card modal-inspect-card" style="max-width: 900px; width: 95%;">
+      <button class="modal-close" id="close-inspect-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-body" style="padding: 2.5rem;">
+        
+        <!-- Inspected User Profile Content -->
+        <div class="profile-container" id="inspect-user-container">
+          <div class="profile-header-card" style="padding: 1.5rem; gap: 1.5rem;">
+            <div class="profile-avatar">🧘</div>
+            <div class="profile-info-details">
+              <h2 id="inspect-user-name">User Name</h2>
+              <p id="inspect-user-email">user@email.com</p>
+            </div>
+            <div class="profile-stats" style="gap: 1.5rem;">
+              <div class="stat-box">
+                <span class="stat-num" id="inspect-stat-completed">0</span>
+                <span class="stat-label">Completions</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="inspect-stat-favorites">0</span>
+                <span class="stat-label">Favorites</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-content-grid" style="gap: 1.5rem;">
+            <!-- Inspected Favorites List Panel -->
+            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
+              <h3>❤️ Favorited Poses</h3>
+              <div class="profile-favorites-grid" id="inspect-favorites-list">
+                <!-- Dynamically rendered favorites -->
+              </div>
+            </div>
+
+            <!-- Inspected History Panel -->
+            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
+              <h3>⏱️ Routine History</h3>
+              <div class="profile-history-list" id="inspect-history-list">
+                <!-- Dynamically rendered history -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Admin Membership Editor Panel -->
+          <div class="profile-panel" style="padding: 1.5rem; margin-top: 1.5rem; gap: 1rem;">
+            <h3>🛡️ Membership & Administrative Settings</h3>
+            <form id="admin-inspect-membership-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;">
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-membership-tier" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Membership Tier</label>
+                <select id="inspect-membership-tier" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  <option value="Basic">Basic Member</option>
+                  <option value="Premium">Premium Member</option>
+                  <option value="Unlimited VIP">Unlimited VIP</option>
+                </select>
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-membership-status" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Membership Status</label>
+                <select id="inspect-membership-status" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  <option value="Active">Active</option>
+                  <option value="Paused">Paused</option>
+                  <option value="Expired">Expired</option>
+                </select>
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-membership-expiry-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Expiration Date</label>
+                <input type="date" id="inspect-membership-expiry-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-user-batch" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Enrolled Cohort Batch</label>
+                <select id="inspect-user-batch" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  <option value="">No Batch Assigned</option>
+                  <!-- Dynamically populated -->
+                </select>
+              </div>
+              
+              <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-coaching-notes" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Coaching & Instructor Notes</label>
+                <textarea id="inspect-coaching-notes" placeholder="Add coaching tips, trainer referrals, or internal notes..." style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
+              </div>
+              
+              <div style="grid-column: 1 / -1; display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
+                <button type="submit" class="btn btn-primary" id="save-inspect-membership-btn">Save Membership Settings</button>
+                <div id="inspect-membership-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem;">
+                  �o" Settings saved successfully.
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Lead Inspection Modal for Administrator -->
+  <div class="modal-overlay" id="admin-inspect-lead-modal" aria-hidden="true">
+    <div class="modal-card modal-inspect-card" style="max-width: 800px; width: 95%;">
+      <button class="modal-close" id="close-inspect-lead-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-body" style="padding: 2.5rem;">
+        
+        <!-- Inspected Lead Content -->
+        <div class="profile-container">
+          <div class="profile-header-card" style="padding: 1.5rem; gap: 1.5rem;">
+            <div class="profile-avatar">🧘</div>
+            <div class="profile-info-details">
+              <h2 id="inspect-lead-name">Lead Name</h2>
+              <p id="inspect-lead-email">lead@email.com</p>
+              <p id="inspect-lead-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: 123-456-7890</p>
+              <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span class="badge badge-category" id="inspect-lead-status-badge">New</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Submitted: <span id="inspect-lead-date">2026-06-14</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <h3 style="font-size: 1rem; color: var(--text-secondary); font-weight: 600;">Original Inquiry Message</h3>
+            <div id="inspect-lead-message" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 1rem; margin-top: 0.5rem; color: var(--text-primary); font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">
+              Inquiry message goes here...
+            </div>
+          </div>
+
+          <div class="profile-content-grid" style="gap: 1.5rem; margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <!-- Follow-up log history timeline -->
+            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
+              <h3>⏱️ Follow-up Log History</h3>
+              <div id="inspect-lead-logs" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">
+                <!-- Dynamically rendered timeline nodes -->
+              </div>
+            </div>
+
+            <!-- Follow-up and status updates form -->
+            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
+              <h3>🛡️ Pipeline & Follow-up Actions</h3>
+              <form id="inspect-lead-action-form" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
+                <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <label for="inspect-lead-status" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Lead Status</label>
+                  <select id="inspect-lead-status" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                    <option value="New">New</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="Converted">Converted</option>
+                    <option value="Closed">Closed</option>
+                  </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <label for="inspect-lead-note-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Add Follow-up Note</label>
+                  <textarea id="inspect-lead-note-input" placeholder="Type a note from your conversation..." style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                  <button type="submit" class="btn btn-primary" id="save-lead-settings-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Save Follow-up</button>
+                  <button type="button" class="btn btn-secondary" id="convert-lead-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">Convert to Member</button>
+                </div>
+                
+                <div id="inspect-lead-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem; text-align: left; margin-top: 0.5rem;">
+                  �o" Log entry saved successfully.
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- UPI QR Code Payment Modal Overlay -->
+  <div class="modal-overlay" id="upi-payment-modal" aria-hidden="true">
+    <div class="modal-card" style="max-width: 450px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); text-align: center; position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="margin: 0; font-size: 1.25rem;">UPI Scan & Pay</h3>
+        <button class="modal-close" id="close-upi-payment-modal" aria-label="Close modal" style="position: static; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); cursor: pointer; color: var(--text-primary); font-size: 1.25rem;">&times;</button>
+      </div>
+      <div id="upi-payment-invoice-info" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); font-size: 0.9rem; text-align: left;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+          <strong style="color: var(--text-secondary);">Invoice ID:</strong>
+          <span id="upi-pay-invoice-id" style="font-family: monospace; font-weight: 600;">#INV-10029</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+          <strong style="color: var(--text-secondary);">Description:</strong>
+          <span id="upi-pay-invoice-desc">Monthly Gold Fee</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+          <strong style="color: var(--text-secondary);">Amount Due:</strong>
+          <span id="upi-pay-invoice-amount" style="font-weight: 700; color: var(--accent-primary);">₹0</span>
+        </div>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <div id="upi-qr-code-wrapper" style="background: white; padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); display: flex; align-items: center; justify-content: center; width: 176px; height: 176px; overflow: hidden;">
+          <img id="upi-qr-image" src="" alt="Scan QR Code to Pay" style="width: 160px; height: 160px;">
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; max-width: 320px;">
+          Scan this QR code using any UPI App (GPay, PhonePe, Paytm, BHIM) to transfer the fee to: <strong id="upi-pay-recipient-name" style="color: var(--text-primary);">Quantum Yoga Studio</strong> (<span id="upi-pay-recipient-vpa" style="font-family: monospace;">quantumyoga@upi</span>)
+        </p>
+      </div>
+
+      <form id="upi-payment-utr-form" style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label for="upi-payment-utr" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Transaction Ref / UTR No (12 Digits):</label>
+          <input type="text" id="upi-payment-utr" required pattern="\d{12}" minlength="12" maxlength="12" title="Please enter the exact 12-digit transaction reference or UTR number from your payment app receipt." placeholder="Enter 12-digit UPI UTR No" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; text-align: center; letter-spacing: 0.05em; font-weight: 600;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm Payment & Submit Reference</button>
+      </form>
+    </div>
+  </div>
+
+  </div> <!-- End #dashboard-app -->
+
+  <!-- Fullscreen Auth Gate -->
+  <div id="auth-gate-fullscreen" style="display: flex;">
+    <div class="auth-gate-card">
+      <div class="auth-gate-logo">
+        <span class="logo-icon">🧘</span>
+        <span class="logo-text">Quantum<span class="text-accent">Yoga</span></span>
+      </div>
+      <p class="auth-gate-tagline">Elevate Your Body & Mind. Please log in or register to access the dashboard.</p>
+      
+      <!-- Toggle Login/Register Forms Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="auth-login-tab-btn">Login</button>
+        <button class="auth-tab" id="auth-register-tab-btn">Register</button>
+        <button class="auth-tab" id="auth-inquire-tab-btn">Inquire</button>
+      </div>
+
+      <div class="auth-gate-body">
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form active-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" required placeholder="your.email@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required placeholder="Enter password" autocomplete="current-password">
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -0.25rem; margin-bottom: 0.5rem; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="login-remember" style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-dark-border); border-radius: var(--radius-sm); width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-primary);">
+              <label for="login-remember" style="cursor: pointer; margin-bottom: 0; font-size: 0.85rem; color: var(--text-secondary); user-select: none; font-weight: 500;">Remember Me</label>
+            </div>
+            <a href="#" id="forgot-password-link" style="font-size: 0.85rem; color: var(--accent-primary); text-decoration: none; font-weight: 500; transition: var(--transition-fast);">Forgot Password?</a>
+          </div>
+          <div class="form-error-msg" id="login-error-msg" style="display: none;"></div>
+          <button type="submit" class="btn btn-primary btn-block">Log In</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form">
+          <div class="form-group">
+            <label for="register-name">Full Name</label>
+            <input type="text" id="register-name" required placeholder="Your Name" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email Address</label>
+            <input type="email" id="register-email" required placeholder="your.email@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" required placeholder="Create password (minimum 6 characters)" autocomplete="new-password">
+          </div>
+          <div class="form-error-msg" id="register-error-msg" style="display: none;"></div>
+          <button type="submit" class="btn btn-rose btn-block">Register Account</button>
+        </form>
+
+        <!-- Inquiry Form -->
+        <div id="auth-inquire-form-wrapper" class="auth-form" style="display: none;">
+          <form id="inquire-form">
+            <div class="form-group">
+              <label for="inquire-name">Full Name</label>
+              <input type="text" id="inquire-name" required placeholder="Your Name" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="inquire-email">Email Address</label>
+              <input type="email" id="inquire-email" required placeholder="your.email@example.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="inquire-phone">Phone Number</label>
+              <input type="tel" id="inquire-phone" required pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number (e.g., +91 98765 43210 or 09876543210)" placeholder="+91 98765 43210" autocomplete="tel">
+            </div>
+            <div class="form-group">
+              <label for="inquire-message">Message / Interest</label>
+              <textarea id="inquire-message" required placeholder="What are you hoping to find at Quantum Yoga?" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
+            </div>
+            <div id="inquire-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem; margin-bottom: 1rem; text-align: center;">
+              �o" Inquiry submitted successfully. We will contact you soon!
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="submit-inquiry-btn">Submit Inquiry</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Force Change Password Screen -->
+  <div id="force-change-password-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 9999; align-items: center; justify-content: center; overflow-y: auto; padding: 2rem;">
+    <div class="auth-gate-card" style="max-width: 450px; width: 90%;">
+      <div class="auth-gate-logo">
+        <span class="logo-icon">🧘</span>
+        <span class="logo-text">Security<span class="text-accent">Update</span></span>
+      </div>
+      <p class="auth-gate-tagline" style="margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary);">For security purposes, you must change your temporary password to a custom password before accessing the dashboard.</p>
+      
+      <form id="force-change-password-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
+          <label for="force-new-password" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">New Password</label>
+          <input type="password" id="force-new-password" required placeholder="Minimum 6 characters" autocomplete="new-password" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+        </div>
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
+          <label for="force-confirm-password" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Confirm New Password</label>
+          <input type="password" id="force-confirm-password" required placeholder="Re-enter password" autocomplete="new-password" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+        </div>
+        <div class="form-error-msg" id="force-change-password-error-msg" style="display: none; color: #ef4444; font-weight: 600; font-size: 0.85rem; text-align: left;"></div>
+        <button type="submit" class="btn btn-rose btn-block" style="padding: 0.75rem; width: 100%;">Update Password & Continue</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal Overlay -->
+  <div class="modal-overlay" id="forgot-password-modal" aria-hidden="true" style="z-index: 10000;">
+    <div class="modal-card" style="max-width: 450px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="margin: 0; font-size: 1.25rem;">Reset Password</h3>
+        <button class="modal-close" id="close-forgot-password-modal" aria-label="Close modal" style="position: static; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); cursor: pointer; color: var(--text-primary); font-size: 1.25rem;">&times;</button>
+      </div>
+      
+      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
+        Enter your registered email address below. We will generate a new secure temporary password for your account.
+      </p>
+
+      <form id="forgot-password-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
+          <label for="forgot-email" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Email Address</label>
+          <input type="email" id="forgot-email" required placeholder="your.email@example.com" autocomplete="email" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+        </div>
+        
+        <div class="form-error-msg" id="forgot-password-error-msg" style="display: none; color: #ef4444; font-weight: 600; font-size: 0.85rem; text-align: left;"></div>
+        
+        <div id="forgot-password-success-msg" style="display: none; background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; text-align: left; line-height: 1.4;">
+          <!-- Success message and temp password will be dynamically injected here -->
+        </div>
+
+        <button type="submit" class="btn btn-rose btn-block" style="padding: 0.75rem; width: 100%;">Generate Temporary Password</button>
+      </form>
+      
+      <div style="margin-top: 1.25rem; font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; border-top: 1px solid var(--border-glass); padding-top: 0.75rem; text-align: center;">
+        <span style="font-weight: 600; color: var(--text-secondary);">Notice:</span> This is a simulated local test reset flow.
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Declarations -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "quantum-yoga-website",
+  "version": "1.0.0",
+  "description": "A premium static dashboard website for Quantum Yoga",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node server.js",
+    "test": "npx jest",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "jest": "^30.4.2",
+    "rollup-plugin-copy": "^3.5.0",
+    "supertest": "^7.2.2",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
+    "express": "^5.2.1",
+    "pg": "^8.21.0",
+    "ws": "^8.21.0"
+  }
+}

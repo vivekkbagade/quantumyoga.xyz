@@ -1,0 +1,221 @@
+{
+    "users": [
+        {
+            "name": "Member",
+            "email": "member@quantumyoga.com",
+            "password": "memberpass",
+            "favorites": [],
+            "routineHistory": [],
+            "theme": "",
+            "batchId": "batch-vinyasa-mornings",
+            "membership": {
+                "tier": "Basic",
+                "status": "Active",
+                "expiryDate": "2026-07-15",
+                "notes": ""
+            },
+            "goals": "",
+            "healthNotes": ""
+        },
+        {
+            "name": "Administrator",
+            "email": "admin@quantumyoga.com",
+            "password": "adminpass",
+            "favorites": [],
+            "routineHistory": []
+        },
+        {
+            "name": "Persistence Test User",
+            "email": "persistent@yoga.com",
+            "password": "password123",
+            "favorites": [],
+            "routineHistory": [],
+            "theme": "",
+            "membership": {
+                "tier": "Basic",
+                "status": "Active",
+                "expiryDate": "2026-07-15",
+                "notes": ""
+            },
+            "goals": "",
+            "healthNotes": ""
+        },
+        {
+            "name": "Conversion Test Lead",
+            "email": "convertme@yoga.com",
+            "password": "hzz7HIUE",
+            "favorites": [],
+            "routineHistory": [],
+            "theme": "",
+            "membership": {
+                "tier": "Basic",
+                "status": "Active",
+                "expiryDate": "2026-07-15",
+                "notes": "Converted from lead registration."
+            },
+            "goals": "",
+            "healthNotes": ""
+        }
+    ],
+    "leads": [
+        {
+            "id": "lead-1",
+            "name": "Michael Chang",
+            "email": "michael@inquiry.com",
+            "phone": "555-0199",
+            "message": "Would love to know more about the Unlimited VIP package benefits.",
+            "date": "2026-06-12",
+            "status": "New",
+            "logs": [
+                {
+                    "timestamp": "2026-06-12, 10:30:00 AM",
+                    "note": "Lead created via landing page inquiry form."
+                }
+            ]
+        },
+        {
+            "id": "lead-2",
+            "name": "Jessica Taylor",
+            "email": "jessica@inquiry.com",
+            "phone": "555-0144",
+            "message": "Do you offer prenatal vinyasa classes? Looking for beginners difficulty.",
+            "date": "2026-06-13",
+            "status": "Contacted",
+            "logs": [
+                {
+                    "timestamp": "2026-06-14, 09:15:00 AM",
+                    "note": "Called to discuss Vinyasa options. She is interested in beginner level programs."
+                },
+                {
+                    "timestamp": "2026-06-13, 02:00:00 AM",
+                    "note": "Lead created via landing page inquiry form."
+                }
+            ]
+        },
+        {
+            "id": "lead-1781504349193",
+            "name": "Browser Test Invalid",
+            "email": "invalidphone@test.com",
+            "phone": "+91 98765 43210",
+            "message": "Testing invalid phone formats.",
+            "date": "2026-06-15",
+            "status": "New",
+            "logs": [
+                {
+                    "timestamp": "6/15/2026, 11:49:09 AM",
+                    "note": "Lead created via landing page inquiry form."
+                }
+            ]
+        },
+        {
+            "id": "lead-1781504773422",
+            "name": "Format Fix Test",
+            "email": "format@test.com",
+            "phone": "+91 98765 43210",
+            "message": "Confirming pattern fix works.",
+            "date": "2026-06-15",
+            "status": "New",
+            "logs": [
+                {
+                    "timestamp": "6/15/2026, 11:56:13 AM",
+                    "note": "Lead created via landing page inquiry form."
+                }
+            ]
+        },
+        {
+            "id": "lead-1781505163337",
+            "name": "Format Fix Test",
+            "email": "format@test.com",
+            "phone": "+91 98765 43210",
+            "message": "Confirming pattern fix works.",
+            "date": "2026-06-15",
+            "status": "New",
+            "logs": [
+                {
+                    "timestamp": "6/15/2026, 12:02:43 PM",
+                    "note": "Lead created via landing page inquiry form."
+                }
+            ]
+        },
+        {
+            "id": "lead-1781513963959",
+            "name": "Conversion Test Lead",
+            "email": "convertme@yoga.com",
+            "phone": "+91 98765 43210",
+            "message": "Interested in prenatal yoga.",
+            "date": "2026-06-15",
+            "status": "Converted",
+            "logs": [
+                {
+                    "timestamp": "6/15/2026, 2:32:23 PM",
+                    "note": "Lead converted to registered user account successfully. Temporary Password: hzz7HIUE"
+                },
+                {
+                    "timestamp": "6/15/2026, 2:29:23 PM",
+                    "note": "Lead created via landing page inquiry form."
+                }
+            ]
+        }
+    ],
+    "upi_settings": null,
+    "batches": [
+        {
+            "id": "batch-vinyasa-mornings",
+            "name": "Morning Vinyasa Flow",
+            "instructor": "David Vance",
+            "capacity": 15,
+            "timetable": [
+                {
+                    "day": "Monday",
+                    "time": "08:00 AM"
+                },
+                {
+                    "day": "Wednesday",
+                    "time": "08:00 AM"
+                },
+                {
+                    "day": "Friday",
+                    "time": "08:00 AM"
+                }
+            ]
+        }
+    ],
+    "payments": [
+        {
+            "id": "INV-10029",
+            "userEmail": "member@quantumyoga.com",
+            "description": "Gold Monthly subscription fee",
+            "amount": "2499",
+            "dueDate": "2026-06-30",
+            "status": "pending"
+        },
+        {
+            "id": "INV-10010",
+            "userEmail": "member@quantumyoga.com",
+            "description": "Private coaching class fee",
+            "amount": "1500",
+            "dueDate": "2026-06-10",
+            "status": "paid",
+            "paymentDate": "2026-06-08"
+        },
+        {
+            "id": "INV-10005",
+            "userEmail": "member@quantumyoga.com",
+            "description": "Overdue Vinyasa workshop fee",
+            "amount": "1999",
+            "dueDate": "2026-05-15",
+            "status": "overdue"
+        }
+    ],
+    "appointments": [
+        {
+            "id": "appt-90112",
+            "studentEmail": "member@quantumyoga.com",
+            "selectedRoutine": "Vinyasa flow routine",
+            "date": "2026-06-20",
+            "time": "10:00 AM",
+            "status": "scheduled"
+        }
+    ],
+    "site_default_theme": "midnight"
+}
