@@ -1,28 +1,34 @@
 ## Context
 
-Currently, Quantum Yoga lacks automated transaction matching, requiring manual verification of UTR numbers. The introduction of an automated verification flow speeds up confirmations by checking student inputs against a verified bank transaction ledger updated regularly (hourly/daily) or imported manually.
+Currently, Quantum Yoga lacks automated transaction matching, requiring manual verification of UTR numbers. The introduction of an automated verification flow speeds up confirmations by checking student inputs against a verified bank transaction ledger imported manually by administrators from Excel or CSV files.
 
 ## Goals / Non-Goals
 
 **Goals:**
-*   Implement an automated matching process comparing submitted UTRs and invoice amounts against an inbound transactions list (`upi_ledger` in database state).
+*   Implement an automated matching process comparing student-submitted UTRs and invoice amounts against a local bank transaction ledger (`upi_ledger` in database state).
 *   Transition payment status to `"paid"` instantly if a match is successfully identified.
-*   Support periodic syncs (hourly/daily updates) of bank transactions into `upi_ledger`.
-*   Provide an administrative UI to upload bank statements (CSV/Excel formats) containing UTR and amount columns.
+*   Provide an administrative UI to upload bank statements (.xlsx, .xls, .csv formats) containing transaction details (UTR, amount, date, etc.).
 *   Retain administrative manual approval as a fallback if automatic matching fails.
 
 **Non-Goals:**
-*   Live, synchronous P2P API calls to UPI merchant servers for each payment (relying instead on batch/ledger inputs).
+*   Integrating with live third-party bank APIs or external API-based synchronizations.
 *   Automated refund handling or payment reversals.
 
 ## Decisions
 
 ### 1. Database Schema Extension
-*   **Approach:** Keep a `upi_ledger` array in the global state to serve as the local cache of imported bank-received UPI payments.
+*   **Approach:** Maintain a `upi_ledger` array in the global state (`db.json` / Supabase state) to serve as the local cache of verified UPI payments.
 *   **Structure:**
     ```json
     "upi_ledger": [
-      { "utr": "123456789012", "amount": "1500", "senderName": "Sarah Jenkins", "date": "2026-06-21", "importedAt": "2026-06-21T18:00:00Z" }
+      { 
+        "utr": "123456789012", 
+        "amount": "1500", 
+        "date": "2026-06-21", 
+        "senderName": "Sarah Jenkins", 
+        "details": "UPI/987654321/Vinyasa Coaching",
+        "importedAt": "2026-06-21T18:00:00Z" 
+      }
     ]
     ```
 
@@ -35,15 +41,14 @@ Currently, Quantum Yoga lacks automated transaction matching, requiring manual v
     *   If the UTR matches but the amount is different, update payment status to `"discrepancy"`.
     *   If no UTR match is found, update payment status to `"review"`. Return `{ success: false, status: 'review' }`.
 
-### 3. Ledger Synchronization & Upload API
-*   **Approach:** Add `POST /api/admin/upload-ledger` to process CSV/Excel file uploads.
-*   **Parsing Utility:** Write a parser function in `server.js` that maps bank-specific CSV rows (e.g., matching "UTR", "Ref No", or "Transaction ID" columns and "Amount" columns) into standard ledger JSON objects and merges them into `upi_ledger` without duplicates.
-*   **Cron Synchronization:** Implement a background synchronization task in `server.js` (running hourly or daily) that queries Setu's Bank Statement / Transaction List API using configured credentials (`SETU_CLIENT_ID`, `SETU_CLIENT_SECRET`, and `SETU_PRODUCT_KEY` or sandbox secrets). It will fetch the latest transaction ledger records, map them to our internal model format, and merge new entries into the local database `upi_ledger` array.
+### 3. Excel/CSV Ledger Upload API
+*   **Approach:** Add a `POST /api/admin/upload-ledger` endpoint to process Excel/CSV bank statement files.
+*   **Parsing Utility:** Use a library or standard text parser in `server.js` to parse CSV or Excel data. It must read column headers to locate the UTR (typically under columns named "UTR", "Ref No", "Transaction ID", "Reference Number") and Transaction Amount.
+*   **Deduplication:** When merging new transactions, query existing `upi_ledger` records by UTR to prevent duplicating imported transaction references.
 
 ## Risks / Trade-offs
 
-*   **Risk:** Sync latency (payments made between updates won't auto-verify immediately).
-    *   *Mitigation:* Clearly notify the student during UTR submission that auto-verification runs on an hourly/daily sync cycle and payments may take time to reflect, while leaving manual admin override active.
+*   **Risk:** Sync latency (students paying after the latest upload will not auto-verify until the next upload).
+    *   *Mitigation:* Clearly notify the student during UTR submission that auto-verification runs against imported statements and may take time to verify, leaving the manual admin override active.
 *   **Risk:** Spoofing or fake UTR guessing attacks.
     *   *Mitigation:* Once a UTR in the ledger is successfully matched and linked to an invoice, mark it as "linked" or remove it from the pool of unlinked ledger entries to prevent double-claiming.
-
