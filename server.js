@@ -409,7 +409,7 @@ app.post('/api/admin/upload-ledger', async (req, res) => {
     const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
     
     // Find column indices
-    const utrIdx = headers.findIndex(h => /utr|ref|transaction\s*id|reference/i.test(h));
+    const utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
     const amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
     const dateIdx = headers.findIndex(h => /date/i.test(h));
     const senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
