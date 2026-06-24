@@ -42,6 +42,10 @@ jobs:
           cp package.json deploy-dist/
           cp package-lock.json deploy-dist/
           cp ecosystem.config.cjs deploy-dist/
+          cp app.js deploy-dist/
+          cp data.js deploy-dist/
+          cp index.css deploy-dist/
+          cp index.html deploy-dist/
 
       - name: Upload Deployment Artifacts
         uses: actions/upload-artifact@v4
