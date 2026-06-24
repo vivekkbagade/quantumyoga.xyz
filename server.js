@@ -58,6 +58,12 @@ const DEFAULT_STUDIO_CONTACT_SETTINGS = {
   email: "support@quantumyoga.xyz"
 };
 
+const DEFAULT_REFERRAL_TIERS = [
+  { minReferrals: 1, discount: 10 },
+  { minReferrals: 2, discount: 15 },
+  { minReferrals: 3, discount: 20 }
+];
+
 // Unified state helper functions
 async function getDbState() {
   let state = null;
@@ -79,6 +85,9 @@ async function getDbState() {
     }
     if (!state.studioContactSettings) {
       state.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
+    }
+    if (!state.referralTiers) {
+      state.referralTiers = DEFAULT_REFERRAL_TIERS;
     }
     if (!state.upi_ledger) {
       state.upi_ledger = [];
@@ -140,6 +149,9 @@ app.all('/api/db', async (req, res) => {
         }
         if (!localState.studioContactSettings) {
           localState.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
+        }
+        if (!localState.referralTiers) {
+          localState.referralTiers = DEFAULT_REFERRAL_TIERS;
         }
         return res.json(localState);
       }

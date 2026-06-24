@@ -216,6 +216,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const registerEmailInput = document.getElementById("register-email");
   const registerPhoneInput = document.getElementById("register-phone");
   const registerPasswordInput = document.getElementById("register-password");
+  const registerReferralInput = document.getElementById("register-referral");
   const loginErrorMsg = document.getElementById("login-error-msg");
   const registerErrorMsg = document.getElementById("register-error-msg");
   
@@ -226,12 +227,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const inquireEmailInput = document.getElementById("inquire-email");
   const inquirePhoneInput = document.getElementById("inquire-phone");
   const inquireMessageInput = document.getElementById("inquire-message");
+  const inquireReferralInput = document.getElementById("inquire-referral");
   const inquireSuccessMsg = document.getElementById("inquire-success-msg");
   
   // Profile DOM Elements
   const profileUserName = document.getElementById("profile-user-name");
   const profileUserEmail = document.getElementById("profile-user-email");
   const profileUserPhone = document.getElementById("profile-user-phone");
+  const profileReferralCode = document.getElementById("profile-referral-code");
+  const profileReferralCount = document.getElementById("profile-referral-count");
+  const profileReferralDiscount = document.getElementById("profile-referral-discount");
   const profileStatCompleted = document.getElementById("profile-stat-completed");
   const profileStatFavorites = document.getElementById("profile-stat-favorites");
   const profileFavoritesList = document.getElementById("profile-favorites-list");
@@ -384,6 +389,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminContactPhoneInput = document.getElementById("admin-contact-phone");
   const adminContactEmailInput = document.getElementById("admin-contact-email");
   const adminContactSuccessMsg = document.getElementById("admin-contact-settings-success-msg");
+
+  // Admin Referral Tiers Settings DOM Elements
+  const adminReferralTiersForm = document.getElementById("admin-referral-tiers-form");
+  const adminReferralTiersList = document.getElementById("admin-referral-tiers-list");
+  const adminAddReferralTierBtn = document.getElementById("admin-add-referral-tier-btn");
+  const adminReferralSettingsSuccessMsg = document.getElementById("admin-referral-settings-success-msg");
 
   // Client UPI Payment Modal DOM Elements
   const upiPaymentModal = document.getElementById("upi-payment-modal");
@@ -1535,6 +1546,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (db.studioContactSettings) {
             localStorage.setItem("qy_studio_contact_settings", JSON.stringify(db.studioContactSettings));
           }
+          if (db.referralTiers) {
+            localStorage.setItem("qy_referral_tiers", JSON.stringify(db.referralTiers));
+          }
           updatePublicContactInfo();
           if (db.appointment_fee !== undefined) {
             localStorage.setItem(STORAGE_KEY_APPOINTMENT_FEE, String(db.appointment_fee));
@@ -1632,7 +1646,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         whatsappSettings: whatsappSettingsParsed,
         reconciliationSettings: JSON.parse(localStorage.getItem("qy_reconciliation_settings") || JSON.stringify({ tolerance: 0.05, maxAgeDays: 30, columnMapping: { utr: "", amount: "", date: "", sender: "" } })),
         upi_reconciliation_logs: JSON.parse(localStorage.getItem("qy_reconciliation_logs") || "[]"),
-        studioContactSettings: JSON.parse(localStorage.getItem("qy_studio_contact_settings") || "null")
+        studioContactSettings: JSON.parse(localStorage.getItem("qy_studio_contact_settings") || "null"),
+        referralTiers: JSON.parse(localStorage.getItem("qy_referral_tiers") || "[]")
       };
       await fetch('/api/db', {
         method: 'POST',
@@ -2711,6 +2726,41 @@ Please verify and update my status. Thank you!`);
     }
   }
 
+  // Referral discount calculations
+  const DEFAULT_REFERRAL_TIERS = [
+    { minReferrals: 1, discount: 10 },
+    { minReferrals: 2, discount: 15 },
+    { minReferrals: 3, discount: 20 }
+  ];
+
+  function loadReferralTiers() {
+    const stored = localStorage.getItem("qy_referral_tiers");
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error("Error parsing referral tiers from local storage:", e);
+      }
+    }
+    return DEFAULT_REFERRAL_TIERS;
+  }
+
+  function saveReferralTiers(tiers) {
+    localStorage.setItem("qy_referral_tiers", JSON.stringify(tiers));
+    saveToServer();
+  }
+
+  function getReferralDiscountPercent(referralsCount) {
+    const tiers = loadReferralTiers();
+    let discount = 0;
+    tiers.forEach(tier => {
+      if (referralsCount >= tier.minReferrals && tier.discount > discount) {
+        discount = tier.discount;
+      }
+    });
+    return discount;
+  }
+
   // Appointment fee helpers
   function loadAppointmentFee() {
     const stored = localStorage.getItem(STORAGE_KEY_APPOINTMENT_FEE);
@@ -2733,6 +2783,23 @@ Please verify and update my status. Thank you!`);
   function saveLeads(leads) {
     localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(leads));
     saveToServer();
+  }
+
+  function generateUniqueReferralCode(usersList) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const list = usersList || [];
+    let code = "";
+    let isUnique = false;
+    let attempts = 0;
+    while (!isUnique && attempts < 1000) {
+      code = "";
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      isUnique = !list.some(u => u.referralCode === code);
+      attempts++;
+    }
+    return code;
   }
 
   // Load registered users from storage
@@ -2780,6 +2847,12 @@ Please verify and update my status. Thank you!`);
           u.healthNotes = "";
           modified = true;
         }
+      }
+      if (!u.referralCode) {
+        u.referralCode = generateUniqueReferralCode(users);
+        u.referralsCount = u.referralsCount || 0;
+        u.referredBy = u.referredBy || null;
+        modified = true;
       }
       return u;
     });
@@ -2902,6 +2975,16 @@ Please verify and update my status. Thank you!`);
     profileUserEmail.textContent = state.currentUser.email;
     if (profileUserPhone) {
       profileUserPhone.textContent = state.currentUser.phone ? `Phone: ${state.currentUser.phone}` : "Phone: -";
+    }
+    if (profileReferralCode) {
+      profileReferralCode.textContent = state.currentUser.referralCode || "-";
+    }
+    if (profileReferralCount) {
+      profileReferralCount.textContent = state.currentUser.referralsCount || 0;
+    }
+    if (profileReferralDiscount) {
+      const discount = getReferralDiscountPercent(state.currentUser.referralsCount || 0);
+      profileReferralDiscount.textContent = `${discount}%`;
     }
     if (profilePhoneInput) {
       profilePhoneInput.value = state.currentUser.phone || "";
@@ -3151,25 +3234,35 @@ Please verify and update my status. Thank you!`);
     const name = registerNameInput.value.trim();
     const email = registerEmailInput.value.trim().toLowerCase();
     const phone = registerPhoneInput.value.trim();
-    const password = registerPasswordInput.value;
-    
-    if (password.length < 6) {
-      registerErrorMsg.textContent = "Password must be at least 6 characters.";
-      registerErrorMsg.style.display = "block";
-      return;
-    }
-    
-    const users = loadUsers();
+    const password = registerPasswordInput.value;    const users = loadUsers();
     if (users.some(u => u.email === email)) {
       registerErrorMsg.textContent = "Email is already registered.";
       registerErrorMsg.style.display = "block";
       return;
+    }
+
+    const referralCodeVal = registerReferralInput ? registerReferralInput.value.trim().toUpperCase() : "";
+    let referrer = null;
+    if (referralCodeVal) {
+      referrer = users.find(u => u.referralCode === referralCodeVal);
+      if (!referrer) {
+        registerErrorMsg.textContent = "Invalid referral code.";
+        registerErrorMsg.style.display = "block";
+        return;
+      }
+      if (referrer.email === email) {
+        registerErrorMsg.textContent = "You cannot refer yourself.";
+        registerErrorMsg.style.display = "block";
+        return;
+      }
     }
     
     const today = new Date();
     const expiry = new Date();
     expiry.setDate(today.getDate() + 30);
     const expiryStr = expiry.toISOString().split('T')[0];
+
+    const uniqueReferralCode = generateUniqueReferralCode(users);
 
     const newUser = {
       name,
@@ -3186,10 +3279,21 @@ Please verify and update my status. Thank you!`);
         notes: ""
       },
       goals: "",
-      healthNotes: ""
+      healthNotes: "",
+      referralCode: uniqueReferralCode,
+      referredBy: referrer ? referrer.email : null,
+      referralsCount: 0
     };
     
     users.push(newUser);
+
+    if (referrer) {
+      const refIdx = users.findIndex(u => u.email === referrer.email);
+      if (refIdx > -1) {
+        users[refIdx].referralsCount = (users[refIdx].referralsCount || 0) + 1;
+      }
+    }
+
     saveUsers(users);
     
     // Send transactional welcome email and WhatsApp notification
@@ -3396,6 +3500,16 @@ Please verify and update my status. Thank you!`);
         return;
       }
       
+      const referralCodeVal = inquireReferralInput ? inquireReferralInput.value.trim().toUpperCase() : "";
+      if (referralCodeVal) {
+        const usersList = loadUsers();
+        const refObj = usersList.find(u => u.referralCode === referralCodeVal);
+        if (!refObj) {
+          alert("Invalid referral code.");
+          return;
+        }
+      }
+
       const leads = loadLeads();
       const newLead = {
         id: "lead-" + Date.now(),
@@ -3405,10 +3519,11 @@ Please verify and update my status. Thank you!`);
         message: message,
         date: new Date().toISOString().split("T")[0],
         status: "New",
+        referralCode: referralCodeVal || null,
         logs: [
           {
             timestamp: new Date().toLocaleString(),
-            note: "Lead created via landing page inquiry form."
+            note: referralCodeVal ? `Lead created via landing page inquiry form with referral code: ${referralCodeVal}.` : "Lead created via landing page inquiry form."
           }
         ]
       };
@@ -5112,11 +5227,24 @@ Please verify and update my status. Thank you!`);
       const randNum = Math.floor(Math.random() * 900) + 100;
       const nextId = `INV-${10000 + payments.length + randNum}`;
       
+      let finalAmount = Number(amount);
+      let referralMsg = "";
+      const users = loadUsers();
+      const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (user && user.referralsCount && user.referralsCount > 0) {
+        const discountPercent = getReferralDiscountPercent(user.referralsCount);
+        if (discountPercent > 0) {
+          finalAmount = Math.max(0, finalAmount * (1 - discountPercent / 100));
+          referralMsg = ` (Applied ${discountPercent}% referral discount)`;
+        }
+      }
+      const finalAmountStr = String(finalAmount);
+
       const newInvoice = {
         id: nextId,
         userEmail: email,
-        description: desc,
-        amount: amount,
+        description: desc + referralMsg,
+        amount: finalAmountStr,
         dueDate: due,
         status: "pending"
       };
@@ -5126,16 +5254,16 @@ Please verify and update my status. Thank you!`);
       
       sendTransactionalEmail("invoice", {
         invoiceId: nextId,
-        description: desc,
-        amount: amount,
+        description: desc + referralMsg,
+        amount: finalAmountStr,
         dueDate: due
       }, email);
       
       // WhatsApp notification
       sendWhatsAppNotification("invoice", {
         invoiceId: nextId,
-        description: desc,
-        amount: amount,
+        description: desc + referralMsg,
+        amount: finalAmountStr,
         dueDate: due
       }, email);
       
@@ -5236,6 +5364,7 @@ Please verify and update my status. Thank you!`);
       if (adminContactEmailInput) {
         adminContactEmailInput.value = currentContactSettings.email;
       }
+      renderAdminReferralTiersSettings();
       // Load appointment fee into input
       const apptFeeInput = document.getElementById("admin-appointment-fee-input");
       if (apptFeeInput) {
@@ -6927,6 +7056,20 @@ Please verify and update my status. Thank you!`);
         expiry.setDate(today.getDate() + 30);
         const expiryStr = expiry.toISOString().split('T')[0];
         
+        let referredBy = lead.referralCode || null;
+        let referrer = null;
+        if (referredBy) {
+          referrer = users.find(u => u.referralCode === referredBy);
+          if (referrer && referrer.email !== lead.email) {
+            const referrerIdx = users.findIndex(u => u.email === referrer.email);
+            if (referrerIdx > -1) {
+              users[referrerIdx].referralsCount = (users[referrerIdx].referralsCount || 0) + 1;
+            }
+          } else {
+            referredBy = null;
+          }
+        }
+
         const generatedPassword = generateRandomPassword(8);
         const convertedUser = {
           name: lead.name,
@@ -6944,7 +7087,10 @@ Please verify and update my status. Thank you!`);
             notes: "Converted from lead registration."
           },
           goals: "",
-          healthNotes: ""
+          healthNotes: "",
+          referralCode: generateUniqueReferralCode(users),
+          referredBy: referredBy,
+          referralsCount: 0
         };
         
         users.push(convertedUser);
@@ -8050,6 +8196,92 @@ Please verify and update my status. Thank you!`);
     });
   }
 
+  // Admin Referral Tiers UI rendering & interactions
+  function renderAdminReferralTiersSettings() {
+    if (!adminReferralTiersList) return;
+    adminReferralTiersList.innerHTML = "";
+    const tiers = loadReferralTiers();
+    tiers.sort((a, b) => a.minReferrals - b.minReferrals);
+    
+    tiers.forEach(tier => {
+      const row = document.createElement("div");
+      row.className = "referral-tier-row";
+      row.style = "display: flex; gap: 0.5rem; align-items: center;";
+      row.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 0.1rem; flex: 1;">
+          <label style="font-size: 0.7rem; color: var(--text-secondary);">Min Referrals:</label>
+          <input type="number" min="1" value="${tier.minReferrals}" class="tier-min-referrals" required style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.3rem 0.5rem; color: var(--text-primary); font-size: 0.8rem; outline: none; width: 100%;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.1rem; flex: 1;">
+          <label style="font-size: 0.7rem; color: var(--text-secondary);">Discount %:</label>
+          <input type="number" min="0" max="100" value="${tier.discount}" class="tier-discount" required style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.3rem 0.5rem; color: var(--text-primary); font-size: 0.8rem; outline: none; width: 100%;">
+        </div>
+        <button type="button" class="btn-remove-tier" style="margin-top: 1rem; background: transparent; border: none; color: #ef4444; font-size: 1.1rem; cursor: pointer;" title="Remove Tier">&times;</button>
+      `;
+      row.querySelector(".btn-remove-tier").addEventListener("click", () => {
+        row.remove();
+      });
+      adminReferralTiersList.appendChild(row);
+    });
+  }
+
+  if (adminAddReferralTierBtn) {
+    adminAddReferralTierBtn.addEventListener("click", () => {
+      if (!adminReferralTiersList) return;
+      const row = document.createElement("div");
+      row.className = "referral-tier-row";
+      row.style = "display: flex; gap: 0.5rem; align-items: center;";
+      row.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 0.1rem; flex: 1;">
+          <label style="font-size: 0.7rem; color: var(--text-secondary);">Min Referrals:</label>
+          <input type="number" min="1" value="1" class="tier-min-referrals" required style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.3rem 0.5rem; color: var(--text-primary); font-size: 0.8rem; outline: none; width: 100%;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.1rem; flex: 1;">
+          <label style="font-size: 0.7rem; color: var(--text-secondary);">Discount %:</label>
+          <input type="number" min="0" max="100" value="5" class="tier-discount" required style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.3rem 0.5rem; color: var(--text-primary); font-size: 0.8rem; outline: none; width: 100%;">
+        </div>
+        <button type="button" class="btn-remove-tier" style="margin-top: 1rem; background: transparent; border: none; color: #ef4444; font-size: 1.1rem; cursor: pointer;" title="Remove Tier">&times;</button>
+      `;
+      row.querySelector(".btn-remove-tier").addEventListener("click", () => {
+        row.remove();
+      });
+      adminReferralTiersList.appendChild(row);
+    });
+  }
+
+  if (adminReferralTiersForm) {
+    adminReferralTiersForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!adminReferralTiersList) return;
+      const rows = adminReferralTiersList.querySelectorAll(".referral-tier-row");
+      const tiers = [];
+      let hasError = false;
+      rows.forEach(row => {
+        const minVal = parseInt(row.querySelector(".tier-min-referrals").value);
+        const discVal = parseInt(row.querySelector(".tier-discount").value);
+        if (isNaN(minVal) || minVal < 1 || isNaN(discVal) || discVal < 0 || discVal > 100) {
+          hasError = true;
+          return;
+        }
+        tiers.push({ minReferrals: minVal, discount: discVal });
+      });
+
+      if (hasError) {
+        alert("Please ensure all fields are valid. Min referrals must be >= 1, and Discount must be between 0 and 100.");
+        return;
+      }
+
+      saveReferralTiers(tiers);
+
+      if (adminReferralSettingsSuccessMsg) {
+        adminReferralSettingsSuccessMsg.style.display = "block";
+        setTimeout(() => {
+          adminReferralSettingsSuccessMsg.style.display = "none";
+        }, 3000);
+      }
+    });
+  }
+
   // Appointment fee save button listener
   const adminSaveApptFeeBtn = document.getElementById("admin-save-appointment-fee-btn");
   if (adminSaveApptFeeBtn) {
@@ -8548,6 +8780,18 @@ Please verify and update my status. Thank you!`);
         }
       } else {
         const apptFee = loadAppointmentFee();
+        let finalFee = apptFee;
+        let referralMsg = "";
+        const users = loadUsers();
+        const user = users.find(u => u.email.toLowerCase() === studentEmail.toLowerCase());
+        if (user && user.referralsCount && user.referralsCount > 0) {
+          const discountPercent = getReferralDiscountPercent(user.referralsCount);
+          if (discountPercent > 0) {
+            finalFee = Math.max(0, apptFee * (1 - discountPercent / 100));
+            referralMsg = ` (Applied ${discountPercent}% referral discount)`;
+          }
+        }
+
         const apptId = "appt-" + Date.now();
         const invoiceId = "INV-" + Date.now();
         const newAppt = {
@@ -8557,7 +8801,7 @@ Please verify and update my status. Thank you!`);
           date: date,
           time: time,
           status: "Scheduled",
-          fee: apptFee,
+          fee: finalFee,
           invoiceId: invoiceId
         };
         appointments.push(newAppt);
@@ -8568,8 +8812,8 @@ Please verify and update my status. Thank you!`);
         payments.push({
           id: invoiceId,
           userEmail: studentEmail,
-          description: "Private coaching class fee",
-          amount: String(apptFee),
+          description: "Private coaching class fee" + referralMsg,
+          amount: String(finalFee),
           dueDate: date,
           status: "pending",
           appointmentId: apptId
