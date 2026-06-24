@@ -7838,7 +7838,7 @@ Please verify and update my status. Thank you!`);
 
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const host = window.location.host;
-      chatSocket = new WebSocket(`${protocol}//${host}`);
+      chatSocket = new WebSocket(`${protocol}//${host}/api/ws`);
 
       chatSocket.onopen = () => {
         console.log("[WebSocket] Connected to community chat.");
