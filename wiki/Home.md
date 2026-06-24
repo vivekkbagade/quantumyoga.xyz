@@ -23,3 +23,7 @@ A setup guide for the dual-integration engine supporting transactional emails vi
 
 ### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
 Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.
+
+### 7. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
+Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
+
