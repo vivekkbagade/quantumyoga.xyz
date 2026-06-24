@@ -27,6 +27,9 @@ Learn about administrative settings, automated notification triggers, and client
 ### 7. [Community Chat & WebSockets](Community-Chat.md)
 Learn about real-time glassmorphic chat, WebSocket connection protocol, message schemas, and database history cache persistence.
 
-### 8. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
+### 8. [Live WebRTC Video Rooms](Live-Yoga-Rooms.md)
+Learn about interactive WebRTC virtual classrooms, Jitsi Meet IFrame API, browser camera/mic lifecycle management, and countdown timers.
+
+### 9. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
 Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
 

@@ -52,6 +52,11 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **Message History:** Automatic retrieval of the last 50 messages on join, persisted in database states (PG, Supabase, or local db.json).
 *   **Co-hosted WebSocket Server:** Runs directly on the same Express server port using standard WebSockets (`ws`).
 
+### 9. [Live Interactive Yoga Rooms (WebRTC)](file:///d:/QuantumYogaWebsite/openspec/changes/live-yoga-rooms-webrtc/specs/live-yoga-rooms/spec.md)
+*   **Virtual Classrooms**: Embedded peer-to-peer interactive WebRTC video streaming rooms powered by the Jitsi Meet IFrame API.
+*   **Instructor Dashboard**: Custom stream launching panel enabling instructors to initiate and moderate classes.
+*   **Dynamic Timetable Sync**: Integrates a glowing "Join Live Room Now" shortcut directly within the student's next class countdown timetable when a session is active.
+
 ---
 
 ## 🛠️ Technology Stack

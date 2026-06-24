@@ -175,6 +175,12 @@ openspec/changes/leads-management/design.md
 openspec/changes/leads-management/proposal.md
 openspec/changes/leads-management/specs/leads-management/spec.md
 openspec/changes/leads-management/tasks.md
+openspec/changes/live-yoga-rooms-webrtc/.openspec.yaml
+openspec/changes/live-yoga-rooms-webrtc/design.md
+openspec/changes/live-yoga-rooms-webrtc/proposal.md
+openspec/changes/live-yoga-rooms-webrtc/specs/class-scheduling/spec.md
+openspec/changes/live-yoga-rooms-webrtc/specs/live-yoga-rooms/spec.md
+openspec/changes/live-yoga-rooms-webrtc/tasks.md
 openspec/changes/member-management/.openspec.yaml
 openspec/changes/member-management/design.md
 openspec/changes/member-management/proposal.md
@@ -260,10 +266,143 @@ wiki/Deployment-and-CI-CD.md
 wiki/Email-Communication.md
 wiki/Home.md
 wiki/Lead-Management-and-CRM.md
+wiki/Live-Yoga-Rooms.md
 wiki/WhatsApp-Integration.md
 ```
 
 # Files
+
+## File: openspec/changes/live-yoga-rooms-webrtc/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/design.md
+````markdown
+## Context
+
+Currently, the Quantum Yoga platform manages scheduling and asynchronous guided video routines, but does not support live video sessions. This design introduces interactive virtual rooms inside the platform dashboard using the Jitsi Meet IFrame API. This integrates low-latency video streaming without adding high-cost WebRTC infrastructure.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement a virtual WebRTC video classroom directly inside a glassmorphic dashboard pane (`#live-class-section`).
+*   Allow administrators (instructors) to spin up and control active video streams.
+*   Allow students to join active classes directly from their assigned timetables.
+*   Ensure full responsiveness across desktop and mobile screens.
+
+**Non-Goals:**
+*   Hosting custom WebRTC media servers (like Kurento, Janus, or Mediasoup) on the studio server.
+*   Recording or archiving live streams.
+*   Private 1-on-1 calls.
+
+## Decisions
+
+### 1. WebRTC Provider Selection
+*   **Decision:** Jitsi Meet IFrame API over daily.co or a custom WebRTC server.
+*   **Rationale:** Jitsi Meet is fully open-source and free to embed. The `external_api.js` library allows full control over room events, participant layouts, and audio/video settings directly from our frontend client. This avoids hosting costly and complex TURN/STUN or SFU/MCU video servers.
+*   **Alternative Considered:** Daily.co (requires account creation and API limits) or custom WebSocket WebRTC signaling (too complex to scale for multi-user classrooms).
+
+### 2. Frontend Embedding
+*   **Decision:** Load the Jitsi API script dynamically or declare it in `index.html`, and instantiate `JitsiMeetExternalAPI` on an empty container (`#live-class-room-container`) inside the new chat/live section.
+*   **Rationale:** Dynamic instantiation inside a container allows us to mount and unmount the iframe room cleanly when switching tabs to prevent background audio leaks.
+
+### 3. Timetable Sync
+*   **Decision:** When a timetable slot is active, calculate the Jitsi room name dynamically based on the batch ID (e.g., `qy-room-vinyasa-mornings`) and display a "Join Class" button on the client dashboard.
+*   **Rationale:** Avoids storing active meeting URLs in the database, keeping scheduling state fully automatic and calculated from current time.
+
+## Risks / Trade-offs
+
+*   **Risk:** Jitsi public server (`meet.jit.si`) capacity or rate limits.
+    *   *Mitigation:* Jitsi Meet allows using custom instances or low-cost Jitsi-as-a-Service (JaaS) domains. We will define the domain as a variable so it can be pointed to a dedicated server easily.
+*   **Risk:** Camera/mic permissions blocking.
+    *   *Mitigation:* Check for browser capability (`navigator.mediaDevices.getUserMedia`) and display clean instructions if permissions are denied.
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/proposal.md
+````markdown
+## Why
+
+Currently, students can view static yoga postures, follow guided routines, and discuss wellness in the community chat, but there is no way to participate in live virtual streaming sessions directly on the platform. Adding integrated virtual classrooms enables students to join interactive live stream rooms hosted by instructors without leaving their premium glassmorphic dashboard, increasing engagement and community bonding.
+
+## What Changes
+
+*   **Live Stream Container**: Integrate a WebRTC-based live streaming viewport directly inside the dashboard structure.
+*   **Instructor Room controls**: Provide administrators/instructors with the ability to launch interactive video rooms.
+*   **Student Stream Viewport**: Allow students to join the classroom video feed as viewing participants.
+*   **Navigation Integration**: Add a dedicated "Live Class" portal linked to the active weekly timetables.
+
+## Capabilities
+
+### New Capabilities
+- `live-yoga-rooms`: Virtual classroom streaming portal that overlays a WebRTC interactive live feed (via Jitsi Meet IFrame API integration) directly on the student and instructor dashboards.
+
+### Modified Capabilities
+- `class-scheduling`: Update active schedules to support launching/joining active video links for live timetabled classes.
+
+## Impact
+
+*   **Frontend UI (`index.html`, `app.js`, `index.css`)**: New navigation portal (`#nav-live-class`), streaming viewport container (`#live-class-section`), and interactive overlay components.
+*   **Backend Server (`server.js`)**: Extend database state to track room status (active, offline) and session credentials.
+*   **Dependencies**: Integrate Jitsi Meet IFrame API library (`https://8x8.vc/external_api.js` or standard Jitsi Meet client script) on the frontend.
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/specs/class-scheduling/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Timetable Active WebRTC Room Links
+The system SHALL display an active "Join Live Class" WebRTC room link in the student's dashboard timetable when a timetabled class session is currently active or in progress.
+
+#### Scenario: Joining active class from countdown timetable
+- **WHEN** the countdown timer reaches 0 or indicates "Class in progress"
+- **THEN** the system displays a clickable "Join Live Room" button next to the timetable entry.
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/specs/live-yoga-rooms/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive Live Class Room Viewport
+The system SHALL display an interactive video streaming frame directly in the client dashboard using a low-latency WebRTC IFrame overlay.
+
+#### Scenario: User joins active live streaming room
+- **WHEN** a logged-in student visits the "Live Class" tab and the instructor is actively broadcasting
+- **THEN** the system overlays the live video session player inside the dashboard frame
+
+### Requirement: Instructor Broadcast Panel
+The system SHALL provide administrators/instructors with room controls to launch a new streaming session.
+
+#### Scenario: Instructor starts streaming
+- **WHEN** an administrator logs in, clicks the "Live Class" tab, and clicks "Launch Streaming Session"
+- **THEN** the system initializes the WebRTC media container and grants broadcast access to camera/microphone
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/tasks.md
+````markdown
+Created At: 2026-06-24T20:34:53Z
+Completed At: 2026-06-24T20:34:56Z
+File Path: `file:///D:/QuantumYogaWebsite/openspec/changes/live-yoga-rooms-webrtc/tasks.md`
+
+## 1. Frontend Interface & Script Setup
+
+- [x] 1.1 Include the Jitsi Meet IFrame API external script in `index.html`
+- [x] 1.2 Add the "Live Class" navigation tab link in the top navigation panel of `index.html`
+- [x] 1.3 Create `#live-class-section` content panel containing `#live-class-room-container` inside `index.html`
+
+## 2. WebRTC Client Integration
+
+- [x] 2.1 Map selectors and set up tab navigation router logic in `app.js` to initialize WebRTC when active
+- [x] 2.2 Write instantiation code in `app.js` using `JitsiMeetExternalAPI` to mount the interactive video room
+- [x] 2.3 Write cleanup and teardown logic to dispose of the active Jitsi IFrame room on tab switch (to stop camera/microphone feed)
+
+## 3. Scheduling & Room Linking
+
+- [x] 3.1 Implement active room calculation based on user's current timetabled batch ID
+- [x] 3.2 Display a glowing "Join Live Room" CTA button next to active schedule entries in the profile dashboard
+- [x] 3.3 Add click event listeners to join the active streaming session from the dashboard timetable
+````
 
 ## File: openspec/changes/real-time-community-chat/.openspec.yaml
 ````yaml
@@ -523,6 +662,77 @@ Chat history is persisted in the unified database (`state.chatMessages` array) u
     ```
 2.  **Auto-Scroll:** The message container automatically scrolls down to display incoming messages if the user is active in the chat tab.
 3.  **Role Styling:** Message headers are styled differently depending on the role (`Admin`/Instructors receive a gold-highlighted name and an `Instructor` badge; `Students` receive a standard student badge).
+````
+
+## File: wiki/Live-Yoga-Rooms.md
+````markdown
+# Live Interactive Yoga Rooms (WebRTC)
+
+Quantum Yoga supports virtual classrooms directly inside the glassmorphic dashboard interface. This capability uses the Jitsi Meet IFrame API, providing low-latency WebRTC streams with zero media server overhead.
+
+---
+
+## 🛠️ WebRTC Integration Architecture
+
+The platform embeds Jitsi Meet as a responsive iframe inside the `#live-class-room-container` DOM element. 
+
+### External Script Include
+To communicate with Jitsi rooms, the frontend loads the Jitsi external API library:
+```html
+<script src="https://meet.jit.si/external_api.js" defer></script>
+```
+
+### Instantiation
+Jitsi is instantiated dynamically inside `app.js` using `JitsiMeetExternalAPI`:
+```javascript
+const domain = "meet.jit.si";
+const options = {
+  roomName: roomName,
+  width: "100%",
+  height: "100%",
+  parentNode: container,
+  userInfo: {
+    displayName: state.currentUser ? state.currentUser.name : "Yoga Practitioner"
+  },
+  interfaceConfigOverwrite: {
+    TOOLBAR_BUTTONS: [
+      'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+      'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand'
+    ]
+  },
+  configOverwrite: {
+    startWithAudioMuted: !isInstructor,
+    startWithVideoMuted: !isInstructor,
+    prejoinPageEnabled: false
+  }
+};
+jitsiApiInstance = new JitsiMeetExternalAPI(domain, options);
+```
+
+---
+
+## 🔄 Lifecycle & Resource Management
+
+WebRTC sessions require active camera and microphone hardware permissions. If a user switches to another tab (e.g. Routines, Poses, or Chat) while inside a live class, the platform **must** immediately release these hardware resources to preserve privacy and reduce battery overhead.
+
+1. **Instantiation**: Loaded when the user enters the `Live Class` tab or clicks the timetable shortcut.
+2. **Teardown**: When the active tab shifts away from `#live-class-section`, the client calls `disposeLiveClassRoom()`:
+   ```javascript
+   if (jitsiApiInstance) {
+     jitsiApiInstance.dispose();
+     jitsiApiInstance = null;
+   }
+   ```
+   This terminates the iframe connection and completely stops camera/microphone hardware usage.
+
+---
+
+## ⏱️ Dynamic Timetable Integration
+
+The client tracks scheduled class slots in the student's active batch timetable:
+1. **Active Checking**: Checks if the current local time falls within a scheduled timetable window (e.g., class start time up to 1 hour in the future).
+2. **UI Injection**: If active, the countdown timer displays `🔴 Class in Progress!` in red.
+3. **CTA Button**: A glowing `🎥 Join Live Room Now` button is dynamically appended to the countdown box. Clicking it navigates the user to the streaming viewport and mounts the corresponding Jitsi room automatically.
 ````
 
 ## File: .agent/skills/openspec-apply-change/SKILL.md
@@ -11364,7 +11574,10 @@ Learn about administrative settings, automated notification triggers, and client
 ### 7. [Community Chat & WebSockets](Community-Chat.md)
 Learn about real-time glassmorphic chat, WebSocket connection protocol, message schemas, and database history cache persistence.
 
-### 8. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
+### 8. [Live WebRTC Video Rooms](Live-Yoga-Rooms.md)
+Learn about interactive WebRTC virtual classrooms, Jitsi Meet IFrame API, browser camera/mic lifecycle management, and countdown timers.
+
+### 9. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
 Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
 ````
 
@@ -12420,6 +12633,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const navProfileLink = document.getElementById("nav-profile");
   const sectionChat = document.getElementById("chat-section");
   const navChat = document.getElementById("nav-chat");
+  const navLiveClass = document.getElementById("nav-live-class");
+  const sectionLiveClass = document.getElementById("live-class-section");
+  const liveClassRoomContainer = document.getElementById("live-class-room-container");
+  const btnStartStream = document.getElementById("btn-start-stream");
+  const instructorLiveControls = document.getElementById("instructor-live-controls");
   
   const poseModal = document.getElementById("pose-modal");
   const poseModalBody = document.getElementById("pose-modal-body");
@@ -13277,6 +13495,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     sectionProfile.classList.remove("active");
     sectionAdmin.classList.remove("active");
     sectionChat.classList.remove("active");
+    sectionLiveClass.classList.remove("active");
+    navLiveClass.classList.remove("active");
     
     if (tabName === "poses") {
       navPoses.classList.add("active");
@@ -13292,6 +13512,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       navChat.classList.add("active");
       sectionChat.classList.add("active");
       initChatWebSocketIfNeeded();
+    } else if (tabName === "live-class") {
+      navLiveClass.classList.add("active");
+      sectionLiveClass.classList.add("active");
     } else if (tabName === "admin") {
       if (!state.currentUser || state.currentUser.email !== "admin@quantumyoga.xyz") {
         setTab("poses");
@@ -13300,6 +13523,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       navAdmin.classList.add("active");
       sectionAdmin.classList.add("active");
       renderAdminDashboard();
+    }
+
+    if (tabName !== "live-class") {
+      disposeLiveClassRoom();
     }
 
     if (appHero) {
@@ -13316,6 +13543,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   navProfileLink.addEventListener("click", () => setTab("profile"));
   navAdmin.addEventListener("click", () => setTab("admin"));
   navChat.addEventListener("click", () => setTab("chat"));
+  navLiveClass.addEventListener("click", () => setTab("live-class"));
 
   // Search input change
   searchInput.addEventListener("input", () => {
@@ -14756,9 +14984,12 @@ Please verify and update my status. Thank you!`);
     
     // Navigation links
     navChat.style.display = "inline-block";
+    navLiveClass.style.display = "inline-block";
+    
     if (state.currentUser.email === "admin@quantumyoga.xyz") {
       navProfileLink.style.display = "none";
       navAdmin.style.display = "inline-block";
+      if (instructorLiveControls) instructorLiveControls.style.display = "block";
 
       // Hide member-facing sections that are irrelevant for admin
       const heroSection = document.querySelector(".hero-section");
@@ -14775,6 +15006,7 @@ Please verify and update my status. Thank you!`);
     } else {
       navProfileLink.style.display = "inline-block";
       navAdmin.style.display = "none";
+      if (instructorLiveControls) instructorLiveControls.style.display = "none";
 
       // Restore member-facing sections that are relevant for student
       const heroSection = document.querySelector(".hero-section");
@@ -14948,12 +15180,14 @@ Please verify and update my status. Thank you!`);
     navProfileLink.style.display = "none";
     navAdmin.style.display = "none";
     navChat.style.display = "none";
+    navLiveClass.style.display = "none";
     
     // Disconnect chat websocket if connected
     closeChatWebSocket();
+    disposeLiveClassRoom();
 
-    // Switch active tab back to poses if currently on profile, admin, or chat
-    if (state.activeTab === "profile" || state.activeTab === "admin" || state.activeTab === "chat") {
+    // Switch active tab back to poses if currently on profile, admin, chat, or live-class
+    if (state.activeTab === "profile" || state.activeTab === "admin" || state.activeTab === "chat" || state.activeTab === "live-class") {
       setTab("poses");
     }
     
@@ -15605,8 +15839,35 @@ Please verify and update my status. Thank you!`);
       let soonestClass = null;
       let minDelta = Infinity;
 
+      let isClassActive = false;
+      let activeRoomId = null;
+
       batch.timetable.forEach(slot => {
         const nextDate = getWeekdayTimestamp(slot.day, slot.time);
+        
+        // Check if class is currently in progress (e.g. started less than 1 hour ago)
+        const classStart = new Date(nextDate.getTime());
+        // If the calculated next class day/time matches today but nextDate was set in the future (next week),
+        // we check today's actual slot occurrence
+        const todayClassStart = new Date(now);
+        const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const targetDayIdx = days.indexOf(slot.day);
+        const todayDayIdx = now.getDay();
+        let diffDays = targetDayIdx - todayDayIdx;
+        todayClassStart.setDate(now.getDate() + diffDays);
+        const [timeStr, ampm] = slot.time.split(" ");
+        const [hoursStr, minutesStr] = timeStr.split(":");
+        let hrs = parseInt(hoursStr);
+        if (ampm === "PM" && hrs !== 12) hrs += 12;
+        if (ampm === "AM" && hrs === 12) hrs = 0;
+        todayClassStart.setHours(hrs, parseInt(minutesStr), 0, 0);
+
+        const classEnd = new Date(todayClassStart.getTime() + 60 * 60 * 1000); // 1 hour class
+        if (now.getTime() >= todayClassStart.getTime() && now.getTime() <= classEnd.getTime()) {
+          isClassActive = true;
+          activeRoomId = `qy-room-${batch.id}-${slot.day.toLowerCase()}`;
+        }
+
         if (nextDate.getTime() < now.getTime()) {
           nextDate.setDate(nextDate.getDate() + 7);
         }
@@ -15617,22 +15878,46 @@ Please verify and update my status. Thank you!`);
         }
       });
 
-      if (!soonestClass) {
-        countdownEl.textContent = "No upcoming classes";
-        return;
+      const countdownBox = document.getElementById("profile-batch-countdown-box");
+      const joinBtnId = "btn-join-active-class";
+
+      if (isClassActive && activeRoomId) {
+        countdownEl.textContent = "🔴 Class in Progress!";
+        countdownEl.style.color = "#ef4444";
+        if (countdownBox && !document.getElementById(joinBtnId)) {
+          const joinBtn = document.createElement("button");
+          joinBtn.id = joinBtnId;
+          joinBtn.className = "btn btn-primary";
+          joinBtn.setAttribute("style", "width: 100%; margin-top: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; animation: pulse 2s infinite; border: none; box-shadow: 0 4px 10px rgba(16,185,129,0.3);");
+          joinBtn.innerHTML = "🎥 Join Live Room Now";
+          joinBtn.addEventListener("click", () => {
+            setTab("live-class");
+            initLiveClassRoom(activeRoomId, false);
+          });
+          countdownBox.appendChild(joinBtn);
+        }
+      } else {
+        countdownEl.style.color = "";
+        const existingBtn = document.getElementById(joinBtnId);
+        if (existingBtn) existingBtn.remove();
+
+        if (!soonestClass) {
+          countdownEl.textContent = "No upcoming classes";
+          return;
+        }
+
+        const diffMs = soonestClass.getTime() - now.getTime();
+        const totalSecs = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSecs / (3600 * 24));
+        const hours = Math.floor((totalSecs % (3600 * 24)) / 3600);
+        const mins = Math.floor((totalSecs % 3600) / 60);
+        const secs = totalSecs % 60;
+
+        let displayStr = "";
+        if (days > 0) displayStr += `${days}d `;
+        displayStr += `${hours}h ${mins}m ${secs}s`;
+        countdownEl.textContent = displayStr;
       }
-
-      const diffMs = soonestClass.getTime() - now.getTime();
-      const totalSecs = Math.floor(diffMs / 1000);
-      const days = Math.floor(totalSecs / (3600 * 24));
-      const hours = Math.floor((totalSecs % (3600 * 24)) / 3600);
-      const mins = Math.floor((totalSecs % 3600) / 60);
-      const secs = totalSecs % 60;
-
-      let displayStr = "";
-      if (days > 0) displayStr += `${days}d `;
-      displayStr += `${hours}h ${mins}m ${secs}s`;
-      countdownEl.textContent = displayStr;
     }
 
     tick();
@@ -20217,6 +20502,80 @@ Please verify and update my status. Thank you!`);
     window.closeChatWebSocket = closeChatWebSocket;
     window.initChatWebSocketIfNeeded = initChatWebSocketIfNeeded;
 
+    let jitsiApiInstance = null;
+
+    function initLiveClassRoom(roomName, isInstructor) {
+      if (jitsiApiInstance) {
+        jitsiApiInstance.dispose();
+        jitsiApiInstance = null;
+      }
+
+      const container = document.getElementById("live-class-room-container");
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      const domain = "meet.jit.si";
+      const options = {
+        roomName: roomName || "qy-general-room",
+        width: "100%",
+        height: "100%",
+        parentNode: container,
+        userInfo: {
+          displayName: state.currentUser ? state.currentUser.name : "Yoga Practitioner"
+        },
+        interfaceConfigOverwrite: {
+          TOOLBAR_BUTTONS: [
+            'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+            'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand',
+            'videoquality', 'filmstrip', 'tileview', 'videobackgroundblur'
+          ]
+        },
+        configOverwrite: {
+          startWithAudioMuted: !isInstructor,
+          startWithVideoMuted: !isInstructor,
+          prejoinPageEnabled: false
+        }
+      };
+
+      try {
+        jitsiApiInstance = new JitsiMeetExternalAPI(domain, options);
+      } catch (e) {
+        console.error("Failed to load Jitsi API:", e);
+        container.innerHTML = `<p style="color:var(--text-muted); padding:2rem;">Failed to initialize video room. Ensure permissions are granted.</p>`;
+      }
+    }
+
+    function disposeLiveClassRoom() {
+      if (jitsiApiInstance) {
+        jitsiApiInstance.dispose();
+        jitsiApiInstance = null;
+      }
+      const container = document.getElementById("live-class-room-container");
+      if (container) {
+        container.innerHTML = `
+          <div id="live-class-placeholder" style="text-align: center; padding: 2rem;">
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🧘</span>
+            <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">No Active Live Session</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 450px; margin: 0 auto;">There is no streaming class active at this moment. Join from your timetable schedule when a session starts.</p>
+          </div>
+        `;
+      }
+    }
+
+    if (btnStartStream) {
+      btnStartStream.addEventListener("click", () => {
+        const room = prompt("Enter Live Class Room Name:", "qy-live-class-session");
+        if (room) {
+          const cleanName = room.trim().replace(/[^a-zA-Z0-9-_]/g, "-");
+          initLiveClassRoom(cleanName, true);
+        }
+      });
+    }
+
+    window.initLiveClassRoom = initLiveClassRoom;
+    window.disposeLiveClassRoom = disposeLiveClassRoom;
+
     checkSession();
     renderPoses();
     renderRoutines();
@@ -20257,6 +20616,7 @@ Please verify and update my status. Thank you!`);
        enable the Gmail API, create OAuth2 credentials (Web Application type), and add
        http://localhost as an authorized JavaScript origin. Enter the Client ID in Admin > Settings > Gmail Integration. -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://meet.jit.si/external_api.js" defer></script>
 </head>
 <body>
 
@@ -20280,6 +20640,7 @@ Please verify and update my status. Thank you!`);
         <a href="#routines-section" class="nav-link" id="nav-routines">Routines</a>
         <a href="#profile-section" class="nav-link" id="nav-profile" style="display: none;">Profile</a>
         <a href="#chat-section" class="nav-link" id="nav-chat" style="display: none;">Community Chat</a>
+        <a href="#live-class-section" class="nav-link" id="nav-live-class" style="display: none;">Live Class</a>
         <a href="#admin-section" class="nav-link" id="nav-admin" style="display: none;">Admin Panel</a>
       </nav>
       <div class="nav-actions">
@@ -21420,6 +21781,37 @@ Please verify and update my status. Thank you!`);
               <input type="text" id="chat-message-input" placeholder="Type a message..." required autocomplete="off" style="flex: 1; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); outline: none;">
               <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Send</button>
             </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Live Class WebRTC Section -->
+    <section id="live-class-section" class="content-section">
+      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+        
+        <!-- Header -->
+        <div class="admin-header-card" style="margin-bottom: 0;">
+          <div class="admin-avatar">🎥</div>
+          <div class="admin-info-details">
+            <h2>Live Interactive Class</h2>
+            <p>Participate in virtual interactive streams hosted by studio instructors.</p>
+          </div>
+        </div>
+
+        <!-- Instructor Controls (Only visible to admin) -->
+        <div id="instructor-live-controls" style="display: none; text-align: left; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 1rem;">
+          <button id="btn-start-stream" class="btn btn-rose">🔴 Launch Live Video Session</button>
+          <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: 1rem;">Launches the public WebRTC room for active students.</span>
+        </div>
+
+        <!-- WebRTC Meeting Room Container -->
+        <div id="live-class-room-container" style="width: 100%; height: 600px; background: rgba(0, 0, 0, 0.4); border-radius: var(--radius-md); border: 1px solid var(--glass-light-border); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-top: 1rem;">
+          <div id="live-class-placeholder" style="text-align: center; padding: 2rem;">
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🧘</span>
+            <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">No Active Live Session</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 450px; margin: 0 auto;">There is no streaming class active at this moment. Join from your timetable schedule when a session starts.</p>
           </div>
         </div>
 

@@ -182,6 +182,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const navProfileLink = document.getElementById("nav-profile");
   const sectionChat = document.getElementById("chat-section");
   const navChat = document.getElementById("nav-chat");
+  const navLiveClass = document.getElementById("nav-live-class");
+  const sectionLiveClass = document.getElementById("live-class-section");
+  const liveClassRoomContainer = document.getElementById("live-class-room-container");
+  const btnStartStream = document.getElementById("btn-start-stream");
+  const instructorLiveControls = document.getElementById("instructor-live-controls");
   
   const poseModal = document.getElementById("pose-modal");
   const poseModalBody = document.getElementById("pose-modal-body");
@@ -1039,6 +1044,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     sectionProfile.classList.remove("active");
     sectionAdmin.classList.remove("active");
     sectionChat.classList.remove("active");
+    sectionLiveClass.classList.remove("active");
+    navLiveClass.classList.remove("active");
     
     if (tabName === "poses") {
       navPoses.classList.add("active");
@@ -1054,6 +1061,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       navChat.classList.add("active");
       sectionChat.classList.add("active");
       initChatWebSocketIfNeeded();
+    } else if (tabName === "live-class") {
+      navLiveClass.classList.add("active");
+      sectionLiveClass.classList.add("active");
     } else if (tabName === "admin") {
       if (!state.currentUser || state.currentUser.email !== "admin@quantumyoga.xyz") {
         setTab("poses");
@@ -1062,6 +1072,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       navAdmin.classList.add("active");
       sectionAdmin.classList.add("active");
       renderAdminDashboard();
+    }
+
+    if (tabName !== "live-class") {
+      disposeLiveClassRoom();
     }
 
     if (appHero) {
@@ -1078,6 +1092,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   navProfileLink.addEventListener("click", () => setTab("profile"));
   navAdmin.addEventListener("click", () => setTab("admin"));
   navChat.addEventListener("click", () => setTab("chat"));
+  navLiveClass.addEventListener("click", () => setTab("live-class"));
 
   // Search input change
   searchInput.addEventListener("input", () => {
@@ -2518,9 +2533,12 @@ Please verify and update my status. Thank you!`);
     
     // Navigation links
     navChat.style.display = "inline-block";
+    navLiveClass.style.display = "inline-block";
+    
     if (state.currentUser.email === "admin@quantumyoga.xyz") {
       navProfileLink.style.display = "none";
       navAdmin.style.display = "inline-block";
+      if (instructorLiveControls) instructorLiveControls.style.display = "block";
 
       // Hide member-facing sections that are irrelevant for admin
       const heroSection = document.querySelector(".hero-section");
@@ -2537,6 +2555,7 @@ Please verify and update my status. Thank you!`);
     } else {
       navProfileLink.style.display = "inline-block";
       navAdmin.style.display = "none";
+      if (instructorLiveControls) instructorLiveControls.style.display = "none";
 
       // Restore member-facing sections that are relevant for student
       const heroSection = document.querySelector(".hero-section");
@@ -2710,12 +2729,14 @@ Please verify and update my status. Thank you!`);
     navProfileLink.style.display = "none";
     navAdmin.style.display = "none";
     navChat.style.display = "none";
+    navLiveClass.style.display = "none";
     
     // Disconnect chat websocket if connected
     closeChatWebSocket();
+    disposeLiveClassRoom();
 
-    // Switch active tab back to poses if currently on profile, admin, or chat
-    if (state.activeTab === "profile" || state.activeTab === "admin" || state.activeTab === "chat") {
+    // Switch active tab back to poses if currently on profile, admin, chat, or live-class
+    if (state.activeTab === "profile" || state.activeTab === "admin" || state.activeTab === "chat" || state.activeTab === "live-class") {
       setTab("poses");
     }
     
@@ -3367,8 +3388,35 @@ Please verify and update my status. Thank you!`);
       let soonestClass = null;
       let minDelta = Infinity;
 
+      let isClassActive = false;
+      let activeRoomId = null;
+
       batch.timetable.forEach(slot => {
         const nextDate = getWeekdayTimestamp(slot.day, slot.time);
+        
+        // Check if class is currently in progress (e.g. started less than 1 hour ago)
+        const classStart = new Date(nextDate.getTime());
+        // If the calculated next class day/time matches today but nextDate was set in the future (next week),
+        // we check today's actual slot occurrence
+        const todayClassStart = new Date(now);
+        const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const targetDayIdx = days.indexOf(slot.day);
+        const todayDayIdx = now.getDay();
+        let diffDays = targetDayIdx - todayDayIdx;
+        todayClassStart.setDate(now.getDate() + diffDays);
+        const [timeStr, ampm] = slot.time.split(" ");
+        const [hoursStr, minutesStr] = timeStr.split(":");
+        let hrs = parseInt(hoursStr);
+        if (ampm === "PM" && hrs !== 12) hrs += 12;
+        if (ampm === "AM" && hrs === 12) hrs = 0;
+        todayClassStart.setHours(hrs, parseInt(minutesStr), 0, 0);
+
+        const classEnd = new Date(todayClassStart.getTime() + 60 * 60 * 1000); // 1 hour class
+        if (now.getTime() >= todayClassStart.getTime() && now.getTime() <= classEnd.getTime()) {
+          isClassActive = true;
+          activeRoomId = `qy-room-${batch.id}-${slot.day.toLowerCase()}`;
+        }
+
         if (nextDate.getTime() < now.getTime()) {
           nextDate.setDate(nextDate.getDate() + 7);
         }
@@ -3379,22 +3427,46 @@ Please verify and update my status. Thank you!`);
         }
       });
 
-      if (!soonestClass) {
-        countdownEl.textContent = "No upcoming classes";
-        return;
+      const countdownBox = document.getElementById("profile-batch-countdown-box");
+      const joinBtnId = "btn-join-active-class";
+
+      if (isClassActive && activeRoomId) {
+        countdownEl.textContent = "🔴 Class in Progress!";
+        countdownEl.style.color = "#ef4444";
+        if (countdownBox && !document.getElementById(joinBtnId)) {
+          const joinBtn = document.createElement("button");
+          joinBtn.id = joinBtnId;
+          joinBtn.className = "btn btn-primary";
+          joinBtn.setAttribute("style", "width: 100%; margin-top: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; animation: pulse 2s infinite; border: none; box-shadow: 0 4px 10px rgba(16,185,129,0.3);");
+          joinBtn.innerHTML = "🎥 Join Live Room Now";
+          joinBtn.addEventListener("click", () => {
+            setTab("live-class");
+            initLiveClassRoom(activeRoomId, false);
+          });
+          countdownBox.appendChild(joinBtn);
+        }
+      } else {
+        countdownEl.style.color = "";
+        const existingBtn = document.getElementById(joinBtnId);
+        if (existingBtn) existingBtn.remove();
+
+        if (!soonestClass) {
+          countdownEl.textContent = "No upcoming classes";
+          return;
+        }
+
+        const diffMs = soonestClass.getTime() - now.getTime();
+        const totalSecs = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSecs / (3600 * 24));
+        const hours = Math.floor((totalSecs % (3600 * 24)) / 3600);
+        const mins = Math.floor((totalSecs % 3600) / 60);
+        const secs = totalSecs % 60;
+
+        let displayStr = "";
+        if (days > 0) displayStr += `${days}d `;
+        displayStr += `${hours}h ${mins}m ${secs}s`;
+        countdownEl.textContent = displayStr;
       }
-
-      const diffMs = soonestClass.getTime() - now.getTime();
-      const totalSecs = Math.floor(diffMs / 1000);
-      const days = Math.floor(totalSecs / (3600 * 24));
-      const hours = Math.floor((totalSecs % (3600 * 24)) / 3600);
-      const mins = Math.floor((totalSecs % 3600) / 60);
-      const secs = totalSecs % 60;
-
-      let displayStr = "";
-      if (days > 0) displayStr += `${days}d `;
-      displayStr += `${hours}h ${mins}m ${secs}s`;
-      countdownEl.textContent = displayStr;
     }
 
     tick();
@@ -7978,6 +8050,80 @@ Please verify and update my status. Thank you!`);
 
     window.closeChatWebSocket = closeChatWebSocket;
     window.initChatWebSocketIfNeeded = initChatWebSocketIfNeeded;
+
+    let jitsiApiInstance = null;
+
+    function initLiveClassRoom(roomName, isInstructor) {
+      if (jitsiApiInstance) {
+        jitsiApiInstance.dispose();
+        jitsiApiInstance = null;
+      }
+
+      const container = document.getElementById("live-class-room-container");
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      const domain = "meet.jit.si";
+      const options = {
+        roomName: roomName || "qy-general-room",
+        width: "100%",
+        height: "100%",
+        parentNode: container,
+        userInfo: {
+          displayName: state.currentUser ? state.currentUser.name : "Yoga Practitioner"
+        },
+        interfaceConfigOverwrite: {
+          TOOLBAR_BUTTONS: [
+            'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+            'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand',
+            'videoquality', 'filmstrip', 'tileview', 'videobackgroundblur'
+          ]
+        },
+        configOverwrite: {
+          startWithAudioMuted: !isInstructor,
+          startWithVideoMuted: !isInstructor,
+          prejoinPageEnabled: false
+        }
+      };
+
+      try {
+        jitsiApiInstance = new JitsiMeetExternalAPI(domain, options);
+      } catch (e) {
+        console.error("Failed to load Jitsi API:", e);
+        container.innerHTML = `<p style="color:var(--text-muted); padding:2rem;">Failed to initialize video room. Ensure permissions are granted.</p>`;
+      }
+    }
+
+    function disposeLiveClassRoom() {
+      if (jitsiApiInstance) {
+        jitsiApiInstance.dispose();
+        jitsiApiInstance = null;
+      }
+      const container = document.getElementById("live-class-room-container");
+      if (container) {
+        container.innerHTML = `
+          <div id="live-class-placeholder" style="text-align: center; padding: 2rem;">
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🧘</span>
+            <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">No Active Live Session</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 450px; margin: 0 auto;">There is no streaming class active at this moment. Join from your timetable schedule when a session starts.</p>
+          </div>
+        `;
+      }
+    }
+
+    if (btnStartStream) {
+      btnStartStream.addEventListener("click", () => {
+        const room = prompt("Enter Live Class Room Name:", "qy-live-class-session");
+        if (room) {
+          const cleanName = room.trim().replace(/[^a-zA-Z0-9-_]/g, "-");
+          initLiveClassRoom(cleanName, true);
+        }
+      });
+    }
+
+    window.initLiveClassRoom = initLiveClassRoom;
+    window.disposeLiveClassRoom = disposeLiveClassRoom;
 
     checkSession();
     renderPoses();
