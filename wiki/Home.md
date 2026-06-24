@@ -36,3 +36,6 @@ Detailed guide on deploying the application to a Virtual Machine (VM) and config
 ### 10. [Practice Calendar & Streak Grid](Practice-Tracker.md)
 Learn about the GitHub-style contribution chart, daily streaks tracker, and milestone badges.
 
+### 11. [Studio Analytics & CSV/PDF Reports](Reports-and-Analytics.md)
+Learn about interactive SVG data charts, posture rankings, CSV exports, and printable PDF logs.
+

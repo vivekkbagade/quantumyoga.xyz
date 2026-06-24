@@ -3044,3 +3044,23 @@ td,
   40% { transform: scale(1); opacity: 1; }
 }
 
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #admin-reports-panel, #admin-reports-panel * {
+    visibility: visible;
+  }
+  #admin-reports-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white !important;
+    color: black !important;
+  }
+  .controls-card, .profile-dashboard-top-row, .admin-stats-grid {
+    display: none !important;
+  }
+}
+

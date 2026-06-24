@@ -6813,7 +6813,184 @@ Please verify and update my status. Thank you!`);
     });
     adminStatPopularPose.textContent = popularPoseName;
     
-    // Render Chronological completion history table
+    // 1. Render Poses Ranking Table
+    const posesRankingTbody = document.getElementById("admin-reports-poses-ranking");
+    if (posesRankingTbody) {
+      posesRankingTbody.innerHTML = "";
+      const sortedPoses = Object.keys(poseFavoritesCount)
+        .map(id => ({ id, count: poseFavoritesCount[id] }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
+      
+      if (sortedPoses.length === 0) {
+        posesRankingTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding: 1rem 0;">No favorited poses.</td></tr>`;
+      } else {
+        sortedPoses.forEach((item, idx) => {
+          const poseObj = YOGA_POSES.find(p => p.id === item.id);
+          if (poseObj) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td><strong>#${idx + 1}</strong></td>
+              <td><span style="font-weight: 600; color: var(--accent-primary);">${poseObj.name}</span></td>
+              <td>${poseObj.category}</td>
+              <td style="text-align: right; font-weight: bold;">${item.count}</td>
+            `;
+            posesRankingTbody.appendChild(row);
+          }
+        });
+      }
+    }
+
+    // 2. Render Routines Ranking Table
+    const routinesRankingTbody = document.getElementById("admin-reports-routines-ranking");
+    if (routinesRankingTbody) {
+      routinesRankingTbody.innerHTML = "";
+      const sortedRoutines = Object.keys(routineCompletionsCount)
+        .map(id => ({ id, count: routineCompletionsCount[id] }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
+      
+      if (sortedRoutines.length === 0) {
+        routinesRankingTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding: 1rem 0;">No completed routines.</td></tr>`;
+      } else {
+        sortedRoutines.forEach((item, idx) => {
+          const routineObj = YOGA_ROUTINES.find(r => r.id === item.id);
+          if (routineObj) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td><strong>#${idx + 1}</strong></td>
+              <td><span style="font-weight: 600; color: var(--accent-secondary);">${routineObj.name}</span></td>
+              <td><span class="badge badge-difficulty-${routineObj.difficulty.toLowerCase()}">${routineObj.difficulty}</span></td>
+              <td style="text-align: right; font-weight: bold;">${item.count}</td>
+            `;
+            routinesRankingTbody.appendChild(row);
+          }
+        });
+      }
+    }
+
+    // 3. Helper to get past 6 months
+    function getPast6Months() {
+      const months = [];
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        months.push({
+          label: d.toLocaleString('default', { month: 'short' }),
+          key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` // YYYY-MM
+        });
+      }
+      return months;
+    }
+
+    const pastMonths = getPast6Months();
+
+    // 4. Render Monthly Revenue SVG Bar Chart
+    const paymentsList = JSON.parse(localStorage.getItem("qy_payments") || "[]");
+    const monthlyRevenue = pastMonths.map(m => {
+      const rev = paymentsList
+        .filter(p => p.status === "paid" && p.dueDate && p.dueDate.startsWith(m.key))
+        .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+      return { label: m.label, value: rev };
+    });
+
+    const revenueChartContainer = document.getElementById("chart-collections-container");
+    if (revenueChartContainer) {
+      const svgWidth = 320;
+      const svgHeight = 220;
+      const padding = 35;
+      const chartWidth = svgWidth - padding * 2;
+      const chartHeight = svgHeight - padding * 2;
+      const maxVal = Math.max(...monthlyRevenue.map(d => d.value), 1000);
+      const barWidth = Math.floor(chartWidth / monthlyRevenue.length) - 10;
+      
+      let barsHtml = "";
+      monthlyRevenue.forEach((d, idx) => {
+        const x = padding + idx * (barWidth + 10) + 5;
+        const pct = d.value / maxVal;
+        const barHeight = chartHeight * pct;
+        const y = padding + chartHeight - barHeight;
+        
+        barsHtml += `
+          <g class="chart-bar">
+            <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" fill="url(#grad-revenue)" rx="3" style="transition: all 0.3s ease;">
+              <title>Revenue: ₹${d.value}</title>
+            </rect>
+            <text x="${x + barWidth / 2}" y="${svgHeight - 10}" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-family="var(--font-sans)">${d.label}</text>
+            <text x="${x + barWidth / 2}" y="${y - 6}" text-anchor="middle" fill="var(--text-primary)" font-size="8" font-family="var(--font-sans)" font-weight="bold">₹${d.value >= 1000 ? (d.value / 1000).toFixed(1) + 'k' : d.value}</text>
+          </g>
+        `;
+      });
+
+      revenueChartContainer.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${svgWidth} ${svgHeight}" style="overflow: visible;">
+          <defs>
+            <linearGradient id="grad-revenue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--accent-teal)" />
+              <stop offset="100%" stop-color="#059669" stop-opacity="0.8" />
+            </linearGradient>
+          </defs>
+          <line x1="${padding}" y1="${padding + chartHeight}" x2="${svgWidth - padding}" y2="${padding + chartHeight}" stroke="var(--border-glass)" stroke-width="1" />
+          ${barsHtml}
+        </svg>
+      `;
+    }
+
+    // 5. Render Monthly Booking Trends SVG Line Chart
+    const appointmentsList = JSON.parse(localStorage.getItem("qy_appointments") || "[]");
+    const monthlyBookings = pastMonths.map(m => {
+      const count = appointmentsList
+        .filter(a => a.status !== "Cancelled" && a.status !== "cancelled" && a.date && a.date.startsWith(m.key))
+        .length;
+      return { label: m.label, value: count };
+    });
+
+    const bookingsChartContainer = document.getElementById("chart-bookings-container");
+    if (bookingsChartContainer) {
+      const svgWidth = 320;
+      const svgHeight = 220;
+      const padding = 35;
+      const chartWidth = svgWidth - padding * 2;
+      const chartHeight = svgHeight - padding * 2;
+      const maxVal = Math.max(...monthlyBookings.map(d => d.value), 5);
+      const colWidth = chartWidth / (monthlyBookings.length - 1);
+      
+      const points = [];
+      monthlyBookings.forEach((d, idx) => {
+        const x = padding + idx * colWidth;
+        const pct = d.value / maxVal;
+        const y = padding + chartHeight - (chartHeight * pct);
+        points.push({ x, y, label: d.label, val: d.value });
+      });
+
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        pathD += ` L ${points[i].x} ${points[i].y}`;
+      }
+
+      let dotsHtml = "";
+      points.forEach(p => {
+        dotsHtml += `
+          <g>
+            <circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--accent-secondary)" stroke="var(--bg-primary)" stroke-width="1.5">
+              <title>Bookings: ${p.val}</title>
+            </circle>
+            <text x="${p.x}" y="${p.y - 8}" text-anchor="middle" fill="var(--text-primary)" font-size="8" font-family="var(--font-sans)" font-weight="bold">${p.val}</text>
+            <text x="${p.x}" y="${svgHeight - 10}" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-family="var(--font-sans)">${p.label}</text>
+          </g>
+        `;
+      });
+
+      bookingsChartContainer.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${svgWidth} ${svgHeight}" style="overflow: visible;">
+          <line x1="${padding}" y1="${padding + chartHeight}" x2="${svgWidth - padding}" y2="${padding + chartHeight}" stroke="var(--border-glass)" stroke-width="1" />
+          <path d="${pathD}" fill="none" stroke="var(--accent-secondary)" stroke-width="2.5" stroke-linecap="round" />
+          ${dotsHtml}
+        </svg>
+      `;
+    }
+    
+    // 6. Render Chronological completion history table
     adminReportsTableBody.innerHTML = "";
     
     if (allCompletionLogs.length === 0) {
@@ -7143,6 +7320,40 @@ Please verify and update my status. Thank you!`);
     adminLeadsTabBtn.addEventListener("click", () => setAdminSubTab("leads"));
   }
   adminReportsTabBtn.addEventListener("click", () => setAdminSubTab("reports"));
+  
+  const btnExportBillingCsv = document.getElementById("btn-export-billing-csv");
+  if (btnExportBillingCsv) {
+    btnExportBillingCsv.addEventListener("click", () => {
+      const payments = JSON.parse(localStorage.getItem("qy_payments") || "[]");
+      if (payments.length === 0) {
+        alert("No payments available to export.");
+        return;
+      }
+      
+      let csvContent = "Invoice ID,User Name,User Email,Amount (INR),Due Date,Status,Payment details\n";
+      payments.forEach(p => {
+        const desc = (p.description || "").replace(/"/g, '""');
+        csvContent += `"${p.id}","${p.userName || ''}","${p.userEmail || ''}",${p.amount},"${p.dueDate}","${p.status}","${desc}"\n`;
+      });
+      
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `quantum_yoga_billing_ledger_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+
+  const btnPrintAttendance = document.getElementById("btn-print-attendance");
+  if (btnPrintAttendance) {
+    btnPrintAttendance.addEventListener("click", () => {
+      window.print();
+    });
+  }
+
   adminSettingsTabBtn.addEventListener("click", () => setAdminSubTab("settings"));
   
   if (adminBatchesTabBtn) {

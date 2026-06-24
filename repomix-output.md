@@ -278,6 +278,7 @@ wiki/Home.md
 wiki/Lead-Management-and-CRM.md
 wiki/Live-Yoga-Rooms.md
 wiki/Practice-Tracker.md
+wiki/Reports-and-Analytics.md
 wiki/WhatsApp-Integration.md
 ```
 
@@ -377,26 +378,26 @@ The system SHALL provide export options allowing administrators to download CSV 
 ````markdown
 ## 1. Dashboard UI Elements
 
-- [ ] 1.1 Add the "Studio Analytics" sub-navigation tab and content panels inside `#admin-section` in `index.html`
-- [ ] 1.2 Add container divs for SVG charts (billing collections and booking trends) in `index.html`
-- [ ] 1.3 Add CSV Export and Attendance Printing buttons in the analytics panel inside `index.html`
+- [x] 1.1 Add the "Studio Analytics" sub-navigation tab and content panels inside `#admin-section` in `index.html`
+- [x] 1.2 Add container divs for SVG charts (billing collections and booking trends) in `index.html`
+- [x] 1.3 Add CSV Export and Attendance Printing buttons in the analytics panel inside `index.html`
 
 ## 2. Interactive SVG Logic
 
-- [ ] 2.1 Write JavaScript helper functions in `app.js` to compile monthly payment data and draw an SVG bar chart
-- [ ] 2.2 Write JavaScript helper functions in `app.js` to compile monthly booking dates and draw an SVG line chart
-- [ ] 2.3 Implement posture popularity calculator (aggregating favorited counts from `qy_users`) and render a ranking table
+- [x] 2.1 Write JavaScript helper functions in `app.js` to compile monthly payment data and draw an SVG bar chart
+- [x] 2.2 Write JavaScript helper functions in `app.js` to compile monthly booking dates and draw an SVG line chart
+- [x] 2.3 Implement posture popularity calculator (aggregating favorited counts from `qy_users`) and render a ranking table
 
 ## 3. CSV & Receipt PDF Generators
 
-- [ ] 3.1 Implement the CSV billing exporter click handler in `app.js` utilizing `Blob` downloads
-- [ ] 3.2 Implement print view styles in `index.css` targeting `@media print` to present a receipt-like log table
-- [ ] 3.3 Implement the Print Attendance handler in `app.js` to toggle a print view overlay and call `window.print()`
+- [x] 3.1 Implement the CSV billing exporter click handler in `app.js` utilizing `Blob` downloads
+- [x] 3.2 Implement print view styles in `index.css` targeting `@media print` to present a receipt-like log table
+- [x] 3.3 Implement the Print Attendance handler in `app.js` to toggle a print view overlay and call `window.print()`
 
 ## 4. Verification and Build
 
-- [ ] 4.1 Run `npm run build` to verify frontend compiling
-- [ ] 4.2 Validate charts load and hover values update on mock admin dashboard
+- [x] 4.1 Run `npm run build` to verify frontend compiling
+- [x] 4.2 Validate charts load and hover values update on mock admin dashboard
 ````
 
 ## File: openspec/changes/live-yoga-rooms-webrtc/.openspec.yaml
@@ -1041,6 +1042,35 @@ Unlocked badges change from a locked/translucent state to an illuminated state w
 
 *   **LocalStorage Key**: Saved under `qy_users` within each user record as a `practice_logs` array of ISO timestamps.
 *   **Database Synchronization**: Synced automatically to the server database via the `/api/db` endpoint, persisting progress across all client platforms.
+````
+
+## File: wiki/Reports-and-Analytics.md
+````markdown
+# Studio Analytics & CSV/PDF Reports
+
+The Quantum Yoga Admin Panel includes an interactive Reports and Analytics dashboard to monitor business operations, collections, and student progress.
+
+---
+
+## 📊 Interactive SVG Data Charts
+
+To ensure fast load times and zero dependency overhead, charts are rendered using dynamic SVGs:
+1.  **Monthly Collections (Bar Chart)**: Aggregates paid transactions over the past 6 months to display monthly revenue, complete with gradient fills and hover value overlays.
+2.  **Monthly Booking Trends (Line Chart)**: Tracks scheduled class appointments over the past 6 months using clean SVG lines and coordinates.
+
+---
+
+## 🏆 Practice and Posture Rankings
+
+*   **Most Favorited Postures**: Aggregates pose bookmark lists across all users to display a ranking table of the top 5 most favorited postures.
+*   **Most Popular Routines**: Parses all student completion histories to rank the top 5 most completed routine workouts.
+
+---
+
+## 📥 File Exports & Reports Printing
+
+*   **CSV Exporter**: Clicking "Export CSV Ledger" triggers a client-side Blob generation of all payment records in standard CSV format, instantly downloading the file.
+*   **Printable Attendance logs**: Uses `@media print` style blocks in CSS to isolate the completion history tables, hiding navigation menus, KPI cards, and charts, allowing clean printing or saving to PDF.
 ````
 
 ## File: .agent/skills/openspec-apply-change/SKILL.md
@@ -5793,6 +5823,26 @@ td,
 @keyframes spinnerBounce {
   0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
   40% { transform: scale(1); opacity: 1; }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #admin-reports-panel, #admin-reports-panel * {
+    visibility: visible;
+  }
+  #admin-reports-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white !important;
+    color: black !important;
+  }
+  .controls-card, .profile-dashboard-top-row, .admin-stats-grid {
+    display: none !important;
+  }
 }
 ````
 
@@ -11950,6 +12000,9 @@ Detailed guide on deploying the application to a Virtual Machine (VM) and config
 
 ### 10. [Practice Calendar & Streak Grid](Practice-Tracker.md)
 Learn about the GitHub-style contribution chart, daily streaks tracker, and milestone badges.
+
+### 11. [Studio Analytics & CSV/PDF Reports](Reports-and-Analytics.md)
+Learn about interactive SVG data charts, posture rankings, CSV exports, and printable PDF logs.
 ````
 
 ## File: openspec/changes/auto-review-upi-payments/design.md
@@ -19641,7 +19694,184 @@ Please verify and update my status. Thank you!`);
     });
     adminStatPopularPose.textContent = popularPoseName;
     
-    // Render Chronological completion history table
+    // 1. Render Poses Ranking Table
+    const posesRankingTbody = document.getElementById("admin-reports-poses-ranking");
+    if (posesRankingTbody) {
+      posesRankingTbody.innerHTML = "";
+      const sortedPoses = Object.keys(poseFavoritesCount)
+        .map(id => ({ id, count: poseFavoritesCount[id] }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
+      
+      if (sortedPoses.length === 0) {
+        posesRankingTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding: 1rem 0;">No favorited poses.</td></tr>`;
+      } else {
+        sortedPoses.forEach((item, idx) => {
+          const poseObj = YOGA_POSES.find(p => p.id === item.id);
+          if (poseObj) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td><strong>#${idx + 1}</strong></td>
+              <td><span style="font-weight: 600; color: var(--accent-primary);">${poseObj.name}</span></td>
+              <td>${poseObj.category}</td>
+              <td style="text-align: right; font-weight: bold;">${item.count}</td>
+            `;
+            posesRankingTbody.appendChild(row);
+          }
+        });
+      }
+    }
+
+    // 2. Render Routines Ranking Table
+    const routinesRankingTbody = document.getElementById("admin-reports-routines-ranking");
+    if (routinesRankingTbody) {
+      routinesRankingTbody.innerHTML = "";
+      const sortedRoutines = Object.keys(routineCompletionsCount)
+        .map(id => ({ id, count: routineCompletionsCount[id] }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
+      
+      if (sortedRoutines.length === 0) {
+        routinesRankingTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding: 1rem 0;">No completed routines.</td></tr>`;
+      } else {
+        sortedRoutines.forEach((item, idx) => {
+          const routineObj = YOGA_ROUTINES.find(r => r.id === item.id);
+          if (routineObj) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td><strong>#${idx + 1}</strong></td>
+              <td><span style="font-weight: 600; color: var(--accent-secondary);">${routineObj.name}</span></td>
+              <td><span class="badge badge-difficulty-${routineObj.difficulty.toLowerCase()}">${routineObj.difficulty}</span></td>
+              <td style="text-align: right; font-weight: bold;">${item.count}</td>
+            `;
+            routinesRankingTbody.appendChild(row);
+          }
+        });
+      }
+    }
+
+    // 3. Helper to get past 6 months
+    function getPast6Months() {
+      const months = [];
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        months.push({
+          label: d.toLocaleString('default', { month: 'short' }),
+          key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` // YYYY-MM
+        });
+      }
+      return months;
+    }
+
+    const pastMonths = getPast6Months();
+
+    // 4. Render Monthly Revenue SVG Bar Chart
+    const paymentsList = JSON.parse(localStorage.getItem("qy_payments") || "[]");
+    const monthlyRevenue = pastMonths.map(m => {
+      const rev = paymentsList
+        .filter(p => p.status === "paid" && p.dueDate && p.dueDate.startsWith(m.key))
+        .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+      return { label: m.label, value: rev };
+    });
+
+    const revenueChartContainer = document.getElementById("chart-collections-container");
+    if (revenueChartContainer) {
+      const svgWidth = 320;
+      const svgHeight = 220;
+      const padding = 35;
+      const chartWidth = svgWidth - padding * 2;
+      const chartHeight = svgHeight - padding * 2;
+      const maxVal = Math.max(...monthlyRevenue.map(d => d.value), 1000);
+      const barWidth = Math.floor(chartWidth / monthlyRevenue.length) - 10;
+      
+      let barsHtml = "";
+      monthlyRevenue.forEach((d, idx) => {
+        const x = padding + idx * (barWidth + 10) + 5;
+        const pct = d.value / maxVal;
+        const barHeight = chartHeight * pct;
+        const y = padding + chartHeight - barHeight;
+        
+        barsHtml += `
+          <g class="chart-bar">
+            <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" fill="url(#grad-revenue)" rx="3" style="transition: all 0.3s ease;">
+              <title>Revenue: ₹${d.value}</title>
+            </rect>
+            <text x="${x + barWidth / 2}" y="${svgHeight - 10}" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-family="var(--font-sans)">${d.label}</text>
+            <text x="${x + barWidth / 2}" y="${y - 6}" text-anchor="middle" fill="var(--text-primary)" font-size="8" font-family="var(--font-sans)" font-weight="bold">₹${d.value >= 1000 ? (d.value / 1000).toFixed(1) + 'k' : d.value}</text>
+          </g>
+        `;
+      });
+
+      revenueChartContainer.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${svgWidth} ${svgHeight}" style="overflow: visible;">
+          <defs>
+            <linearGradient id="grad-revenue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--accent-teal)" />
+              <stop offset="100%" stop-color="#059669" stop-opacity="0.8" />
+            </linearGradient>
+          </defs>
+          <line x1="${padding}" y1="${padding + chartHeight}" x2="${svgWidth - padding}" y2="${padding + chartHeight}" stroke="var(--border-glass)" stroke-width="1" />
+          ${barsHtml}
+        </svg>
+      `;
+    }
+
+    // 5. Render Monthly Booking Trends SVG Line Chart
+    const appointmentsList = JSON.parse(localStorage.getItem("qy_appointments") || "[]");
+    const monthlyBookings = pastMonths.map(m => {
+      const count = appointmentsList
+        .filter(a => a.status !== "Cancelled" && a.status !== "cancelled" && a.date && a.date.startsWith(m.key))
+        .length;
+      return { label: m.label, value: count };
+    });
+
+    const bookingsChartContainer = document.getElementById("chart-bookings-container");
+    if (bookingsChartContainer) {
+      const svgWidth = 320;
+      const svgHeight = 220;
+      const padding = 35;
+      const chartWidth = svgWidth - padding * 2;
+      const chartHeight = svgHeight - padding * 2;
+      const maxVal = Math.max(...monthlyBookings.map(d => d.value), 5);
+      const colWidth = chartWidth / (monthlyBookings.length - 1);
+      
+      const points = [];
+      monthlyBookings.forEach((d, idx) => {
+        const x = padding + idx * colWidth;
+        const pct = d.value / maxVal;
+        const y = padding + chartHeight - (chartHeight * pct);
+        points.push({ x, y, label: d.label, val: d.value });
+      });
+
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        pathD += ` L ${points[i].x} ${points[i].y}`;
+      }
+
+      let dotsHtml = "";
+      points.forEach(p => {
+        dotsHtml += `
+          <g>
+            <circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--accent-secondary)" stroke="var(--bg-primary)" stroke-width="1.5">
+              <title>Bookings: ${p.val}</title>
+            </circle>
+            <text x="${p.x}" y="${p.y - 8}" text-anchor="middle" fill="var(--text-primary)" font-size="8" font-family="var(--font-sans)" font-weight="bold">${p.val}</text>
+            <text x="${p.x}" y="${svgHeight - 10}" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-family="var(--font-sans)">${p.label}</text>
+          </g>
+        `;
+      });
+
+      bookingsChartContainer.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${svgWidth} ${svgHeight}" style="overflow: visible;">
+          <line x1="${padding}" y1="${padding + chartHeight}" x2="${svgWidth - padding}" y2="${padding + chartHeight}" stroke="var(--border-glass)" stroke-width="1" />
+          <path d="${pathD}" fill="none" stroke="var(--accent-secondary)" stroke-width="2.5" stroke-linecap="round" />
+          ${dotsHtml}
+        </svg>
+      `;
+    }
+    
+    // 6. Render Chronological completion history table
     adminReportsTableBody.innerHTML = "";
     
     if (allCompletionLogs.length === 0) {
@@ -19971,6 +20201,40 @@ Please verify and update my status. Thank you!`);
     adminLeadsTabBtn.addEventListener("click", () => setAdminSubTab("leads"));
   }
   adminReportsTabBtn.addEventListener("click", () => setAdminSubTab("reports"));
+  
+  const btnExportBillingCsv = document.getElementById("btn-export-billing-csv");
+  if (btnExportBillingCsv) {
+    btnExportBillingCsv.addEventListener("click", () => {
+      const payments = JSON.parse(localStorage.getItem("qy_payments") || "[]");
+      if (payments.length === 0) {
+        alert("No payments available to export.");
+        return;
+      }
+      
+      let csvContent = "Invoice ID,User Name,User Email,Amount (INR),Due Date,Status,Payment details\n";
+      payments.forEach(p => {
+        const desc = (p.description || "").replace(/"/g, '""');
+        csvContent += `"${p.id}","${p.userName || ''}","${p.userEmail || ''}",${p.amount},"${p.dueDate}","${p.status}","${desc}"\n`;
+      });
+      
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `quantum_yoga_billing_ledger_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+
+  const btnPrintAttendance = document.getElementById("btn-print-attendance");
+  if (btnPrintAttendance) {
+    btnPrintAttendance.addEventListener("click", () => {
+      window.print();
+    });
+  }
+
   adminSettingsTabBtn.addEventListener("click", () => setAdminSubTab("settings"));
   
   if (adminBatchesTabBtn) {
@@ -21881,6 +22145,68 @@ Please verify and update my status. Thank you!`);
             <div class="stat-box admin-stat-card">
               <span class="stat-num" id="admin-stat-popular-pose" style="font-size: 1.1rem; text-align: center; word-break: break-word; font-weight: 700; height: 2rem; display: flex; align-items: center;">None</span>
               <span class="stat-label">Most Favorited Pose</span>
+            </div>
+          </div>
+
+          <!-- Action Controls -->
+          <div class="controls-card" style="margin-top: 1.5rem; padding: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end;">
+            <button class="btn btn-secondary" id="btn-export-billing-csv">📥 Export CSV Ledger</button>
+            <button class="btn btn-secondary" id="btn-print-attendance">🖨️ Print Attendance Log</button>
+          </div>
+
+          <!-- Visual Graphs Grid -->
+          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="profile-panel">
+              <h3>📊 Monthly Collections (Revenue)</h3>
+              <div id="chart-collections-container" style="width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-top: 1rem; padding: 0.5rem; position: relative;">
+                <!-- Dynamically generated SVG bar chart will load here -->
+              </div>
+            </div>
+            <div class="profile-panel">
+              <h3>📈 Monthly Booking Trends (Class Count)</h3>
+              <div id="chart-bookings-container" style="width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-top: 1rem; padding: 0.5rem; position: relative;">
+                <!-- Dynamically generated SVG line chart will load here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Rankings & Popularity List -->
+          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="profile-panel">
+              <h3>🏆 Most Favorited Postures</h3>
+              <div class="admin-table-wrapper" style="margin-top: 1rem;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Pose Name</th>
+                      <th>Category</th>
+                      <th style="text-align: right;">Favorites</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-reports-poses-ranking">
+                    <!-- Dynamically filled with top favorited postures -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="profile-panel">
+              <h3>🔥 Most Popular Routines</h3>
+              <div class="admin-table-wrapper" style="margin-top: 1rem;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Routine Name</th>
+                      <th>Difficulty</th>
+                      <th style="text-align: right;">Completions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-reports-routines-ranking">
+                    <!-- Dynamically filled with top popular routines -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 

@@ -64,6 +64,12 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **Milestone Badges**: Automatically unlocks and lights up streak achievements (3, 7, 14, and 30-day targets) with glowing, pulsing hover effects.
 *   **One-Click Logging**: Provides student dashboard checkbox controls to mark practices complete for the day, syncing directly to the server.
 
+### 11. [Admin Studio Analytics & CSV/PDF Reports](file:///d:/QuantumYogaWebsite/openspec/changes/admin-analytics-reports/specs/admin-reports-analytics/spec.md)
+*   **Interactive SVG Charts**: Dynamic revenue collection bar charts and scheduled class booking trend line charts drawn dynamically in JS.
+*   **Posture Rankings**: Compiles student favorite histories and workout frequencies to present tables listing the top 5 yoga postures and routines.
+*   **CSV Exporter**: Allows administrators to download a complete ledger file of billing transactions with a single click.
+*   **Print-ready Reports**: Integrates specialized printing stylesheets to automatically hide non-printable dashboard headers and buttons, enabling clean physical logging or PDF print-outs.
+
 ---
 
 ## 🛠️ Technology Stack

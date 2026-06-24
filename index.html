@@ -634,6 +634,68 @@
             </div>
           </div>
 
+          <!-- Action Controls -->
+          <div class="controls-card" style="margin-top: 1.5rem; padding: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end;">
+            <button class="btn btn-secondary" id="btn-export-billing-csv">📥 Export CSV Ledger</button>
+            <button class="btn btn-secondary" id="btn-print-attendance">🖨️ Print Attendance Log</button>
+          </div>
+
+          <!-- Visual Graphs Grid -->
+          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="profile-panel">
+              <h3>📊 Monthly Collections (Revenue)</h3>
+              <div id="chart-collections-container" style="width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-top: 1rem; padding: 0.5rem; position: relative;">
+                <!-- Dynamically generated SVG bar chart will load here -->
+              </div>
+            </div>
+            <div class="profile-panel">
+              <h3>📈 Monthly Booking Trends (Class Count)</h3>
+              <div id="chart-bookings-container" style="width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-top: 1rem; padding: 0.5rem; position: relative;">
+                <!-- Dynamically generated SVG line chart will load here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Rankings & Popularity List -->
+          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="profile-panel">
+              <h3>🏆 Most Favorited Postures</h3>
+              <div class="admin-table-wrapper" style="margin-top: 1rem;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Pose Name</th>
+                      <th>Category</th>
+                      <th style="text-align: right;">Favorites</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-reports-poses-ranking">
+                    <!-- Dynamically filled with top favorited postures -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="profile-panel">
+              <h3>🔥 Most Popular Routines</h3>
+              <div class="admin-table-wrapper" style="margin-top: 1rem;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Routine Name</th>
+                      <th>Difficulty</th>
+                      <th style="text-align: right;">Completions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-reports-routines-ranking">
+                    <!-- Dynamically filled with top popular routines -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           <!-- Chronological Completion History Logs Table -->
           <div class="admin-panel" style="margin-top: 2rem;">
             <h3>⏱️ Chronological Completion History</h3>
