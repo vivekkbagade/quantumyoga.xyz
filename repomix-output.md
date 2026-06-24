@@ -13515,6 +13515,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else if (tabName === "live-class") {
       navLiveClass.classList.add("active");
       sectionLiveClass.classList.add("active");
+      const activeRoom = getActiveTimetableRoom();
+      const isInstructor = state.currentUser && state.currentUser.email === "admin@quantumyoga.xyz";
+      initLiveClassRoom(activeRoom || "qy-general-room", isInstructor);
     } else if (tabName === "admin") {
       if (!state.currentUser || state.currentUser.email !== "admin@quantumyoga.xyz") {
         setTab("poses");
@@ -20575,6 +20578,43 @@ Please verify and update my status. Thank you!`);
 
     window.initLiveClassRoom = initLiveClassRoom;
     window.disposeLiveClassRoom = disposeLiveClassRoom;
+
+    function getActiveTimetableRoom() {
+      if (!state.currentUser) return null;
+      const batches = JSON.parse(localStorage.getItem("qy_batches") || "[]");
+      const activeBatch = batches.find(b => b.id === state.currentUser.batchId) || batches[0];
+      if (!activeBatch || !activeBatch.timetable) return null;
+
+      const now = new Date();
+      let activeRoomId = null;
+
+      batchTimetableCheck:
+      for (const slot of activeBatch.timetable) {
+        const todayClassStart = new Date(now);
+        const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const targetDayIdx = days.indexOf(slot.day);
+        const todayDayIdx = now.getDay();
+        let diffDays = targetDayIdx - todayDayIdx;
+        todayClassStart.setDate(now.getDate() + diffDays);
+        
+        const [timeStr, ampm] = slot.time.split(" ");
+        const [hoursStr, minutesStr] = timeStr.split(":");
+        let hrs = parseInt(hoursStr);
+        if (ampm === "PM" && hrs !== 12) hrs += 12;
+        if (ampm === "AM" && hrs === 12) hrs = 0;
+        todayClassStart.setHours(hrs, parseInt(minutesStr), 0, 0);
+
+        const classEnd = new Date(todayClassStart.getTime() + 60 * 60 * 1000); // 1 hour
+        if (now.getTime() >= todayClassStart.getTime() && now.getTime() <= classEnd.getTime()) {
+          activeRoomId = `qy-room-${activeBatch.id}-${slot.day.toLowerCase()}`;
+          break batchTimetableCheck;
+        }
+      }
+
+      return activeRoomId;
+    }
+
+    window.getActiveTimetableRoom = getActiveTimetableRoom;
 
     checkSession();
     renderPoses();
