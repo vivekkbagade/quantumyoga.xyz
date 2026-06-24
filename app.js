@@ -495,6 +495,204 @@ document.addEventListener("DOMContentLoaded", async () => {
   const videoBufferedBar = document.getElementById("video-buffered-bar");
   const videoTimelineHandle = document.getElementById("video-timeline-handle");
 
+  // Voice Coach DOM Elements
+  const voiceCoachToggle = document.getElementById("voice-coach-toggle");
+  const voiceSettingsToggleBtn = document.getElementById("voice-settings-toggle-btn");
+  const voiceCoachSettings = document.getElementById("voice-coach-settings");
+  const voiceCoachSelect = document.getElementById("voice-coach-select");
+  const voiceCoachVolume = document.getElementById("voice-coach-volume");
+  const voiceCoachRate = document.getElementById("voice-coach-rate");
+  const voiceCoachPitch = document.getElementById("voice-coach-pitch");
+
+  const routineWalkthroughPanel = document.getElementById("routine-walkthrough-panel");
+  const walkthroughPoseName = document.getElementById("walkthrough-pose-name");
+  const walkthroughPoseSanskrit = document.getElementById("walkthrough-pose-sanskrit");
+  const walkthroughTimerText = document.getElementById("walkthrough-timer-text");
+  const walkthroughInstructions = document.getElementById("walkthrough-instructions");
+  const walkthroughNextPoseName = document.getElementById("walkthrough-next-pose-name");
+  const walkthroughNextPoseWrap = document.getElementById("walkthrough-next-pose-wrap");
+
+  // Voice Coach Runtime State
+  let voiceCoachVoices = [];
+  let routineTimer = null;
+  let currentSteps = [];
+  let currentStepIdx = 0;
+  let stepSecondsRemaining = 0;
+  let breathingTimer = null;
+
+  // Initialize Voice Coach settings and populate available voices
+  function initVoiceCoachSettings() {
+    if (!voiceCoachToggle) return;
+    
+    // Load settings from localStorage
+    const savedEnabled = localStorage.getItem("qy_voice_coach_enabled") === "true";
+    voiceCoachToggle.checked = savedEnabled;
+    
+    const savedVolume = localStorage.getItem("qy_voice_coach_volume");
+    if (savedVolume !== null) voiceCoachVolume.value = savedVolume;
+    
+    const savedRate = localStorage.getItem("qy_voice_coach_rate");
+    if (savedRate !== null) voiceCoachRate.value = savedRate;
+    
+    const savedPitch = localStorage.getItem("qy_voice_coach_pitch");
+    if (savedPitch !== null) voiceCoachPitch.value = savedPitch;
+    
+    function populateVoices() {
+      if (typeof window.speechSynthesis === "undefined") return;
+      voiceCoachVoices = window.speechSynthesis.getVoices();
+      const selectedVoiceName = localStorage.getItem("qy_voice_coach_selected_voice") || "";
+      
+      voiceCoachSelect.innerHTML = "";
+      voiceCoachVoices.forEach(voice => {
+        const option = document.createElement("option");
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        if (voice.name === selectedVoiceName) {
+          option.selected = true;
+        }
+        voiceCoachSelect.appendChild(option);
+      });
+    }
+    
+    populateVoices();
+    if (typeof window.speechSynthesis !== "undefined" && window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = populateVoices;
+    }
+  }
+
+  // Speak a voice cue using the SpeechSynthesis API
+  function speakVoiceCue(text) {
+    if (!voiceCoachToggle || !voiceCoachToggle.checked) return;
+    if (typeof window.speechSynthesis === "undefined") return;
+    
+    // Cancel any active/queued dispatches to prevent overlap
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    const selectedVoiceName = voiceCoachSelect.value;
+    const voice = voiceCoachVoices.find(v => v.name === selectedVoiceName);
+    if (voice) utterance.voice = voice;
+    
+    utterance.volume = parseFloat(voiceVolumeSliderValue());
+    utterance.rate = parseFloat(voiceCoachRate.value || 1.0);
+    utterance.pitch = parseFloat(voiceCoachPitch.value || 1.0);
+    
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function voiceVolumeSliderValue() {
+    return voiceCoachVolume ? voiceCoachVolume.value : 0.8;
+  }
+
+  // Bind settings listeners
+  if (voiceCoachToggle) {
+    voiceCoachToggle.addEventListener("change", () => {
+      localStorage.setItem("qy_voice_coach_enabled", voiceCoachToggle.checked);
+      if (!voiceCoachToggle.checked && typeof window.speechSynthesis !== "undefined") {
+        window.speechSynthesis.cancel();
+      }
+    });
+  }
+  if (voiceCoachSelect) {
+    voiceCoachSelect.addEventListener("change", () => {
+      localStorage.setItem("qy_voice_coach_selected_voice", voiceCoachSelect.value);
+    });
+  }
+  if (voiceCoachVolume) {
+    voiceCoachVolume.addEventListener("input", () => {
+      localStorage.setItem("qy_voice_coach_volume", voiceCoachVolume.value);
+    });
+  }
+  if (voiceCoachRate) {
+    voiceCoachRate.addEventListener("input", () => {
+      localStorage.setItem("qy_voice_coach_rate", voiceCoachRate.value);
+    });
+  }
+  if (voiceCoachPitch) {
+    voiceCoachPitch.addEventListener("input", () => {
+      localStorage.setItem("qy_voice_coach_pitch", voiceCoachPitch.value);
+    });
+  }
+  if (voiceSettingsToggleBtn) {
+    voiceSettingsToggleBtn.addEventListener("click", () => {
+      const isHidden = voiceCoachSettings.style.display === "none";
+      voiceCoachSettings.style.display = isHidden ? "flex" : "none";
+    });
+  }
+
+  // Start a step in active routine
+  function startRoutineStep(index) {
+    if (index < 0 || index >= currentSteps.length) {
+      stopRoutinePlayback();
+      handleVideoCompletion();
+      return;
+    }
+    
+    currentStepIdx = index;
+    const step = currentSteps[index];
+    const poseInfo = YOGA_POSES.find(p => p.id === step.poseId);
+    if (!poseInfo) return;
+    
+    const secs = parseInt(step.duration) || 60;
+    stepSecondsRemaining = secs;
+    
+    walkthroughPoseName.textContent = poseInfo.name;
+    walkthroughPoseSanskrit.textContent = poseInfo.sanskrit;
+    walkthroughTimerText.textContent = formatTime(stepSecondsRemaining);
+    walkthroughInstructions.textContent = poseInfo.instructions[0] || poseInfo.description;
+    
+    if (index + 1 < currentSteps.length) {
+      const nextStep = currentSteps[index + 1];
+      const nextPoseInfo = YOGA_POSES.find(p => p.id === nextStep.poseId);
+      if (nextPoseInfo) {
+        walkthroughNextPoseName.textContent = nextPoseInfo.name;
+        walkthroughNextPoseWrap.style.display = "block";
+      } else {
+        walkthroughNextPoseWrap.style.display = "none";
+      }
+    } else {
+      walkthroughNextPoseName.textContent = "Final Stretch";
+      walkthroughNextPoseWrap.style.display = "block";
+    }
+    
+    // Narrate pose alignment details
+    speakVoiceCue(`Step ${index + 1}: ${poseInfo.name}. Sanskrit: ${poseInfo.sanskrit}. Tip: ${poseInfo.instructions[0] || poseInfo.description}`);
+    
+    clearInterval(routineTimer);
+    routineTimer = setInterval(() => {
+      if (!videoElement.paused) {
+        stepSecondsRemaining--;
+        walkthroughTimerText.textContent = formatTime(stepSecondsRemaining);
+        
+        if (stepSecondsRemaining <= 0) {
+          clearInterval(routineTimer);
+          startRoutineStep(currentStepIdx + 1);
+        }
+      }
+    }, 1000);
+    
+    clearInterval(breathingTimer);
+    breathingTimer = setInterval(() => {
+      if (!videoElement.paused && stepSecondsRemaining > 5) {
+        speakVoiceCue("Inhale for four seconds... and exhale for four seconds...");
+      }
+    }, 12000);
+  }
+
+  function stopRoutinePlayback() {
+    clearInterval(routineTimer);
+    clearInterval(breathingTimer);
+    routineTimer = null;
+    breathingTimer = null;
+    if (routineWalkthroughPanel) {
+      routineWalkthroughPanel.style.display = "none";
+    }
+    if (typeof window.speechSynthesis !== "undefined") {
+      window.speechSynthesis.cancel();
+    }
+  }
+
   // Force Change Password DOM Elements
   const forceChangePasswordOverlay = document.getElementById("force-change-password-overlay");
   const forceChangePasswordForm = document.getElementById("force-change-password-form");
@@ -782,6 +980,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     videoElement.poster = posterUrl;
     videoModal.classList.add("active");
     videoModal.setAttribute("aria-hidden", "false");
+
+    // Start routine progression if we are in a routine
+    if (state.activeRoutineId) {
+      const routine = YOGA_ROUTINES.find(r => r.id === state.activeRoutineId);
+      if (routine) {
+        currentSteps = routine.poses;
+        if (routineWalkthroughPanel) {
+          routineWalkthroughPanel.style.display = "flex";
+        }
+        videoElement.loop = true;
+        speakVoiceCue(`Starting ${routine.name}`);
+        startRoutineStep(0);
+      }
+    } else {
+      if (routineWalkthroughPanel) {
+        routineWalkthroughPanel.style.display = "none";
+      }
+      videoElement.loop = false;
+    }
     
     // Attempt playback immediately
     videoElement.play()
@@ -798,6 +1015,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     videoModal.classList.remove("active");
     videoModal.setAttribute("aria-hidden", "true");
     updatePlayPauseState(false);
+    stopRoutinePlayback();
   }
 
   function updatePlayPauseState(isPlaying) {
@@ -8614,6 +8832,7 @@ Please verify and update my status. Thank you!`);
     checkSession();
     renderPoses();
     renderRoutines();
+    initVoiceCoachSettings();
     await loadFromServer();
 
     // Periodic synchronization from server to detect active live rooms and other updates

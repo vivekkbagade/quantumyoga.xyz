@@ -1382,6 +1382,56 @@
     <div class="video-player-container">
       <button class="video-modal-close" id="close-video-modal" aria-label="Close video player">&times;</button>
       
+      <!-- Voice Coach Floating Control Widget -->
+      <div id="voice-coach-toggle-wrapper" class="voice-coach-widget">
+        <div class="voice-coach-header">
+          <label class="voice-coach-switch">
+            <input type="checkbox" id="voice-coach-toggle">
+            <span class="voice-coach-slider"></span>
+          </label>
+          <span class="voice-coach-title">🎙️ Voice Coach</span>
+          <button id="voice-settings-toggle-btn" class="voice-settings-btn" type="button" aria-label="Voice Settings">⚙️</button>
+        </div>
+        
+        <!-- Voice settings drawer -->
+        <div id="voice-coach-settings" class="voice-coach-settings-drawer" style="display: none;">
+          <div class="settings-group">
+            <label for="voice-coach-select">Voice:</label>
+            <select id="voice-coach-select" class="voice-select-dropdown"></select>
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-volume">Volume:</label>
+            <input type="range" id="voice-coach-volume" min="0" max="1" step="0.1" value="0.8">
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-rate">Speech Rate:</label>
+            <input type="range" id="voice-coach-rate" min="0.5" max="2" step="0.1" value="1.0">
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-pitch">Speech Pitch:</label>
+            <input type="range" id="voice-coach-pitch" min="0.5" max="2" step="0.1" value="1.0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Routine Walkthrough HUD Overlay -->
+      <div id="routine-walkthrough-panel" class="routine-walkthrough-panel" style="display: none;">
+        <div class="walkthrough-pose-header">
+          <h3 id="walkthrough-pose-name">Child's Pose</h3>
+          <p id="walkthrough-pose-sanskrit">Balasana</p>
+        </div>
+        <div class="walkthrough-timer-wrap">
+          <span class="walkthrough-timer-icon">⏱️</span>
+          <span id="walkthrough-timer-text">0:00</span>
+        </div>
+        <div class="walkthrough-instructions-wrap">
+          <p id="walkthrough-instructions">Deep breathing warmup...</p>
+        </div>
+        <div class="walkthrough-next-pose" id="walkthrough-next-pose-wrap">
+          <span>Next: <strong id="walkthrough-next-pose-name">-</strong></span>
+        </div>
+      </div>
+
       <!-- Video Element -->
       <video id="custom-video-element" preload="metadata" poster="">
         <source src="" type="video/mp4">

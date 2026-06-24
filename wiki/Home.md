@@ -39,3 +39,7 @@ Learn about the GitHub-style contribution chart, daily streaks tracker, and mile
 ### 11. [Studio Analytics & CSV/PDF Reports](Reports-and-Analytics.md)
 Learn about interactive SVG data charts, posture rankings, CSV exports, and printable PDF logs.
 
+### 12. [Guided Practice Voice Coach](Practice-Voice-Coach.md)
+Learn about the native Web Speech API (Text-to-Speech) voice coach alignment guides and breathing cadence cues.
+
+

@@ -283,6 +283,7 @@ wiki/Home.md
 wiki/Lead-Management-and-CRM.md
 wiki/Live-Yoga-Rooms.md
 wiki/Practice-Tracker.md
+wiki/Practice-Voice-Coach.md
 wiki/Reports-and-Analytics.md
 wiki/WhatsApp-Integration.md
 ```
@@ -496,24 +497,24 @@ The system SHALL narrate breathing cycles ("Inhale" and "Exhale") at regular int
 ````markdown
 ## 1. Dashboard UI Settings
 
-- [ ] 1.1 Add the glassmorphic Voice Coach toggle widget (`#voice-coach-toggle-wrapper`) and voice select elements inside the routine player modal in `index.html`
-- [ ] 1.2 Add volume, speech rate, and speech pitch controls in the settings modal list in `index.html`
+- [x] 1.1 Add the glassmorphic Voice Coach toggle widget (`#voice-coach-toggle-wrapper`) and voice select elements inside the routine player modal in `index.html`
+- [x] 1.2 Add volume, speech rate, and speech pitch controls in the settings modal list in `index.html`
 
 ## 2. Core Speech Synthesis Engine
 
-- [ ] 2.1 Implement `initVoiceCoachSettings()` in `app.js` to populate available voices using `speechSynthesis.getVoices()`
-- [ ] 2.2 Implement `speakVoiceCue(text)` helper in `app.js` that handles canceling active queues, setting rates, pitch, and triggering TTS output
-- [ ] 2.3 Store preferred voice selections in local settings state
+- [x] 2.1 Implement `initVoiceCoachSettings()` in `app.js` to populate available voices using `speechSynthesis.getVoices()`
+- [x] 2.2 Implement `speakVoiceCue(text)` helper in `app.js` that handles canceling active queues, setting rates, pitch, and triggering TTS output
+- [x] 2.3 Store preferred voice selections in local settings state
 
 ## 3. Playback Integration
 
-- [ ] 3.1 Hook `speakVoiceCue` into the routine step transition handler in `app.js` to announce step number, pose title, and details
-- [ ] 3.2 Implement breathing cue scheduler to trigger periodic inhale/exhale speech prompts during pose holds
+- [x] 3.1 Hook `speakVoiceCue` into the routine step transition handler in `app.js` to announce step number, pose title, and details
+- [x] 3.2 Implement breathing cue scheduler to trigger periodic inhale/exhale speech prompts during pose holds
 
 ## 4. Verification and Build
 
-- [ ] 4.1 Run `npm run build` to verify frontend compiling
-- [ ] 4.2 Validate synthesis is cancelable and transitions play smoothly on mock routine start
+- [x] 4.1 Run `npm run build` to verify frontend compiling
+- [x] 4.2 Validate synthesis is cancelable and transitions play smoothly on mock routine start
 ````
 
 ## File: openspec/changes/live-yoga-rooms-webrtc/.openspec.yaml
@@ -1158,6 +1159,37 @@ Unlocked badges change from a locked/translucent state to an illuminated state w
 
 *   **LocalStorage Key**: Saved under `qy_users` within each user record as a `practice_logs` array of ISO timestamps.
 *   **Database Synchronization**: Synced automatically to the server database via the `/api/db` endpoint, persisting progress across all client platforms.
+````
+
+## File: wiki/Practice-Voice-Coach.md
+````markdown
+# Guided Practice Voice Coach (Interactive Audio Guides)
+
+The Guided Practice Voice Coach integrates client-side Text-to-Speech (TTS) alignment cues and breathing cadence prompts directly into the guided routines overlay player. This allows students to practice yoga hands-free without constantly checking their device screens.
+
+## ⚙️ Technical Architecture
+
+The Voice Coach relies entirely on the client's web browser using native browser APIs:
+
+1. **Text-To-Speech Synthesis**: Powered by `window.speechSynthesis`.
+2. **Audio Queue Management**: Uses `SpeechSynthesisUtterance` to speak phrases. To prevent overlapping speech, the app invokes `window.speechSynthesis.cancel()` immediately before dispatching any new alignment or breathing cue.
+3. **Autoplay Policy Bypass**: Browser autoplay policies restrict audio until a user interaction (like clicking a button) is performed. Since the Voice Coach controls are embedded directly in the routine detail modal overlay, the user's initial interaction satisfies this restriction.
+
+## 🎛️ Settings & Controls
+
+Inside the Custom HTML5 video player overlay, the user has access to a glassmorphic Voice Coach settings panel:
+
+* **Voice Selection Dropdown**: Dynamically queries the browser device for all available voices using `speechSynthesis.getVoices()`, allowing users to select accents and genders.
+* **Volume Slider**: Controls speech synthesis output volume.
+* **Speech Rate Slider**: Speeds up or slows down the narration cadence.
+* **Speech Pitch Slider**: Adjusts the tone of the speaking voice.
+
+## ⏱️ Playback Integration
+
+When the Voice Coach is active:
+1. **Pose Transitions**: On transition to a new pose, the coach reads out the pose number, name, Sanskrit translation, and the first instruction/alignment tip.
+2. **Breathing Cadence Prompts**: During pose holds, the coach schedules periodic reminders (e.g., "Inhale for 4 seconds... Exhale for 4 seconds...") matching the pose hold pace.
+3. **Cancellation**: Toggling the Voice Coach off or closing the video modal cancels all pending speech dispatches immediately.
 ````
 
 ## File: wiki/Reports-and-Analytics.md
@@ -3931,6 +3963,244 @@ select option {
 .video-modal-close:hover {
   background: rgba(0, 0, 0, 0.8);
   color: var(--accent-secondary);
+}
+
+/* Voice Coach Floating Control Widget */
+.voice-coach-widget {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  width: 260px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  transition: all 0.3s ease;
+}
+
+.voice-coach-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.voice-coach-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex: 1;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.voice-settings-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: var(--transition-fast);
+}
+
+.voice-settings-btn:hover {
+  color: var(--accent-primary);
+  transform: rotate(30deg);
+}
+
+/* Switch Toggle Styling */
+.voice-coach-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+}
+
+.voice-coach-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.voice-coach-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: .3s;
+  border-radius: 20px;
+}
+
+.voice-coach-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+.voice-coach-switch input:checked + .voice-coach-slider {
+  background-color: var(--accent-primary);
+}
+
+.voice-coach-switch input:checked + .voice-coach-slider:before {
+  transform: translateX(18px);
+}
+
+/* Voice Settings Drawer */
+.voice-coach-settings-drawer {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.settings-group label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.voice-select-dropdown {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem;
+  color: #fff;
+  font-size: 0.8rem;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.settings-group input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  outline: none;
+}
+
+.settings-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.settings-group input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Routine Walkthrough HUD Overlay */
+.routine-walkthrough-panel {
+  position: absolute;
+  top: 1.5rem;
+  right: 5.5rem;
+  z-index: 45;
+  width: 300px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.walkthrough-pose-header h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.walkthrough-pose-header p {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--accent-secondary);
+  margin: 0.2rem 0 0 0;
+}
+
+.walkthrough-timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  align-self: flex-start;
+}
+
+.walkthrough-timer-icon {
+  font-size: 1rem;
+}
+
+#walkthrough-timer-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.walkthrough-instructions-wrap {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+#walkthrough-instructions {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.walkthrough-next-pose {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 0.6rem;
+}
+
+.walkthrough-next-pose strong {
+  color: var(--text-primary);
 }
 
 #custom-video-element {
@@ -12119,6 +12389,9 @@ Learn about the GitHub-style contribution chart, daily streaks tracker, and mile
 
 ### 11. [Studio Analytics & CSV/PDF Reports](Reports-and-Analytics.md)
 Learn about interactive SVG data charts, posture rankings, CSV exports, and printable PDF logs.
+
+### 12. [Guided Practice Voice Coach](Practice-Voice-Coach.md)
+Learn about the native Web Speech API (Text-to-Speech) voice coach alignment guides and breathing cadence cues.
 ````
 
 ## File: openspec/changes/auto-review-upi-payments/design.md
@@ -13496,6 +13769,204 @@ document.addEventListener("DOMContentLoaded", async () => {
   const videoBufferedBar = document.getElementById("video-buffered-bar");
   const videoTimelineHandle = document.getElementById("video-timeline-handle");
 
+  // Voice Coach DOM Elements
+  const voiceCoachToggle = document.getElementById("voice-coach-toggle");
+  const voiceSettingsToggleBtn = document.getElementById("voice-settings-toggle-btn");
+  const voiceCoachSettings = document.getElementById("voice-coach-settings");
+  const voiceCoachSelect = document.getElementById("voice-coach-select");
+  const voiceCoachVolume = document.getElementById("voice-coach-volume");
+  const voiceCoachRate = document.getElementById("voice-coach-rate");
+  const voiceCoachPitch = document.getElementById("voice-coach-pitch");
+
+  const routineWalkthroughPanel = document.getElementById("routine-walkthrough-panel");
+  const walkthroughPoseName = document.getElementById("walkthrough-pose-name");
+  const walkthroughPoseSanskrit = document.getElementById("walkthrough-pose-sanskrit");
+  const walkthroughTimerText = document.getElementById("walkthrough-timer-text");
+  const walkthroughInstructions = document.getElementById("walkthrough-instructions");
+  const walkthroughNextPoseName = document.getElementById("walkthrough-next-pose-name");
+  const walkthroughNextPoseWrap = document.getElementById("walkthrough-next-pose-wrap");
+
+  // Voice Coach Runtime State
+  let voiceCoachVoices = [];
+  let routineTimer = null;
+  let currentSteps = [];
+  let currentStepIdx = 0;
+  let stepSecondsRemaining = 0;
+  let breathingTimer = null;
+
+  // Initialize Voice Coach settings and populate available voices
+  function initVoiceCoachSettings() {
+    if (!voiceCoachToggle) return;
+    
+    // Load settings from localStorage
+    const savedEnabled = localStorage.getItem("qy_voice_coach_enabled") === "true";
+    voiceCoachToggle.checked = savedEnabled;
+    
+    const savedVolume = localStorage.getItem("qy_voice_coach_volume");
+    if (savedVolume !== null) voiceCoachVolume.value = savedVolume;
+    
+    const savedRate = localStorage.getItem("qy_voice_coach_rate");
+    if (savedRate !== null) voiceCoachRate.value = savedRate;
+    
+    const savedPitch = localStorage.getItem("qy_voice_coach_pitch");
+    if (savedPitch !== null) voiceCoachPitch.value = savedPitch;
+    
+    function populateVoices() {
+      if (typeof window.speechSynthesis === "undefined") return;
+      voiceCoachVoices = window.speechSynthesis.getVoices();
+      const selectedVoiceName = localStorage.getItem("qy_voice_coach_selected_voice") || "";
+      
+      voiceCoachSelect.innerHTML = "";
+      voiceCoachVoices.forEach(voice => {
+        const option = document.createElement("option");
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        if (voice.name === selectedVoiceName) {
+          option.selected = true;
+        }
+        voiceCoachSelect.appendChild(option);
+      });
+    }
+    
+    populateVoices();
+    if (typeof window.speechSynthesis !== "undefined" && window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = populateVoices;
+    }
+  }
+
+  // Speak a voice cue using the SpeechSynthesis API
+  function speakVoiceCue(text) {
+    if (!voiceCoachToggle || !voiceCoachToggle.checked) return;
+    if (typeof window.speechSynthesis === "undefined") return;
+    
+    // Cancel any active/queued dispatches to prevent overlap
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    const selectedVoiceName = voiceCoachSelect.value;
+    const voice = voiceCoachVoices.find(v => v.name === selectedVoiceName);
+    if (voice) utterance.voice = voice;
+    
+    utterance.volume = parseFloat(voiceVolumeSliderValue());
+    utterance.rate = parseFloat(voiceCoachRate.value || 1.0);
+    utterance.pitch = parseFloat(voiceCoachPitch.value || 1.0);
+    
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function voiceVolumeSliderValue() {
+    return voiceCoachVolume ? voiceCoachVolume.value : 0.8;
+  }
+
+  // Bind settings listeners
+  if (voiceCoachToggle) {
+    voiceCoachToggle.addEventListener("change", () => {
+      localStorage.setItem("qy_voice_coach_enabled", voiceCoachToggle.checked);
+      if (!voiceCoachToggle.checked && typeof window.speechSynthesis !== "undefined") {
+        window.speechSynthesis.cancel();
+      }
+    });
+  }
+  if (voiceCoachSelect) {
+    voiceCoachSelect.addEventListener("change", () => {
+      localStorage.setItem("qy_voice_coach_selected_voice", voiceCoachSelect.value);
+    });
+  }
+  if (voiceCoachVolume) {
+    voiceCoachVolume.addEventListener("input", () => {
+      localStorage.setItem("qy_voice_coach_volume", voiceCoachVolume.value);
+    });
+  }
+  if (voiceCoachRate) {
+    voiceCoachRate.addEventListener("input", () => {
+      localStorage.setItem("qy_voice_coach_rate", voiceCoachRate.value);
+    });
+  }
+  if (voiceCoachPitch) {
+    voiceCoachPitch.addEventListener("input", () => {
+      localStorage.setItem("qy_voice_coach_pitch", voiceCoachPitch.value);
+    });
+  }
+  if (voiceSettingsToggleBtn) {
+    voiceSettingsToggleBtn.addEventListener("click", () => {
+      const isHidden = voiceCoachSettings.style.display === "none";
+      voiceCoachSettings.style.display = isHidden ? "flex" : "none";
+    });
+  }
+
+  // Start a step in active routine
+  function startRoutineStep(index) {
+    if (index < 0 || index >= currentSteps.length) {
+      stopRoutinePlayback();
+      handleVideoCompletion();
+      return;
+    }
+    
+    currentStepIdx = index;
+    const step = currentSteps[index];
+    const poseInfo = YOGA_POSES.find(p => p.id === step.poseId);
+    if (!poseInfo) return;
+    
+    const secs = parseInt(step.duration) || 60;
+    stepSecondsRemaining = secs;
+    
+    walkthroughPoseName.textContent = poseInfo.name;
+    walkthroughPoseSanskrit.textContent = poseInfo.sanskrit;
+    walkthroughTimerText.textContent = formatTime(stepSecondsRemaining);
+    walkthroughInstructions.textContent = poseInfo.instructions[0] || poseInfo.description;
+    
+    if (index + 1 < currentSteps.length) {
+      const nextStep = currentSteps[index + 1];
+      const nextPoseInfo = YOGA_POSES.find(p => p.id === nextStep.poseId);
+      if (nextPoseInfo) {
+        walkthroughNextPoseName.textContent = nextPoseInfo.name;
+        walkthroughNextPoseWrap.style.display = "block";
+      } else {
+        walkthroughNextPoseWrap.style.display = "none";
+      }
+    } else {
+      walkthroughNextPoseName.textContent = "Final Stretch";
+      walkthroughNextPoseWrap.style.display = "block";
+    }
+    
+    // Narrate pose alignment details
+    speakVoiceCue(`Step ${index + 1}: ${poseInfo.name}. Sanskrit: ${poseInfo.sanskrit}. Tip: ${poseInfo.instructions[0] || poseInfo.description}`);
+    
+    clearInterval(routineTimer);
+    routineTimer = setInterval(() => {
+      if (!videoElement.paused) {
+        stepSecondsRemaining--;
+        walkthroughTimerText.textContent = formatTime(stepSecondsRemaining);
+        
+        if (stepSecondsRemaining <= 0) {
+          clearInterval(routineTimer);
+          startRoutineStep(currentStepIdx + 1);
+        }
+      }
+    }, 1000);
+    
+    clearInterval(breathingTimer);
+    breathingTimer = setInterval(() => {
+      if (!videoElement.paused && stepSecondsRemaining > 5) {
+        speakVoiceCue("Inhale for four seconds... and exhale for four seconds...");
+      }
+    }, 12000);
+  }
+
+  function stopRoutinePlayback() {
+    clearInterval(routineTimer);
+    clearInterval(breathingTimer);
+    routineTimer = null;
+    breathingTimer = null;
+    if (routineWalkthroughPanel) {
+      routineWalkthroughPanel.style.display = "none";
+    }
+    if (typeof window.speechSynthesis !== "undefined") {
+      window.speechSynthesis.cancel();
+    }
+  }
+
   // Force Change Password DOM Elements
   const forceChangePasswordOverlay = document.getElementById("force-change-password-overlay");
   const forceChangePasswordForm = document.getElementById("force-change-password-form");
@@ -13783,6 +14254,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     videoElement.poster = posterUrl;
     videoModal.classList.add("active");
     videoModal.setAttribute("aria-hidden", "false");
+
+    // Start routine progression if we are in a routine
+    if (state.activeRoutineId) {
+      const routine = YOGA_ROUTINES.find(r => r.id === state.activeRoutineId);
+      if (routine) {
+        currentSteps = routine.poses;
+        if (routineWalkthroughPanel) {
+          routineWalkthroughPanel.style.display = "flex";
+        }
+        videoElement.loop = true;
+        speakVoiceCue(`Starting ${routine.name}`);
+        startRoutineStep(0);
+      }
+    } else {
+      if (routineWalkthroughPanel) {
+        routineWalkthroughPanel.style.display = "none";
+      }
+      videoElement.loop = false;
+    }
     
     // Attempt playback immediately
     videoElement.play()
@@ -13799,6 +14289,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     videoModal.classList.remove("active");
     videoModal.setAttribute("aria-hidden", "true");
     updatePlayPauseState(false);
+    stopRoutinePlayback();
   }
 
   function updatePlayPauseState(isPlaying) {
@@ -21615,6 +22106,7 @@ Please verify and update my status. Thank you!`);
     checkSession();
     renderPoses();
     renderRoutines();
+    initVoiceCoachSettings();
     await loadFromServer();
 
     // Periodic synchronization from server to detect active live rooms and other updates
@@ -23016,6 +23508,56 @@ Please verify and update my status. Thank you!`);
     <div class="video-player-container">
       <button class="video-modal-close" id="close-video-modal" aria-label="Close video player">&times;</button>
       
+      <!-- Voice Coach Floating Control Widget -->
+      <div id="voice-coach-toggle-wrapper" class="voice-coach-widget">
+        <div class="voice-coach-header">
+          <label class="voice-coach-switch">
+            <input type="checkbox" id="voice-coach-toggle">
+            <span class="voice-coach-slider"></span>
+          </label>
+          <span class="voice-coach-title">🎙️ Voice Coach</span>
+          <button id="voice-settings-toggle-btn" class="voice-settings-btn" type="button" aria-label="Voice Settings">⚙️</button>
+        </div>
+        
+        <!-- Voice settings drawer -->
+        <div id="voice-coach-settings" class="voice-coach-settings-drawer" style="display: none;">
+          <div class="settings-group">
+            <label for="voice-coach-select">Voice:</label>
+            <select id="voice-coach-select" class="voice-select-dropdown"></select>
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-volume">Volume:</label>
+            <input type="range" id="voice-coach-volume" min="0" max="1" step="0.1" value="0.8">
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-rate">Speech Rate:</label>
+            <input type="range" id="voice-coach-rate" min="0.5" max="2" step="0.1" value="1.0">
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-pitch">Speech Pitch:</label>
+            <input type="range" id="voice-coach-pitch" min="0.5" max="2" step="0.1" value="1.0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Routine Walkthrough HUD Overlay -->
+      <div id="routine-walkthrough-panel" class="routine-walkthrough-panel" style="display: none;">
+        <div class="walkthrough-pose-header">
+          <h3 id="walkthrough-pose-name">Child's Pose</h3>
+          <p id="walkthrough-pose-sanskrit">Balasana</p>
+        </div>
+        <div class="walkthrough-timer-wrap">
+          <span class="walkthrough-timer-icon">⏱️</span>
+          <span id="walkthrough-timer-text">0:00</span>
+        </div>
+        <div class="walkthrough-instructions-wrap">
+          <p id="walkthrough-instructions">Deep breathing warmup...</p>
+        </div>
+        <div class="walkthrough-next-pose" id="walkthrough-next-pose-wrap">
+          <span>Next: <strong id="walkthrough-next-pose-name">-</strong></span>
+        </div>
+      </div>
+
       <!-- Video Element -->
       <video id="custom-video-element" preload="metadata" poster="">
         <source src="" type="video/mp4">

@@ -70,6 +70,11 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **CSV Exporter**: Allows administrators to download a complete ledger file of billing transactions with a single click.
 *   **Print-ready Reports**: Integrates specialized printing stylesheets to automatically hide non-printable dashboard headers and buttons, enabling clean physical logging or PDF print-outs.
 
+### 12. [Guided Practice Voice Coach](file:///d:/QuantumYogaWebsite/openspec/changes/guided-practice-voice-coach/specs/voice-coach/spec.md)
+*   **Interactive Audio Alignment Guides**: Speaks pose names, Sanskrit translations, and posture alignment instructions out loud using the browser's native Web Speech API.
+*   **Breathing Cadence Auditory Prompts**: Synthesizes periodic breathing prompts ("Inhale... Exhale...") matching the pose hold timings.
+*   **Glassmorphic Settings Widget**: Floating player overlay that toggles the voice guide on/off and configures speaking voices, volume, speech rates, and speech pitches locally.
+
 ---
 
 ## 🛠️ Technology Stack
