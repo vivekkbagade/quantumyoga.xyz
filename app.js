@@ -519,6 +519,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentStepIdx = 0;
   let stepSecondsRemaining = 0;
   let breathingTimer = null;
+  let routineIsPlaying = false;
 
   // Initialize Voice Coach settings and populate available voices
   function initVoiceCoachSettings() {
@@ -661,7 +662,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     clearInterval(routineTimer);
     routineTimer = setInterval(() => {
-      if (!videoElement.paused) {
+      if (routineIsPlaying) {
         stepSecondsRemaining--;
         walkthroughTimerText.textContent = formatTime(stepSecondsRemaining);
         
@@ -674,7 +675,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     clearInterval(breathingTimer);
     breathingTimer = setInterval(() => {
-      if (!videoElement.paused && stepSecondsRemaining > 5) {
+      if (routineIsPlaying && stepSecondsRemaining > 5) {
         speakVoiceCue("Inhale for four seconds... and exhale for four seconds...");
       }
     }, 12000);
@@ -685,6 +686,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     clearInterval(breathingTimer);
     routineTimer = null;
     breathingTimer = null;
+    routineIsPlaying = false;
     if (routineWalkthroughPanel) {
       routineWalkthroughPanel.style.display = "none";
     }
@@ -990,6 +992,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           routineWalkthroughPanel.style.display = "flex";
         }
         videoElement.loop = true;
+        routineIsPlaying = true;
         speakVoiceCue(`Starting ${routine.name}`);
         startRoutineStep(0);
       }
@@ -998,6 +1001,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         routineWalkthroughPanel.style.display = "none";
       }
       videoElement.loop = false;
+      routineIsPlaying = false;
     }
     
     // Attempt playback immediately
@@ -1015,6 +1019,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     videoModal.classList.remove("active");
     videoModal.setAttribute("aria-hidden", "true");
     updatePlayPauseState(false);
+    routineIsPlaying = false;
     stopRoutinePlayback();
   }
 
@@ -1030,12 +1035,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Toggle Play / Pause
   function togglePlay() {
-    if (videoElement.paused) {
-      videoElement.play();
-      updatePlayPauseState(true);
+    if (state.activeRoutineId) {
+      routineIsPlaying = !routineIsPlaying;
+      if (routineIsPlaying) {
+        videoElement.play().catch(err => {
+          console.log("Video play failed (possibly zero length), running in audio-only mode:", err);
+        });
+        updatePlayPauseState(true);
+      } else {
+        videoElement.pause();
+        updatePlayPauseState(false);
+      }
     } else {
-      videoElement.pause();
-      updatePlayPauseState(false);
+      if (videoElement.paused) {
+        videoElement.play().catch(err => console.log(err));
+        updatePlayPauseState(true);
+      } else {
+        videoElement.pause();
+        updatePlayPauseState(false);
+      }
     }
   }
 
@@ -1148,8 +1166,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   videoElement.addEventListener("click", togglePlay);
   videoElement.addEventListener("timeupdate", updateProgress);
   videoElement.addEventListener("durationchange", updateProgress);
-  videoElement.addEventListener("play", () => updatePlayPauseState(true));
-  videoElement.addEventListener("pause", () => updatePlayPauseState(false));
+  videoElement.addEventListener("play", () => {
+    if (state.activeRoutineId) {
+      routineIsPlaying = true;
+    }
+    updatePlayPauseState(true);
+  });
+  videoElement.addEventListener("pause", () => {
+    if (state.activeRoutineId) {
+      // Only pause routine if the video is actually loaded and playable
+      if (videoElement.readyState >= 2) {
+        routineIsPlaying = false;
+      }
+    }
+    updatePlayPauseState(false);
+  });
   videoElement.addEventListener("ended", () => {
     handleVideoCompletion();
   });
