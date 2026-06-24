@@ -154,6 +154,11 @@ openspec/changes/gmail-email-integration/specs/gmail-oauth-connect/spec.md
 openspec/changes/gmail-email-integration/specs/student-email-inbox/spec.md
 openspec/changes/gmail-email-integration/specs/transactional-email-triggers/spec.md
 openspec/changes/gmail-email-integration/tasks.md
+openspec/changes/guided-practice-voice-coach/.openspec.yaml
+openspec/changes/guided-practice-voice-coach/design.md
+openspec/changes/guided-practice-voice-coach/proposal.md
+openspec/changes/guided-practice-voice-coach/specs/voice-coach/spec.md
+openspec/changes/guided-practice-voice-coach/tasks.md
 openspec/changes/implement-supabase-json/.openspec.yaml
 openspec/changes/implement-supabase-json/design.md
 openspec/changes/implement-supabase-json/proposal.md
@@ -398,6 +403,117 @@ The system SHALL provide export options allowing administrators to download CSV 
 
 - [x] 4.1 Run `npm run build` to verify frontend compiling
 - [x] 4.2 Validate charts load and hover values update on mock admin dashboard
+````
+
+## File: openspec/changes/guided-practice-voice-coach/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/guided-practice-voice-coach/design.md
+````markdown
+## Context
+
+Yoga practitioners struggle to maintain visual contact with dashboard screens during balances, forward folds, or inversions. Implementing client-side Text-to-Speech (TTS) using the browser's Web Speech API solves this problem without external backend voice api costs.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement a Toggle Voice Coach UI switch inside the routine preview and play viewport modals.
+*   Hook transition timers to synthesize `SpeechSynthesisUtterance` cues.
+*   Enable voice choice settings (allowing users to pick their preferred voice or set pitch/rate).
+
+**Non-Goals:**
+*   Voice recognition (speech-to-text) for command controls (e.g. telling the app to "pause" or "stop").
+*   Custom hosted voice audio files (synthesis runs 100% locally on the device).
+
+## Decisions
+
+### 1. Web Speech Synthesis (TTS) Engine
+*   **Decision**: Leverage standard `window.speechSynthesis`.
+*   **Rationale**: Supported out of the box in all modern browsers (Safari, Chrome, Firefox, Edge) without network request latency or pricing concerns.
+
+### 2. Multi-Voice Settings Panel
+*   **Decision**: Populate a drop-down selection list using `speechSynthesis.getVoices()` so users can switch speaking options.
+*   **Rationale**: Ensures a customized experience (gender/accent options) depending on user preferences.
+
+## Risks / Trade-offs
+
+*   **Risk**: Voice synthesis can overlap if triggers fire too close together.
+    *   *Mitigation*: Execute `window.speechSynthesis.cancel()` before speaking any new transition or breath phrase.
+*   **Risk**: Speech synthesis requires user interaction before it can play on page load (browser autoplay restrictions).
+    *   *Mitigation*: The toggle is inside the routine modals, which are clicked by the user, satisfying the user gesture requirement.
+````
+
+## File: openspec/changes/guided-practice-voice-coach/proposal.md
+````markdown
+## Why
+
+During guided routines, users must look at their screens to check posture changes, alignment tips, and breathing counts. This screen dependency compromises balance and flow. Incorporating a dynamic voice guide using the browser's native Web Speech API (Text-to-Speech) will create a hands-free, auditory guided practice environment, allowing students to maintain focus and alignment.
+
+## What Changes
+
+*   **Voice Coach Toggle Button**: An overlay or setting inside the routine player modal allowing users to enable/disable the interactive audio guide.
+*   **Speech Trigger Dispatchers**: Hook Speech Synthesis triggers to routine step transitions and breathing ticker ticks.
+*   **Alignment Speech Engine**: Read pose names, step durations, and specific posture alignment notes out loud as steps change.
+*   **Breathing Cadence Audio Guides**: Read breathing cues ("Inhale... Exhale...") dynamically aligned with the routine's pacing.
+
+## Capabilities
+
+### New Capabilities
+- `voice-coach`: Implements client-side Text-to-Speech guides using Web Speech API synthesis to read alignment and breathing cues hands-free.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+*   **Frontend**: Adds UI toggles to the routine video player modals and inserts speech dispatches in step transition routines (`app.js`).
+*   **Aesthetics**: Glassmorphic sound toggles, volume sliders, and animations when the voice coach is active.
+````
+
+## File: openspec/changes/guided-practice-voice-coach/specs/voice-coach/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive Audio Alignment Guides
+The system SHALL narrate pose descriptions and transitions using the browser's native Web Speech API when the voice coach is enabled.
+
+#### Scenario: Audio guide triggers on pose transition
+- **WHEN** the user starts a guided routine and the step changes to a new posture
+- **THEN** the system checks if the voice coach toggle is enabled, and if so, synthetically speaks the pose name and its core alignment tip.
+
+### Requirement: Breathing Cadence Auditory Prompts
+The system SHALL narrate breathing cycles ("Inhale" and "Exhale") at regular intervals matching the pose hold pacing.
+
+#### Scenario: Breathing guides narration
+- **WHEN** a pose step hold begins
+- **THEN** the system triggers periodic audio announcements ("Inhale for 4 seconds... Exhale for 4 seconds...") matching the hold duration settings.
+````
+
+## File: openspec/changes/guided-practice-voice-coach/tasks.md
+````markdown
+## 1. Dashboard UI Settings
+
+- [ ] 1.1 Add the glassmorphic Voice Coach toggle widget (`#voice-coach-toggle-wrapper`) and voice select elements inside the routine player modal in `index.html`
+- [ ] 1.2 Add volume, speech rate, and speech pitch controls in the settings modal list in `index.html`
+
+## 2. Core Speech Synthesis Engine
+
+- [ ] 2.1 Implement `initVoiceCoachSettings()` in `app.js` to populate available voices using `speechSynthesis.getVoices()`
+- [ ] 2.2 Implement `speakVoiceCue(text)` helper in `app.js` that handles canceling active queues, setting rates, pitch, and triggering TTS output
+- [ ] 2.3 Store preferred voice selections in local settings state
+
+## 3. Playback Integration
+
+- [ ] 3.1 Hook `speakVoiceCue` into the routine step transition handler in `app.js` to announce step number, pose title, and details
+- [ ] 3.2 Implement breathing cue scheduler to trigger periodic inhale/exhale speech prompts during pose holds
+
+## 4. Verification and Build
+
+- [ ] 4.1 Run `npm run build` to verify frontend compiling
+- [ ] 4.2 Validate synthesis is cancelable and transitions play smoothly on mock routine start
 ````
 
 ## File: openspec/changes/live-yoga-rooms-webrtc/.openspec.yaml
@@ -12749,11 +12865,15 @@ on:
     paths-ignore:
       - '**/*.md'
       - '.gitignore'
+      - 'wiki/**'
+      - 'openspec/**'
   pull_request:
     branches: [ main, master ]
     paths-ignore:
       - '**/*.md'
       - '.gitignore'
+      - 'wiki/**'
+      - 'openspec/**'
   workflow_dispatch:
 
 permissions:
