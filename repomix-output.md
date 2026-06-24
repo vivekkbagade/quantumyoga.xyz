@@ -21302,6 +21302,46 @@ Please verify and update my status. Thank you!`);
       </div>
     </section>
 
+    <!-- Community Chat Section -->
+    <section id="chat-section" class="content-section">
+      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+        
+        <!-- Header -->
+        <div class="admin-header-card" style="margin-bottom: 0;">
+          <div class="admin-avatar">💬</div>
+          <div class="admin-info-details">
+            <h2>Community Chat</h2>
+            <p>Connect with instructors and fellow practitioners in real-time.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 3fr; gap: 1.5rem;">
+          <!-- Left Panel: Online Users -->
+          <div class="admin-panel" style="display: flex; flex-direction: column;">
+            <h3>👥 Online Users</h3>
+            <div id="chat-users-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; max-height: 400px;">
+              <!-- Connected users list loaded dynamically -->
+              <p style="color: var(--text-muted); font-size: 0.85rem;">No other users online.</p>
+            </div>
+          </div>
+
+          <!-- Right Panel: Message Room -->
+          <div class="admin-panel" style="display: flex; flex-direction: column; height: 500px;">
+            <div id="chat-messages-container" style="flex: 1; overflow-y: auto; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem;">
+              <!-- History/new messages loaded dynamically -->
+              <p style="color: var(--text-muted); text-align: center; margin-top: auto; margin-bottom: auto; font-size: 0.9rem;">Welcome to the chat! Start the conversation below.</p>
+            </div>
+            
+            <form id="chat-send-form" style="display: flex; gap: 0.75rem; align-items: center;">
+              <input type="text" id="chat-message-input" placeholder="Type a message..." required autocomplete="off" style="flex: 1; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); outline: none;">
+              <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Send</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <!-- Footer -->
@@ -21668,45 +21708,6 @@ Please verify and update my status. Thank you!`);
     </div>
   </div>
 
-    <!-- Community Chat Section -->
-    <section id="chat-section" class="content-section">
-      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
-        
-        <!-- Header -->
-        <div class="admin-header-card" style="margin-bottom: 0;">
-          <div class="admin-avatar">💬</div>
-          <div class="admin-info-details">
-            <h2>Community Chat</h2>
-            <p>Connect with instructors and fellow practitioners in real-time.</p>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1.2fr 3fr; gap: 1.5rem;">
-          <!-- Left Panel: Online Users -->
-          <div class="admin-panel" style="display: flex; flex-direction: column;">
-            <h3>👥 Online Users</h3>
-            <div id="chat-users-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; max-height: 400px;">
-              <!-- Connected users list loaded dynamically -->
-              <p style="color: var(--text-muted); font-size: 0.85rem;">No other users online.</p>
-            </div>
-          </div>
-
-          <!-- Right Panel: Message Room -->
-          <div class="admin-panel" style="display: flex; flex-direction: column; height: 500px;">
-            <div id="chat-messages-container" style="flex: 1; overflow-y: auto; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem;">
-              <!-- History/new messages loaded dynamically -->
-              <p style="color: var(--text-muted); text-align: center; margin-top: auto; margin-bottom: auto; font-size: 0.9rem;">Welcome to the chat! Start the conversation below.</p>
-            </div>
-            
-            <form id="chat-send-form" style="display: flex; gap: 0.75rem; align-items: center;">
-              <input type="text" id="chat-message-input" placeholder="Type a message..." required autocomplete="off" style="flex: 1; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); outline: none;">
-              <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Send</button>
-            </form>
-          </div>
-        </div>
-
-      </div>
-    </section>
 
   </div> <!-- End #dashboard-app -->
 
