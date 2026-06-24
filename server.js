@@ -52,6 +52,12 @@ const DEFAULT_WHATSAPP_SETTINGS = {
   }
 };
 
+const DEFAULT_STUDIO_CONTACT_SETTINGS = {
+  address: "108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038",
+  phone: "+91 98765 43210",
+  email: "support@quantumyoga.xyz"
+};
+
 // Unified state helper functions
 async function getDbState() {
   let state = null;
@@ -70,6 +76,9 @@ async function getDbState() {
   if (state) {
     if (!state.whatsappSettings) {
       state.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+    }
+    if (!state.studioContactSettings) {
+      state.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
     }
     if (!state.upi_ledger) {
       state.upi_ledger = [];
@@ -128,6 +137,9 @@ app.all('/api/db', async (req, res) => {
         const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
         if (!localState.whatsappSettings) {
           localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+        }
+        if (!localState.studioContactSettings) {
+          localState.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
         }
         return res.json(localState);
       }

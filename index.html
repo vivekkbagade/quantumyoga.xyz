@@ -1073,6 +1073,27 @@
             </form>
           </div>
 
+          <!-- Studio Contact Settings card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📞 Studio Contact Settings</h3>
+            <form id="admin-contact-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-address" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Physical Address:</label>
+                <textarea id="admin-contact-address" required rows="2" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.8rem; outline: none; resize: vertical;"></textarea>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-phone" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Phone Number:</label>
+                <input type="tel" id="admin-contact-phone" required placeholder="+91 98765 43210" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-email" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Email ID:</label>
+                <input type="email" id="admin-contact-email" required placeholder="support@quantumyoga.xyz" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Studio Details</button>
+              <div id="admin-contact-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
+            </form>
+          </div>
+
           <!-- UPI Bank Ledger CSV/Excel Upload widget -->
           <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
             <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📂 Import UPI Bank Statement</h3>
@@ -1885,7 +1906,7 @@
           <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📍</span>
           <div>
             <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Address</h4>
-            <p style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
+            <p id="contact-studio-address" style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
           </div>
         </div>
 
@@ -1893,7 +1914,7 @@
           <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📞</span>
           <div>
             <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Phone Number</h4>
-            <p style="font-size: 0.95rem; margin: 0;"><a href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
+            <p style="font-size: 0.95rem; margin: 0;"><a id="contact-studio-phone" href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
           </div>
         </div>
 
@@ -1901,7 +1922,7 @@
           <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">✉️</span>
           <div>
             <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Email ID</h4>
-            <p style="font-size: 0.95rem; margin: 0;"><a href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
+            <p style="font-size: 0.95rem; margin: 0;"><a id="contact-studio-email" href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
           </div>
         </div>
       </div>

@@ -13503,6 +13503,12 @@ const DEFAULT_WHATSAPP_SETTINGS = {
   }
 };
 
+const DEFAULT_STUDIO_CONTACT_SETTINGS = {
+  address: "108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038",
+  phone: "+91 98765 43210",
+  email: "support@quantumyoga.xyz"
+};
+
 // Unified state helper functions
 async function getDbState() {
   let state = null;
@@ -13521,6 +13527,9 @@ async function getDbState() {
   if (state) {
     if (!state.whatsappSettings) {
       state.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+    }
+    if (!state.studioContactSettings) {
+      state.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
     }
     if (!state.upi_ledger) {
       state.upi_ledger = [];
@@ -13579,6 +13588,9 @@ app.all('/api/db', async (req, res) => {
         const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
         if (!localState.whatsappSettings) {
           localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+        }
+        if (!localState.studioContactSettings) {
+          localState.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
         }
         return res.json(localState);
       }
@@ -15225,6 +15237,27 @@ function broadcastActiveUsers() {
             </form>
           </div>
 
+          <!-- Studio Contact Settings card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📞 Studio Contact Settings</h3>
+            <form id="admin-contact-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-address" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Physical Address:</label>
+                <textarea id="admin-contact-address" required rows="2" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.8rem; outline: none; resize: vertical;"></textarea>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-phone" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Phone Number:</label>
+                <input type="tel" id="admin-contact-phone" required placeholder="+91 98765 43210" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-email" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Email ID:</label>
+                <input type="email" id="admin-contact-email" required placeholder="support@quantumyoga.xyz" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Studio Details</button>
+              <div id="admin-contact-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
+            </form>
+          </div>
+
           <!-- UPI Bank Ledger CSV/Excel Upload widget -->
           <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
             <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📂 Import UPI Bank Statement</h3>
@@ -16037,7 +16070,7 @@ function broadcastActiveUsers() {
           <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📍</span>
           <div>
             <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Address</h4>
-            <p style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
+            <p id="contact-studio-address" style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
           </div>
         </div>
 
@@ -16045,7 +16078,7 @@ function broadcastActiveUsers() {
           <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📞</span>
           <div>
             <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Phone Number</h4>
-            <p style="font-size: 0.95rem; margin: 0;"><a href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
+            <p style="font-size: 0.95rem; margin: 0;"><a id="contact-studio-phone" href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
           </div>
         </div>
 
@@ -16053,7 +16086,7 @@ function broadcastActiveUsers() {
           <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">✉️</span>
           <div>
             <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Email ID</h4>
-            <p style="font-size: 0.95rem; margin: 0;"><a href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
+            <p style="font-size: 0.95rem; margin: 0;"><a id="contact-studio-email" href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
           </div>
         </div>
       </div>
@@ -16391,6 +16424,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const navContactUs = document.getElementById("nav-contact-us");
   const footerContactUs = document.getElementById("footer-contact-us");
   const authContactUsBtn = document.getElementById("auth-contact-us-btn");
+  const contactStudioAddress = document.getElementById("contact-studio-address");
+  const contactStudioPhone = document.getElementById("contact-studio-phone");
+  const contactStudioEmail = document.getElementById("contact-studio-email");
   
   const adminPaymentsTabBtn = document.getElementById("admin-payments-tab-btn");
   const adminPaymentsPanel = document.getElementById("admin-payments-panel");
@@ -16501,6 +16537,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminUpiVpaInput = document.getElementById("admin-upi-vpa");
   const adminUpiNameInput = document.getElementById("admin-upi-name");
   const adminUpiSuccessMsg = document.getElementById("admin-upi-settings-success-msg");
+
+  // Admin Studio Contact Settings DOM Elements
+  const adminContactSettingsForm = document.getElementById("admin-contact-settings-form");
+  const adminContactAddressInput = document.getElementById("admin-contact-address");
+  const adminContactPhoneInput = document.getElementById("admin-contact-phone");
+  const adminContactEmailInput = document.getElementById("admin-contact-email");
+  const adminContactSuccessMsg = document.getElementById("admin-contact-settings-success-msg");
 
   // Client UPI Payment Modal DOM Elements
   const upiPaymentModal = document.getElementById("upi-payment-modal");
@@ -17649,6 +17692,10 @@ document.addEventListener("DOMContentLoaded", async () => {
           // Auto-sync any old/historically mismatched cancelled appointments with their billing records
           syncCancelledAppointmentsWithBilling();
           if (db.site_default_theme) localStorage.setItem("qy_site_default_theme", db.site_default_theme);
+          if (db.studioContactSettings) {
+            localStorage.setItem("qy_studio_contact_settings", JSON.stringify(db.studioContactSettings));
+          }
+          updatePublicContactInfo();
           if (db.appointment_fee !== undefined) {
             localStorage.setItem(STORAGE_KEY_APPOINTMENT_FEE, String(db.appointment_fee));
             // Update admin setting input immediately if it exists
@@ -17744,7 +17791,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         gmailSettings: gmailSettingsForDb,
         whatsappSettings: whatsappSettingsParsed,
         reconciliationSettings: JSON.parse(localStorage.getItem("qy_reconciliation_settings") || JSON.stringify({ tolerance: 0.05, maxAgeDays: 30, columnMapping: { utr: "", amount: "", date: "", sender: "" } })),
-        upi_reconciliation_logs: JSON.parse(localStorage.getItem("qy_reconciliation_logs") || "[]")
+        upi_reconciliation_logs: JSON.parse(localStorage.getItem("qy_reconciliation_logs") || "[]"),
+        studioContactSettings: JSON.parse(localStorage.getItem("qy_studio_contact_settings") || "null")
       };
       await fetch('/api/db', {
         method: 'POST',
@@ -18781,6 +18829,46 @@ Please verify and update my status. Thank you!`);
   function saveUpiSettings(settings) {
     localStorage.setItem(STORAGE_KEY_UPI_SETTINGS, JSON.stringify(settings));
     saveToServer();
+  }
+
+  // Studio Contact Settings Helpers
+  const DEFAULT_STUDIO_CONTACT_SETTINGS = {
+    address: "108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038",
+    phone: "+91 98765 43210",
+    email: "support@quantumyoga.xyz"
+  };
+
+  function loadStudioContactSettings() {
+    const data = localStorage.getItem("qy_studio_contact_settings");
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        console.warn("Error parsing studio contact settings from local storage, using default", e);
+      }
+    }
+    return DEFAULT_STUDIO_CONTACT_SETTINGS;
+  }
+
+  function saveStudioContactSettings(settings) {
+    localStorage.setItem("qy_studio_contact_settings", JSON.stringify(settings));
+    saveToServer();
+    updatePublicContactInfo();
+  }
+
+  function updatePublicContactInfo() {
+    const settings = loadStudioContactSettings();
+    if (contactStudioAddress) {
+      contactStudioAddress.textContent = settings.address;
+    }
+    if (contactStudioPhone) {
+      contactStudioPhone.href = `tel:${settings.phone.replace(/\s+/g, '')}`;
+      contactStudioPhone.textContent = settings.phone;
+    }
+    if (contactStudioEmail) {
+      contactStudioEmail.href = `mailto:${settings.email}`;
+      contactStudioEmail.textContent = settings.email;
+    }
   }
 
   // Appointment fee helpers
@@ -21297,6 +21385,16 @@ Please verify and update my status. Thank you!`);
       }
       if (adminUpiNameInput) {
         adminUpiNameInput.value = currentUpiSettings.name;
+      }
+      const currentContactSettings = loadStudioContactSettings();
+      if (adminContactAddressInput) {
+        adminContactAddressInput.value = currentContactSettings.address;
+      }
+      if (adminContactPhoneInput) {
+        adminContactPhoneInput.value = currentContactSettings.phone;
+      }
+      if (adminContactEmailInput) {
+        adminContactEmailInput.value = currentContactSettings.email;
       }
       // Load appointment fee into input
       const apptFeeInput = document.getElementById("admin-appointment-fee-input");
@@ -24054,6 +24152,30 @@ Please verify and update my status. Thank you!`);
     });
   }
 
+  // Admin Contact settings form submit listener
+  if (adminContactSettingsForm) {
+    adminContactSettingsForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const address = adminContactAddressInput.value.trim();
+      const phone = adminContactPhoneInput.value.trim();
+      const email = adminContactEmailInput.value.trim();
+      
+      if (!address || !phone || !email) {
+        alert("Please enter a valid physical address, phone number, and email ID.");
+        return;
+      }
+      
+      saveStudioContactSettings({ address, phone, email });
+      
+      if (adminContactSuccessMsg) {
+        adminContactSuccessMsg.style.display = "block";
+        setTimeout(() => {
+          adminContactSuccessMsg.style.display = "none";
+        }, 3000);
+      }
+    });
+  }
+
   // Admin WhatsApp settings form submit listener
   const adminWhatsAppSettingsForm = document.getElementById("admin-whatsapp-settings-form");
   if (adminWhatsAppSettingsForm) {
@@ -25035,6 +25157,7 @@ Please verify and update my status. Thank you!`);
     renderPoses();
     renderRoutines();
     initVoiceCoachSettings();
+    updatePublicContactInfo();
     await loadFromServer();
 
     // Periodic synchronization from server to detect active live rooms and other updates
