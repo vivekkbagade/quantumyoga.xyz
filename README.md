@@ -141,6 +141,17 @@ Every time a push is made to the `main` or `master` branch, the CI/CD pipeline c
 *   **Release Archive**: The build process gathers the compiled frontend (`dist/`), backend server files (`server.js`, `data.js`), dependencies config (`package.json`, `package-lock.json`), and process runner files (`ecosystem.config.cjs`) into a single ZIP file named `quantum-yoga-build.zip`.
 *   **Automatic Releases**: This zip file is uploaded as a build asset to a new GitHub Release tagged `build-<run_number>` under the **Releases** page of your repository.
 *   **Manual Deployment**: You can download this pre-compiled zip from GitHub Releases, unzip it on any server, configure the `.env` file, run `npm install --omit=dev`, and start the app using PM2 or npm.
+*   **Release Rollback Strategy**: If a newly deployed build has issues, you can roll back instantly on your VM to a previous stable release:
+    1. Log in to the VM and navigate to your deployment directory (e.g., `/var/www/quantum-yoga`).
+    2. Download a previous stable release zip from your GitHub repository's Releases page (e.g. using `wget` or `curl`).
+    3. Unzip and overwrite the files:
+       ```bash
+       unzip -o quantum-yoga-build.zip
+       ```
+    4. Run `npm install --omit=dev` to sync dependencies, then restart the server processes using PM2:
+       ```bash
+       pm2 startOrReload ecosystem.config.cjs
+       ```
 
 ---
 
