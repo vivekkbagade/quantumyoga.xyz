@@ -1485,6 +1485,66 @@ select option {
   font-weight: 600;
 }
 
+/* Milestone and Practice Grid styles */
+.milestone-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-light-border);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  opacity: 0.4;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  width: 100px;
+}
+.milestone-badge.unlocked {
+  opacity: 1 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+  transform: scale(1.05);
+}
+.milestone-badge.unlocked span {
+  animation: pulse-badge 2s infinite;
+}
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+#practice-calendar-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-flow: column;
+  gap: 3px;
+  width: max-content;
+  margin: 0 auto;
+}
+
+.calendar-pixel {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+.calendar-pixel:hover {
+  transform: scale(1.3);
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.calendar-pixel.contrib-0 { background: rgba(255, 255, 255, 0.05); }
+.calendar-pixel.contrib-1 { background: rgba(16, 185, 129, 0.2); }
+.calendar-pixel.contrib-2 { background: rgba(16, 185, 129, 0.45); }
+.calendar-pixel.contrib-3 { background: rgba(16, 185, 129, 0.7); }
+.calendar-pixel.contrib-4 { background: rgba(16, 185, 129, 0.95); box-shadow: 0 0 4px rgba(16, 185, 129, 0.4); }
+
 /* Profile content grid */
 .profile-content-grid {
   display: grid;

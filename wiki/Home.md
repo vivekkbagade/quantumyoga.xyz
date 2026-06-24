@@ -33,3 +33,6 @@ Learn about interactive WebRTC virtual classrooms, Jitsi Meet IFrame API, browse
 ### 9. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
 Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
 
+### 10. [Practice Calendar & Streak Grid](Practice-Tracker.md)
+Learn about the GitHub-style contribution chart, daily streaks tracker, and milestone badges.
+

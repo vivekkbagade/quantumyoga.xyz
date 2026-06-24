@@ -285,6 +285,74 @@
 
         <!-- My Practice Log Sub-panel -->
         <div class="profile-panel-content" id="profile-practice-panel" style="display: none;">
+          <!-- Practice Streak Tracker & Contribution Grid -->
+          <div class="profile-panel" style="margin-bottom: 1.5rem; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <h3 style="margin-bottom: 0.25rem;">🔥 Daily Practice Streak & Activity</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Build habits by checking off your daily yoga practice.</p>
+              </div>
+              <div id="practice-checkin-wrapper" style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-light-border); padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
+                <input type="checkbox" id="practice-today-check" style="width: 1.15rem; height: 1.15rem; cursor: pointer; accent-color: #10b981;">
+                <label for="practice-today-check" style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); cursor: pointer; user-select: none;">Completed Practice Today</label>
+              </div>
+            </div>
+            
+            <!-- Streak Stats -->
+            <div class="profile-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; width: 100%;">
+              <div class="stat-box" style="padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm);">
+                <span class="stat-num" id="practice-current-streak" style="font-size: 2.2rem; color: #10b981; text-shadow: 0 0 10px rgba(16,185,129,0.3);">0 Days</span>
+                <span class="stat-label" style="font-size: 0.8rem; margin-top: 0.25rem;">Current Streak 🔥</span>
+              </div>
+              <div class="stat-box" style="padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm);">
+                <span class="stat-num" id="practice-longest-streak" style="font-size: 2.2rem; color: #8b5cf6; text-shadow: 0 0 10px rgba(139,92,246,0.3);">0 Days</span>
+                <span class="stat-label" style="font-size: 0.8rem; margin-top: 0.25rem;">Longest Streak 🏆</span>
+              </div>
+            </div>
+
+            <!-- Milestone Badges Grid -->
+            <div style="margin-bottom: 1.5rem;">
+              <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Yoga Milestones</h4>
+              <div id="practice-milestones-grid" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="milestone-badge locked" id="badge-streak-3">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🌱</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">3 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-7">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🔥</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">7 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-14">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🧘</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">14 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-30">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">👑</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">30 Day Streak</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- GitHub Contribution Grid -->
+            <div>
+              <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Practice Density (Past 365 Days)</h4>
+              <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-light-border); border-radius: var(--radius-md); padding: 1.25rem; overflow-x: auto;">
+                <div id="practice-calendar-grid">
+                  <!-- Dynamically filled with 365 days of pixel grids -->
+                </div>
+                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; padding-right: 1rem;">
+                  <span>Less</span>
+                  <div style="width: 10px; height: 10px; background: rgba(255,255,255,0.05); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.2); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.4); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.7); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.95); border-radius: 2px;"></div>
+                  <span>More</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="profile-content-grid">
             <!-- Favorites List Panel -->
             <div class="profile-panel">

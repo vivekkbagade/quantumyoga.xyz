@@ -1299,6 +1299,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
           }
 
+          if (state.currentUser) {
+            const freshUsers = JSON.parse(localStorage.getItem("qy_users") || "[]");
+            const freshUser = freshUsers.find(u => u.email === state.currentUser.email);
+            if (freshUser) {
+              state.currentUser = freshUser;
+            }
+          }
+
           // Trigger UI updates to reflect fresh database data
           renderStudentAppointments();
           renderAdminAppointments();
@@ -3259,6 +3267,158 @@ Please verify and update my status. Thank you!`);
     });
   }
 
+  // Dynamic streaks computation helper
+  function computeStreaks(datesList) {
+    if (!datesList || datesList.length === 0) return { current: 0, longest: 0 };
+    // Parse to sorted unique YYYY-MM-DD local strings
+    const uniqueLocalDates = Array.from(new Set(datesList.map(d => new Date(d).toLocaleDateString('en-CA')))).sort();
+    
+    let currentStreak = 0;
+    let longestStreak = 0;
+    
+    const todayStr = new Date().toLocaleDateString('en-CA');
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toLocaleDateString('en-CA');
+    
+    // Calculate current daily streak
+    let checkDateStr = todayStr;
+    if (!uniqueLocalDates.includes(todayStr)) {
+      if (uniqueLocalDates.includes(yesterdayStr)) {
+        checkDateStr = yesterdayStr;
+      } else {
+        checkDateStr = null;
+      }
+    }
+    
+    if (checkDateStr) {
+      let tempDate = new Date(checkDateStr);
+      while (true) {
+        const tempStr = tempDate.toLocaleDateString('en-CA');
+        if (uniqueLocalDates.includes(tempStr)) {
+          currentStreak++;
+          tempDate.setDate(tempDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+    }
+    
+    // Calculate longest streak
+    let currentRun = 0;
+    let prevTime = null;
+    
+    uniqueLocalDates.forEach(dateStr => {
+      const currTime = new Date(dateStr).getTime();
+      if (prevTime === null) {
+        currentRun = 1;
+      } else {
+        const diffTime = currTime - prevTime;
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) {
+          currentRun++;
+        } else if (diffDays > 1) {
+          if (currentRun > longestStreak) {
+            longestStreak = currentRun;
+          }
+          currentRun = 1;
+        }
+      }
+      prevTime = currTime;
+    });
+    if (currentRun > longestStreak) {
+      longestStreak = currentRun;
+    }
+    
+    return { current: currentStreak, longest: longestStreak };
+  }
+
+  // Render Practice Streak Calendar grid and badges
+  function renderPracticeTracker() {
+    if (!state.currentUser) return;
+    if (state.currentUser.email === "admin@quantumyoga.xyz") return;
+    
+    if (!state.currentUser.practice_logs) {
+      state.currentUser.practice_logs = [];
+    }
+    
+    const todayLocalStr = new Date().toLocaleDateString('en-CA');
+    const hasCompletedToday = state.currentUser.practice_logs.some(ts => {
+      return new Date(ts).toLocaleDateString('en-CA') === todayLocalStr;
+    });
+    
+    const checkEl = document.getElementById("practice-today-check");
+    if (checkEl) {
+      checkEl.checked = hasCompletedToday;
+    }
+    
+    const streaks = computeStreaks(state.currentUser.practice_logs);
+    
+    const currentStreakEl = document.getElementById("practice-current-streak");
+    const longestStreakEl = document.getElementById("practice-longest-streak");
+    
+    if (currentStreakEl) currentStreakEl.textContent = `${streaks.current} Day${streaks.current !== 1 ? 's' : ''}`;
+    if (longestStreakEl) longestStreakEl.textContent = `${streaks.longest} Day${streaks.longest !== 1 ? 's' : ''}`;
+    
+    // Update milestones
+    const milestones = [
+      { id: "badge-streak-3", target: 3 },
+      { id: "badge-streak-7", target: 7 },
+      { id: "badge-streak-14", target: 14 },
+      { id: "badge-streak-30", target: 30 }
+    ];
+    milestones.forEach(m => {
+      const el = document.getElementById(m.id);
+      if (el) {
+        if (streaks.longest >= m.target) {
+          el.classList.remove("locked");
+          el.classList.add("unlocked");
+        } else {
+          el.classList.add("locked");
+          el.classList.remove("unlocked");
+        }
+      }
+    });
+    
+    // Draw 365-day grid
+    const gridContainer = document.getElementById("practice-calendar-grid");
+    if (gridContainer) {
+      gridContainer.innerHTML = "";
+      
+      const practiceCountsByDate = {};
+      state.currentUser.practice_logs.forEach(d => {
+        const key = new Date(d).toLocaleDateString('en-CA');
+        practiceCountsByDate[key] = (practiceCountsByDate[key] || 0) + 1;
+      });
+      
+      const now = new Date();
+      const startDate = new Date();
+      startDate.setDate(now.getDate() - 364);
+      
+      for (let i = 0; i < 365; i++) {
+        const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+        const dateStr = date.toLocaleDateString('en-CA');
+        const count = practiceCountsByDate[dateStr] || 0;
+        
+        const pixel = document.createElement("div");
+        pixel.className = "calendar-pixel";
+        
+        let density = 0;
+        if (count > 0) {
+          if (count === 1) density = 1;
+          else if (count === 2) density = 2;
+          else if (count === 3) density = 3;
+          else density = 4;
+        }
+        pixel.classList.add(`contrib-${density}`);
+        
+        const formattedDate = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        pixel.title = `${count} practice${count !== 1 ? 's' : ''} on ${formattedDate}`;
+        gridContainer.appendChild(pixel);
+      }
+    }
+  }
+
   // Student Profile Dashboard Sub-tabs Routing
   function setProfileSubTab(panelName) {
     if (!profileDashboardTabBtn || !profilePracticeTabBtn) return;
@@ -3284,6 +3444,7 @@ Please verify and update my status. Thank you!`);
       profilePracticePanel.style.display = "block";
       renderFavorites();
       renderHistory();
+      renderPracticeTracker();
     } else if (panelName === "wellness") {
       if (profileWellnessTabBtn) profileWellnessTabBtn.classList.add("active");
       if (profileWellnessPanel) profileWellnessPanel.style.display = "block";
@@ -7151,6 +7312,39 @@ Please verify and update my status. Thank you!`);
           saveUsers(users);
         }
       }
+    });
+  }
+
+  // Practice completion checkbox listener
+  const practiceTodayCheck = document.getElementById("practice-today-check");
+  if (practiceTodayCheck) {
+    practiceTodayCheck.addEventListener("change", () => {
+      if (!state.currentUser) return;
+      if (!state.currentUser.practice_logs) state.currentUser.practice_logs = [];
+      
+      const todayLocalStr = new Date().toLocaleDateString('en-CA');
+      if (practiceTodayCheck.checked) {
+        state.currentUser.practice_logs.push(new Date().toISOString());
+        // trigger check-off scale animation or pulse
+        practiceTodayCheck.parentElement.style.animation = "pulse 0.5s ease";
+        setTimeout(() => {
+          practiceTodayCheck.parentElement.style.animation = "";
+        }, 500);
+      } else {
+        state.currentUser.practice_logs = state.currentUser.practice_logs.filter(ts => {
+          return new Date(ts).toLocaleDateString('en-CA') !== todayLocalStr;
+        });
+      }
+      
+      // Save changes to database
+      const users = loadUsers();
+      const userIndex = users.findIndex(u => u.email === state.currentUser.email);
+      if (userIndex > -1) {
+        users[userIndex].practice_logs = state.currentUser.practice_logs;
+        saveUsers(users);
+      }
+      
+      renderPracticeTracker();
     });
   }
 

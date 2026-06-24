@@ -58,6 +58,12 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **Dynamic Timetable Sync**: Integrates a glowing "Join Live Room Now" shortcut directly within the student's next class countdown timetable when a session is active.
 *   **Manual Session Synchronization**: Allows instructors to launch a live video session under any room name, which is persisted to the database and automatically synchronized to all logged-in students in real-time, displaying a "Join Live Room Now" prompt.
 
+### 10. [Interactive Practice Calendar & Streak Grid](file:///d:/QuantumYogaWebsite/openspec/changes/practice-calendar-streak-grid/specs/practice-tracker/spec.md)
+*   **Practice Contribution Grid**: A GitHub-style 365-day heat map displaying practice density with glassmorphic styles and date-based hover tooltips.
+*   **Streak Tracker**: Dynamically tracks current daily practice streaks and records longest historical streaks.
+*   **Milestone Badges**: Automatically unlocks and lights up streak achievements (3, 7, 14, and 30-day targets) with glowing, pulsing hover effects.
+*   **One-Click Logging**: Provides student dashboard checkbox controls to mark practices complete for the day, syncing directly to the server.
+
 ---
 
 ## 🛠️ Technology Stack

@@ -201,6 +201,11 @@ openspec/changes/persistent-data-storage/design.md
 openspec/changes/persistent-data-storage/proposal.md
 openspec/changes/persistent-data-storage/specs/persistent-data-storage/spec.md
 openspec/changes/persistent-data-storage/tasks.md
+openspec/changes/practice-calendar-streak-grid/.openspec.yaml
+openspec/changes/practice-calendar-streak-grid/design.md
+openspec/changes/practice-calendar-streak-grid/proposal.md
+openspec/changes/practice-calendar-streak-grid/specs/practice-tracker/spec.md
+openspec/changes/practice-calendar-streak-grid/tasks.md
 openspec/changes/real-time-community-chat/.openspec.yaml
 openspec/changes/real-time-community-chat/design.md
 openspec/changes/real-time-community-chat/proposal.md
@@ -267,6 +272,7 @@ wiki/Email-Communication.md
 wiki/Home.md
 wiki/Lead-Management-and-CRM.md
 wiki/Live-Yoga-Rooms.md
+wiki/Practice-Tracker.md
 wiki/WhatsApp-Integration.md
 ```
 
@@ -413,6 +419,124 @@ File Path: `file:///D:/QuantumYogaWebsite/openspec/changes/live-yoga-rooms-webrt
 - [x] 3.1 Implement active room calculation based on user's current timetabled batch ID
 - [x] 3.2 Display a glowing "Join Live Room" CTA button next to active schedule entries in the profile dashboard
 - [x] 3.3 Add click event listeners to join the active streaming session from the dashboard timetable
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/design.md
+````markdown
+## Context
+
+Quantum Yoga students currently have a timetable but no direct gamified habit trackers. Adding a practice contribution chart (similar to GitHub's contribution heat map), streak counter, and unlocked badges will provide visual rewards and encourage regular application interaction.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement a contribution chart (GitHub-style calendar grid) displaying the last 365 days of user practices.
+*   Implement current vs longest practice streak counters.
+*   Award milestone badges for key streak accomplishments (e.g. 3-day, 7-day, 14-day, 30-day).
+*   Add a checkbox or trigger on the student dashboard allowing them to check off today's class/practice manually.
+
+**Non-Goals:**
+*   Integrating external fitness trackers (Apple Health, Google Fit) for automatic logging.
+*   Synchronizing peer grids in real-time (grids are shown on user profiles individually).
+
+## Decisions
+
+### 1. Client-Side Rendering of the Contribution Chart
+*   **Decision**: Render the 365-day grid using pure CSS Grid and Vanilla Javascript dynamically (a container filled with 365 pixel divs styled according to state).
+*   **Rationale**: Avoids bloated graphing libraries. CSS grid provides complete glassmorphic control, color density styling, and easy tooltip/hover effects.
+
+### 2. State Storage in User Database
+*   **Decision**: Store a list of completed practice timestamps (ISO strings or YYYY-MM-DD strings) in `state.currentUser.practice_logs` and serialize it to the server state database.
+*   **Rationale**: Keeps logging persistent across browser sessions and VM deployments. Allows easy backend calculations if needed.
+
+## Risks / Trade-offs
+
+*   **Risk**: Rendering 365 divs per user could impact loading performance.
+    *   *Mitigation*: Pre-generate the divs once during dashboard load and update cell colors on checking/unchecking practices.
+*   **Risk**: Manual logging can be manipulated or backdated.
+    *   *Mitigation*: Only allow users to check off the current date (no backdating or future logging).
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/proposal.md
+````markdown
+## Why
+
+To encourage regular yoga practice, students need visual habit-building tools. Introducing a GitHub-style activity grid (practice calendar), active practice streaks, and milestones will provide visual validation, increase dashboard interactive engagement, and keep practitioners motivated.
+
+## What Changes
+
+*   **Practice Streak Grid Component**: A beautiful glassmorphic contribution chart showing the student's practice density (sessions/sessions checked off) over the year.
+*   **Streak Tracker**: Computes and displays current daily streaks and longest streaks.
+*   **Milestones & Badges**: Awards virtual milestone badges with glowing hover effects for streak achievements.
+*   **Practice Logging**: Integrates practice completion logging (e.g. marking a scheduled routine or pose workout as completed for the day).
+
+## Capabilities
+
+### New Capabilities
+- `practice-tracker`: Handles tracking practice logins/completions, computing current and longest streaks, showing the contribution grid, and awarding milestone badges.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+*   **Frontend**: Adds a new interactive sub-component or card in the student dashboard (Profile tab/section).
+*   **Database/Storage**: Adds a `practice_logs` array to the user's database state to store completion timestamps.
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/specs/practice-tracker/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive Practice Contribution Grid
+The system SHALL display a pixelated contribution chart showing the student's yoga practice density over the past 365 days.
+
+#### Scenario: Displaying contribution calendar density on load
+- **WHEN** the student views their profile page
+- **THEN** the system renders a contribution grid with days of the year, color-coded by practice intensity (0 for none, 1-4 for logged sessions), and hover tooltips showing date and logged count.
+
+### Requirement: Streak Counting and Milestones
+The system SHALL compute current daily practice streaks and longest practice streaks, displaying them alongside visual badges.
+
+#### Scenario: Dynamic calculation of practice streaks
+- **WHEN** a student checks off a yoga class or pose session completion
+- **THEN** the system increments their daily practice log, updates their current and longest streak values in real-time, and plays a subtle check-off animation.
+
+#### Scenario: Displaying milestone achievements
+- **WHEN** the student's current streak reaches milestone counts (e.g., 5 days, 15 days, 30 days)
+- **THEN** the system unlocks and illuminates a glowing milestone badge in the milestone section.
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/tasks.md
+````markdown
+## 1. Database Model and Persistence
+
+- [x] 1.1 Update `saveToServer()` in `app.js` to serialize `practice_logs` array
+- [x] 1.2 Update `loadFromServer()` in `app.js` to retrieve and store `practice_logs` array
+
+## 2. Dashboard UI Elements
+
+- [x] 2.1 Add the practice calendar container (`#practice-calendar-container`) and streak boxes to the student profile section in `index.html`
+- [x] 2.2 Add milestone badge containers with glassmorphic styles in `index.html`
+- [x] 2.3 Implement the Check-In checkbox or button widget inside `index.html` to allow checking off today's practice
+
+## 3. Habit Tracker Logic
+
+- [x] 3.1 Implement calendar grid generation logic in `app.js` to dynamically draw the 365 contribution days
+- [x] 3.2 Implement streak counter calculator (current streak and longest streak) in `app.js` based on `practice_logs`
+- [x] 3.3 Implement check-in button click handler in `app.js` to update `practice_logs`, save to server, trigger check-off animations, and recalculate streaks
+- [x] 3.4 Implement badge illumination logic in `app.js` when milestone targets are hit
+
+## 4. Testing and Verification
+
+- [x] 4.1 Run `npm run build` to verify the frontend compilation
+- [x] 4.2 Verify calendar grids render correctly and check-ins increment daily streaks on mock login
 ````
 
 ## File: openspec/changes/real-time-community-chat/.openspec.yaml
@@ -748,6 +872,54 @@ The client tracks both scheduled class slots and manual live sessions started by
    * Displays `🔴 Live Session Active!` (or `🔴 Class in Progress!`).
    * Appends a glowing `🎥 Join Live Room Now` button to the dashboard countdown box.
    * Redirects the user to the active room name when clicked.
+````
+
+## File: wiki/Practice-Tracker.md
+````markdown
+# Interactive Practice Calendar & Streak Grid
+
+Quantum Yoga features an interactive Practice Tracker designed to help students build consistent daily habits.
+
+---
+
+## 📅 Practice Contribution Grid
+
+The Practice Grid displays the user's practice density over the past 365 days, color-coded by intensity:
+*   **Grid Layout**: Formatted as a 7x52 CSS grid mimicking the GitHub contribution chart.
+*   **Density Mapping**:
+    *   `contrib-0` (Grey): No practice logged.
+    *   `contrib-1` (Light Green): 1 practice session logged.
+    *   `contrib-2` (Medium Green): 2 practice sessions logged.
+    *   `contrib-3` (Dark Green): 3 practice sessions logged.
+    *   `contrib-4` (Vibrant Green with Glow): 4+ practice sessions logged.
+*   **Tooltips**: Hovering over any cell displays the date and total practice sessions completed on that day.
+
+---
+
+## 🔥 Daily Streak Counting
+
+The client dynamically calculates and displays:
+1.  **Current Daily Streak**: The number of consecutive days of practice leading up to today (or yesterday). A streak is maintained as long as the student logs a practice at least once every 24-48 hours.
+2.  **Longest Practice Streak**: The longest contiguous sequence of practice days achieved historically.
+
+---
+
+## 🏆 Milestone Badges
+
+Virtual milestone badges are awarded when the student reaches key streak thresholds:
+*   **🌱 Sprout**: 3-day streak.
+*   **🔥 Spark**: 7-day streak.
+*   **🧘 Master**: 14-day streak.
+*   **👑 Champion**: 30-day streak.
+
+Unlocked badges change from a locked/translucent state to an illuminated state with subtle pulsing animations.
+
+---
+
+## 💾 Storage & Sync
+
+*   **LocalStorage Key**: Saved under `qy_users` within each user record as a `practice_logs` array of ISO timestamps.
+*   **Database Synchronization**: Synced automatically to the server database via the `/api/db` endpoint, persisting progress across all client platforms.
 ````
 
 ## File: .agent/skills/openspec-apply-change/SKILL.md
@@ -3942,6 +4114,66 @@ select option {
   color: var(--text-muted);
   font-weight: 600;
 }
+
+/* Milestone and Practice Grid styles */
+.milestone-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-light-border);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  opacity: 0.4;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  width: 100px;
+}
+.milestone-badge.unlocked {
+  opacity: 1 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+  transform: scale(1.05);
+}
+.milestone-badge.unlocked span {
+  animation: pulse-badge 2s infinite;
+}
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+#practice-calendar-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-flow: column;
+  gap: 3px;
+  width: max-content;
+  margin: 0 auto;
+}
+
+.calendar-pixel {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+.calendar-pixel:hover {
+  transform: scale(1.3);
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.calendar-pixel.contrib-0 { background: rgba(255, 255, 255, 0.05); }
+.calendar-pixel.contrib-1 { background: rgba(16, 185, 129, 0.2); }
+.calendar-pixel.contrib-2 { background: rgba(16, 185, 129, 0.45); }
+.calendar-pixel.contrib-3 { background: rgba(16, 185, 129, 0.7); }
+.calendar-pixel.contrib-4 { background: rgba(16, 185, 129, 0.95); box-shadow: 0 0 4px rgba(16, 185, 129, 0.4); }
 
 /* Profile content grid */
 .profile-content-grid {
@@ -11594,6 +11826,9 @@ Learn about interactive WebRTC virtual classrooms, Jitsi Meet IFrame API, browse
 
 ### 9. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
 Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
+
+### 10. [Practice Calendar & Streak Grid](Practice-Tracker.md)
+Learn about the GitHub-style contribution chart, daily streaks tracker, and milestone badges.
 ````
 
 ## File: openspec/changes/auto-review-upi-payments/design.md
@@ -12337,8 +12572,14 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ main, master ]
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
   pull_request:
     branches: [ main, master ]
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
   workflow_dispatch:
 
 permissions:
@@ -13762,6 +14003,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem("qy_active_live_room", db.activeLiveRoom || "");
             if (typeof updateLiveClassControls === "function") {
               updateLiveClassControls();
+            }
+          }
+
+          if (state.currentUser) {
+            const freshUsers = JSON.parse(localStorage.getItem("qy_users") || "[]");
+            const freshUser = freshUsers.find(u => u.email === state.currentUser.email);
+            if (freshUser) {
+              state.currentUser = freshUser;
             }
           }
 
@@ -15725,6 +15974,158 @@ Please verify and update my status. Thank you!`);
     });
   }
 
+  // Dynamic streaks computation helper
+  function computeStreaks(datesList) {
+    if (!datesList || datesList.length === 0) return { current: 0, longest: 0 };
+    // Parse to sorted unique YYYY-MM-DD local strings
+    const uniqueLocalDates = Array.from(new Set(datesList.map(d => new Date(d).toLocaleDateString('en-CA')))).sort();
+    
+    let currentStreak = 0;
+    let longestStreak = 0;
+    
+    const todayStr = new Date().toLocaleDateString('en-CA');
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toLocaleDateString('en-CA');
+    
+    // Calculate current daily streak
+    let checkDateStr = todayStr;
+    if (!uniqueLocalDates.includes(todayStr)) {
+      if (uniqueLocalDates.includes(yesterdayStr)) {
+        checkDateStr = yesterdayStr;
+      } else {
+        checkDateStr = null;
+      }
+    }
+    
+    if (checkDateStr) {
+      let tempDate = new Date(checkDateStr);
+      while (true) {
+        const tempStr = tempDate.toLocaleDateString('en-CA');
+        if (uniqueLocalDates.includes(tempStr)) {
+          currentStreak++;
+          tempDate.setDate(tempDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+    }
+    
+    // Calculate longest streak
+    let currentRun = 0;
+    let prevTime = null;
+    
+    uniqueLocalDates.forEach(dateStr => {
+      const currTime = new Date(dateStr).getTime();
+      if (prevTime === null) {
+        currentRun = 1;
+      } else {
+        const diffTime = currTime - prevTime;
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) {
+          currentRun++;
+        } else if (diffDays > 1) {
+          if (currentRun > longestStreak) {
+            longestStreak = currentRun;
+          }
+          currentRun = 1;
+        }
+      }
+      prevTime = currTime;
+    });
+    if (currentRun > longestStreak) {
+      longestStreak = currentRun;
+    }
+    
+    return { current: currentStreak, longest: longestStreak };
+  }
+
+  // Render Practice Streak Calendar grid and badges
+  function renderPracticeTracker() {
+    if (!state.currentUser) return;
+    if (state.currentUser.email === "admin@quantumyoga.xyz") return;
+    
+    if (!state.currentUser.practice_logs) {
+      state.currentUser.practice_logs = [];
+    }
+    
+    const todayLocalStr = new Date().toLocaleDateString('en-CA');
+    const hasCompletedToday = state.currentUser.practice_logs.some(ts => {
+      return new Date(ts).toLocaleDateString('en-CA') === todayLocalStr;
+    });
+    
+    const checkEl = document.getElementById("practice-today-check");
+    if (checkEl) {
+      checkEl.checked = hasCompletedToday;
+    }
+    
+    const streaks = computeStreaks(state.currentUser.practice_logs);
+    
+    const currentStreakEl = document.getElementById("practice-current-streak");
+    const longestStreakEl = document.getElementById("practice-longest-streak");
+    
+    if (currentStreakEl) currentStreakEl.textContent = `${streaks.current} Day${streaks.current !== 1 ? 's' : ''}`;
+    if (longestStreakEl) longestStreakEl.textContent = `${streaks.longest} Day${streaks.longest !== 1 ? 's' : ''}`;
+    
+    // Update milestones
+    const milestones = [
+      { id: "badge-streak-3", target: 3 },
+      { id: "badge-streak-7", target: 7 },
+      { id: "badge-streak-14", target: 14 },
+      { id: "badge-streak-30", target: 30 }
+    ];
+    milestones.forEach(m => {
+      const el = document.getElementById(m.id);
+      if (el) {
+        if (streaks.longest >= m.target) {
+          el.classList.remove("locked");
+          el.classList.add("unlocked");
+        } else {
+          el.classList.add("locked");
+          el.classList.remove("unlocked");
+        }
+      }
+    });
+    
+    // Draw 365-day grid
+    const gridContainer = document.getElementById("practice-calendar-grid");
+    if (gridContainer) {
+      gridContainer.innerHTML = "";
+      
+      const practiceCountsByDate = {};
+      state.currentUser.practice_logs.forEach(d => {
+        const key = new Date(d).toLocaleDateString('en-CA');
+        practiceCountsByDate[key] = (practiceCountsByDate[key] || 0) + 1;
+      });
+      
+      const now = new Date();
+      const startDate = new Date();
+      startDate.setDate(now.getDate() - 364);
+      
+      for (let i = 0; i < 365; i++) {
+        const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+        const dateStr = date.toLocaleDateString('en-CA');
+        const count = practiceCountsByDate[dateStr] || 0;
+        
+        const pixel = document.createElement("div");
+        pixel.className = "calendar-pixel";
+        
+        let density = 0;
+        if (count > 0) {
+          if (count === 1) density = 1;
+          else if (count === 2) density = 2;
+          else if (count === 3) density = 3;
+          else density = 4;
+        }
+        pixel.classList.add(`contrib-${density}`);
+        
+        const formattedDate = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        pixel.title = `${count} practice${count !== 1 ? 's' : ''} on ${formattedDate}`;
+        gridContainer.appendChild(pixel);
+      }
+    }
+  }
+
   // Student Profile Dashboard Sub-tabs Routing
   function setProfileSubTab(panelName) {
     if (!profileDashboardTabBtn || !profilePracticeTabBtn) return;
@@ -15750,6 +16151,7 @@ Please verify and update my status. Thank you!`);
       profilePracticePanel.style.display = "block";
       renderFavorites();
       renderHistory();
+      renderPracticeTracker();
     } else if (panelName === "wellness") {
       if (profileWellnessTabBtn) profileWellnessTabBtn.classList.add("active");
       if (profileWellnessPanel) profileWellnessPanel.style.display = "block";
@@ -19620,6 +20022,39 @@ Please verify and update my status. Thank you!`);
     });
   }
 
+  // Practice completion checkbox listener
+  const practiceTodayCheck = document.getElementById("practice-today-check");
+  if (practiceTodayCheck) {
+    practiceTodayCheck.addEventListener("change", () => {
+      if (!state.currentUser) return;
+      if (!state.currentUser.practice_logs) state.currentUser.practice_logs = [];
+      
+      const todayLocalStr = new Date().toLocaleDateString('en-CA');
+      if (practiceTodayCheck.checked) {
+        state.currentUser.practice_logs.push(new Date().toISOString());
+        // trigger check-off scale animation or pulse
+        practiceTodayCheck.parentElement.style.animation = "pulse 0.5s ease";
+        setTimeout(() => {
+          practiceTodayCheck.parentElement.style.animation = "";
+        }, 500);
+      } else {
+        state.currentUser.practice_logs = state.currentUser.practice_logs.filter(ts => {
+          return new Date(ts).toLocaleDateString('en-CA') !== todayLocalStr;
+        });
+      }
+      
+      // Save changes to database
+      const users = loadUsers();
+      const userIndex = users.findIndex(u => u.email === state.currentUser.email);
+      if (userIndex > -1) {
+        users[userIndex].practice_logs = state.currentUser.practice_logs;
+        saveUsers(users);
+      }
+      
+      renderPracticeTracker();
+    });
+  }
+
   // Phone save button listener
   if (profilePhoneSaveBtn) {
     profilePhoneSaveBtn.addEventListener("click", () => {
@@ -20979,6 +21414,74 @@ Please verify and update my status. Thank you!`);
 
         <!-- My Practice Log Sub-panel -->
         <div class="profile-panel-content" id="profile-practice-panel" style="display: none;">
+          <!-- Practice Streak Tracker & Contribution Grid -->
+          <div class="profile-panel" style="margin-bottom: 1.5rem; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <h3 style="margin-bottom: 0.25rem;">🔥 Daily Practice Streak & Activity</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Build habits by checking off your daily yoga practice.</p>
+              </div>
+              <div id="practice-checkin-wrapper" style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-light-border); padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
+                <input type="checkbox" id="practice-today-check" style="width: 1.15rem; height: 1.15rem; cursor: pointer; accent-color: #10b981;">
+                <label for="practice-today-check" style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); cursor: pointer; user-select: none;">Completed Practice Today</label>
+              </div>
+            </div>
+            
+            <!-- Streak Stats -->
+            <div class="profile-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; width: 100%;">
+              <div class="stat-box" style="padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm);">
+                <span class="stat-num" id="practice-current-streak" style="font-size: 2.2rem; color: #10b981; text-shadow: 0 0 10px rgba(16,185,129,0.3);">0 Days</span>
+                <span class="stat-label" style="font-size: 0.8rem; margin-top: 0.25rem;">Current Streak 🔥</span>
+              </div>
+              <div class="stat-box" style="padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm);">
+                <span class="stat-num" id="practice-longest-streak" style="font-size: 2.2rem; color: #8b5cf6; text-shadow: 0 0 10px rgba(139,92,246,0.3);">0 Days</span>
+                <span class="stat-label" style="font-size: 0.8rem; margin-top: 0.25rem;">Longest Streak 🏆</span>
+              </div>
+            </div>
+
+            <!-- Milestone Badges Grid -->
+            <div style="margin-bottom: 1.5rem;">
+              <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Yoga Milestones</h4>
+              <div id="practice-milestones-grid" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="milestone-badge locked" id="badge-streak-3">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🌱</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">3 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-7">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🔥</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">7 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-14">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🧘</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">14 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-30">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">👑</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">30 Day Streak</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- GitHub Contribution Grid -->
+            <div>
+              <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Practice Density (Past 365 Days)</h4>
+              <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-light-border); border-radius: var(--radius-md); padding: 1.25rem; overflow-x: auto;">
+                <div id="practice-calendar-grid">
+                  <!-- Dynamically filled with 365 days of pixel grids -->
+                </div>
+                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; padding-right: 1rem;">
+                  <span>Less</span>
+                  <div style="width: 10px; height: 10px; background: rgba(255,255,255,0.05); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.2); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.4); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.7); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.95); border-radius: 2px;"></div>
+                  <span>More</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="profile-content-grid">
             <!-- Favorites List Panel -->
             <div class="profile-panel">
