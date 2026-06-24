@@ -58,6 +58,11 @@ openspec/changes/add-whatsapp-functionality/specs/class-scheduling/spec.md
 openspec/changes/add-whatsapp-functionality/specs/leads-crm/spec.md
 openspec/changes/add-whatsapp-functionality/specs/whatsapp-communication/spec.md
 openspec/changes/add-whatsapp-functionality/tasks.md
+openspec/changes/admin-analytics-reports/.openspec.yaml
+openspec/changes/admin-analytics-reports/design.md
+openspec/changes/admin-analytics-reports/proposal.md
+openspec/changes/admin-analytics-reports/specs/admin-reports-analytics/spec.md
+openspec/changes/admin-analytics-reports/tasks.md
 openspec/changes/admin-default-theme/.openspec.yaml
 openspec/changes/admin-default-theme/design.md
 openspec/changes/admin-default-theme/proposal.md
@@ -277,6 +282,122 @@ wiki/WhatsApp-Integration.md
 ```
 
 # Files
+
+## File: openspec/changes/admin-analytics-reports/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/admin-analytics-reports/design.md
+````markdown
+## Context
+
+Studio administrators want to view high-level metrics for their business. Instead of integrating bulky charting libraries, we will use raw inline SVGs dynamically populated by JavaScript.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Add a "Studio Analytics" sub-navigation view to the Admin Panel.
+*   Draw SVG charts representing monthly billing collections and scheduled classes.
+*   Add a ranking table of favorited postures and routine counts.
+*   Implement CSV file generators on the client-side using `data:text/csv` URI blobs.
+*   Implement clean print-friendly CSS formatting for PDF printing of attendance logs.
+
+**Non-Goals:**
+*   Server-side PDF rendering using third-party packages. All document generation happens on the client-side.
+
+## Decisions
+
+### 1. SVG Rendering of Charts
+*   **Decision**: Calculate coordinates dynamically and append SVG elements (rects for bars, paths/polylines for charts) using Vanilla JS.
+*   **Rationale**: Minimizes dependencies, keeps bundling lightweight, and ensures responsive rendering.
+
+### 2. Client-Side CSV Downloads
+*   **Decision**: Generate CSV format strings from localStorage array variables dynamically, convert to Blobs, and trigger downloads using mock anchor links.
+*   **Rationale**: Secure and instant download without requiring backend API generation overhead.
+
+## Risks / Trade-offs
+
+*   **Risk**: SVG chart coordinates can scale incorrectly on screen resize.
+    *   *Mitigation*: Use responsive `viewBox` settings on target SVGs.
+````
+
+## File: openspec/changes/admin-analytics-reports/proposal.md
+````markdown
+## Why
+
+Studio administrators need high-level dashboard visualizations and download capabilities to monitor monthly booking counts, financial collection progress, and posture popularity metrics. Adding dynamic interactive SVG graphs and CSV/PDF report download endpoints will provide administrators with immediate business growth insights.
+
+## What Changes
+
+*   **Analytics Sub-tab in Admin Panel**: Introduce a new "Studio Analytics" sub-view inside the Admin Panel.
+*   **Interactive SVG Charts**: Render SVG-based monthly payment revenue bar charts and class booking line charts with hover tooltip animations.
+*   **Postures Popularity Metrics**: Add statistics displaying favorited pose counts and routine execution frequencies.
+*   **CSV/PDF Export Options**: Add buttons to export financial ledger files (CSV) and attendance logs.
+
+## Capabilities
+
+### New Capabilities
+- `admin-reports-analytics`: Visualizes monthly booking trends, collections, and posture rankings using raw SVG charts. Provides one-click CSV and receipt printing/PDF formatting logs.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+*   **Frontend**: Adds a sub-navigation tab under the Admin Panel view (`index.html` & `app.js`).
+*   **Database/Storage**: Reads payments, appointments, users, and routines datasets. No schema changes are required.
+````
+
+## File: openspec/changes/admin-analytics-reports/specs/admin-reports-analytics/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive SVG Visualizations
+The system SHALL display SVG-based interactive charts within the Studio Analytics panel representing payment collections and class bookings.
+
+#### Scenario: Rendering interactive analytics charts
+- **WHEN** the administrator navigates to the "Studio Analytics" sub-tab in the Admin Panel
+- **THEN** the system generates clean SVG bar charts and line charts displaying monthly collections, class bookings, and posture popularity, with hover effects revealing precise values.
+
+### Requirement: Export to CSV and PDF Reports
+The system SHALL provide export options allowing administrators to download CSV financial ledgers or launch a print-friendly PDF receipt of bookings.
+
+#### Scenario: Downloading CSV financial ledger
+- **WHEN** the administrator clicks the "Export CSV Ledger" button
+- **THEN** the browser triggers a file download containing a comma-separated list of all payment logs with dates, invoice IDs, and amounts.
+
+#### Scenario: Print/PDF formatting of studio logs
+- **WHEN** the administrator clicks the "Print Attendance Log" button
+- **THEN** the system opens a browser print window displaying a clean, receipt-like table formatted for PDF generation or physical print.
+````
+
+## File: openspec/changes/admin-analytics-reports/tasks.md
+````markdown
+## 1. Dashboard UI Elements
+
+- [ ] 1.1 Add the "Studio Analytics" sub-navigation tab and content panels inside `#admin-section` in `index.html`
+- [ ] 1.2 Add container divs for SVG charts (billing collections and booking trends) in `index.html`
+- [ ] 1.3 Add CSV Export and Attendance Printing buttons in the analytics panel inside `index.html`
+
+## 2. Interactive SVG Logic
+
+- [ ] 2.1 Write JavaScript helper functions in `app.js` to compile monthly payment data and draw an SVG bar chart
+- [ ] 2.2 Write JavaScript helper functions in `app.js` to compile monthly booking dates and draw an SVG line chart
+- [ ] 2.3 Implement posture popularity calculator (aggregating favorited counts from `qy_users`) and render a ranking table
+
+## 3. CSV & Receipt PDF Generators
+
+- [ ] 3.1 Implement the CSV billing exporter click handler in `app.js` utilizing `Blob` downloads
+- [ ] 3.2 Implement print view styles in `index.css` targeting `@media print` to present a receipt-like log table
+- [ ] 3.3 Implement the Print Attendance handler in `app.js` to toggle a print view overlay and call `window.print()`
+
+## 4. Verification and Build
+
+- [ ] 4.1 Run `npm run build` to verify frontend compiling
+- [ ] 4.2 Validate charts load and hover values update on mock admin dashboard
+````
 
 ## File: openspec/changes/live-yoga-rooms-webrtc/.openspec.yaml
 ````yaml
