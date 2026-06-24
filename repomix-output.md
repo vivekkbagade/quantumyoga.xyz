@@ -3361,6 +3361,7 @@ export const YOGA_ROUTINES = [
   --mouse-y: 50%;
 
   --auth-overlay-bg: linear-gradient(rgba(17, 24, 39, 0.75), rgba(3, 7, 18, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
+  --site-bg: linear-gradient(rgba(10, 5, 20, 0.9), rgba(10, 5, 20, 0.95)), url('./quantumyoga.jpg') no-repeat center center fixed / cover;
 }
 
 /* Base resets & scrollbar */
@@ -3377,7 +3378,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-primary);
+  background: var(--site-bg);
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
@@ -5404,6 +5405,7 @@ select option {
 /* 3.1 Ethereal Light (Light Glassmorphism Theme) */
 .theme-light {
   --auth-overlay-bg: linear-gradient(rgba(245, 244, 248, 0.75), rgba(210, 208, 224, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
+  --site-bg: linear-gradient(rgba(245, 244, 248, 0.9), rgba(210, 208, 224, 0.95)), url('./quantumyoga.jpg') no-repeat center center fixed / cover;
   --bg-primary: #f5f4f8; /* Soft warm-lavender off-white */
   --bg-secondary: #e9e8f0; /* Soft cool grey-purple */
   --bg-card: rgba(255, 255, 255, 0.45); /* Light glass background */
@@ -5450,6 +5452,7 @@ select option {
 /* 3.2 Zen Sunset (Warm Dusk/Amber Sunset Theme) */
 .theme-sunset {
   --auth-overlay-bg: linear-gradient(rgba(42, 22, 49, 0.75), rgba(18, 10, 22, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
+  --site-bg: linear-gradient(rgba(42, 22, 49, 0.9), rgba(18, 10, 22, 0.95)), url('./quantumyoga.jpg') no-repeat center center fixed / cover;
   --bg-primary: #1a0f20; /* Deep dusk purple */
   --bg-secondary: #291630; /* Medium dusk purple */
   --bg-card: rgba(42, 22, 49, 0.5); /* Rose glass background */
