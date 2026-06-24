@@ -10870,6 +10870,37 @@ After modifying the configuration, test and reload Nginx:
 sudo nginx -t
 sudo systemctl reload nginx
 ```
+
+---
+
+## 🌐 Caddy Reverse Proxy Configuration
+
+If you are using **Caddy** instead of Nginx to manage SSL and proxy traffic:
+
+Caddy supports WebSockets out-of-the-box dynamically and does not require explicit header configuration. A simple `reverse_proxy` directive is sufficient:
+
+```caddyfile
+quantumyoga.xyz, www.quantumyoga.xyz {
+    # Proxy all traffic (including websockets) to Express backend on port 8080
+    reverse_proxy localhost:8080
+}
+```
+
+### Troubleshooting WebSocket Fails on Caddy:
+1. **Verify Backend Port**: Ensure the port in your `/var/www/quantum-yoga/.env` file (`PORT=8080`) matches the port Caddy is proxying to.
+2. **Reload Caddy**: If you recently updated the Caddyfile, reload it:
+   ```bash
+   sudo caddy reload --config /etc/caddy/Caddyfile
+   ```
+3. **Inspect Caddy Logs**: If connection drops, check Caddy's runtime logs for handshake failures:
+   ```bash
+   sudo journalctl -u caddy --no-pager -n 50
+   ```
+4. **PM2 Health**: Ensure your Node process is running on the VM and didn't crash:
+   ```bash
+   pm2 status
+   pm2 logs quantum-yoga
+   ```
 ````
 
 ## File: wiki/Email-Communication.md
