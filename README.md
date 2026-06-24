@@ -46,13 +46,19 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **Direct Chat Shortcuts:** Displays chat launch actions (`https://wa.me/`) next to student profiles, appointment lists, invoices, and Kanban leads to start immediate conversations with pre-filled greeting templates.
 *   **System settings:** Incorporates toggles, provider gateway endpoints, credentials keys, and template editors in the Admin Settings panel.
 
+### 8. [Community Chat & WebSockets](file:///d:/QuantumYogaWebsite/openspec/changes/real-time-community-chat/specs/community-chat/spec.md)
+*   **Real-time Glassmorphic Chat:** Real-time chat room where students and instructors/admins can discuss wellness and share daily motivation.
+*   **Active Users List:** A live panel displaying online users with role indicators (Student, Instructor).
+*   **Message History:** Automatic retrieval of the last 50 messages on join, persisted in database states (PG, Supabase, or local db.json).
+*   **Co-hosted WebSocket Server:** Runs directly on the same Express server port using standard WebSockets (`ws`).
+
 ---
 
 ## 🛠️ Technology Stack
 
 *   **Frontend:** HTML5, Vanilla JavaScript, CSS3 (Custom Glassmorphism styling with support for multiple themes).
 *   **Build Tooling:** [Vite](https://vitejs.dev/) for quick HMR and optimal client-side bundling.
-*   **Backend:** [Express](https://expressjs.com/) server acting as a database router, static asset hosting, email integration proxy, and WhatsApp provider proxy.
+*   **Backend:** [Express](https://expressjs.com/) server acting as a database router, static asset hosting, email integration proxy, WhatsApp provider proxy, and co-hosted WebSocket server.
 *   **Storage & Database:** Supports fallback local file database storage (`db.json`) and connects seamlessly to either a **PostgreSQL** pool or **Supabase Client JSON storage** when variables are set.
 *   **Testing Suite:** [Jest](https://jestjs.io/) for backend/unit tests and [Playwright](https://playwright.dev/) for robust end-to-end testing.
 

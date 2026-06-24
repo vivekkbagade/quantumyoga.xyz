@@ -179,6 +179,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const navPoses = document.getElementById("nav-poses");
   const navRoutines = document.getElementById("nav-routines");
   const navProfileLink = document.getElementById("nav-profile");
+  const sectionChat = document.getElementById("chat-section");
+  const navChat = document.getElementById("nav-chat");
   
   const poseModal = document.getElementById("pose-modal");
   const poseModalBody = document.getElementById("pose-modal-body");
@@ -1029,11 +1031,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     navRoutines.classList.remove("active");
     navProfileLink.classList.remove("active");
     navAdmin.classList.remove("active");
+    navChat.classList.remove("active");
     
     sectionPoses.classList.remove("active");
     sectionRoutines.classList.remove("active");
     sectionProfile.classList.remove("active");
     sectionAdmin.classList.remove("active");
+    sectionChat.classList.remove("active");
     
     if (tabName === "poses") {
       navPoses.classList.add("active");
@@ -1045,6 +1049,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       navProfileLink.classList.add("active");
       sectionProfile.classList.add("active");
       updateUIForLogin();
+    } else if (tabName === "chat") {
+      navChat.classList.add("active");
+      sectionChat.classList.add("active");
+      initChatWebSocketIfNeeded();
     } else if (tabName === "admin") {
       if (!state.currentUser || state.currentUser.email !== "admin@quantumyoga.xyz") {
         setTab("poses");
@@ -1060,6 +1068,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   navRoutines.addEventListener("click", () => setTab("routines"));
   navProfileLink.addEventListener("click", () => setTab("profile"));
   navAdmin.addEventListener("click", () => setTab("admin"));
+  navChat.addEventListener("click", () => setTab("chat"));
 
   // Search input change
   searchInput.addEventListener("input", () => {
@@ -2499,6 +2508,7 @@ Please verify and update my status. Thank you!`);
     loginNavBtn.style.display = "none";
     
     // Navigation links
+    navChat.style.display = "inline-block";
     if (state.currentUser.email === "admin@quantumyoga.xyz") {
       navProfileLink.style.display = "none";
       navAdmin.style.display = "inline-block";
@@ -2690,9 +2700,13 @@ Please verify and update my status. Thank you!`);
     
     navProfileLink.style.display = "none";
     navAdmin.style.display = "none";
+    navChat.style.display = "none";
     
-    // Switch active tab back to poses if currently on profile or admin
-    if (state.activeTab === "profile" || state.activeTab === "admin") {
+    // Disconnect chat websocket if connected
+    closeChatWebSocket();
+
+    // Switch active tab back to poses if currently on profile, admin, or chat
+    if (state.activeTab === "profile" || state.activeTab === "admin" || state.activeTab === "chat") {
       setTab("poses");
     }
     
@@ -7805,6 +7819,156 @@ Please verify and update my status. Thank you!`);
         }
       }
     }, 5000);
+
+    let chatSocket = null;
+
+    function initChatWebSocketIfNeeded() {
+      if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+        return;
+      }
+
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const host = window.location.host;
+      chatSocket = new WebSocket(`${protocol}//${host}`);
+
+      chatSocket.onopen = () => {
+        console.log("[WebSocket] Connected to community chat.");
+        chatSocket.send(JSON.stringify({
+          type: "join",
+          name: state.currentUser ? state.currentUser.name : "Anonymous Practitioner",
+          role: state.currentUser && state.currentUser.email === "admin@quantumyoga.xyz" ? "Admin" : "Student"
+        }));
+      };
+
+      chatSocket.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+
+          if (payload.type === "history") {
+            renderChatHistory(payload.messages);
+          }
+          if (payload.type === "message") {
+            appendChatMessage(payload.message);
+          }
+          if (payload.type === "users") {
+            renderActiveUsers(payload.users);
+          }
+        } catch (e) {
+          console.error("[WebSocket] Client error parsing message:", e);
+        }
+      };
+
+      chatSocket.onclose = () => {
+        console.log("[WebSocket] Connection closed.");
+        chatSocket = null;
+      };
+    }
+
+    function closeChatWebSocket() {
+      if (chatSocket) {
+        chatSocket.close();
+        chatSocket = null;
+      }
+    }
+
+    function renderChatHistory(messages) {
+      const container = document.getElementById("chat-messages-container");
+      if (!container) return;
+      container.innerHTML = "";
+      if (messages.length === 0) {
+        container.innerHTML = `<p style="color: var(--text-muted); text-align: center; margin-top: auto; margin-bottom: auto; font-size: 0.9rem;">Welcome to the chat! Start the conversation below.</p>`;
+        return;
+      }
+      messages.forEach(msg => appendChatMessage(msg));
+    }
+
+    function appendChatMessage(msg) {
+      const container = document.getElementById("chat-messages-container");
+      if (!container) return;
+
+      const placeholder = container.querySelector("p");
+      if (placeholder && placeholder.textContent.includes("Welcome to the chat")) {
+        container.innerHTML = "";
+      }
+
+      const msgEl = document.createElement("div");
+      msgEl.className = "chat-message-bubble";
+      
+      const isAdmin = msg.role === "Admin";
+      const roleBadge = isAdmin ? `<span class="badge badge-tier-vip" style="font-size: 0.7rem; padding: 0.15rem 0.35rem; font-weight: 700; margin-left: 0.5rem;">Instructor</span>` : `<span class="badge badge-tier-basic" style="font-size: 0.7rem; padding: 0.15rem 0.35rem; font-weight: 700; margin-left: 0.5rem;">Student</span>`;
+      const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+      msgEl.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+          <div style="display: flex; align-items: center;">
+            <strong style="font-size: 0.9rem; color: ${isAdmin ? '#fbbf24' : 'var(--text-primary)'};">${msg.name}</strong>
+            ${roleBadge}
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">${timeStr}</span>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.4; white-space: pre-wrap; margin: 0;">${escapeHtml(msg.text)}</p>
+      `;
+
+      msgEl.setAttribute("style", "background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 0.5rem; animation: fadeIn 0.2s ease-out; text-align: left;");
+
+      container.appendChild(msgEl);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function renderActiveUsers(users) {
+      const list = document.getElementById("chat-users-list");
+      if (!list) return;
+      list.innerHTML = "";
+      if (users.length === 0) {
+        list.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No other users online.</p>`;
+        return;
+      }
+      
+      const uniqueUsers = Array.from(new Set(users.map(u => JSON.stringify(u)))).map(s => JSON.parse(s));
+
+      uniqueUsers.forEach(u => {
+        const userEl = document.createElement("div");
+        userEl.setAttribute("style", "display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border);");
+        
+        const roleBadge = u.role === "Admin" ? `<span class="badge badge-tier-vip" style="font-size: 0.65rem; padding: 0.1rem 0.25rem;">Instructor</span>` : `<span class="badge badge-tier-basic" style="font-size: 0.65rem; padding: 0.1rem 0.25rem;">Student</span>`;
+
+        userEl.innerHTML = `
+          <span class="pulse-dot" style="background: #10B981; width: 8px; height: 8px;"></span>
+          <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left;">${u.name}</span>
+          ${roleBadge}
+        `;
+        list.appendChild(userEl);
+      });
+    }
+
+    const chatSendForm = document.getElementById("chat-send-form");
+    const chatMessageInput = document.getElementById("chat-message-input");
+
+    if (chatSendForm) {
+      chatSendForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
+          alert("Chat is currently disconnected. Attempting to reconnect...");
+          initChatWebSocketIfNeeded();
+          return;
+        }
+
+        const text = chatMessageInput.value.trim();
+        if (!text) return;
+
+        chatSocket.send(JSON.stringify({
+          type: "message",
+          name: state.currentUser ? state.currentUser.name : "Anonymous",
+          role: state.currentUser && state.currentUser.email === "admin@quantumyoga.xyz" ? "Admin" : "Student",
+          text: text
+        }));
+
+        chatMessageInput.value = "";
+      });
+    }
+
+    window.closeChatWebSocket = closeChatWebSocket;
+    window.initChatWebSocketIfNeeded = initChatWebSocketIfNeeded;
 
     checkSession();
     renderPoses();

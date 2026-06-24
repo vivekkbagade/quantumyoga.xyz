@@ -579,7 +579,119 @@ app.get('/*splat', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-app.listen(PORT, async () => {
+async function getUnifiedState() {
+  const state = await getDbState();
+  if (state !== null) {
+    if (!state.chatMessages) {
+      state.chatMessages = [];
+    }
+    return state;
+  }
+  
+  const dbPath = path.resolve(__dirname, 'db.json');
+  const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
+  if (!localState.whatsappSettings) {
+    localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+  }
+  if (!localState.upi_ledger) {
+    localState.upi_ledger = [];
+  }
+  if (!localState.chatMessages) {
+    localState.chatMessages = [];
+  }
+  return localState;
+}
+
+async function saveUnifiedState(state) {
+  if (pgPool || supabase) {
+    await setDbState(state);
+  } else {
+    const dbPath = path.resolve(__dirname, 'db.json');
+    fs.writeFileSync(dbPath, JSON.stringify(state, null, 2), 'utf8');
+  }
+}
+
+const server = app.listen(PORT, async () => {
   console.log(`Production server running on port ${PORT}`);
   await seedDbIfNeeded();
 });
+
+// Setup WebSocket Server co-hosted on HTTP Server port
+const wss = new ws.WebSocketServer({ server });
+const connectedUsers = new Map();
+
+wss.on('connection', (socket) => {
+  console.log('[WebSocket] Client connected.');
+
+  socket.on('message', async (data) => {
+    try {
+      const message = JSON.parse(data);
+
+      if (message.type === 'join') {
+        connectedUsers.set(socket, { name: message.name, role: message.role });
+        
+        // Send history to user
+        const dbState = await getUnifiedState();
+        socket.send(JSON.stringify({
+          type: 'history',
+          messages: dbState.chatMessages || []
+        }));
+
+        // Broadcast updated user list
+        broadcastActiveUsers();
+      }
+
+      if (message.type === 'message') {
+        const dbState = await getUnifiedState();
+        if (!dbState.chatMessages) {
+          dbState.chatMessages = [];
+        }
+
+        const newMsg = {
+          id: 'msg-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          name: message.name,
+          role: message.role,
+          text: message.text,
+          timestamp: new Date().toISOString()
+        };
+
+        dbState.chatMessages.push(newMsg);
+        if (dbState.chatMessages.length > 50) {
+          dbState.chatMessages = dbState.chatMessages.slice(-50);
+        }
+
+        await saveUnifiedState(dbState);
+
+        // Broadcast new message
+        broadcast({
+          type: 'message',
+          message: newMsg
+        });
+      }
+    } catch (e) {
+      console.error('[WebSocket] Error processing message:', e);
+    }
+  });
+
+  socket.on('close', () => {
+    console.log('[WebSocket] Client disconnected.');
+    connectedUsers.delete(socket);
+    broadcastActiveUsers();
+  });
+});
+
+function broadcast(payload) {
+  const data = JSON.stringify(payload);
+  for (const client of wss.clients) {
+    if (client.readyState === ws.OPEN) {
+      client.send(data);
+    }
+  }
+}
+
+function broadcastActiveUsers() {
+  broadcast({
+    type: 'users',
+    users: Array.from(connectedUsers.values())
+  });
+}

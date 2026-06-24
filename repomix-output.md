@@ -195,6 +195,12 @@ openspec/changes/persistent-data-storage/design.md
 openspec/changes/persistent-data-storage/proposal.md
 openspec/changes/persistent-data-storage/specs/persistent-data-storage/spec.md
 openspec/changes/persistent-data-storage/tasks.md
+openspec/changes/real-time-community-chat/.openspec.yaml
+openspec/changes/real-time-community-chat/design.md
+openspec/changes/real-time-community-chat/proposal.md
+openspec/changes/real-time-community-chat/specs/community-chat/spec.md
+openspec/changes/real-time-community-chat/specs/user-auth-profile/spec.md
+openspec/changes/real-time-community-chat/tasks.md
 openspec/changes/resend-email-provider/.openspec.yaml
 openspec/changes/resend-email-provider/design.md
 openspec/changes/resend-email-provider/proposal.md
@@ -248,6 +254,7 @@ tst.json
 vite.config.js
 wiki/Architecture.md
 wiki/Billing-and-Payments.md
+wiki/Community-Chat.md
 wiki/Core-Yoga-Directory.md
 wiki/Deployment-and-CI-CD.md
 wiki/Email-Communication.md
@@ -257,6 +264,266 @@ wiki/WhatsApp-Integration.md
 ```
 
 # Files
+
+## File: openspec/changes/real-time-community-chat/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/real-time-community-chat/design.md
+````markdown
+## Context
+
+The Quantum Yoga application currently runs an Express-based server backend to handle APIs and static asset delivery. To add real-time community chat capability, we must incorporate a bi-directional messaging solution. We will use the existing `ws` npm dependency to run a WebSocket server co-hosted on the main HTTP server port.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement a WebSocket connection endpoint co-hosted with the Express API server.
+*   Store the last 50 messages locally (in `db.json` or database pools) to maintain history during app restarts.
+*   Introduce a new glassmorphic "Community Chat" tab in the frontend layout.
+*   Broadcast message streams, connection lists, and message history feeds securely.
+
+**Non-Goals:**
+*   Implementing private 1-on-1 direct messaging (only a single shared community room is in scope).
+*   Rich text messaging or file uploads (text-only messages are supported).
+*   Chat moderation tools (mute, ban, block) or user reporting.
+
+## Decisions
+
+### 1. Unified HTTP & WebSocket Co-Hosting
+*   **Choice:** Co-host the WebSocket server (`ws`) on the same Express server port using Node's standard `http` server instance.
+*   **Rationale:** Avoids configuring additional ports, simplifying firewall setups and avoiding browser mixed-content/CORS errors in production VM environments.
+*   **Alternative:** running a standalone WebSocket server on a separate port (e.g. 8081). Rejected because it requires configuring extra VM port mappings and inbound security group rules.
+
+### 2. Memory/Database Message Cache
+*   **Choice:** Cache the last 50 messages in the active database state (`db.json` / postgres).
+*   **Rationale:** Keeps the chat history lightweight while ensuring messages persist when the PM2 process reloads or redeploys.
+
+## Risks / Trade-offs
+
+*   **[Risk] Out-of-memory or database size inflation:** Storing message feeds could bloat database sizes.
+    *   *Mitigation:* Enforce a strict buffer size (limit to maximum 50 messages, slicing old messages when new ones arrive).
+*   **[Risk] Unauthenticated spam:** Socket connections could be opened anonymously.
+    *   *Mitigation:* Validate session info or require user logins before broadcasting messages.
+````
+
+## File: openspec/changes/real-time-community-chat/proposal.md
+````markdown
+## Why
+
+Quantum Yoga currently lacks a live interaction channel for active members to communicate directly with instructors and peers. Adding a real-time community chat room will foster student engagement, enable instructors to share motivation instantly, and build a connected community.
+
+## What Changes
+
+*   Introduce a new WebSocket-enabled chat server module on the Express backend.
+*   Create a clean, glassmorphic UI tab in the student and admin dashboards named "Community Chat".
+*   Display real-time messages, user statuses, and user roles (Student vs. Administrator/Instructor).
+
+## Capabilities
+
+### New Capabilities
+- `community-chat`: A real-time WebSocket-based community chat room allowing active students and instructors to chat, share motivation, and ask questions.
+
+### Modified Capabilities
+- `user-auth-profile`: User profiles will be integrated to map nicknames and avatars dynamically into active chat sessions.
+
+## Impact
+
+*   **Express Backend (`server.js`):** Will incorporate a WebSocket server (`ws`) handling live connection hooks, broadcast sessions, and safety limits.
+*   **Frontend UI (`index.html` & `app.js`):** A new "Community Chat" navigation link and panel will render chat streams, message input, and list active users.
+*   **Database:** A history log structure for the last 50-100 messages will persist chat feeds across socket restarts.
+````
+
+## File: openspec/changes/real-time-community-chat/specs/community-chat/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Real-time Message Broadcasting
+The system SHALL broadcast any user-sent chat messages in real time to all currently connected clients using WebSockets.
+
+#### Scenario: Send message to chat
+- **WHEN** an authenticated user sends a message in the chat input
+- **THEN** the system broadcasts a JSON message containing the sender's name, role (Student or Admin), message body, and timestamp to all active sockets
+
+### Requirement: Message History Retention
+The system SHALL store the last 50 chat messages in the database and transmit this history to newly connected clients.
+
+#### Scenario: Join chat room
+- **WHEN** a client successfully establishes a WebSocket connection to the chat room
+- **THEN** the system SHALL immediately send the last 50 stored chat messages to populate the client's message feed
+
+### Requirement: Active User List
+The system SHALL track and display the list of currently active (connected) users in the chat room.
+
+#### Scenario: User online status updates
+- **WHEN** a user opens or closes the chat tab (connecting or disconnecting from the socket)
+- **THEN** the system SHALL broadcast an updated list of online user names to all connected clients
+````
+
+## File: openspec/changes/real-time-community-chat/specs/user-auth-profile/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Profile Integration in Chat
+The system SHALL retrieve and display the authenticated user's name and role (Student or Admin) from their profile when they send messages or appear online in the chat room.
+
+#### Scenario: Display profile name in sent messages
+- **WHEN** a logged-in user sends a message to the chat room
+- **THEN** the system SHALL attach their authenticated profile name and membership role to the message payload before broadcasting it
+````
+
+## File: openspec/changes/real-time-community-chat/tasks.md
+````markdown
+Created At: 2026-06-24T19:32:40Z
+Completed At: 2026-06-24T19:32:40Z
+File Path: `file:///d:/QuantumYogaWebsite/openspec/changes/real-time-community-chat/tasks.md`
+
+## 1. Backend Server Setup
+
+- [x] 1.1 Integrate WebSocket server (`ws`) package in `server.js` and bind it to the main HTTP server
+- [x] 1.2 Implement connection hooks, connection counting, and active user tracking
+- [x] 1.3 Implement message broadcast logic and message schema verification
+
+## 2. Storage & History Cache
+
+- [x] 2.1 Integrate chat messages cache structure into database adapters (local `db.json`, PG/Supabase)
+- [x] 2.2 Write retrieval logic to load and send last 50 messages on user join
+- [x] 2.3 Write message archiving logic to push new incoming messages into database state and slice over limit
+
+## 3. Frontend Chat UI Layout
+
+- [x] 3.1 Create "Community Chat" tab in `index.html` navigation bar and content section
+- [x] 3.2 Implement glassmorphic message thread layout, user list, and chat input controls
+- [x] 3.3 Add active user connection lifecycle updates to UI client script in `app.js`
+
+## 4. Chat Client Websocket Integration
+
+- [x] 4.1 Implement WebSocket client setup and connection handlers in `app.js`
+- [x] 4.2 Implement outbound message packaging (sending name, role, body, timestamp)
+- [x] 4.3 Implement inbound message parsing and DOM insertion for message updates and online user list
+````
+
+## File: wiki/Community-Chat.md
+````markdown
+# Community Chat & WebSockets
+
+Quantum Yoga includes a real-time community chat room where students and instructors can interact. This feature is powered by a co-hosted WebSocket server running on the same port as the main HTTP application.
+
+---
+
+## 🔌 WebSocket Co-Hosting Architecture
+
+To simplify deployment and avoid CORS/firewall complications, the WebSocket server is bound to the existing HTTP server instance:
+
+```javascript
+import ws from 'ws';
+// ...
+const server = app.listen(PORT, ...);
+const wss = new ws.WebSocketServer({ server });
+```
+
+This configuration enables the WebSocket server to share port `80` (or `8080` in development) with Express. Clients connect using the relative protocol matching the page loading protocol:
+*   `ws://<host>` for insecure HTTP connections.
+*   `wss://<host>` for secure HTTPS connections.
+
+---
+
+## 📨 Message Protocol & Schemas
+
+The client and server communicate via JSON-encoded string payloads. Below are the primary event types:
+
+### 1. User Join (`join`)
+**Direction:** Client ➔ Server  
+Sent immediately after the connection is opened to register the user's name and role.
+```json
+{
+  "type": "join",
+  "name": "Jane Doe",
+  "role": "Student" // or "Admin" for instructors
+}
+```
+
+### 2. Message History (`history`)
+**Direction:** Server ➔ Client  
+Sent to the joining user immediately after registering. Contains the last 50 archived chat messages.
+```json
+{
+  "type": "history",
+  "messages": [
+    {
+      "id": "msg-1718000000000-123",
+      "name": "Instructor Vivekk",
+      "role": "Admin",
+      "text": "Welcome to the class! Here is your daily motivation.",
+      "timestamp": "2026-06-25T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+### 3. Send Message (`message`)
+**Direction:** Client ➔ Server ➔ Broadcast to All Clients  
+When a user submits a message, the client packages the input:
+```json
+{
+  "type": "message",
+  "name": "Jane Doe",
+  "role": "Student",
+  "text": "Hello, excited for the yoga flow!"
+}
+```
+The server intercepts this, creates a message object with a unique ID and ISO timestamp, saves it to the unified database state, and broadcasts the structured event:
+```json
+{
+  "type": "message",
+  "message": {
+    "id": "msg-1718000050000-456",
+    "name": "Jane Doe",
+    "role": "Student",
+    "text": "Hello, excited for the yoga flow!",
+    "timestamp": "2026-06-25T00:00:50.000Z"
+  }
+}
+```
+
+### 4. Active Online Users (`users`)
+**Direction:** Server ➔ Broadcast to All Clients  
+Sent whenever a client joins or disconnects (closes connection) to refresh the online users panel.
+```json
+{
+  "type": "users",
+  "users": [
+    { "name": "Instructor Vivekk", "role": "Admin" },
+    { "name": "Jane Doe", "role": "Student" }
+  ]
+}
+```
+
+---
+
+## 💾 Storage & Persistence
+
+Chat history is persisted in the unified database (`state.chatMessages` array) using the selected adapter (PostgreSQL, Supabase, or local `db.json` fallback).
+*   **Capacity Limit:** The server caches and stores up to **50 messages**.
+*   **Rotation:** When a new message arrives, if the history size exceeds 50, the oldest message is dropped (`slice(-50)`).
+
+---
+
+## 🛡️ Security & UX Controls
+
+1.  **XSS Protection:** Client renders text securely. HTML tags within incoming chat messages are escaped using `escapeHtml()` in `app.js` prior to DOM insertion:
+    ```javascript
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[m]);
+    }
+    ```
+2.  **Auto-Scroll:** The message container automatically scrolls down to display incoming messages if the user is active in the chat tab.
+3.  **Role Styling:** Message headers are styled differently depending on the role (`Admin`/Instructors receive a gold-highlighted name and an `Instructor` badge; `Students` receive a standard student badge).
+````
 
 ## File: .agent/skills/openspec-apply-change/SKILL.md
 ````markdown
@@ -11025,7 +11292,10 @@ A setup guide for the dual-integration engine supporting transactional emails vi
 ### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
 Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.
 
-### 7. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
+### 7. [Community Chat & WebSockets](Community-Chat.md)
+Learn about real-time glassmorphic chat, WebSocket connection protocol, message schemas, and database history cache persistence.
+
+### 8. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
 Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
 ````
 
@@ -12063,6 +12333,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const navPoses = document.getElementById("nav-poses");
   const navRoutines = document.getElementById("nav-routines");
   const navProfileLink = document.getElementById("nav-profile");
+  const sectionChat = document.getElementById("chat-section");
+  const navChat = document.getElementById("nav-chat");
   
   const poseModal = document.getElementById("pose-modal");
   const poseModalBody = document.getElementById("pose-modal-body");
@@ -12913,11 +13185,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     navRoutines.classList.remove("active");
     navProfileLink.classList.remove("active");
     navAdmin.classList.remove("active");
+    navChat.classList.remove("active");
     
     sectionPoses.classList.remove("active");
     sectionRoutines.classList.remove("active");
     sectionProfile.classList.remove("active");
     sectionAdmin.classList.remove("active");
+    sectionChat.classList.remove("active");
     
     if (tabName === "poses") {
       navPoses.classList.add("active");
@@ -12929,6 +13203,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       navProfileLink.classList.add("active");
       sectionProfile.classList.add("active");
       updateUIForLogin();
+    } else if (tabName === "chat") {
+      navChat.classList.add("active");
+      sectionChat.classList.add("active");
+      initChatWebSocketIfNeeded();
     } else if (tabName === "admin") {
       if (!state.currentUser || state.currentUser.email !== "admin@quantumyoga.xyz") {
         setTab("poses");
@@ -12944,6 +13222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   navRoutines.addEventListener("click", () => setTab("routines"));
   navProfileLink.addEventListener("click", () => setTab("profile"));
   navAdmin.addEventListener("click", () => setTab("admin"));
+  navChat.addEventListener("click", () => setTab("chat"));
 
   // Search input change
   searchInput.addEventListener("input", () => {
@@ -14383,6 +14662,7 @@ Please verify and update my status. Thank you!`);
     loginNavBtn.style.display = "none";
     
     // Navigation links
+    navChat.style.display = "inline-block";
     if (state.currentUser.email === "admin@quantumyoga.xyz") {
       navProfileLink.style.display = "none";
       navAdmin.style.display = "inline-block";
@@ -14574,9 +14854,13 @@ Please verify and update my status. Thank you!`);
     
     navProfileLink.style.display = "none";
     navAdmin.style.display = "none";
+    navChat.style.display = "none";
     
-    // Switch active tab back to poses if currently on profile or admin
-    if (state.activeTab === "profile" || state.activeTab === "admin") {
+    // Disconnect chat websocket if connected
+    closeChatWebSocket();
+
+    // Switch active tab back to poses if currently on profile, admin, or chat
+    if (state.activeTab === "profile" || state.activeTab === "admin" || state.activeTab === "chat") {
       setTab("poses");
     }
     
@@ -19690,6 +19974,156 @@ Please verify and update my status. Thank you!`);
       }
     }, 5000);
 
+    let chatSocket = null;
+
+    function initChatWebSocketIfNeeded() {
+      if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+        return;
+      }
+
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const host = window.location.host;
+      chatSocket = new WebSocket(`${protocol}//${host}`);
+
+      chatSocket.onopen = () => {
+        console.log("[WebSocket] Connected to community chat.");
+        chatSocket.send(JSON.stringify({
+          type: "join",
+          name: state.currentUser ? state.currentUser.name : "Anonymous Practitioner",
+          role: state.currentUser && state.currentUser.email === "admin@quantumyoga.xyz" ? "Admin" : "Student"
+        }));
+      };
+
+      chatSocket.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+
+          if (payload.type === "history") {
+            renderChatHistory(payload.messages);
+          }
+          if (payload.type === "message") {
+            appendChatMessage(payload.message);
+          }
+          if (payload.type === "users") {
+            renderActiveUsers(payload.users);
+          }
+        } catch (e) {
+          console.error("[WebSocket] Client error parsing message:", e);
+        }
+      };
+
+      chatSocket.onclose = () => {
+        console.log("[WebSocket] Connection closed.");
+        chatSocket = null;
+      };
+    }
+
+    function closeChatWebSocket() {
+      if (chatSocket) {
+        chatSocket.close();
+        chatSocket = null;
+      }
+    }
+
+    function renderChatHistory(messages) {
+      const container = document.getElementById("chat-messages-container");
+      if (!container) return;
+      container.innerHTML = "";
+      if (messages.length === 0) {
+        container.innerHTML = `<p style="color: var(--text-muted); text-align: center; margin-top: auto; margin-bottom: auto; font-size: 0.9rem;">Welcome to the chat! Start the conversation below.</p>`;
+        return;
+      }
+      messages.forEach(msg => appendChatMessage(msg));
+    }
+
+    function appendChatMessage(msg) {
+      const container = document.getElementById("chat-messages-container");
+      if (!container) return;
+
+      const placeholder = container.querySelector("p");
+      if (placeholder && placeholder.textContent.includes("Welcome to the chat")) {
+        container.innerHTML = "";
+      }
+
+      const msgEl = document.createElement("div");
+      msgEl.className = "chat-message-bubble";
+      
+      const isAdmin = msg.role === "Admin";
+      const roleBadge = isAdmin ? `<span class="badge badge-tier-vip" style="font-size: 0.7rem; padding: 0.15rem 0.35rem; font-weight: 700; margin-left: 0.5rem;">Instructor</span>` : `<span class="badge badge-tier-basic" style="font-size: 0.7rem; padding: 0.15rem 0.35rem; font-weight: 700; margin-left: 0.5rem;">Student</span>`;
+      const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+      msgEl.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+          <div style="display: flex; align-items: center;">
+            <strong style="font-size: 0.9rem; color: ${isAdmin ? '#fbbf24' : 'var(--text-primary)'};">${msg.name}</strong>
+            ${roleBadge}
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">${timeStr}</span>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.4; white-space: pre-wrap; margin: 0;">${escapeHtml(msg.text)}</p>
+      `;
+
+      msgEl.setAttribute("style", "background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 0.5rem; animation: fadeIn 0.2s ease-out; text-align: left;");
+
+      container.appendChild(msgEl);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function renderActiveUsers(users) {
+      const list = document.getElementById("chat-users-list");
+      if (!list) return;
+      list.innerHTML = "";
+      if (users.length === 0) {
+        list.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No other users online.</p>`;
+        return;
+      }
+      
+      const uniqueUsers = Array.from(new Set(users.map(u => JSON.stringify(u)))).map(s => JSON.parse(s));
+
+      uniqueUsers.forEach(u => {
+        const userEl = document.createElement("div");
+        userEl.setAttribute("style", "display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border);");
+        
+        const roleBadge = u.role === "Admin" ? `<span class="badge badge-tier-vip" style="font-size: 0.65rem; padding: 0.1rem 0.25rem;">Instructor</span>` : `<span class="badge badge-tier-basic" style="font-size: 0.65rem; padding: 0.1rem 0.25rem;">Student</span>`;
+
+        userEl.innerHTML = `
+          <span class="pulse-dot" style="background: #10B981; width: 8px; height: 8px;"></span>
+          <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left;">${u.name}</span>
+          ${roleBadge}
+        `;
+        list.appendChild(userEl);
+      });
+    }
+
+    const chatSendForm = document.getElementById("chat-send-form");
+    const chatMessageInput = document.getElementById("chat-message-input");
+
+    if (chatSendForm) {
+      chatSendForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
+          alert("Chat is currently disconnected. Attempting to reconnect...");
+          initChatWebSocketIfNeeded();
+          return;
+        }
+
+        const text = chatMessageInput.value.trim();
+        if (!text) return;
+
+        chatSocket.send(JSON.stringify({
+          type: "message",
+          name: state.currentUser ? state.currentUser.name : "Anonymous",
+          role: state.currentUser && state.currentUser.email === "admin@quantumyoga.xyz" ? "Admin" : "Student",
+          text: text
+        }));
+
+        chatMessageInput.value = "";
+      });
+    }
+
+    window.closeChatWebSocket = closeChatWebSocket;
+    window.initChatWebSocketIfNeeded = initChatWebSocketIfNeeded;
+
     checkSession();
     renderPoses();
     renderRoutines();
@@ -19752,6 +20186,7 @@ Please verify and update my status. Thank you!`);
         <a href="#poses-section" class="nav-link active" id="nav-poses">Poses</a>
         <a href="#routines-section" class="nav-link" id="nav-routines">Routines</a>
         <a href="#profile-section" class="nav-link" id="nav-profile" style="display: none;">Profile</a>
+        <a href="#chat-section" class="nav-link" id="nav-chat" style="display: none;">Community Chat</a>
         <a href="#admin-section" class="nav-link" id="nav-admin" style="display: none;">Admin Panel</a>
       </nav>
       <div class="nav-actions">
@@ -21226,6 +21661,46 @@ Please verify and update my status. Thank you!`);
     </div>
   </div>
 
+    <!-- Community Chat Section -->
+    <section id="chat-section" class="content-section" style="display: none;">
+      <div class="admin-container" style="max-width: 900px; margin: 0 auto;">
+        
+        <!-- Header -->
+        <div class="admin-header-card" style="margin-bottom: 1.5rem;">
+          <div class="admin-avatar">💬</div>
+          <div class="admin-info-details">
+            <h2>Community Chat</h2>
+            <p>Connect with instructors and fellow practitioners in real-time.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 3fr; gap: 1.5rem;">
+          <!-- Left Panel: Online Users -->
+          <div class="admin-panel" style="display: flex; flex-direction: column;">
+            <h3>👥 Online Users</h3>
+            <div id="chat-users-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; max-height: 400px;">
+              <!-- Connected users list loaded dynamically -->
+              <p style="color: var(--text-muted); font-size: 0.85rem;">No other users online.</p>
+            </div>
+          </div>
+
+          <!-- Right Panel: Message Room -->
+          <div class="admin-panel" style="display: flex; flex-direction: column; height: 500px;">
+            <div id="chat-messages-container" style="flex: 1; overflow-y: auto; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem;">
+              <!-- History/new messages loaded dynamically -->
+              <p style="color: var(--text-muted); text-align: center; margin-top: auto; margin-bottom: auto; font-size: 0.9rem;">Welcome to the chat! Start the conversation below.</p>
+            </div>
+            
+            <form id="chat-send-form" style="display: flex; gap: 0.75rem; align-items: center;">
+              <input type="text" id="chat-message-input" placeholder="Type a message..." required autocomplete="off" style="flex: 1; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); outline: none;">
+              <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Send</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </div> <!-- End #dashboard-app -->
 
   <!-- Fullscreen Auth Gate -->
@@ -21991,8 +22466,120 @@ app.get('/*splat', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-app.listen(PORT, async () => {
+async function getUnifiedState() {
+  const state = await getDbState();
+  if (state !== null) {
+    if (!state.chatMessages) {
+      state.chatMessages = [];
+    }
+    return state;
+  }
+  
+  const dbPath = path.resolve(__dirname, 'db.json');
+  const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
+  if (!localState.whatsappSettings) {
+    localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+  }
+  if (!localState.upi_ledger) {
+    localState.upi_ledger = [];
+  }
+  if (!localState.chatMessages) {
+    localState.chatMessages = [];
+  }
+  return localState;
+}
+
+async function saveUnifiedState(state) {
+  if (pgPool || supabase) {
+    await setDbState(state);
+  } else {
+    const dbPath = path.resolve(__dirname, 'db.json');
+    fs.writeFileSync(dbPath, JSON.stringify(state, null, 2), 'utf8');
+  }
+}
+
+const server = app.listen(PORT, async () => {
   console.log(`Production server running on port ${PORT}`);
   await seedDbIfNeeded();
 });
+
+// Setup WebSocket Server co-hosted on HTTP Server port
+const wss = new ws.WebSocketServer({ server });
+const connectedUsers = new Map();
+
+wss.on('connection', (socket) => {
+  console.log('[WebSocket] Client connected.');
+
+  socket.on('message', async (data) => {
+    try {
+      const message = JSON.parse(data);
+
+      if (message.type === 'join') {
+        connectedUsers.set(socket, { name: message.name, role: message.role });
+        
+        // Send history to user
+        const dbState = await getUnifiedState();
+        socket.send(JSON.stringify({
+          type: 'history',
+          messages: dbState.chatMessages || []
+        }));
+
+        // Broadcast updated user list
+        broadcastActiveUsers();
+      }
+
+      if (message.type === 'message') {
+        const dbState = await getUnifiedState();
+        if (!dbState.chatMessages) {
+          dbState.chatMessages = [];
+        }
+
+        const newMsg = {
+          id: 'msg-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          name: message.name,
+          role: message.role,
+          text: message.text,
+          timestamp: new Date().toISOString()
+        };
+
+        dbState.chatMessages.push(newMsg);
+        if (dbState.chatMessages.length > 50) {
+          dbState.chatMessages = dbState.chatMessages.slice(-50);
+        }
+
+        await saveUnifiedState(dbState);
+
+        // Broadcast new message
+        broadcast({
+          type: 'message',
+          message: newMsg
+        });
+      }
+    } catch (e) {
+      console.error('[WebSocket] Error processing message:', e);
+    }
+  });
+
+  socket.on('close', () => {
+    console.log('[WebSocket] Client disconnected.');
+    connectedUsers.delete(socket);
+    broadcastActiveUsers();
+  });
+});
+
+function broadcast(payload) {
+  const data = JSON.stringify(payload);
+  for (const client of wss.clients) {
+    if (client.readyState === ws.OPEN) {
+      client.send(data);
+    }
+  }
+}
+
+function broadcastActiveUsers() {
+  broadcast({
+    type: 'users',
+    users: Array.from(connectedUsers.values())
+  });
+}
 ````
