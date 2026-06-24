@@ -6,11 +6,15 @@ on:
     paths-ignore:
       - '**/*.md'
       - '.gitignore'
+      - 'wiki/**'
+      - 'openspec/**'
   pull_request:
     branches: [ main, master ]
     paths-ignore:
       - '**/*.md'
       - '.gitignore'
+      - 'wiki/**'
+      - 'openspec/**'
   workflow_dispatch:
 
 permissions:
