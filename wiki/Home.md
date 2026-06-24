@@ -45,4 +45,7 @@ Learn about the native Web Speech API (Text-to-Speech) voice coach alignment gui
 ### 13. [Contact Us Information Portal](Contact-Us.md)
 View details on the public contact details modal and protocols.
 
+### 14. [Student Referral Program](Student-Referrals.md)
+Learn about referral codes, signup tracking, and configurable scaling discount tiers.
+
 

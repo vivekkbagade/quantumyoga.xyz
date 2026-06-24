@@ -55,6 +55,11 @@ openspec/changes/add-contact-us/design.md
 openspec/changes/add-contact-us/proposal.md
 openspec/changes/add-contact-us/specs/contact-us/spec.md
 openspec/changes/add-contact-us/tasks.md
+openspec/changes/add-student-referrals/.openspec.yaml
+openspec/changes/add-student-referrals/design.md
+openspec/changes/add-student-referrals/proposal.md
+openspec/changes/add-student-referrals/specs/student-referrals/spec.md
+openspec/changes/add-student-referrals/tasks.md
 openspec/changes/add-whatsapp-functionality/.openspec.yaml
 openspec/changes/add-whatsapp-functionality/design.md
 openspec/changes/add-whatsapp-functionality/proposal.md
@@ -291,10 +296,47 @@ wiki/Live-Yoga-Rooms.md
 wiki/Practice-Tracker.md
 wiki/Practice-Voice-Coach.md
 wiki/Reports-and-Analytics.md
+wiki/Student-Referrals.md
 wiki/WhatsApp-Integration.md
 ```
 
 # Files
+
+## File: wiki/Student-Referrals.md
+````markdown
+# Student Referral & Scaling Discounts Portal
+
+The Student Referrals capability drives organic studio growth by incentivizing current students to refer friends. It supports unique referral codes and a dynamic scaling discount tier based on successful referral counts.
+
+## 🧭 Student Referral Flows
+
+Every registered student can view and share their referrals:
+
+1. **Unique Code Generation**: During signup, the system automatically assigns a unique 6-character alphanumeric code (e.g., `FLOW88`) to the student.
+2. **Dashboard Display**: The code, along with successful invite metrics and active discount rate, is visible directly inside the student's **Profile** tab.
+3. **Sharing**: Students share their code with prospective members.
+
+## 🔀 Referral Verification
+
+When a prospective member signs up or submits an inquiry:
+
+1. **Signup Entry**: Prospective students fill out the optional **Referral Code** field in the registration card.
+2. **Validation**: The system verifies the code belongs to a valid active member.
+3. **Referral Mapping**: Upon successful registration, the new user's account is created, and the referrer's successful referral counter increments by 1.
+
+## 📈 Configurable Discount Tiers
+
+Administrators configure the business logic dynamically:
+
+1. **Settings Control**: In **Admin Panel -> System Settings**, locate the **Referral Tiers Settings** card.
+2. **Define Tiers**: Add, update, or remove discount milestones (e.g., 1 referral = 10% discount, 2 referrals = 15% discount, 3+ referrals = 20% discount).
+3. **Save**: Save changes to sync configuration to the database.
+
+## 💳 Automated Discount Deductions
+
+Referrer rewards are automatically applied:
+* When the system generates a new monthly subscription invoice or an appointment booking fee for a referrer, it calculates their highest qualified discount tier and applies the percentage deduction to the total amount due.
+````
 
 ## File: .agent/skills/openspec-apply-change/SKILL.md
 ````markdown
@@ -2056,6 +2098,173 @@ Visitors and members need a simple, direct way to view the studio's official con
 ## Impact
 
 * **Frontend**: Adds a Contact Us link in the navigation/footer that launches a floating contact details modal in `index.html`.
+````
+
+## File: openspec/changes/add-student-referrals/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/add-student-referrals/design.md
+````markdown
+## Context
+
+The Quantum Yoga application operates as a single-page application (SPA) backed by an Express server that stores a unified state object (`db.json` / PostgreSQL / Supabase). To implement referrals, we must extend the global database schema and introduce logic for registration validation and billing discount calculations.
+
+## Goals / Non-Goals
+
+**Goals:**
+* Define configurable discount tiers inside the database configuration.
+* Automatically generate unique, easy-to-share referral codes for students.
+* Increment the referrer's referral count when a new user registers using their code.
+* Dynamically display referral stats on the user's dashboard profile.
+* Deduct the calculated discount percentage from student invoices and coaching booking fees.
+
+**Non-Goals:**
+* Implementing multi-tier or nested referral networks (MLM). Only direct, single-level referrals are rewarded.
+* Supporting cash payouts or bank transfers. Rewards are strictly discount credits applied directly to billing.
+
+## Decisions
+
+### 1. Referral Code Generation Scheme
+* **Choice**: Generate a 6-character alphanumeric uppercase code (e.g., `FLOW79`) when a student registers.
+* **Rationale**: Shareable codes are more user-friendly than long UUIDs and preserve privacy compared to email-based referral links.
+* **Alternatives Considered**: Using the student's email as their code. Rejected due to email privacy concerns.
+
+### 2. Schema Structure
+* **Choice**: Add configuration fields directly to the state schema.
+  * **Global Settings**:
+    ```javascript
+    referralTiers: [
+      { minReferrals: 1, discount: 10 },
+      { minReferrals: 2, discount: 15 },
+      { minReferrals: 3, discount: 20 }
+    ]
+    ```
+  * **User Object Extension**:
+    ```javascript
+    {
+      name: "...",
+      email: "...",
+      referralCode: "FLOW79",
+      referredBy: "referrer@email.com" || null,
+      referralsCount: 0
+    }
+    ```
+* **Rationale**: Storing these variables on the central state object fits our static database model and avoids database schema migration issues.
+
+### 3. Discount Evaluation
+* **Choice**: Calculate the discount dynamically on invoice creation.
+  * Lookup user `referralsCount`.
+  * Scan active `referralTiers` to find the highest matched tier.
+  * Deduct that percentage from the invoice or booking fee amount.
+* **Rationale**: Prevents hardcoded values and keeps billing rules configurable.
+
+## Risks / Trade-offs
+
+* **[Risk]** Self-referral abuse via fake accounts.
+  * **Mitigation**: Enforce unique email and phone validation on registration. Since invoices undergo manual UTR verification, admins can audit suspicious referral loops.
+````
+
+## File: openspec/changes/add-student-referrals/proposal.md
+````markdown
+## Why
+
+To drive organic membership growth, the studio wants to introduce a referral program where existing students can invite friends using unique referral codes. To incentivize multiple invites, the earned discount scales up incrementally based on the number of successful referrals, configurable directly by administrators.
+
+## What Changes
+
+* **Admin Referral Configurations**: Administrators can define and customize discount scaling tiers (e.g., 1 referral = 10% discount, 2 referrals = 15% discount, 3+ referrals = 20% discount) inside the System Settings panel.
+* **Unique Referral Codes**: Every registered student is assigned a unique, shareable referral code displayed in their profile portal alongside their active referral count and current unlocked discount tier.
+* **Referral Entry Point**: Adds a "Referral Code" optional field to both the student registration form and the public inquiry form.
+* **Referral Count Increment**: When a new user registers using a valid referral code, the referrer's successful referral count is incremented, immediately recalculating their discount tier.
+* **Referral Discount Application**: Automatically applies the referrer's earned discount percentage to any new billing invoices or appointment coaching fees issued to them.
+
+## Capabilities
+
+### New Capabilities
+- `student-referrals`: Covers referral code generation, registration referral validation, dynamic discount tier calculations, and automated billing discount deductions.
+
+### Modified Capabilities
+<!-- No requirement changes to existing specs, purely adding new capabilities -->
+
+## Impact
+
+* **Frontend**: `index.html` (registration form inputs, dashboard referral stats display, admin referral tiers settings card) and `app.js` (validation, configuration handlers, profile calculations).
+* **Backend**: `server.js` state persistence (`db.json`/SQL state variables) to store the referral codes, referrer mappings, and admin discount tier settings.
+````
+
+## File: openspec/changes/add-student-referrals/specs/student-referrals/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Generate Referral Code
+The system SHALL automatically generate a unique 6-character alphanumeric referral code for every newly registered student.
+
+#### Scenario: Generating code on registration
+- **WHEN** a user completes registration successfully
+- **THEN** the system SHALL generate a unique referral code and save it to the student profile.
+
+### Requirement: Registration Referral Tracking
+The system SHALL allow registering users to optionally submit a referral code, verifying its validity, mapping the relationship, and crediting the referrer student.
+
+#### Scenario: Registration with valid referral code
+- **WHEN** a user registers with a valid referral code belonging to another active student
+- **THEN** the system SHALL create the new user account and increment the referrer's successful referral count by 1.
+
+### Requirement: Configurable Referral Discount Tiers
+The system SHALL allow administrators to configure referral discount scaling tiers (minimum referral counts mapping to discount percentages) inside the System Settings panel.
+
+#### Scenario: Administrator updates discount tiers
+- **WHEN** an administrator modifies the referral milestones and discount percentages and saves the form
+- **THEN** the system SHALL save the configuration to the server database and immediately apply the updated pricing rules.
+
+### Requirement: Display Referral Metrics on Profile
+The system SHALL display the student's unique referral code, successful referrals count, and current discount percentage on their profile dashboard.
+
+#### Scenario: Student views profile dashboard
+- **WHEN** a student navigates to their profile page
+- **THEN** the system SHALL present their shareable referral code, successful referrals counter, and calculated discount rate.
+
+### Requirement: Automated Billing Discount Application
+The system SHALL automatically apply the student's current referral discount percentage to reduce any newly generated invoices or appointment coaching fees.
+
+#### Scenario: System generates invoice for referrer
+- **WHEN** a new payment invoice or appointment coaching fee is created for a student
+- **THEN** the system SHALL apply their active referral discount percentage as a deduction to the total amount due.
+````
+
+## File: openspec/changes/add-student-referrals/tasks.md
+````markdown
+## 1. Database and Server Schema
+
+- [ ] 1.1 Update default DB state and initial seeding in `server.js` to include default referral scaling tiers and initialize user state records with a unique 6-character referral code.
+
+## 2. Registration and Inquiry Integration
+
+- [ ] 2.1 Modify the registration form and public inquiry forms in `index.html` to include a "Referral Code" input field.
+- [ ] 2.2 Integrate referral code verification inside user creation logic in `app.js` to map the referrer relation and increment their referral counter.
+- [ ] 2.3 Implement the automatic 6-character uppercase alphanumeric referral code generation utility during signup.
+
+## 3. Student Dashboard Metrics
+
+- [ ] 3.1 Edit the profile container in `index.html` to display the active student's unique referral code, total successful referrals, and active discount rate.
+- [ ] 3.2 Implement front-end logic in `app.js` to calculate, render, and update referral achievements dynamically.
+
+## 4. Admin Settings and Configuration
+
+- [ ] 4.1 Insert the Referral Milestone Tiers configuration form inside the Admin Settings tab in `index.html`.
+- [ ] 4.2 Wire form event handlers, validation checks, and database synchronization in `app.js` to configure scaling tiers.
+
+## 5. Invoice Discount Calculations
+
+- [ ] 5.1 Implement billing handlers in `app.js` to evaluate a student's referral count against active tiers and deduct their discount from newly created invoices or appointments.
+
+## 6. Verification
+
+- [ ] 6.1 Run the production build command `npm run build` to verify clean compilation.
+- [ ] 6.2 Conduct manual checks on registration referral inputs and verify discount deductions on payment workflows.
 ````
 
 ## File: openspec/changes/add-whatsapp-functionality/.openspec.yaml
@@ -8735,34 +8944,6 @@ npm run start
 ```
 ````
 
-## File: wiki/Contact-Us.md
-````markdown
-# Contact Us Information Portal
-
-The Contact Us capability provides visitors and members with immediate, public access to the studio's official contact information directly from the landing page.
-
-## 🧭 Public Access
-
-The Contact Us links are placed in the navigation header, the page footer, and at the bottom of the fullscreen login card. Clicking any of these links will open a glassmorphic modal overlay (`#contact-us-modal`) displaying the studio's information.
-
-This modal operates independently of the authorization status, meaning users who are not logged in can view these details directly without hitting the authentication gates, and can access it directly while on the login page.
-
-## 📇 Contact Information Displayed
-
-The modal provides the following details:
-1. **Physical Address**: The location of the studio (default: `108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038`).
-2. **Phone Number**: An interactive link targeting the telephone protocol (`tel:`) so users on mobile or desktop softphone clients can initiate calls with a single click.
-3. **Email ID**: An interactive link targeting the email client protocol (`mailto:`) to immediately draft general query emails.
-
-## ⚙️ Administration & Configuration
-
-Rather than being hardcoded in HTML, the studio contact details are fully database-driven:
-
-1. **Access Settings**: Log in as an administrator (e.g. `admin@quantumyoga.xyz`) and navigate to **Admin Panel -> System Settings**.
-2. **Configure Details**: Locate the **Studio Contact Settings** card and enter the new Physical Address, Phone Number, and Email ID.
-3. **Instant Propagation**: Click **Save Studio Details** to persist updates on the server database. The new details propagate dynamically to all Contact Us triggers across the site.
-````
-
 ## File: wiki/Live-Yoga-Rooms.md
 ````markdown
 # Live Interactive Yoga Rooms (WebRTC)
@@ -8836,40 +9017,6 @@ The client tracks both scheduled class slots and manual live sessions started by
    * Displays `🔴 Live Session Active!` (or `🔴 Class in Progress!`).
    * Appends a glowing `🎥 Join Live Room Now` button to the dashboard countdown box.
    * Redirects the user to the active room name when clicked.
-````
-
-## File: openspec/changes/add-contact-us/specs/contact-us/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Studio Contact Details Display
-The system SHALL present a public Contact Us modal overlay displaying the studio's physical address, telephone number, and official email ID.
-
-#### Scenario: User views contact details
-- **WHEN** a user clicks the "Contact Us" link/button
-- **THEN** the system SHALL display the `#contact-us-modal` modal containing the studio's physical address, contact phone number, and support email ID.
-
-#### Scenario: Non-logged-in visitor views contact details
-- **WHEN** a visitor who is not logged in clicks the "Contact Us" link/button
-- **THEN** the system SHALL display the `#contact-us-modal` overlay directly on the landing page, bypassing any login or registration gates.
-
-#### Scenario: Contact Us visible and triggerable on login screen
-- **WHEN** the fullscreen login screen is active
-- **THEN** the Contact Us link SHALL be visible and triggerable, allowing the modal to open over the login screen.
-
-### Requirement: Interactive Call/Email Triggers
-The system SHALL support interactive protocol links to initiate contact instantly.
-
-#### Scenario: User clicks contact options
-- **WHEN** a user clicks the telephone or email ID links inside the contact modal
-- **THEN** the system SHALL launch the client's default telephone handler (using `tel:`) or email composer (using `mailto:`).
-
-### Requirement: Configurable Studio Details
-The system SHALL support dynamic administration of the studio's physical address, phone number, and email ID.
-
-#### Scenario: Admin updates contact details
-- **WHEN** an administrator saves updated contact details under the System Settings panel
-- **THEN** the system SHALL persist the settings on the server database and instantly propagate the updated values to all Contact Us links and modals across the application.
 ````
 
 ## File: openspec/specs/billing-payments/spec.md
@@ -8978,6 +9125,34 @@ Trusted bank transaction entries loaded via admin statement uploads:
     ]
   }
 }
+````
+
+## File: wiki/Contact-Us.md
+````markdown
+# Contact Us Information Portal
+
+The Contact Us capability provides visitors and members with immediate, public access to the studio's official contact information directly from the landing page.
+
+## 🧭 Public Access
+
+The Contact Us links are placed in the navigation header, the page footer, and at the bottom of the fullscreen login card. Clicking any of these links will open a glassmorphic modal overlay (`#contact-us-modal`) displaying the studio's information.
+
+This modal operates independently of the authorization status, meaning users who are not logged in can view these details directly without hitting the authentication gates, and can access it directly while on the login page.
+
+## 📇 Contact Information Displayed
+
+The modal provides the following details:
+1. **Physical Address**: The location of the studio (default: `108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038`).
+2. **Phone Number**: An interactive link targeting the telephone protocol (`tel:`) so users on mobile or desktop softphone clients can initiate calls with a single click.
+3. **Email ID**: An interactive link targeting the email client protocol (`mailto:`) to immediately draft general query emails.
+
+## ⚙️ Administration & Configuration
+
+Rather than being hardcoded in HTML, the studio contact details are fully database-driven:
+
+1. **Access Settings**: Log in as an administrator (e.g. `admin@quantumyoga.xyz`) and navigate to **Admin Panel -> System Settings**.
+2. **Configure Details**: Locate the **Studio Contact Settings** card and enter the new Physical Address, Phone Number, and Email ID.
+3. **Instant Propagation**: Click **Save Studio Details** to persist updates on the server database. The new details propagate dynamically to all Contact Us triggers across the site.
 ````
 
 ## File: wiki/Deployment-and-CI-CD.md
@@ -9144,6 +9319,40 @@ quantumyoga.xyz, www.quantumyoga.xyz {
    pm2 status
    pm2 logs quantum-yoga
    ```
+````
+
+## File: openspec/changes/add-contact-us/specs/contact-us/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Studio Contact Details Display
+The system SHALL present a public Contact Us modal overlay displaying the studio's physical address, telephone number, and official email ID.
+
+#### Scenario: User views contact details
+- **WHEN** a user clicks the "Contact Us" link/button
+- **THEN** the system SHALL display the `#contact-us-modal` modal containing the studio's physical address, contact phone number, and support email ID.
+
+#### Scenario: Non-logged-in visitor views contact details
+- **WHEN** a visitor who is not logged in clicks the "Contact Us" link/button
+- **THEN** the system SHALL display the `#contact-us-modal` overlay directly on the landing page, bypassing any login or registration gates.
+
+#### Scenario: Contact Us visible and triggerable on login screen
+- **WHEN** the fullscreen login screen is active
+- **THEN** the Contact Us link SHALL be visible and triggerable, allowing the modal to open over the login screen.
+
+### Requirement: Interactive Call/Email Triggers
+The system SHALL support interactive protocol links to initiate contact instantly.
+
+#### Scenario: User clicks contact options
+- **WHEN** a user clicks the telephone or email ID links inside the contact modal
+- **THEN** the system SHALL launch the client's default telephone handler (using `tel:`) or email composer (using `mailto:`).
+
+### Requirement: Configurable Studio Details
+The system SHALL support dynamic administration of the studio's physical address, phone number, and email ID.
+
+#### Scenario: Admin updates contact details
+- **WHEN** an administrator saves updated contact details under the System Settings panel
+- **THEN** the system SHALL persist the settings on the server database and instantly propagate the updated values to all Contact Us links and modals across the application.
 ````
 
 ## File: openspec/changes/auto-review-upi-payments/design.md
@@ -13460,6 +13669,9 @@ Learn about the native Web Speech API (Text-to-Speech) voice coach alignment gui
 
 ### 13. [Contact Us Information Portal](Contact-Us.md)
 View details on the public contact details modal and protocols.
+
+### 14. [Student Referral Program](Student-Referrals.md)
+Learn about referral codes, signup tracking, and configurable scaling discount tiers.
 ````
 
 ## File: server.js

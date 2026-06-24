@@ -82,6 +82,11 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **Login Screen Accessibility**: Accessible directly from the fullscreen login gate, allowing non-logged-in visitors to get in touch easily.
 *   **Interactive Protocol Shortcuts**: Leverages standard clickable `tel:` and `mailto:` protocol bindings to call or draft emails instantly.
 
+### 14. [Student Referrals & Tiered Discounts](file:///d:/QuantumYogaWebsite/openspec/changes/add-student-referrals/specs/student-referrals/spec.md)
+*   **Unique Referral Codes**: Generates unique shareable codes automatically for students, displayed directly on their profile dashboard.
+*   **Configurable Scaling Milestones**: Allows administrators to define discount tiers based on successful referrals count (e.g. 1 referral = 10% discount, 2 referrals = 15% discount) under Admin Settings.
+*   **Automated Billing Deductions**: Automatically applies calculated referral discounts to student monthly invoices and appointment coaching fees.
+
 ---
 
 ## 🛠️ Technology Stack
