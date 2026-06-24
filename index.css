@@ -2589,6 +2589,22 @@ td,
   color: #ffffff;
 }
 
+/* Contact Us Modal Card */
+.contact-modal-card {
+  background: var(--glass-dark-bg) !important;
+  border: 1px solid var(--glass-medium-border) !important;
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(124, 58, 237, 0.15) !important;
+}
+
+.contact-item a {
+  transition: var(--transition-fast);
+}
+
+.contact-item a:hover {
+  color: var(--accent-secondary) !important;
+  text-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+}
+
 /* Detailed Receipt Modal Overlay & Layout */
 .receipt-modal-card {
   background: var(--glass-dark-bg) !important;

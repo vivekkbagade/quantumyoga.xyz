@@ -52,6 +52,7 @@
         <a href="#chat-section" class="nav-link" id="nav-chat" style="display: none;">Community Chat</a>
         <a href="#live-class-section" class="nav-link" id="nav-live-class" style="display: none;">Live Class</a>
         <a href="#admin-section" class="nav-link" id="nav-admin" style="display: none;">Admin Panel</a>
+        <a href="#" class="nav-link" id="nav-contact-us">Contact Us</a>
       </nav>
       <div class="nav-actions">
         <div id="user-nav-panel" style="display: none; align-items: center; gap: 1rem; margin-right: 1rem;">
@@ -1360,10 +1361,9 @@
 
   </main>
 
-  <!-- Footer -->
   <footer class="app-footer">
     <div class="footer-content">
-      <p>&copy; 2026 Quantum Yoga Platform. Designed for supreme alignment of mind, body, and code.</p>
+      <p>&copy; 2026 Quantum Yoga Platform. Designed for supreme alignment of mind, body, and code. | <a href="#" id="footer-contact-us" style="color: var(--accent-primary); text-decoration: underline; margin-left: 0.5rem; cursor: pointer;">Contact Us</a></p>
     </div>
   </footer>
 
@@ -1500,6 +1500,44 @@
       <button class="modal-close" id="close-receipt-modal" aria-label="Close modal">&times;</button>
       <div class="modal-body" id="receipt-modal-body" style="padding: 2.5rem;">
         <!-- Dynamic receipt details will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Us Modal Overlay -->
+  <div class="modal-overlay" id="contact-us-modal" aria-hidden="true">
+    <div class="modal-card contact-modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative; color: var(--text-primary); text-align: left;">
+      <button class="modal-close" id="close-contact-modal" aria-label="Close modal">&times;</button>
+      
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-light-border); padding-bottom: 0.75rem;">
+        <span style="font-size: 1.5rem;">📞</span>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #fff;">Contact Us</h3>
+      </div>
+      
+      <div class="contact-info-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📍</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Address</h4>
+            <p style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
+          </div>
+        </div>
+
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📞</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Phone Number</h4>
+            <p style="font-size: 0.95rem; margin: 0;"><a href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
+          </div>
+        </div>
+
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">✉️</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Email ID</h4>
+            <p style="font-size: 0.95rem; margin: 0;"><a href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

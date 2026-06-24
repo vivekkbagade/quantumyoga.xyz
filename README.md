@@ -75,6 +75,11 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **Breathing Cadence Auditory Prompts**: Synthesizes periodic breathing prompts ("Inhale... Exhale...") matching the pose hold timings.
 *   **Glassmorphic Settings Widget**: Floating player overlay that toggles the voice guide on/off and configures speaking voices, volume, speech rates, and speech pitches locally.
 
+### 13. [Contact Us Information Portal](file:///d:/QuantumYogaWebsite/openspec/changes/add-contact-us/specs/contact-us/spec.md)
+*   **Static Contact Info Overlay**: Seamless, glassmorphic modal displaying the studio's physical address, contact telephone, and support email ID.
+*   **Bypassed Authentication Gates**: Publicly accessible directly on the landing page/footer to visitors who are not logged in.
+*   **Interactive Protocol Shortcuts**: Leverages standard clickable `tel:` and `mailto:` protocol bindings to call or draft emails instantly.
+
 ---
 
 ## 🛠️ Technology Stack

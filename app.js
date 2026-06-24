@@ -259,6 +259,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const receiptModalBody = document.getElementById("receipt-modal-body");
   const closeReceiptModalBtn = document.getElementById("close-receipt-modal");
   
+  const contactUsModal = document.getElementById("contact-us-modal");
+  const closeContactModalBtn = document.getElementById("close-contact-modal");
+  const navContactUs = document.getElementById("nav-contact-us");
+  const footerContactUs = document.getElementById("footer-contact-us");
+  
   const adminPaymentsTabBtn = document.getElementById("admin-payments-tab-btn");
   const adminPaymentsPanel = document.getElementById("admin-payments-panel");
   const adminPaymentsTableBody = document.getElementById("admin-payments-table-body");
@@ -1218,6 +1223,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         closeInspectLeadModal();
       } else if (upiPaymentModal && upiPaymentModal.classList.contains("active")) {
         closeUpiPaymentModal();
+      } else if (contactUsModal && contactUsModal.classList.contains("active")) {
+        closeContactUsModal();
       }
     }
   });
@@ -4646,6 +4653,39 @@ Please verify and update my status. Thank you!`);
   if (receiptModal) {
     receiptModal.addEventListener("click", (e) => {
       if (e.target === receiptModal) closeReceiptModal();
+    });
+  }
+
+  // Contact Us Modal Toggle Logic
+  function openContactUsModal(e) {
+    if (e) e.preventDefault();
+    if (contactUsModal) {
+      contactUsModal.classList.add("active");
+      contactUsModal.setAttribute("aria-hidden", "false");
+    }
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeContactUsModal() {
+    if (contactUsModal) {
+      contactUsModal.classList.remove("active");
+      contactUsModal.setAttribute("aria-hidden", "true");
+    }
+    document.body.style.overflow = "";
+  }
+
+  if (navContactUs) {
+    navContactUs.addEventListener("click", openContactUsModal);
+  }
+  if (footerContactUs) {
+    footerContactUs.addEventListener("click", openContactUsModal);
+  }
+  if (closeContactModalBtn) {
+    closeContactModalBtn.addEventListener("click", closeContactUsModal);
+  }
+  if (contactUsModal) {
+    contactUsModal.addEventListener("click", (e) => {
+      if (e.target === contactUsModal) closeContactUsModal();
     });
   }
 

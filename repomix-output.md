@@ -281,6 +281,7 @@ vite.config.js
 wiki/Architecture.md
 wiki/Billing-and-Payments.md
 wiki/Community-Chat.md
+wiki/Contact-Us.md
 wiki/Core-Yoga-Directory.md
 wiki/Deployment-and-CI-CD.md
 wiki/Email-Communication.md
@@ -380,19 +381,19 @@ The system SHALL support interactive protocol links to initiate contact instantl
 ````markdown
 ## 1. Landing Page UI
 
-- [ ] 1.1 Add "Contact Us" links to the navigation header and page footer in `index.html`
-- [ ] 1.2 Add the glassmorphic Contact Us modal overlay (`#contact-us-modal`) displaying the physical address, phone number, and support email ID in `index.html`
-- [ ] 1.3 Add interactive `tel:` and `mailto:` links to the phone number and email fields inside the modal in `index.html`
-- [ ] 1.4 Style the Contact Us modal and hover link states in `index.css`
+- [x] 1.1 Add "Contact Us" links to the navigation header and page footer in `index.html`
+- [x] 1.2 Add the glassmorphic Contact Us modal overlay (`#contact-us-modal`) displaying the physical address, phone number, and support email ID in `index.html`
+- [x] 1.3 Add interactive `tel:` and `mailto:` links to the phone number and email fields inside the modal in `index.html`
+- [x] 1.4 Style the Contact Us modal and hover link states in `index.css`
 
 ## 2. Frontend Toggle Logic
 
-- [ ] 2.1 Bind Contact Us modal toggle event listeners (open/close actions and ESC key handlers) in `app.js`
+- [x] 2.1 Bind Contact Us modal toggle event listeners (open/close actions and ESC key handlers) in `app.js`
 
 ## 3. Verification & Build
 
-- [ ] 3.1 Run `npm run build` to verify the build compiles successfully
-- [ ] 3.2 Verify the contact links successfully trigger the overlay popup and protocol links work
+- [x] 3.1 Run `npm run build` to verify the build compiles successfully
+- [x] 3.2 Verify the contact links successfully trigger the overlay popup and protocol links work
 ````
 
 ## File: openspec/changes/admin-analytics-reports/.openspec.yaml
@@ -1141,6 +1142,26 @@ Chat history is persisted in the unified database (`state.chatMessages` array) u
     ```
 2.  **Auto-Scroll:** The message container automatically scrolls down to display incoming messages if the user is active in the chat tab.
 3.  **Role Styling:** Message headers are styled differently depending on the role (`Admin`/Instructors receive a gold-highlighted name and an `Instructor` badge; `Students` receive a standard student badge).
+````
+
+## File: wiki/Contact-Us.md
+````markdown
+# Contact Us Information Portal
+
+The Contact Us capability provides visitors and members with immediate, public access to the studio's official contact information directly from the landing page.
+
+## 🧭 Public Access
+
+The Contact Us links are placed in both the navigation header and the page footer. Clicking either link will open a glassmorphic modal overlay (`#contact-us-modal`) displaying the studio's information.
+
+This modal operates independently of the authorization status, meaning users who are not logged in can view these details directly without hitting the authentication gates.
+
+## 📇 Contact Information Displayed
+
+The modal provides the following details:
+1. **Physical Address**: The location of the studio (`108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038`).
+2. **Phone Number**: An interactive link targeting the telephone protocol (`tel:+919876543210`) so users on mobile or desktop softphone clients can initiate calls with a single click.
+3. **Email ID**: An interactive link targeting the email client protocol (`mailto:support@quantumyoga.xyz`) to immediately draft general query emails.
 ````
 
 ## File: wiki/Live-Yoga-Rooms.md
@@ -5621,6 +5642,22 @@ td,
 .overdue-banner-close:hover {
   background: rgba(255, 255, 255, 0.2);
   color: #ffffff;
+}
+
+/* Contact Us Modal Card */
+.contact-modal-card {
+  background: var(--glass-dark-bg) !important;
+  border: 1px solid var(--glass-medium-border) !important;
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(124, 58, 237, 0.15) !important;
+}
+
+.contact-item a {
+  transition: var(--transition-fast);
+}
+
+.contact-item a:hover {
+  color: var(--accent-secondary) !important;
+  text-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
 }
 
 /* Detailed Receipt Modal Overlay & Layout */
@@ -12497,6 +12534,9 @@ Learn about interactive SVG data charts, posture rankings, CSV exports, and prin
 
 ### 12. [Guided Practice Voice Coach](Practice-Voice-Coach.md)
 Learn about the native Web Speech API (Text-to-Speech) voice coach alignment guides and breathing cadence cues.
+
+### 13. [Contact Us Information Portal](Contact-Us.md)
+View details on the public contact details modal and protocols.
 ````
 
 ## File: openspec/changes/auto-review-upi-payments/design.md
@@ -13638,6 +13678,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const receiptModalBody = document.getElementById("receipt-modal-body");
   const closeReceiptModalBtn = document.getElementById("close-receipt-modal");
   
+  const contactUsModal = document.getElementById("contact-us-modal");
+  const closeContactModalBtn = document.getElementById("close-contact-modal");
+  const navContactUs = document.getElementById("nav-contact-us");
+  const footerContactUs = document.getElementById("footer-contact-us");
+  
   const adminPaymentsTabBtn = document.getElementById("admin-payments-tab-btn");
   const adminPaymentsPanel = document.getElementById("admin-payments-panel");
   const adminPaymentsTableBody = document.getElementById("admin-payments-table-body");
@@ -14597,6 +14642,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         closeInspectLeadModal();
       } else if (upiPaymentModal && upiPaymentModal.classList.contains("active")) {
         closeUpiPaymentModal();
+      } else if (contactUsModal && contactUsModal.classList.contains("active")) {
+        closeContactUsModal();
       }
     }
   });
@@ -18025,6 +18072,39 @@ Please verify and update my status. Thank you!`);
   if (receiptModal) {
     receiptModal.addEventListener("click", (e) => {
       if (e.target === receiptModal) closeReceiptModal();
+    });
+  }
+
+  // Contact Us Modal Toggle Logic
+  function openContactUsModal(e) {
+    if (e) e.preventDefault();
+    if (contactUsModal) {
+      contactUsModal.classList.add("active");
+      contactUsModal.setAttribute("aria-hidden", "false");
+    }
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeContactUsModal() {
+    if (contactUsModal) {
+      contactUsModal.classList.remove("active");
+      contactUsModal.setAttribute("aria-hidden", "true");
+    }
+    document.body.style.overflow = "";
+  }
+
+  if (navContactUs) {
+    navContactUs.addEventListener("click", openContactUsModal);
+  }
+  if (footerContactUs) {
+    footerContactUs.addEventListener("click", openContactUsModal);
+  }
+  if (closeContactModalBtn) {
+    closeContactModalBtn.addEventListener("click", closeContactUsModal);
+  }
+  if (contactUsModal) {
+    contactUsModal.addEventListener("click", (e) => {
+      if (e.target === contactUsModal) closeContactUsModal();
     });
   }
 
@@ -22314,6 +22394,7 @@ Please verify and update my status. Thank you!`);
         <a href="#chat-section" class="nav-link" id="nav-chat" style="display: none;">Community Chat</a>
         <a href="#live-class-section" class="nav-link" id="nav-live-class" style="display: none;">Live Class</a>
         <a href="#admin-section" class="nav-link" id="nav-admin" style="display: none;">Admin Panel</a>
+        <a href="#" class="nav-link" id="nav-contact-us">Contact Us</a>
       </nav>
       <div class="nav-actions">
         <div id="user-nav-panel" style="display: none; align-items: center; gap: 1rem; margin-right: 1rem;">
@@ -23622,10 +23703,9 @@ Please verify and update my status. Thank you!`);
 
   </main>
 
-  <!-- Footer -->
   <footer class="app-footer">
     <div class="footer-content">
-      <p>&copy; 2026 Quantum Yoga Platform. Designed for supreme alignment of mind, body, and code.</p>
+      <p>&copy; 2026 Quantum Yoga Platform. Designed for supreme alignment of mind, body, and code. | <a href="#" id="footer-contact-us" style="color: var(--accent-primary); text-decoration: underline; margin-left: 0.5rem; cursor: pointer;">Contact Us</a></p>
     </div>
   </footer>
 
@@ -23762,6 +23842,44 @@ Please verify and update my status. Thank you!`);
       <button class="modal-close" id="close-receipt-modal" aria-label="Close modal">&times;</button>
       <div class="modal-body" id="receipt-modal-body" style="padding: 2.5rem;">
         <!-- Dynamic receipt details will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Us Modal Overlay -->
+  <div class="modal-overlay" id="contact-us-modal" aria-hidden="true">
+    <div class="modal-card contact-modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative; color: var(--text-primary); text-align: left;">
+      <button class="modal-close" id="close-contact-modal" aria-label="Close modal">&times;</button>
+      
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-light-border); padding-bottom: 0.75rem;">
+        <span style="font-size: 1.5rem;">📞</span>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #fff;">Contact Us</h3>
+      </div>
+      
+      <div class="contact-info-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📍</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Address</h4>
+            <p style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
+          </div>
+        </div>
+
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📞</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Phone Number</h4>
+            <p style="font-size: 0.95rem; margin: 0;"><a href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
+          </div>
+        </div>
+
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">✉️</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Email ID</h4>
+            <p style="font-size: 0.95rem; margin: 0;"><a href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

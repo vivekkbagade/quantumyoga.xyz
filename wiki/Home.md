@@ -42,4 +42,7 @@ Learn about interactive SVG data charts, posture rankings, CSV exports, and prin
 ### 12. [Guided Practice Voice Coach](Practice-Voice-Coach.md)
 Learn about the native Web Speech API (Text-to-Speech) voice coach alignment guides and breathing cadence cues.
 
+### 13. [Contact Us Information Portal](Contact-Us.md)
+View details on the public contact details modal and protocols.
+
 
