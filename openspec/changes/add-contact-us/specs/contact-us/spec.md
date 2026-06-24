@@ -11,9 +11,9 @@ The system SHALL present a public Contact Us modal overlay displaying the studio
 - **WHEN** a visitor who is not logged in clicks the "Contact Us" link/button
 - **THEN** the system SHALL display the `#contact-us-modal` overlay directly on the landing page, bypassing any login or registration gates.
 
-#### Scenario: Contact Us not visible or triggerable on login screen
+#### Scenario: Contact Us visible and triggerable on login screen
 - **WHEN** the fullscreen login screen is active
-- **THEN** the Contact Us links and modal SHALL NOT be visible or triggerable.
+- **THEN** the Contact Us link SHALL be visible and triggerable, allowing the modal to open over the login screen.
 
 ### Requirement: Interactive Call/Email Triggers
 The system SHALL support interactive protocol links to initiate contact instantly.

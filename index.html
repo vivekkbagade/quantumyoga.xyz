@@ -1504,44 +1504,6 @@
     </div>
   </div>
 
-  <!-- Contact Us Modal Overlay -->
-  <div class="modal-overlay" id="contact-us-modal" aria-hidden="true">
-    <div class="modal-card contact-modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative; color: var(--text-primary); text-align: left;">
-      <button class="modal-close" id="close-contact-modal" aria-label="Close modal">&times;</button>
-      
-      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-light-border); padding-bottom: 0.75rem;">
-        <span style="font-size: 1.5rem;">📞</span>
-        <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #fff;">Contact Us</h3>
-      </div>
-      
-      <div class="contact-info-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
-        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
-          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📍</span>
-          <div>
-            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Address</h4>
-            <p style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
-          </div>
-        </div>
-
-        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
-          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📞</span>
-          <div>
-            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Phone Number</h4>
-            <p style="font-size: 0.95rem; margin: 0;"><a href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
-          </div>
-        </div>
-
-        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
-          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">✉️</span>
-          <div>
-            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Email ID</h4>
-            <p style="font-size: 0.95rem; margin: 0;"><a href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Appointment Booking & Rescheduling Modal -->
   <div class="modal-overlay" id="appointment-modal" aria-hidden="true" style="display: none;">
     <div class="modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg);">
@@ -1899,6 +1861,48 @@
             </div>
             <button type="submit" class="btn btn-primary btn-block" id="submit-inquiry-btn">Submit Inquiry</button>
           </form>
+        </div>
+      </div>
+      
+      <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--text-secondary); border-top: 1px solid var(--glass-light-border); padding-top: 1rem;">
+        Need help? <a href="#" id="auth-contact-us-btn" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600; cursor: pointer;">Contact Us</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Us Modal Overlay -->
+  <div class="modal-overlay" id="contact-us-modal" aria-hidden="true" style="z-index: 10005;">
+    <div class="modal-card contact-modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative; color: var(--text-primary); text-align: left;">
+      <button class="modal-close" id="close-contact-modal" aria-label="Close modal">&times;</button>
+      
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-light-border); padding-bottom: 0.75rem;">
+        <span style="font-size: 1.5rem;">📞</span>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #fff;">Contact Us</h3>
+      </div>
+      
+      <div class="contact-info-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📍</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Address</h4>
+            <p style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
+          </div>
+        </div>
+
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📞</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Phone Number</h4>
+            <p style="font-size: 0.95rem; margin: 0;"><a href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
+          </div>
+        </div>
+
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">✉️</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Email ID</h4>
+            <p style="font-size: 0.95rem; margin: 0;"><a href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
+          </div>
         </div>
       </div>
     </div>

@@ -263,6 +263,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const closeContactModalBtn = document.getElementById("close-contact-modal");
   const navContactUs = document.getElementById("nav-contact-us");
   const footerContactUs = document.getElementById("footer-contact-us");
+  const authContactUsBtn = document.getElementById("auth-contact-us-btn");
   
   const adminPaymentsTabBtn = document.getElementById("admin-payments-tab-btn");
   const adminPaymentsPanel = document.getElementById("admin-payments-panel");
@@ -4659,9 +4660,6 @@ Please verify and update my status. Thank you!`);
   // Contact Us Modal Toggle Logic
   function openContactUsModal(e) {
     if (e) e.preventDefault();
-    if (authGateFullscreen && authGateFullscreen.style.display !== "none") {
-      return;
-    }
     if (contactUsModal) {
       contactUsModal.classList.add("active");
       contactUsModal.setAttribute("aria-hidden", "false");
@@ -4682,6 +4680,9 @@ Please verify and update my status. Thank you!`);
   }
   if (footerContactUs) {
     footerContactUs.addEventListener("click", openContactUsModal);
+  }
+  if (authContactUsBtn) {
+    authContactUsBtn.addEventListener("click", openContactUsModal);
   }
   if (closeContactModalBtn) {
     closeContactModalBtn.addEventListener("click", closeContactUsModal);
