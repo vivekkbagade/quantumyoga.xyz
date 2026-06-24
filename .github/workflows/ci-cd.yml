@@ -46,6 +46,12 @@ jobs:
           cp data.js deploy-dist/
           cp index.css deploy-dist/
           cp index.html deploy-dist/
+          # Copy images and other JSON configurations
+          cp *.jpg deploy-dist/ || echo "No jpg files"
+          cp *.png deploy-dist/ || echo "No png files"
+          cp tst.json deploy-dist/ || echo "No tst.json file"
+          # Package db.json as a template to avoid overwriting the active live database on the VM
+          cp db.json deploy-dist/db.json.template || echo "No db.json file"
 
       - name: Upload Deployment Artifacts
         uses: actions/upload-artifact@v4
@@ -83,7 +89,15 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             cd ${{ secrets.VM_DEPLOY_PATH }}
+            
+            # Safely initialize db.json if it doesn't exist on the VM
+            if [ ! -f db.json ] && [ -f db.json.template ]; then
+              cp db.json.template db.json
+              echo "Initialized db.json from template."
+            fi
+            
             npm install --omit=dev
+            
             # Check if PM2 is installed, install globally if missing (safeguard)
             if ! command -v pm2 &> /dev/null; then
               npm install -g pm2
