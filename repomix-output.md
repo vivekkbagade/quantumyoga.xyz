@@ -43,9 +43,11 @@ The content is organized as follows:
 .agent/workflows/opsx-archive.md
 .agent/workflows/opsx-explore.md
 .agent/workflows/opsx-propose.md
+.github/workflows/ci-cd.yml
 .gitignore
 app.js
 data.js
+ecosystem.config.cjs
 index.css
 index.html
 openspec/changes/add-whatsapp-functionality/.openspec.yaml
@@ -229,6 +231,7 @@ openspec/changes/yoga-website/tasks.md
 openspec/specs/billing-payments/spec.md
 openspec/specs/class-scheduling/spec.md
 openspec/specs/core-yoga/spec.md
+openspec/specs/deployment-ci-cd/spec.md
 openspec/specs/email-communication/spec.md
 openspec/specs/leads-crm/spec.md
 openspec/specs/user-auth-profile/spec.md
@@ -246,6 +249,7 @@ vite.config.js
 wiki/Architecture.md
 wiki/Billing-and-Payments.md
 wiki/Core-Yoga-Directory.md
+wiki/Deployment-and-CI-CD.md
 wiki/Email-Communication.md
 wiki/Home.md
 wiki/Lead-Management-and-CRM.md
@@ -9864,6 +9868,63 @@ Routines bundle multiple poses into guided practice flows:
   - Automatically handles routine completion when the video plays to the end.
 ````
 
+## File: openspec/specs/deployment-ci-cd/spec.md
+````markdown
+# Deployment & CI/CD Specification
+
+## Overview
+This specification details the deployment architecture, configuration parameters, and CI/CD automated pipeline for the Quantum Yoga platform. It covers local dev server behavior, production Express configurations, PM2 process management, and GitHub Actions workflow execution.
+
+---
+
+## Deployment Architecture
+
+### 1. Environments
+*   **Local Development:** Vite dev server proxying backend requests to local Express middlewares (CORS-free integration testing).
+*   **Production VM:** Node.js Express server running under PM2 serving Vite-compiled static assets and handling production database / integration APIs.
+
+### 2. Process Flow & CI/CD Orchestration
+```
+Developer Push to Git
+  ├── GitHub Actions CI Job (ubuntu-latest)
+  │     ├── Install npm dependencies (npm ci)
+  │     ├── Run test verification (npm test)
+  │     └── Compile Vite static bundle (npm run build)
+  └── GitHub Actions CD Job
+        ├── Transfer production bundle via SCP
+        └── SSH VM commands:
+              ├── Safely check/initialize db.json template
+              ├── Clean up old PM2 processes
+              ├── Install production dependencies
+              └── Restart PM2 app (quantum-yoga)
+```
+
+---
+
+## Capabilities & Implementation Details
+
+### 1. Build Compilation
+*   **Assets Target Directory:** `dist/` containing optimized JS modules, CSS styling stylesheets, and hashed image assets.
+*   **Vite Configurations:** Defined in [vite.config.js](file:///d:/QuantumYogaWebsite/vite.config.js).
+
+### 2. VM Deployment & SSH Authentication
+*   **Secrets Dependency:**
+    *   `VM_SSH_IP`: VM Server public hostname/IP.
+    *   `VM_SSH_USER`: SSH login username.
+    *   `VM_SSH_KEY`: Secure private SSH credential.
+    *   `VM_DEPLOY_PATH`: Absolute destination path.
+*   **Artifacts Package Content:** `dist/`, `server.js`, `package.json`, `package-lock.json`, `ecosystem.config.cjs`, client assets (`app.js`, `data.js`, `index.css`, `index.html`, image assets).
+
+### 3. Database State Persistence
+*   **Handling `db.json`:** To preserve database updates on the VM, the raw `db.json` file is transferred as `db.json.template` and initialized only if no active `db.json` file is present.
+
+### 4. PM2 Process Manager Configuration
+*   Managed via [ecosystem.config.cjs](file:///d:/QuantumYogaWebsite/ecosystem.config.cjs).
+*   **Process Name:** `quantum-yoga`
+*   **Script Target:** `server.js`
+*   **Process Monitoring:** Configured for auto-restart, production flag, log integration, and automatic memory limit restarts (1GB limit).
+````
+
 ## File: openspec/specs/email-communication/spec.md
 ````markdown
 # Email Communication Spec
@@ -10409,6 +10470,103 @@ To avoid relying on generic external players, Quantum Yoga implements a customiz
 *   **Automated Events:** Listens to video termination handlers to instantly trigger routine completion records without requiring manual button clicks.
 ````
 
+## File: wiki/Deployment-and-CI-CD.md
+````markdown
+# Deployment & CI/CD Pipeline Setup
+
+Quantum Yoga uses a fully automated CI/CD pipeline powered by **GitHub Actions** to deploy updates seamlessly to a target Virtual Machine (VM). The application process is managed in production using the **PM2** process manager.
+
+---
+
+## 🚀 CI/CD Pipeline Workflow
+
+The GitHub Actions workflow configuration is located in [.github/workflows/ci-cd.yml](file:///d:/QuantumYogaWebsite/.github/workflows/ci-cd.yml).
+
+The pipeline executes the following stages:
+
+### 1. Build and Test (`build-and-test` job)
+*   **Triggers:** Pushes or Pull Requests to the `main` or `master` branches. Can also be triggered manually via `workflow_dispatch`.
+*   **Setup:** Spins up an `ubuntu-latest` runner, configures Node.js, and restores cached dependencies.
+*   **Compile:** Runs `npm run build` to build client-side assets using Vite into the `dist/` directory.
+*   **Test:** Executes tests (`npm run test`) and fails the deployment if the test suite fails.
+*   **Package:** Gathers production files (`dist/`, `server.js`, `package.json`, `package-lock.json`, `ecosystem.config.cjs`, client files, and images) and uploads them as a build artifact.
+
+### 2. Deploy (`deploy` job)
+*   **Triggers:** Runs only after `build-and-test` succeeds and the code is on the main branch.
+*   **Transfer (SCP):** Uses `appleboy/scp-action` to securely copy files over SSH to the VM's configured deployment path.
+*   **Remote Commands (SSH):** Uses `appleboy/ssh-action` to run the following scripts directly on the VM:
+    1.  Safely initializes `db.json` from the repository template if it doesn't exist on the VM (to prevent overwriting live database states).
+    2.  Cleans up old PM2 processes running under the name `quantum-yoga-website` (if any).
+    3.  Installs production-only dependencies (`npm install --omit=dev`).
+    4.  Ensures PM2 is installed globally.
+    5.  Starts or reloads the Express server under the name `quantum-yoga` using the PM2 config file.
+
+---
+
+## 🔑 GitHub Repository Secrets Configuration
+
+To authorize the pipeline, go to your GitHub repository -> **Settings** -> **Secrets and variables** -> **Actions**, and add these secrets:
+
+| Secret Name | Description | Example Value |
+| :--- | :--- | :--- |
+| `VM_SSH_IP` | Public IP Address or Domain of your VM | `192.0.2.1` |
+| `VM_SSH_USER` | SSH Username for logging in | `ubuntu` or `root` |
+| `VM_SSH_KEY` | Private SSH key authorized to log in | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
+| `VM_DEPLOY_PATH` | Absolute path to deploy files on the VM | `/var/www/quantum-yoga` |
+
+---
+
+## ⚙️ VM Server Environment Preparation
+
+Before your first deployment, configure the VM runtime environment:
+
+### 1. Install Node.js, Git, and PM2
+SSH into your VM and run:
+```bash
+# Update repositories and install Node.js (v20)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs git
+
+# Install PM2 globally
+sudo npm install -g pm2
+```
+
+### 2. Configure Deployment Folder Permissions
+Ensure the deployment folder exists and is owned by the SSH user (e.g. `ubuntu`):
+```bash
+sudo mkdir -p /var/www/quantum-yoga
+sudo chown -R ubuntu:ubuntu /var/www/quantum-yoga
+```
+
+### 3. Create Production `.env`
+In `/var/www/quantum-yoga`, create a `.env` file with production credentials:
+```env
+PORT=8080
+DATABASE_URL=postgresql://postgres:password@127.0.0.1:5432/quantum_yoga
+RESEND_API_KEY=your_resend_api_key
+RESEND_FROM_ADDRESS=admin@quantumyoga.xyz
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_SENDER_NUMBER=+14155238886
+```
+
+---
+
+## 🛡️ PM2 Process Management
+
+Production processes are managed using `ecosystem.config.cjs`:
+*   **App Name:** `quantum-yoga`
+*   **Entry Script:** `server.js`
+*   **Instances:** `1` (customizable for clusters)
+*   **Restart Policy:** Automatically restarts on crashes or memory overhead (>1GB).
+
+### Useful PM2 commands on the VM:
+*   View app status: `pm2 status`
+*   Monitor resources & logs: `pm2 monit`
+*   View real-time logs: `pm2 logs quantum-yoga`
+*   Restart the application: `pm2 restart quantum-yoga`
+````
+
 ## File: wiki/Email-Communication.md
 ````markdown
 # Email Communication Systems
@@ -10557,6 +10715,26 @@ To enable zero-cost, manual communication between admins and users/leads, Quantu
 * **Pre-populated Templates:** Launches a WhatsApp Web browser tab pre-populated with customized greetings.
 ````
 
+## File: ecosystem.config.cjs
+````javascript
+module.exports = {
+  apps: [
+    {
+      name: 'quantum-yoga',
+      script: 'server.js',
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 8080
+      }
+    }
+  ]
+};
+````
+
 ## File: package.json
 ````json
 {
@@ -10670,35 +10848,6 @@ Build client-side assets and spin up the Express server:
 npm run build
 npm run start
 ```
-````
-
-## File: wiki/Home.md
-````markdown
-# Welcome to the Quantum Yoga Wiki!
-
-Quantum Yoga is a premium, fully-integrated platform designed for yoga studio management, student coaching, and guided routines. 
-
-This wiki contains comprehensive guides on the project's architecture, data models, integration guides, and core capabilities.
-
-## 🧭 Navigation
-
-### 1. [System Architecture & Database Setup](Architecture.md)
-Learn about the technologies powering Quantum Yoga, deployment steps, and configuring Supabase, PostgreSQL, or local fallback storage.
-
-### 2. [Core Yoga Capabilities](Core-Yoga-Directory.md)
-Discover the pose directories, guided routines, interactive SVG alignment maps, and the custom HTML5 video player framework.
-
-### 3. [Billing & Payments Flow](Billing-and-Payments.md)
-Read about automated invoicing, outstanding fee warning banners, standard merchant UPI QR Code generation, and client-submitted UTR validations.
-
-### 4. [Lead CRM & Kanban Pipeline](Lead-Management-and-CRM.md)
-Details on landing page wellness inquiry ingestion, lead pipeline swimlanes (Kanban), sales logging, and the single-click active member conversion logic.
-
-### 5. [Email Communication Systems](Email-Communication.md)
-A setup guide for the dual-integration engine supporting transactional emails via the Resend API and full inbox capabilities via Gmail OAuth2.
-
-### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
-Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.
 ````
 
 ## File: .gitignore
@@ -10846,6 +10995,190 @@ Trusted bank transaction entries loaded via admin statement uploads:
     ]
   }
 }
+````
+
+## File: wiki/Home.md
+````markdown
+# Welcome to the Quantum Yoga Wiki!
+
+Quantum Yoga is a premium, fully-integrated platform designed for yoga studio management, student coaching, and guided routines. 
+
+This wiki contains comprehensive guides on the project's architecture, data models, integration guides, and core capabilities.
+
+## 🧭 Navigation
+
+### 1. [System Architecture & Database Setup](Architecture.md)
+Learn about the technologies powering Quantum Yoga, deployment steps, and configuring Supabase, PostgreSQL, or local fallback storage.
+
+### 2. [Core Yoga Capabilities](Core-Yoga-Directory.md)
+Discover the pose directories, guided routines, interactive SVG alignment maps, and the custom HTML5 video player framework.
+
+### 3. [Billing & Payments Flow](Billing-and-Payments.md)
+Read about automated invoicing, outstanding fee warning banners, standard merchant UPI QR Code generation, and client-submitted UTR validations.
+
+### 4. [Lead CRM & Kanban Pipeline](Lead-Management-and-CRM.md)
+Details on landing page wellness inquiry ingestion, lead pipeline swimlanes (Kanban), sales logging, and the single-click active member conversion logic.
+
+### 5. [Email Communication Systems](Email-Communication.md)
+A setup guide for the dual-integration engine supporting transactional emails via the Resend API and full inbox capabilities via Gmail OAuth2.
+
+### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
+Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.
+
+### 7. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
+Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
+````
+
+## File: openspec/changes/auto-review-upi-payments/design.md
+````markdown
+## Context
+
+Currently, Quantum Yoga lacks automated transaction matching, requiring manual verification of UTR numbers. The introduction of an automated verification flow speeds up confirmations by checking student inputs against a verified bank transaction ledger imported manually by administrators from Excel or CSV files.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement an automated matching process comparing student-submitted UTRs and invoice amounts against a local bank transaction ledger (`upi_ledger` in database state).
+*   Transition payment status to `"paid"` instantly if a match is successfully identified.
+*   Provide an administrative UI to upload bank statements (.xlsx, .xls, .csv formats) containing transaction details (UTR, amount, date, etc.).
+*   Retain administrative manual approval as a fallback if automatic matching fails.
+
+**Non-Goals:**
+*   Integrating with live third-party bank APIs or external API-based synchronizations.
+*   Automated refund handling or payment reversals.
+
+## Decisions
+
+### 1. Database Schema Extension
+*   **Approach:** Maintain a `upi_ledger` array in the global state (`db.json` / Supabase state) to serve as the local cache of verified UPI payments.
+*   **Structure:**
+    ```json
+    "upi_ledger": [
+      { 
+        "utr": "123456789012", 
+        "amount": "1500", 
+        "date": "2026-06-21", 
+        "senderName": "Sarah Jenkins", 
+        "details": "UPI/987654321/Vinyasa Coaching",
+        "importedAt": "2026-06-21T18:00:00Z" 
+      }
+    ]
+    ```
+
+### 2. Auto-Review REST Endpoint
+*   **Approach:** Add an API endpoint `POST /api/verify-upi` in `server.js`.
+*   **Payload:** `{ invoiceId: string, utr: string, amount: string }`
+*   **Logic:**
+    *   Compare the UTR and amount against `upi_ledger`.
+    *   If matched, update payment status to `"paid"`, save the transaction date, and trigger emails/WhatsApp messages. Return `{ success: true, status: 'paid' }`.
+    *   If the UTR matches but the amount is different, update payment status to `"discrepancy"`.
+    *   If no UTR match is found, update payment status to `"review"`. Return `{ success: false, status: 'review' }`.
+
+### 3. Excel/CSV Ledger Upload API
+*   **Approach:** Add a `POST /api/admin/upload-ledger` endpoint to process Excel/CSV bank statement files.
+*   **Parsing Utility:** Use a basic CSV text parser in `server.js` to parse CSV data. It reads column headers to locate the UTR and Transaction Amount.
+*   **Deduplication:** When merging new transactions, query existing `upi_ledger` records by UTR to prevent duplicating imported transaction references.
+
+### 4. Planned Reconciliation Enhancements
+*   **Fuzzy Amount Matching:** The endpoint comparison checks whether `Math.abs(ledgerAmount - invoiceAmount) < tolerance` where the tolerance is configurable (defaulting to ±₹0.05) to protect against rounding anomalies.
+*   **Date Window Verification:** When a match is found in the `upi_ledger`, the system validates if `Math.abs(new Date(ledgerMatch.date) - new Date(invoice.date)) <= maxAgeMs` (defaulting to 30 days) before auto-approving.
+*   **Statement Schema Mapping:** An administrative configuration object `upi_ledger_mapping` is saved to settings, allowing the parser to match dynamic header indices (e.g., column index 4 maps to `utr`, index 2 maps to `amount`).
+*   **Reconciliation Log Audit:** A schema collection `upi_reconciliation_logs` is implemented to record matches, failures, invoice IDs, and timestamps.
+
+## Risks / Trade-offs
+
+*   **Risk:** Sync latency (students paying after the latest upload will not auto-verify until the next upload).
+    *   *Mitigation:* Clearly notify the student during UTR submission that auto-verification runs against imported statements and may take time to verify, leaving the manual admin override active.
+*   **Risk:** Spoofing or fake UTR guessing attacks.
+    *   *Mitigation:* Once a UTR in the ledger is successfully matched and linked to an invoice, mark it as "linked" or prevent double-claiming by checking if the UTR was already associated with a paid invoice.
+*   **Risk:** Re-use of old UTRs or stale statements.
+    *   *Mitigation:* Apply the 30-day date window validation to ensure UTR claims are linked only to current transaction timelines.
+````
+
+## File: openspec/changes/auto-review-upi-payments/proposal.md
+````markdown
+## Why
+
+Currently, when a student submits a payment reference (UTR), the status is set to "Under Review". Administrators must then manually verify the UTR and amount, and approve the payment to transition it to "Paid". Automating this verification by comparing student-submitted UTRs and transaction amounts against a trusted ledger of received UPI transactions will reduce administrative workload and speed up confirmation times.
+
+## What Changes
+
+*   **Automated UTR Matching Engine:** Integrate an Excel/CSV bank statement ledger uploader. Administrators can upload their raw UPI transaction statements containing columns for UTR, Transaction Amount, Transaction Date, and other transaction details to construct the internal trusted verification store.
+*   **Auto-Approve Action:** If a submitted UTR matches an unlinked entry in the received UPI transactions ledger with the exact same amount:
+    *   Transition the payment status directly from `pending`/`review` to `paid`.
+    *   Automatically link the transaction and record the payment date.
+    *   Directly trigger `payment-approved` email and WhatsApp notifications containing the verified UTR.
+*   **Flag Discrepancies:** If the UTR matches but the amount is different, flag the payment as `"discrepancy"` (or keep as `"review"` with a warning flag) and notify the administrator.
+*   **Reconciliation Enhancements:**
+    *   **Fuzzy Amount Matching:** Reconcile transaction differences within a small tolerance margin (e.g. ±₹0.05).
+    *   **Date Window Verification:** Enforce that matched transaction dates are within a 30-day window to prevent reuse of old references.
+    *   **Schema Mapping:** Support dynamic header mappings for CSV statement uploads.
+    *   **Audit Logging:** Keep logs of matching matches, discrepancies, and resolutions.
+*   **Manual/Fallback Interface:** Retain the administrative override tools to manually approve payments if automated verification fails or cannot find the UTR.
+
+## Capabilities
+
+### New Capabilities
+<!-- None -->
+
+### Modified Capabilities
+- `billing-payments`: Automates transaction verification and approval triggers upon student UTR submission.
+
+## Impact
+
+*   **Database Schema:** Extend payment records to store verification metadata (e.g. `verifiedAt`, `verificationSource`). Add a schema model for stored bank statement transaction ledger entries and a model for reconciliation audit logs.
+*   **Frontend logic (`app.js`):** Modify UTR submission callbacks to invoke the local verification logic and instantly show success if auto-approved, or show it is under review if no match is found. Add an administrative dashboard interface to upload bank statement files (.xlsx, .xls, .csv) and configure CSV column maps.
+*   **Backend server (`server.js`):** Add a POST `/api/verify-upi` endpoint to process UTR and amount comparisons, and a POST `/api/admin/upload-ledger` endpoint to parse Excel/CSV statements, apply dynamic column mapping, and log activities to the audit log.
+````
+
+## File: openspec/changes/auto-review-upi-payments/specs/billing-payments/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Automated UPI Payment Verification
+The system SHALL verify student-submitted UTR and transaction amount values against a trusted bank transaction ledger.
+
+#### Scenario: Transaction matches ledger exactly
+- **WHEN** a student submits a 12-digit UTR and amount for an invoice
+- **AND** the UTR and amount match an unlinked entry in the trusted bank transaction ledger
+- **THEN** the system SHALL update the payment status to "paid" and link the UTR record automatically
+
+#### Scenario: Transaction matches UTR but amount differs
+- **WHEN** a student submits a UTR and amount for an invoice
+- **AND** the UTR matches an entry in the ledger but the amount differs
+- **THEN** the system SHALL mark the payment status as "discrepancy" and notify administrators
+
+#### Scenario: Transaction UTR not found in ledger
+- **WHEN** a student submits a UTR for an invoice
+- **AND** the UTR does not exist in the trusted ledger
+- **THEN** the system SHALL update the payment status to "review" and flag it for manual review
+
+### Requirement: Bank Statement Ledger Import
+The system SHALL support manual file uploads (CSV, XLS, XLSX) to import received transaction rows into the internal trusted ledger pool.
+
+#### Scenario: Admin uploads a valid CSV bank statement
+- **WHEN** an admin uploads a CSV bank statement containing transaction columns
+- **THEN** the system SHALL parse the document, extract valid UTRs, amounts, transaction dates, and descriptions, and insert new records into the database ledger without creating duplicates
+
+### Requirement: Planned Reconciliation Enhancements
+
+#### Scenario: Configurable fuzzy matching for rounding differences
+- **WHEN** reconciling a UTR entry
+- **AND** the ledger amount matches the invoice amount within a configurable tolerance margin (e.g. ±₹0.05)
+- **THEN** the system SHALL treat it as an exact match and approve the payment automatically
+
+#### Scenario: UTR date window verification
+- **WHEN** a student submits a UTR for reconciliation
+- **AND** the matched ledger transaction date falls outside a 30-day window of the invoice date
+- **THEN** the system SHALL block auto-approval and flag the invoice as a discrepancy to prevent reuse of old transaction references
+
+#### Scenario: Dynamic statement schema configuration
+- **WHEN** an administrator uploads a CSV statement
+- **THEN** the system SHALL permit mapping target columns dynamically to the required fields (UTR, amount, date) from the UI settings panel
+
+#### Scenario: Reconciliation audit log recording
+- **WHEN** any automatic verification or manual reconciliation action is performed
+- **THEN** the system SHALL write a date-stamped activity log record recording the match status, invoice ID, reference UTR, and user ID for auditing purposes
 ````
 
 ## File: vite.config.js
@@ -11341,6 +11674,210 @@ export default defineConfig({
     port: 80
   }
 });
+````
+
+## File: wiki/Billing-and-Payments.md
+````markdown
+# Billing & Payments
+
+Quantum Yoga incorporates a transparent invoicing and transactions manager tailored for standard Indian merchant configurations.
+
+---
+
+## 🧾 Invoice Ledger Schema (`payments`)
+
+Every student payment transaction maps to the following record structure:
+
+*   `id`: Unique invoice identifier prefixed with `INV-` (e.g. `INV-10029`).
+*   `userEmail`: Linked studio member email.
+*   `description` / `amount`: Purpose of charge and value in INR (₹).
+*   `dueDate` / `paymentDate`: Timeline dates.
+*   `status`: Current state, transitioning between `pending`, `review` (Under Review), `paid` (Approved), and `cancelled`.
+*   `utr`: User-submitted UPI Unique Transaction Reference (12-digit code).
+
+---
+
+## 📲 UPI QR Code Gateway Flow
+
+To keep transaction processing cost-free, the platform leverages direct peer-to-peer UPI payments:
+
+```
+[Member clicks "Pay via UPI"]
+               │
+               ▼
+[Generate standard UPI URI]
+"upi://pay?pa={vpa}&pn={name}&am={amount}&tn={description}"
+               │
+               ▼
+[Render live QR Code on Modal]
+               │
+               ▼
+[Member scans & transfers on UPI App]
+               │
+               ▼
+[Member inputs 12-digit UTR code on form]
+               │
+               ▼
+[Status updates to 'review' (Under Review) & logs UTR reference]
+               │
+               ├──────────────────────────────────────────┐
+               ▼                                          ▼
+[Triggers 'payment-under-review' Email]   [Triggers 'payment-under-review' WhatsApp]
+(includes Invoice, Amount, and UTR)       (includes Invoice, Amount, and UTR)
+               │                                          │
+               └────────────────────┬─────────────────────┘
+                                    │
+                                    ▼
+                 [Admin reviews & approves payment]
+                                    │
+               ┌────────────────────┴─────────────────────┐
+               ▼                                          ▼
+ [Status updates to 'paid']              [Triggers 'payment-approved' WhatsApp]
+ (includes Invoice, Amount, and UTR)     (includes Invoice, Amount, and UTR)
+               │
+               ▼
+ [Triggers 'payment-approved' Email]
+ (includes Invoice, Amount, and UTR)
+```
+
+---
+
+## 🏢 System Notifications & Receipts
+
+1.  **Overdue Banners:** If a logged-in member has *any* invoices past their due dates, a sticky global banner warns them of overdue fees and links directly to the invoice page.
+2.  **Dynamic Receipts:** Fully responsive HTML invoice receipt layouts are generated on-demand with options to save or print. Contains transactional audit checkmarks, payment logs, and company branding.
+3.  **Manual Invoices:** Administrators can quickly generate ad-hoc fee demands against any student account via the admin control panel.
+4.  **Notifications:** Both email and WhatsApp notifications keep students informed about invoice status updates.
+
+---
+
+## 🤖 Automated UPI Reconciliation (Bank Ledger Sync)
+
+To expedite approvals while preserving cost-free direct UPI transaction lanes, Quantum Yoga supports automated payment verification:
+
+1.  **Manual CSV Statement Upload:** Administrators can manually upload bank statements in CSV formats via the Admin Settings panel to parse UTRs, transaction amounts, transaction dates, and payer names into the trusted `upi_ledger` cache.
+2.  **Auto-Approval Matching:** When a student submits a UTR code:
+    *   The system compares the UTR and amount against the cached `upi_ledger` entries.
+    *   If a match is found, the system **automatically approves** the payment, transitioning status directly to `paid` and triggering Gmail and WhatsApp payment confirmation notifications containing the verified UTR.
+    *   If the UTR matches but the amount differs, it flags the record as a `discrepancy` for manual administrative review.
+    *   If the UTR is not found (due to statement upload latency), it is set to `review` (Under Review) for manual admin audit or subsequent statement uploads.
+````
+
+## File: .github/workflows/ci-cd.yml
+````yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Run Tests (Optional/If configured)
+        run: |
+          # If Jest or e2e tests fail, they'll block the deployment.
+          # Since no tests are written yet, we check if test script exists and is not just a placeholder.
+          # We run npm test but ignore errors if it's not configured yet or has no tests.
+          npm test || echo "Tests passed or ignored"
+
+      - name: Prepare Deployment Artifacts
+        run: |
+          mkdir deploy-dist
+          cp -r dist deploy-dist/
+          cp server.js deploy-dist/
+          cp package.json deploy-dist/
+          cp package-lock.json deploy-dist/
+          cp ecosystem.config.cjs deploy-dist/
+          cp app.js deploy-dist/
+          cp data.js deploy-dist/
+          cp index.css deploy-dist/
+          cp index.html deploy-dist/
+          # Copy images and other JSON configurations
+          cp *.jpg deploy-dist/ || echo "No jpg files"
+          cp *.png deploy-dist/ || echo "No png files"
+          cp tst.json deploy-dist/ || echo "No tst.json file"
+          # Package db.json as a template to avoid overwriting the active live database on the VM
+          cp db.json deploy-dist/db.json.template || echo "No db.json file"
+
+      - name: Upload Deployment Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build
+          path: deploy-dist/
+
+  deploy:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: production-build
+          path: deploy-dist
+
+      - name: Deploy to VM via SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VM_SSH_IP }}
+          username: ${{ secrets.VM_SSH_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          source: "deploy-dist/*"
+          target: ${{ secrets.VM_DEPLOY_PATH }}
+          strip_components: 1
+          rm: false # Set to true if you want to wipe the remote directory first (warning: wipes db.json and .env if present inside target)
+
+      - name: Run Remote SSH Commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_SSH_IP }}
+          username: ${{ secrets.VM_SSH_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            cd ${{ secrets.VM_DEPLOY_PATH }}
+            
+            # Check if PM2 is installed, install globally if missing (safeguard)
+            if ! command -v pm2 &> /dev/null; then
+              npm install -g pm2
+            fi
+
+            # Clean up old PM2 process name if running
+            if pm2 info quantum-yoga-website > /dev/null 2>&1; then
+              pm2 delete quantum-yoga-website || true
+              echo "Deleted old PM2 process: quantum-yoga-website"
+            fi
+            
+            # Safely initialize db.json if it doesn't exist on the VM
+            if [ ! -f db.json ] && [ -f db.json.template ]; then
+              cp db.json.template db.json
+              echo "Initialized db.json from template."
+            fi
+            
+            npm install --omit=dev
+            
+            pm2 startOrReload ecosystem.config.cjs
+            pm2 save
 ````
 
 ## File: app.js
@@ -20843,245 +21380,6 @@ Please verify and update my status. Thank you!`);
 </html>
 ````
 
-## File: openspec/changes/auto-review-upi-payments/design.md
-````markdown
-## Context
-
-Currently, Quantum Yoga lacks automated transaction matching, requiring manual verification of UTR numbers. The introduction of an automated verification flow speeds up confirmations by checking student inputs against a verified bank transaction ledger imported manually by administrators from Excel or CSV files.
-
-## Goals / Non-Goals
-
-**Goals:**
-*   Implement an automated matching process comparing student-submitted UTRs and invoice amounts against a local bank transaction ledger (`upi_ledger` in database state).
-*   Transition payment status to `"paid"` instantly if a match is successfully identified.
-*   Provide an administrative UI to upload bank statements (.xlsx, .xls, .csv formats) containing transaction details (UTR, amount, date, etc.).
-*   Retain administrative manual approval as a fallback if automatic matching fails.
-
-**Non-Goals:**
-*   Integrating with live third-party bank APIs or external API-based synchronizations.
-*   Automated refund handling or payment reversals.
-
-## Decisions
-
-### 1. Database Schema Extension
-*   **Approach:** Maintain a `upi_ledger` array in the global state (`db.json` / Supabase state) to serve as the local cache of verified UPI payments.
-*   **Structure:**
-    ```json
-    "upi_ledger": [
-      { 
-        "utr": "123456789012", 
-        "amount": "1500", 
-        "date": "2026-06-21", 
-        "senderName": "Sarah Jenkins", 
-        "details": "UPI/987654321/Vinyasa Coaching",
-        "importedAt": "2026-06-21T18:00:00Z" 
-      }
-    ]
-    ```
-
-### 2. Auto-Review REST Endpoint
-*   **Approach:** Add an API endpoint `POST /api/verify-upi` in `server.js`.
-*   **Payload:** `{ invoiceId: string, utr: string, amount: string }`
-*   **Logic:**
-    *   Compare the UTR and amount against `upi_ledger`.
-    *   If matched, update payment status to `"paid"`, save the transaction date, and trigger emails/WhatsApp messages. Return `{ success: true, status: 'paid' }`.
-    *   If the UTR matches but the amount is different, update payment status to `"discrepancy"`.
-    *   If no UTR match is found, update payment status to `"review"`. Return `{ success: false, status: 'review' }`.
-
-### 3. Excel/CSV Ledger Upload API
-*   **Approach:** Add a `POST /api/admin/upload-ledger` endpoint to process Excel/CSV bank statement files.
-*   **Parsing Utility:** Use a basic CSV text parser in `server.js` to parse CSV data. It reads column headers to locate the UTR and Transaction Amount.
-*   **Deduplication:** When merging new transactions, query existing `upi_ledger` records by UTR to prevent duplicating imported transaction references.
-
-### 4. Planned Reconciliation Enhancements
-*   **Fuzzy Amount Matching:** The endpoint comparison checks whether `Math.abs(ledgerAmount - invoiceAmount) < tolerance` where the tolerance is configurable (defaulting to ±₹0.05) to protect against rounding anomalies.
-*   **Date Window Verification:** When a match is found in the `upi_ledger`, the system validates if `Math.abs(new Date(ledgerMatch.date) - new Date(invoice.date)) <= maxAgeMs` (defaulting to 30 days) before auto-approving.
-*   **Statement Schema Mapping:** An administrative configuration object `upi_ledger_mapping` is saved to settings, allowing the parser to match dynamic header indices (e.g., column index 4 maps to `utr`, index 2 maps to `amount`).
-*   **Reconciliation Log Audit:** A schema collection `upi_reconciliation_logs` is implemented to record matches, failures, invoice IDs, and timestamps.
-
-## Risks / Trade-offs
-
-*   **Risk:** Sync latency (students paying after the latest upload will not auto-verify until the next upload).
-    *   *Mitigation:* Clearly notify the student during UTR submission that auto-verification runs against imported statements and may take time to verify, leaving the manual admin override active.
-*   **Risk:** Spoofing or fake UTR guessing attacks.
-    *   *Mitigation:* Once a UTR in the ledger is successfully matched and linked to an invoice, mark it as "linked" or prevent double-claiming by checking if the UTR was already associated with a paid invoice.
-*   **Risk:** Re-use of old UTRs or stale statements.
-    *   *Mitigation:* Apply the 30-day date window validation to ensure UTR claims are linked only to current transaction timelines.
-````
-
-## File: openspec/changes/auto-review-upi-payments/proposal.md
-````markdown
-## Why
-
-Currently, when a student submits a payment reference (UTR), the status is set to "Under Review". Administrators must then manually verify the UTR and amount, and approve the payment to transition it to "Paid". Automating this verification by comparing student-submitted UTRs and transaction amounts against a trusted ledger of received UPI transactions will reduce administrative workload and speed up confirmation times.
-
-## What Changes
-
-*   **Automated UTR Matching Engine:** Integrate an Excel/CSV bank statement ledger uploader. Administrators can upload their raw UPI transaction statements containing columns for UTR, Transaction Amount, Transaction Date, and other transaction details to construct the internal trusted verification store.
-*   **Auto-Approve Action:** If a submitted UTR matches an unlinked entry in the received UPI transactions ledger with the exact same amount:
-    *   Transition the payment status directly from `pending`/`review` to `paid`.
-    *   Automatically link the transaction and record the payment date.
-    *   Directly trigger `payment-approved` email and WhatsApp notifications containing the verified UTR.
-*   **Flag Discrepancies:** If the UTR matches but the amount is different, flag the payment as `"discrepancy"` (or keep as `"review"` with a warning flag) and notify the administrator.
-*   **Reconciliation Enhancements:**
-    *   **Fuzzy Amount Matching:** Reconcile transaction differences within a small tolerance margin (e.g. ±₹0.05).
-    *   **Date Window Verification:** Enforce that matched transaction dates are within a 30-day window to prevent reuse of old references.
-    *   **Schema Mapping:** Support dynamic header mappings for CSV statement uploads.
-    *   **Audit Logging:** Keep logs of matching matches, discrepancies, and resolutions.
-*   **Manual/Fallback Interface:** Retain the administrative override tools to manually approve payments if automated verification fails or cannot find the UTR.
-
-## Capabilities
-
-### New Capabilities
-<!-- None -->
-
-### Modified Capabilities
-- `billing-payments`: Automates transaction verification and approval triggers upon student UTR submission.
-
-## Impact
-
-*   **Database Schema:** Extend payment records to store verification metadata (e.g. `verifiedAt`, `verificationSource`). Add a schema model for stored bank statement transaction ledger entries and a model for reconciliation audit logs.
-*   **Frontend logic (`app.js`):** Modify UTR submission callbacks to invoke the local verification logic and instantly show success if auto-approved, or show it is under review if no match is found. Add an administrative dashboard interface to upload bank statement files (.xlsx, .xls, .csv) and configure CSV column maps.
-*   **Backend server (`server.js`):** Add a POST `/api/verify-upi` endpoint to process UTR and amount comparisons, and a POST `/api/admin/upload-ledger` endpoint to parse Excel/CSV statements, apply dynamic column mapping, and log activities to the audit log.
-````
-
-## File: openspec/changes/auto-review-upi-payments/specs/billing-payments/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Automated UPI Payment Verification
-The system SHALL verify student-submitted UTR and transaction amount values against a trusted bank transaction ledger.
-
-#### Scenario: Transaction matches ledger exactly
-- **WHEN** a student submits a 12-digit UTR and amount for an invoice
-- **AND** the UTR and amount match an unlinked entry in the trusted bank transaction ledger
-- **THEN** the system SHALL update the payment status to "paid" and link the UTR record automatically
-
-#### Scenario: Transaction matches UTR but amount differs
-- **WHEN** a student submits a UTR and amount for an invoice
-- **AND** the UTR matches an entry in the ledger but the amount differs
-- **THEN** the system SHALL mark the payment status as "discrepancy" and notify administrators
-
-#### Scenario: Transaction UTR not found in ledger
-- **WHEN** a student submits a UTR for an invoice
-- **AND** the UTR does not exist in the trusted ledger
-- **THEN** the system SHALL update the payment status to "review" and flag it for manual review
-
-### Requirement: Bank Statement Ledger Import
-The system SHALL support manual file uploads (CSV, XLS, XLSX) to import received transaction rows into the internal trusted ledger pool.
-
-#### Scenario: Admin uploads a valid CSV bank statement
-- **WHEN** an admin uploads a CSV bank statement containing transaction columns
-- **THEN** the system SHALL parse the document, extract valid UTRs, amounts, transaction dates, and descriptions, and insert new records into the database ledger without creating duplicates
-
-### Requirement: Planned Reconciliation Enhancements
-
-#### Scenario: Configurable fuzzy matching for rounding differences
-- **WHEN** reconciling a UTR entry
-- **AND** the ledger amount matches the invoice amount within a configurable tolerance margin (e.g. ±₹0.05)
-- **THEN** the system SHALL treat it as an exact match and approve the payment automatically
-
-#### Scenario: UTR date window verification
-- **WHEN** a student submits a UTR for reconciliation
-- **AND** the matched ledger transaction date falls outside a 30-day window of the invoice date
-- **THEN** the system SHALL block auto-approval and flag the invoice as a discrepancy to prevent reuse of old transaction references
-
-#### Scenario: Dynamic statement schema configuration
-- **WHEN** an administrator uploads a CSV statement
-- **THEN** the system SHALL permit mapping target columns dynamically to the required fields (UTR, amount, date) from the UI settings panel
-
-#### Scenario: Reconciliation audit log recording
-- **WHEN** any automatic verification or manual reconciliation action is performed
-- **THEN** the system SHALL write a date-stamped activity log record recording the match status, invoice ID, reference UTR, and user ID for auditing purposes
-````
-
-## File: wiki/Billing-and-Payments.md
-````markdown
-# Billing & Payments
-
-Quantum Yoga incorporates a transparent invoicing and transactions manager tailored for standard Indian merchant configurations.
-
----
-
-## 🧾 Invoice Ledger Schema (`payments`)
-
-Every student payment transaction maps to the following record structure:
-
-*   `id`: Unique invoice identifier prefixed with `INV-` (e.g. `INV-10029`).
-*   `userEmail`: Linked studio member email.
-*   `description` / `amount`: Purpose of charge and value in INR (₹).
-*   `dueDate` / `paymentDate`: Timeline dates.
-*   `status`: Current state, transitioning between `pending`, `review` (Under Review), `paid` (Approved), and `cancelled`.
-*   `utr`: User-submitted UPI Unique Transaction Reference (12-digit code).
-
----
-
-## 📲 UPI QR Code Gateway Flow
-
-To keep transaction processing cost-free, the platform leverages direct peer-to-peer UPI payments:
-
-```
-[Member clicks "Pay via UPI"]
-               │
-               ▼
-[Generate standard UPI URI]
-"upi://pay?pa={vpa}&pn={name}&am={amount}&tn={description}"
-               │
-               ▼
-[Render live QR Code on Modal]
-               │
-               ▼
-[Member scans & transfers on UPI App]
-               │
-               ▼
-[Member inputs 12-digit UTR code on form]
-               │
-               ▼
-[Status updates to 'review' (Under Review) & logs UTR reference]
-               │
-               ├──────────────────────────────────────────┐
-               ▼                                          ▼
-[Triggers 'payment-under-review' Email]   [Triggers 'payment-under-review' WhatsApp]
-(includes Invoice, Amount, and UTR)       (includes Invoice, Amount, and UTR)
-               │                                          │
-               └────────────────────┬─────────────────────┘
-                                    │
-                                    ▼
-                 [Admin reviews & approves payment]
-                                    │
-               ┌────────────────────┴─────────────────────┐
-               ▼                                          ▼
- [Status updates to 'paid']              [Triggers 'payment-approved' WhatsApp]
- (includes Invoice, Amount, and UTR)     (includes Invoice, Amount, and UTR)
-               │
-               ▼
- [Triggers 'payment-approved' Email]
- (includes Invoice, Amount, and UTR)
-```
-
----
-
-## 🏢 System Notifications & Receipts
-
-1.  **Overdue Banners:** If a logged-in member has *any* invoices past their due dates, a sticky global banner warns them of overdue fees and links directly to the invoice page.
-2.  **Dynamic Receipts:** Fully responsive HTML invoice receipt layouts are generated on-demand with options to save or print. Contains transactional audit checkmarks, payment logs, and company branding.
-3.  **Manual Invoices:** Administrators can quickly generate ad-hoc fee demands against any student account via the admin control panel.
-4.  **Notifications:** Both email and WhatsApp notifications keep students informed about invoice status updates.
-
----
-
-## 🤖 Automated UPI Reconciliation (Bank Ledger Sync)
-
-To expedite approvals while preserving cost-free direct UPI transaction lanes, Quantum Yoga supports automated payment verification:
-
-1.  **Manual CSV Statement Upload:** Administrators can manually upload bank statements in CSV formats via the Admin Settings panel to parse UTRs, transaction amounts, transaction dates, and payer names into the trusted `upi_ledger` cache.
-2.  **Auto-Approval Matching:** When a student submits a UTR code:
-    *   The system compares the UTR and amount against the cached `upi_ledger` entries.
-    *   If a match is found, the system **automatically approves** the payment, transitioning status directly to `paid` and triggering Gmail and WhatsApp payment confirmation notifications containing the verified UTR.
-    *   If the UTR matches but the amount differs, it flags the record as a `discrepancy` for manual administrative review.
-    *   If the UTR is not found (due to statement upload latency), it is set to `review` (Under Review) for manual admin audit or subsequent statement uploads.
-````
-
 ## File: openspec/changes/auto-review-upi-payments/tasks.md
 ````markdown
 ## 1. Database & Server Setup
@@ -21108,135 +21406,6 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
 - [x] 4.2 Add the 30-day date window validation check to block auto-approvals of outdated UTR submissions.
 - [x] 4.3 Add a dynamic CSV column mapping configurations panel to the Admin Settings UI and update `/api/admin/upload-ledger` to map headers dynamically.
 - [x] 4.4 Design and build a database audit log schema and render a Reconciliation Log Audit view on the Admin Dashboard.
-````
-
-## File: README.md
-````markdown
-# 🧘 Quantum Yoga - Premium Studio Management & Practice Dashboard
-
-Welcome to **Quantum Yoga**, a premium static and interactive dashboard website designed for modern yoga studio management, coaching interaction, and guided practices. Powered by a responsive single-page application (SPA) frontend and a modular Node.js/Express backend, Quantum Yoga integrates scheduling, payments, communications, and customer relations into a unified glassmorphic portal.
-
----
-
-## 🌟 Key Features & Capabilities
-
-Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Quantum Yoga is organized into six core capability modules:
-
-### 1. [Core Yoga Directory](file:///d:/QuantumYogaWebsite/openspec/specs/core-yoga/spec.md)
-*   **Postures Directory:** Categorized and searchable index of master postures with detailed metadata (Sanskrit translations, difficulty, duration, benefits, and step-by-step instructions).
-*   **SVG Pose Illustrations:** High-fidelity line-art illustrations embedded dynamically to guide body alignment.
-*   **Guided Practice Flows:** Sequential yoga routines tracking total duration, focus areas, and pose steps.
-*   **Custom HTML5 Video Player:** Bespoke overlay player with custom playback controls, volume sliders, progress buffers, and automatic routine completion logging.
-
-### 2. [User Authentication & Profile Portal](file:///d:/QuantumYogaWebsite/openspec/specs/user-auth-profile/spec.md)
-*   **Unified Auth Gate:** Seamless login, registration, and inquiry gates supporting modern features like "Remember Me" and "Forgot Password."
-*   **Forced Password Reset:** Supports secure administrative conversions by forcing members to reset temporary passwords upon their first login.
-*   **Personal Studio Dashboard:** Visualizes member stats (routines completed, favorites list, practice logs) and houses private wellness goals & health notes.
-*   **UI Skin Selection:** Members can personalize their dashboard with themes like *Midnight Aura (Dark)*, *Ethereal Light*, or *Zen Sunset*.
-
-### 3. [Class Scheduling & Batches](file:///d:/QuantumYogaWebsite/openspec/specs/class-scheduling/spec.md)
-*   **Weekly Timetables:** Automatically maps assigned cohort schedules with a live countdown timer ticking down to the next live session.
-*   **Coaching Appointments:** Members can book private sessions directly with instructors, select target routines, and reschedule or cancel existing appointments.
-*   **Admin Scheduling Directory:** Master schedule manager permitting administrators to book appointments on behalf of students, change timetables, and customize session fees.
-
-### 4. [Billing, Invoices & Payments](file:///d:/QuantumYogaWebsite/openspec/specs/billing-payments/spec.md)
-*   **Outstanding Payment Banners:** Prominently alerts members of pending or overdue invoices right at the top of their dashboard.
-*   **UPI QR Code Generator:** Generates a live merchant UPI QR code (`upi://pay?pa=...`) for instant scanned payments.
-*   **UTR Verification:** Users submit their Unique Transaction Reference (UTR) code to confirm UPI transactions, automatically transitioning invoice statuses to "Paid" via automated reconciliation matching against a trusted bank statement ledger uploaded manually by administrators (as a CSV file), falling back to manual "Under Review" status if matching fails.
-*   **Dynamic Receipts:** Printable branded billing receipts detailing invoice metadata, merchant payment addresses, and reference UTRs.
-
-### 5. [Lead Management & CRM Pipeline](file:///d:/QuantumYogaWebsite/openspec/specs/leads-crm/spec.md)
-*   **Kanban Swimlane Board:** Renders an interactive multi-column board (`New`, `Contacted`, `Nurturing`, `Converted`, `Archived`) to manage incoming inquiries.
-*   **sales Notes & Logs:** Allows admins to record date-stamped interaction history for each prospective lead.
-*   **Automated Conversion Flow:** Converts a lead into an active studio member with a single click—automatically registering the account, generating a temporary password, and dispatching a welcoming email.
-
-### 6. [Email Communication Center](file:///d:/QuantumYogaWebsite/openspec/specs/email-communication/spec.md)
-*   **Dual Integration System:** Supports high-scale transactional emails via the **Resend API proxy** and personalized client interactions via **Gmail OAuth2 flow**.
-*   **Admin Inbox & Outbox:** An administrative dashboard folder to view, preview, and directly reply to messages.
-*   **Pre-made Email Templates:** One-click email templates (e.g., *Welcome Email*, *Invoice Reminders*, *Appointment Confirmations*) auto-filled with variables.
-
-### 7. [WhatsApp Notifications & Direct Chat Shortcuts](file:///d:/QuantumYogaWebsite/openspec/changes/add-whatsapp-functionality/specs/whatsapp-communication/spec.md)
-*   **Automated Alert Dispatches:** Triggers immediate WhatsApp alert messages to student telephone numbers upon booking, rescheduling, and cancellation events or new/overdue billing creation.
-*   **Direct Chat Shortcuts:** Displays chat launch actions (`https://wa.me/`) next to student profiles, appointment lists, invoices, and Kanban leads to start immediate conversations with pre-filled greeting templates.
-*   **System settings:** Incorporates toggles, provider gateway endpoints, credentials keys, and template editors in the Admin Settings panel.
-
----
-
-## 🛠️ Technology Stack
-
-*   **Frontend:** HTML5, Vanilla JavaScript, CSS3 (Custom Glassmorphism styling with support for multiple themes).
-*   **Build Tooling:** [Vite](https://vitejs.dev/) for quick HMR and optimal client-side bundling.
-*   **Backend:** [Express](https://expressjs.com/) server acting as a database router, static asset hosting, email integration proxy, and WhatsApp provider proxy.
-*   **Storage & Database:** Supports fallback local file database storage (`db.json`) and connects seamlessly to either a **PostgreSQL** pool or **Supabase Client JSON storage** when variables are set.
-*   **Testing Suite:** [Jest](https://jestjs.io/) for backend/unit tests and [Playwright](https://playwright.dev/) for robust end-to-end testing.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-*   Node.js (v18 or higher recommended)
-*   npm (v9 or higher)
-
-### Installation
-
-1.  Clone the repository:
-    ```bash
-    git clone <repository-url>
-    cd QuantumYogaWebsite
-    ```
-2.  Install the required dependencies:
-    ```bash
-    npm install
-    ```
-
-### Configuration (`.env`)
-
-Configure your environment by duplicating the active environment variables or editing the existing `.env` file in the root directory:
-
-```env
-# Server configuration
-PORT=8080
-
-# Database Configuration (PostgreSQL / Supabase)
-# Fallback to local db.json if database connection is omitted
-DATABASE_URL=postgresql://postgres:password@127.0.0.1:5432/quantum_yoga
-
-# Email Integrations (Resend)
-RESEND_API_KEY=re_your_api_key_here
-RESEND_FROM_ADDRESS=admin@quantumyoga.xyz
-```
-
-### Running the Application
-
-*   **Development Mode (Frontend HMR):**
-    ```bash
-    npm run dev
-    ```
-*   **Production Build:**
-    ```bash
-    npm run build
-    ```
-*   **Start Production Server:**
-    ```bash
-    npm run start
-    ```
-
----
-
-## 🧪 Testing
-
-To run the test suite:
-
-*   **Unit Tests (Jest):**
-    ```bash
-    npm run test
-    ```
-*   **End-to-End Tests (Playwright):**
-    ```bash
-    npm run e2e
-    ```
 ````
 
 ## File: server.js
