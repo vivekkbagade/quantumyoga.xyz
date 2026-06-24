@@ -23074,7 +23074,7 @@ Please verify and update my status. Thank you!`);
             <div id="profile-referral-wrap" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); max-width: 450px;">
               <span style="font-size: 0.82rem; color: var(--text-secondary);">Referral Code: <strong id="profile-referral-code" style="color: var(--accent-primary); font-family: monospace; font-size: 0.9rem; letter-spacing: 0.02em;">-</strong></span>
               <span style="font-size: 0.82rem; color: var(--text-secondary);">|</span>
-              <span style="font-size: 0.82rem; color: var(--text-secondary);">Invited: <strong id="profile-referral-count" style="color: #fff;">0</strong></span>
+              <span style="font-size: 0.82rem; color: var(--text-secondary);">Invited: <strong id="profile-referral-count" style="color: var(--text-primary);">0</strong></span>
               <span style="font-size: 0.82rem; color: var(--text-secondary);">|</span>
               <span style="font-size: 0.82rem; color: var(--text-secondary);">Active Discount: <strong id="profile-referral-discount" style="color: #10B981;">0%</strong></span>
             </div>
