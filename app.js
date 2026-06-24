@@ -175,6 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const sectionPoses = document.getElementById("poses-section");
   const sectionRoutines = document.getElementById("routines-section");
   const sectionProfile = document.getElementById("profile-section");
+  const appHero = document.getElementById("app-hero");
   
   const navPoses = document.getElementById("nav-poses");
   const navRoutines = document.getElementById("nav-routines");
@@ -1061,6 +1062,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       navAdmin.classList.add("active");
       sectionAdmin.classList.add("active");
       renderAdminDashboard();
+    }
+
+    if (appHero) {
+      if (tabName === "poses" || tabName === "routines") {
+        appHero.style.display = "block";
+      } else {
+        appHero.style.display = "none";
+      }
     }
   }
 
