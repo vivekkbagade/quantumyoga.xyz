@@ -4659,6 +4659,9 @@ Please verify and update my status. Thank you!`);
   // Contact Us Modal Toggle Logic
   function openContactUsModal(e) {
     if (e) e.preventDefault();
+    if (authGateFullscreen && authGateFullscreen.style.display !== "none") {
+      return;
+    }
     if (contactUsModal) {
       contactUsModal.classList.add("active");
       contactUsModal.setAttribute("aria-hidden", "false");
