@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import https from 'node:https';
 import http from 'node:http';
 import { createClient } from '@supabase/supabase-js';
-import ws from 'ws';
+import ws, { WebSocketServer } from 'ws';
 import pg from 'pg';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -617,7 +617,7 @@ const server = app.listen(PORT, async () => {
 });
 
 // Setup WebSocket Server co-hosted on HTTP Server port
-const wss = new ws.WebSocketServer({ server });
+const wss = new WebSocketServer({ server });
 const connectedUsers = new Map();
 
 wss.on('connection', (socket) => {
