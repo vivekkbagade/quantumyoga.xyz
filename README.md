@@ -118,20 +118,29 @@ RESEND_API_KEY=re_your_api_key_here
 RESEND_FROM_ADDRESS=admin@quantumyoga.xyz
 ```
 
-### Running the Application
+### Running and Building the Application
 
 *   **Development Mode (Frontend HMR):**
     ```bash
     npm run dev
     ```
 *   **Production Build:**
+    Compiles client-side scripts, assets, and styling into the optimized `dist/` directory:
     ```bash
     npm run build
     ```
 *   **Start Production Server:**
+    Serves the Express backend, WebSocket chat, and serves production assets from the compiled `dist/` folder:
     ```bash
     npm run start
     ```
+
+### 📦 GitHub Releases & Build Artifacts
+
+Every time a push is made to the `main` or `master` branch, the CI/CD pipeline compiles the application.
+*   **Release Archive**: The build process gathers the compiled frontend (`dist/`), backend server files (`server.js`, `data.js`), dependencies config (`package.json`, `package-lock.json`), and process runner files (`ecosystem.config.cjs`) into a single ZIP file named `quantum-yoga-build.zip`.
+*   **Automatic Releases**: This zip file is uploaded as a build asset to a new GitHub Release tagged `build-<run_number>` under the **Releases** page of your repository.
+*   **Manual Deployment**: You can download this pre-compiled zip from GitHub Releases, unzip it on any server, configure the `.env` file, run `npm install --omit=dev`, and start the app using PM2 or npm.
 
 ---
 
