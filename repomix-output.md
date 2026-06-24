@@ -21670,10 +21670,10 @@ Please verify and update my status. Thank you!`);
 
     <!-- Community Chat Section -->
     <section id="chat-section" class="content-section">
-      <div class="admin-container" style="max-width: 900px; margin: 0 auto;">
+      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
         
         <!-- Header -->
-        <div class="admin-header-card" style="margin-bottom: 1.5rem;">
+        <div class="admin-header-card" style="margin-bottom: 0;">
           <div class="admin-avatar">💬</div>
           <div class="admin-info-details">
             <h2>Community Chat</h2>
