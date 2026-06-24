@@ -20223,39 +20223,37 @@ Please verify and update my status. Thank you!`);
       </div>
     </section>
 
-    <!-- Search & Filters Container -->
-    <section class="controls-section">
-      <div class="controls-card">
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="search-input" placeholder="Search poses, benefits, or categories..." autocomplete="off">
-          <button id="clear-search" class="clear-button" style="display: none;">&times;</button>
-        </div>
-        <div class="filter-group">
-          <div class="select-wrapper">
-            <select id="filter-category" aria-label="Filter by Category">
-              <option value="all">All Categories</option>
-              <option value="vinyasa">Vinyasa</option>
-              <option value="hatha">Hatha</option>
-              <option value="yin">Yin</option>
-              <option value="restorative">Restorative</option>
-            </select>
-          </div>
-          <div class="select-wrapper">
-            <select id="filter-difficulty" aria-label="Filter by Difficulty">
-              <option value="all">All Difficulties</option>
-              <option value="beginner">Beginner</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
     <!-- Poses Grid Section -->
     <section id="poses-section" class="content-section active">
+      <!-- Search & Filters Container -->
+      <section class="controls-section">
+        <div class="controls-card">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Search poses, benefits, or categories..." autocomplete="off">
+            <button id="clear-search" class="clear-button" style="display: none;">&times;</button>
+          </div>
+          <div class="filter-group">
+            <div class="select-wrapper">
+              <select id="filter-category" aria-label="Filter by Category">
+                <option value="all">All Categories</option>
+                <option value="vinyasa">Vinyasa</option>
+                <option value="hatha">Hatha</option>
+                <option value="yin">Yin</option>
+                <option value="restorative">Restorative</option>
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="filter-difficulty" aria-label="Filter by Difficulty">
+                <option value="all">All Difficulties</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
       <div class="grid-container" id="poses-grid">
         <!-- Dynamic pose cards injected here -->
       </div>
