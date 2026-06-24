@@ -56,6 +56,7 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **Virtual Classrooms**: Embedded peer-to-peer interactive WebRTC video streaming rooms powered by the Jitsi Meet IFrame API.
 *   **Instructor Dashboard**: Custom stream launching panel enabling instructors to initiate and moderate classes.
 *   **Dynamic Timetable Sync**: Integrates a glowing "Join Live Room Now" shortcut directly within the student's next class countdown timetable when a session is active.
+*   **Manual Session Synchronization**: Allows instructors to launch a live video session under any room name, which is persisted to the database and automatically synchronized to all logged-in students in real-time, displaying a "Join Live Room Now" prompt.
 
 ---
 

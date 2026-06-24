@@ -11,5 +11,16 @@ The system SHALL display an interactive video streaming frame directly in the cl
 The system SHALL provide administrators/instructors with room controls to launch a new streaming session.
 
 #### Scenario: Instructor starts streaming
-- **WHEN** an administrator logs in, clicks the "Live Class" tab, and clicks "Launch Streaming Session"
-- **THEN** the system initializes the WebRTC media container and grants broadcast access to camera/microphone
+- **WHEN** an administrator logs in, clicks the "Live Class" tab, and clicks "Launch Live Video Session"
+- **THEN** the system prompts for a room name, initializes the WebRTC media container, grants broadcast access to camera/microphone, and saves the active room name to the server database.
+
+#### Scenario: Instructor ends streaming
+- **WHEN** an administrator clicks "End Live Video Session"
+- **THEN** the system disposes of the active WebRTC instance and clears the active room name from the server database, terminating connection access for students.
+
+### Requirement: Real-Time Active Room Synchronization
+The system SHALL synchronize the active manually started WebRTC room name from the server to students' local clients in real-time.
+
+#### Scenario: Student dashboard displays active stream join button
+- **WHEN** the instructor launches a live session
+- **THEN** the student's dashboard countdown container periodically checks the database state and shows a "🔴 Live Session Active!" banner with a glowing "🎥 Join Live Room Now" action button.

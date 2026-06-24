@@ -47,7 +47,7 @@ jitsiApiInstance = new JitsiMeetExternalAPI(domain, options);
 
 WebRTC sessions require active camera and microphone hardware permissions. If a user switches to another tab (e.g. Routines, Poses, or Chat) while inside a live class, the platform **must** immediately release these hardware resources to preserve privacy and reduce battery overhead.
 
-1. **Instantiation**: Loaded when the user enters the `Live Class` tab or clicks the timetable shortcut.
+1. **Instantiation**: Loaded when the user enters the `Live Class` tab or clicks the timetable/active room shortcut.
 2. **Teardown**: When the active tab shifts away from `#live-class-section`, the client calls `disposeLiveClassRoom()`:
    ```javascript
    if (jitsiApiInstance) {
@@ -59,9 +59,13 @@ WebRTC sessions require active camera and microphone hardware permissions. If a 
 
 ---
 
-## ⏱️ Dynamic Timetable Integration
+## ⏱️ Dynamic Timetable & Active Session Integration
 
-The client tracks scheduled class slots in the student's active batch timetable:
-1. **Active Checking**: Checks if the current local time falls within a scheduled timetable window (e.g., class start time up to 1 hour in the future).
-2. **UI Injection**: If active, the countdown timer displays `🔴 Class in Progress!` in red.
-3. **CTA Button**: A glowing `🎥 Join Live Room Now` button is dynamically appended to the countdown box. Clicking it navigates the user to the streaming viewport and mounts the corresponding Jitsi room automatically.
+The client tracks both scheduled class slots and manual live sessions started by the instructor:
+1. **Scheduled Checking**: Checks if the current local time falls within a scheduled timetable window (e.g., class start time up to 1 hour in the future).
+2. **Instructor Live Session (Manual)**: When an instructor clicks "Launch Live Video Session", the custom room name is saved to the shared server state under `activeLiveRoom`.
+3. **Background Sync**: Logged-in clients poll `/api/db` every 10 seconds to discover live rooms.
+4. **UI Injection**: If either a manual live stream or scheduled class is active:
+   * Displays `🔴 Live Session Active!` (or `🔴 Class in Progress!`).
+   * Appends a glowing `🎥 Join Live Room Now` button to the dashboard countdown box.
+   * Redirects the user to the active room name when clicked.
