@@ -78,6 +78,7 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 ### 13. [Contact Us Information Portal](file:///d:/QuantumYogaWebsite/openspec/changes/add-contact-us/specs/contact-us/spec.md)
 *   **Static Contact Info Overlay**: Seamless, glassmorphic modal displaying the studio's physical address, contact telephone, and support email ID.
 *   **Bypassed Authentication Gates**: Publicly accessible directly on the landing page/footer to visitors who are not logged in.
+*   **Login Screen Accessibility**: Accessible directly from the fullscreen login gate, allowing non-logged-in visitors to get in touch easily.
 *   **Interactive Protocol Shortcuts**: Leverages standard clickable `tel:` and `mailto:` protocol bindings to call or draft emails instantly.
 
 ---

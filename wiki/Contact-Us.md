@@ -4,9 +4,9 @@ The Contact Us capability provides visitors and members with immediate, public a
 
 ## 🧭 Public Access
 
-The Contact Us links are placed in both the navigation header and the page footer. Clicking either link will open a glassmorphic modal overlay (`#contact-us-modal`) displaying the studio's information.
+The Contact Us links are placed in the navigation header, the page footer, and at the bottom of the fullscreen login card. Clicking any of these links will open a glassmorphic modal overlay (`#contact-us-modal`) displaying the studio's information.
 
-This modal operates independently of the authorization status, meaning users who are not logged in can view these details directly without hitting the authentication gates.
+This modal operates independently of the authorization status, meaning users who are not logged in can view these details directly without hitting the authentication gates, and can access it directly while on the login page.
 
 ## 📇 Contact Information Displayed
 
