@@ -1064,7 +1064,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else if (tabName === "live-class") {
       navLiveClass.classList.add("active");
       sectionLiveClass.classList.add("active");
-      const activeRoom = getActiveTimetableRoom();
+      const activeRoom = localStorage.getItem("qy_active_live_room") || getActiveTimetableRoom();
       const isInstructor = state.currentUser && state.currentUser.email === "admin@quantumyoga.xyz";
       initLiveClassRoom(activeRoom || "qy-general-room", isInstructor);
     } else if (tabName === "admin") {
@@ -1292,6 +1292,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             populateWhatsAppSettingsInputs(db.whatsappSettings);
           }
 
+          if (db.activeLiveRoom !== undefined) {
+            localStorage.setItem("qy_active_live_room", db.activeLiveRoom || "");
+            if (typeof updateLiveClassControls === "function") {
+              updateLiveClassControls();
+            }
+          }
+
           // Trigger UI updates to reflect fresh database data
           renderStudentAppointments();
           renderAdminAppointments();
@@ -1341,6 +1348,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         appointment_fee: Number(localStorage.getItem(STORAGE_KEY_APPOINTMENT_FEE) || 0),
         emails: JSON.parse(localStorage.getItem(STORAGE_KEY_EMAILS) || "[]"),
         upi_ledger: JSON.parse(localStorage.getItem("qy_upi_ledger") || "[]"),
+        activeLiveRoom: localStorage.getItem("qy_active_live_room") || "",
         gmailSettings: gmailSettingsForDb,
         whatsappSettings: whatsappSettingsParsed,
         reconciliationSettings: JSON.parse(localStorage.getItem("qy_reconciliation_settings") || JSON.stringify({ tolerance: 0.05, maxAgeDays: 30, columnMapping: { utr: "", amount: "", date: "", sender: "" } })),
@@ -3391,8 +3399,9 @@ Please verify and update my status. Thank you!`);
       let soonestClass = null;
       let minDelta = Infinity;
 
-      let isClassActive = false;
-      let activeRoomId = null;
+      const activeLiveRoom = localStorage.getItem("qy_active_live_room");
+      let isClassActive = !!activeLiveRoom;
+      let activeRoomId = activeLiveRoom || null;
 
       batch.timetable.forEach(slot => {
         const nextDate = getWeekdayTimestamp(slot.day, slot.time);
@@ -3416,8 +3425,10 @@ Please verify and update my status. Thank you!`);
 
         const classEnd = new Date(todayClassStart.getTime() + 60 * 60 * 1000); // 1 hour class
         if (now.getTime() >= todayClassStart.getTime() && now.getTime() <= classEnd.getTime()) {
-          isClassActive = true;
-          activeRoomId = `qy-room-${batch.id}-${slot.day.toLowerCase()}`;
+          if (!activeLiveRoom) {
+            isClassActive = true;
+            activeRoomId = `qy-room-${batch.id}-${slot.day.toLowerCase()}`;
+          }
         }
 
         if (nextDate.getTime() < now.getTime()) {
@@ -3434,7 +3445,7 @@ Please verify and update my status. Thank you!`);
       const joinBtnId = "btn-join-active-class";
 
       if (isClassActive && activeRoomId) {
-        countdownEl.textContent = "🔴 Class in Progress!";
+        countdownEl.textContent = activeLiveRoom ? "🔴 Live Session Active!" : "🔴 Class in Progress!";
         countdownEl.style.color = "#ef4444";
         if (countdownBox && !document.getElementById(joinBtnId)) {
           const joinBtn = document.createElement("button");
@@ -8115,15 +8126,45 @@ Please verify and update my status. Thank you!`);
       }
     }
 
+    function updateLiveClassControls() {
+      if (!btnStartStream) return;
+      const activeRoom = localStorage.getItem("qy_active_live_room");
+      if (activeRoom) {
+        btnStartStream.textContent = "⏹️ End Live Video Session";
+        btnStartStream.classList.remove("btn-rose");
+        btnStartStream.classList.add("btn-secondary");
+      } else {
+        btnStartStream.textContent = "🔴 Launch Live Video Session";
+        btnStartStream.classList.add("btn-rose");
+        btnStartStream.classList.remove("btn-secondary");
+      }
+    }
+
     if (btnStartStream) {
-      btnStartStream.addEventListener("click", () => {
-        const room = prompt("Enter Live Class Room Name:", "qy-live-class-session");
-        if (room) {
-          const cleanName = room.trim().replace(/[^a-zA-Z0-9-_]/g, "-");
-          initLiveClassRoom(cleanName, true);
+      updateLiveClassControls();
+      btnStartStream.addEventListener("click", async () => {
+        const activeRoom = localStorage.getItem("qy_active_live_room");
+        if (activeRoom) {
+          if (confirm("Are you sure you want to end the live session? This will disconnect all students.")) {
+            localStorage.removeItem("qy_active_live_room");
+            await saveToServer();
+            disposeLiveClassRoom();
+            updateLiveClassControls();
+          }
+        } else {
+          const room = prompt("Enter Live Class Room Name:", "qy-live-class-session");
+          if (room) {
+            const cleanName = room.trim().replace(/[^a-zA-Z0-9-_]/g, "-");
+            localStorage.setItem("qy_active_live_room", cleanName);
+            await saveToServer();
+            initLiveClassRoom(cleanName, true);
+            updateLiveClassControls();
+          }
         }
       });
     }
+
+    window.updateLiveClassControls = updateLiveClassControls;
 
     window.initLiveClassRoom = initLiveClassRoom;
     window.disposeLiveClassRoom = disposeLiveClassRoom;
@@ -8169,6 +8210,14 @@ Please verify and update my status. Thank you!`);
     renderPoses();
     renderRoutines();
     await loadFromServer();
+
+    // Periodic synchronization from server to detect active live rooms and other updates
+    setInterval(async () => {
+      const loggedIn = localStorage.getItem("qy_session") || sessionStorage.getItem("qy_session");
+      if (loggedIn) {
+        await loadFromServer();
+      }
+    }, 10000);
   } catch (err) {
     console.error("FATAL ERROR IN DOMContentLoaded:", err, err.stack);
   }
