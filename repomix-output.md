@@ -16500,8 +16500,14 @@ Please verify and update my status. Thank you!`);
       }
       if (!u.referralCode) {
         u.referralCode = generateUniqueReferralCode(users);
-        u.referralsCount = u.referralsCount || 0;
-        u.referredBy = u.referredBy || null;
+        modified = true;
+      }
+      if (u.referralsCount === undefined) {
+        u.referralsCount = 0;
+        modified = true;
+      }
+      if (u.referredBy === undefined) {
+        u.referredBy = null;
         modified = true;
       }
       return u;
