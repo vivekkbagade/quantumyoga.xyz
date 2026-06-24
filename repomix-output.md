@@ -21662,7 +21662,7 @@ Please verify and update my status. Thank you!`);
   </div>
 
     <!-- Community Chat Section -->
-    <section id="chat-section" class="content-section" style="display: none;">
+    <section id="chat-section" class="content-section">
       <div class="admin-container" style="max-width: 900px; margin: 0 auto;">
         
         <!-- Header -->
