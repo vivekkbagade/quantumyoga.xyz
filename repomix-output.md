@@ -10832,6 +10832,44 @@ Production processes are managed using `ecosystem.config.cjs`:
 *   Monitor resources & logs: `pm2 monit`
 *   View real-time logs: `pm2 logs quantum-yoga`
 *   Restart the application: `pm2 restart quantum-yoga`
+
+---
+
+## 🌐 Nginx Reverse Proxy & WebSocket Configuration
+
+If you are using Nginx as a reverse proxy to manage SSL/HTTPS (`https://quantumyoga.xyz`), you **must** configure it to forward WebSocket connections (`wss://`) to the PM2 backend process on port `8080`.
+
+Update your Nginx site configuration file (typically in `/etc/nginx/sites-available/default`) to include the `Upgrade` headers:
+
+```nginx
+server {
+    server_name quantumyoga.xyz www.quantumyoga.xyz;
+
+    location / {
+        # Proxy standard HTTP traffic to Node/Express
+        proxy_pass http://127.0.0.1:8080;
+        
+        # Enable WebSocket Proxying (Required for Community Chat)
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        
+        # Forward client headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # SSL configurations managed by Certbot / Let's Encrypt below...
+}
+```
+
+After modifying the configuration, test and reload Nginx:
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
 ````
 
 ## File: wiki/Email-Communication.md
