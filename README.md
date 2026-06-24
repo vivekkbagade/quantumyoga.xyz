@@ -76,6 +76,7 @@ Based on the [OpenSpec Specs](file:///d:/QuantumYogaWebsite/openspec/specs/), Qu
 *   **Glassmorphic Settings Widget**: Floating player overlay that toggles the voice guide on/off and configures speaking voices, volume, speech rates, and speech pitches locally.
 
 ### 13. [Contact Us Information Portal](file:///d:/QuantumYogaWebsite/openspec/changes/add-contact-us/specs/contact-us/spec.md)
+*   **Database-Driven Contact Configuration**: Rather than being statically hardcoded, the studio address, phone number, and support email can be dynamically configured via the **Admin settings panel** and saved to the server state database.
 *   **Static Contact Info Overlay**: Seamless, glassmorphic modal displaying the studio's physical address, contact telephone, and support email ID.
 *   **Bypassed Authentication Gates**: Publicly accessible directly on the landing page/footer to visitors who are not logged in.
 *   **Login Screen Accessibility**: Accessible directly from the fullscreen login gate, allowing non-logged-in visitors to get in touch easily.

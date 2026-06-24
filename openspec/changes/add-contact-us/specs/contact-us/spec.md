@@ -21,3 +21,10 @@ The system SHALL support interactive protocol links to initiate contact instantl
 #### Scenario: User clicks contact options
 - **WHEN** a user clicks the telephone or email ID links inside the contact modal
 - **THEN** the system SHALL launch the client's default telephone handler (using `tel:`) or email composer (using `mailto:`).
+
+### Requirement: Configurable Studio Details
+The system SHALL support dynamic administration of the studio's physical address, phone number, and email ID.
+
+#### Scenario: Admin updates contact details
+- **WHEN** an administrator saves updated contact details under the System Settings panel
+- **THEN** the system SHALL persist the settings on the server database and instantly propagate the updated values to all Contact Us links and modals across the application.

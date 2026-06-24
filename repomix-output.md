@@ -8750,9 +8750,17 @@ This modal operates independently of the authorization status, meaning users who
 ## 📇 Contact Information Displayed
 
 The modal provides the following details:
-1. **Physical Address**: The location of the studio (`108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038`).
-2. **Phone Number**: An interactive link targeting the telephone protocol (`tel:+919876543210`) so users on mobile or desktop softphone clients can initiate calls with a single click.
-3. **Email ID**: An interactive link targeting the email client protocol (`mailto:support@quantumyoga.xyz`) to immediately draft general query emails.
+1. **Physical Address**: The location of the studio (default: `108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038`).
+2. **Phone Number**: An interactive link targeting the telephone protocol (`tel:`) so users on mobile or desktop softphone clients can initiate calls with a single click.
+3. **Email ID**: An interactive link targeting the email client protocol (`mailto:`) to immediately draft general query emails.
+
+## ⚙️ Administration & Configuration
+
+Rather than being hardcoded in HTML, the studio contact details are fully database-driven:
+
+1. **Access Settings**: Log in as an administrator (e.g. `admin@quantumyoga.xyz`) and navigate to **Admin Panel -> System Settings**.
+2. **Configure Details**: Locate the **Studio Contact Settings** card and enter the new Physical Address, Phone Number, and Email ID.
+3. **Instant Propagation**: Click **Save Studio Details** to persist updates on the server database. The new details propagate dynamically to all Contact Us triggers across the site.
 ````
 
 ## File: wiki/Live-Yoga-Rooms.md
@@ -8855,6 +8863,13 @@ The system SHALL support interactive protocol links to initiate contact instantl
 #### Scenario: User clicks contact options
 - **WHEN** a user clicks the telephone or email ID links inside the contact modal
 - **THEN** the system SHALL launch the client's default telephone handler (using `tel:`) or email composer (using `mailto:`).
+
+### Requirement: Configurable Studio Details
+The system SHALL support dynamic administration of the studio's physical address, phone number, and email ID.
+
+#### Scenario: Admin updates contact details
+- **WHEN** an administrator saves updated contact details under the System Settings panel
+- **THEN** the system SHALL persist the settings on the server database and instantly propagate the updated values to all Contact Us links and modals across the application.
 ````
 
 ## File: openspec/specs/billing-payments/spec.md
