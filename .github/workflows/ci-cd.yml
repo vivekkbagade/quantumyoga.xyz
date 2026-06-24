@@ -7,6 +7,8 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
 
 jobs:
   build-and-test:
@@ -52,6 +54,19 @@ jobs:
           cp tst.json deploy-dist/ || echo "No tst.json file"
           # Package db.json as a template to avoid overwriting the active live database on the VM
           cp db.json deploy-dist/db.json.template || echo "No db.json file"
+          
+          # Compress artifacts into a zip file for GitHub Releases
+          cd deploy-dist && zip -r ../quantum-yoga-build.zip . && cd ..
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Release Build ${{ github.run_number }}
+          files: quantum-yoga-build.zip
+          draft: false
+          prerelease: false
 
       - name: Upload Deployment Artifacts
         uses: actions/upload-artifact@v4

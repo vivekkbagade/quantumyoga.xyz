@@ -8,6 +8,7 @@ node_modules/
 /test-results
 
 # Production build
+/dist
 /build
 
 # Environment variables
