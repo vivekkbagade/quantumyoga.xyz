@@ -123,3 +123,49 @@ To run the test suite:
     ```bash
     npm run e2e
     ```
+
+---
+
+## 🌐 VM CI/CD & Deployment Setup
+
+This project is configured with a GitHub Actions CI/CD workflow to automatically deploy code updates to a Virtual Machine (VM) when pushed to the main/master branches.
+
+### 1. GitHub Repository Secrets Configuration
+To enable the deployment workflow, navigate to your GitHub Repository -> **Settings** -> **Secrets and variables** -> **Actions**, and add the following repository secrets:
+
+| Secret Name | Description | Example Value |
+| :--- | :--- | :--- |
+| `VM_SSH_IP` | Public IP Address or Domain of your VM | `192.0.2.1` |
+| `VM_SSH_USER` | SSH Login User name | `ubuntu` or `root` |
+| `VM_SSH_KEY` | Private SSH key authorized to log in | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
+| `VM_DEPLOY_PATH` | Path on the VM to deploy files | `/var/www/quantum-yoga` |
+
+### 2. VM Environment Preparation
+
+Run the following commands on your VM to prepare the environment for hosting this application:
+
+```bash
+# Update and install Node.js (v20 recommended) and git
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs git
+
+# Install PM2 Process Manager globally
+sudo npm install -g pm2
+
+# Create the deployment directory and change ownership to your SSH user
+sudo mkdir -p /var/www/quantum-yoga
+sudo chown -R ubuntu:ubuntu /var/www/quantum-yoga
+```
+
+### 3. Application Configuration on VM
+Inside the deployment path on the VM (e.g., `/var/www/quantum-yoga`), create your production environment configuration file `.env`:
+
+```env
+PORT=8080
+DATABASE_URL=postgresql://postgres:your-db-password@127.0.0.1:5432/quantum_yoga
+RESEND_API_KEY=re_your_api_key
+RESEND_FROM_ADDRESS=admin@quantumyoga.xyz
+```
+
+PM2 will automatically manage and reload the application using the configuration in `ecosystem.config.cjs`.
+
