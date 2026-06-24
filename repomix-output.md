@@ -50,6 +50,11 @@ data.js
 ecosystem.config.cjs
 index.css
 index.html
+openspec/changes/add-contact-us/.openspec.yaml
+openspec/changes/add-contact-us/design.md
+openspec/changes/add-contact-us/proposal.md
+openspec/changes/add-contact-us/specs/contact-us/spec.md
+openspec/changes/add-contact-us/tasks.md
 openspec/changes/add-whatsapp-functionality/.openspec.yaml
 openspec/changes/add-whatsapp-functionality/design.md
 openspec/changes/add-whatsapp-functionality/proposal.md
@@ -289,6 +294,106 @@ wiki/WhatsApp-Integration.md
 ```
 
 # Files
+
+## File: openspec/changes/add-contact-us/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/add-contact-us/design.md
+````markdown
+## Context
+
+Instead of a dynamic form submitting leads to a database CRM, the user wants a simple, accessible contact info panel presenting the physical address, phone number, and email ID of the yoga studio.
+
+## Goals / Non-Goals
+
+**Goals:**
+* Add a "Contact Us" link in the header navigation and footer.
+* Display the physical address, phone number, and support email ID in a glassmorphic modal overlay (`#contact-us-modal`).
+* Make telephone and email fields clickable with direct `tel:` and `mailto:` protocol schemas.
+
+**Non-Goals:**
+* Dynamic database/leads submission logic or server endpoints.
+
+## Decisions
+
+### 1. Modal-based Contact Card
+* **Decision**: Build a static, glassmorphic card modal `#contact-us-modal` triggered via navigation links.
+* **Rationale**: Offers a clean popup view without loading forms or requiring database inserts, keeping page performance lightweight.
+
+## Risks / Trade-offs
+
+* **Risk**: Stale contact details.
+  * *Mitigation*: Maintain contact details in standard static HTML/CSS variables for easy updates.
+````
+
+## File: openspec/changes/add-contact-us/proposal.md
+````markdown
+## Why
+
+Visitors and members need a simple, direct way to view the studio's official contact information (physical address, phone number, and email ID) without needing to navigate complex panels or login interfaces. 
+
+## What Changes
+
+* **Contact Info Panel**: A clean, glassmorphic Contact Us section or modal displaying the studio's physical address, phone number, and support email ID.
+* **Direct Actions**: Quick shortcut triggers to launch email client dispatches or start WhatsApp support chats directly.
+
+## Capabilities
+
+### New Capabilities
+- `contact-us`: Displays the studio's static contact information (address, phone number, and email ID) inside a public, glassmorphic modal overlay.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+* **Frontend**: Adds a Contact Us link in the navigation/footer that launches a floating contact details modal in `index.html`.
+````
+
+## File: openspec/changes/add-contact-us/specs/contact-us/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Studio Contact Details Display
+The system SHALL present a public Contact Us modal overlay displaying the studio's physical address, telephone number, and official email ID.
+
+#### Scenario: User views contact details
+- **WHEN** a user clicks the "Contact Us" link/button
+- **THEN** the system SHALL display the `#contact-us-modal` modal containing the studio's physical address, contact phone number, and support email ID.
+
+#### Scenario: Non-logged-in visitor views contact details
+- **WHEN** a visitor who is not logged in clicks the "Contact Us" link/button
+- **THEN** the system SHALL display the `#contact-us-modal` overlay directly on the landing page, bypassing any login or registration gates.
+
+### Requirement: Interactive Call/Email Triggers
+The system SHALL support interactive protocol links to initiate contact instantly.
+
+#### Scenario: User clicks contact options
+- **WHEN** a user clicks the telephone or email ID links inside the contact modal
+- **THEN** the system SHALL launch the client's default telephone handler (using `tel:`) or email composer (using `mailto:`).
+````
+
+## File: openspec/changes/add-contact-us/tasks.md
+````markdown
+## 1. Landing Page UI
+
+- [ ] 1.1 Add "Contact Us" links to the navigation header and page footer in `index.html`
+- [ ] 1.2 Add the glassmorphic Contact Us modal overlay (`#contact-us-modal`) displaying the physical address, phone number, and support email ID in `index.html`
+- [ ] 1.3 Add interactive `tel:` and `mailto:` links to the phone number and email fields inside the modal in `index.html`
+- [ ] 1.4 Style the Contact Us modal and hover link states in `index.css`
+
+## 2. Frontend Toggle Logic
+
+- [ ] 2.1 Bind Contact Us modal toggle event listeners (open/close actions and ESC key handlers) in `app.js`
+
+## 3. Verification & Build
+
+- [ ] 3.1 Run `npm run build` to verify the build compiles successfully
+- [ ] 3.2 Verify the contact links successfully trigger the overlay popup and protocol links work
+````
 
 ## File: openspec/changes/admin-analytics-reports/.openspec.yaml
 ````yaml
