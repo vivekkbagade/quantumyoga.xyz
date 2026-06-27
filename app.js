@@ -159,7 +159,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     activeTab: "poses", // 'poses' | 'routines' | 'profile'
     currentUser: null,
     activeRoutineId: null,
-    studentEmailFolder: "inbox"
+    studentEmailFolder: "inbox",
+    studentFilterMode: "all"
   };
 
   // DOM Elements
@@ -5872,14 +5873,19 @@ Please verify and update my status. Thank you!`);
     const emails = loadEmails();
     const userEmail = state.currentUser.email;
 
-    const list = emails
+    let list = emails
       .filter(e => {
         const toField = (e.to || "").toLowerCase();
         const match = toField.match(/<([^>]+)>/);
         const recipientEmail = (match ? match[1] : toField).trim();
         return recipientEmail === userEmail.toLowerCase();
-      })
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      });
+
+    if (state.studentFilterMode === "unread") {
+      list = list.filter(e => !e.isRead);
+    }
+
+    list.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (list.length === 0) {
       studentInboxEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0;">No messages received yet.</p>`;
@@ -6014,7 +6020,18 @@ Please verify and update my status. Thank you!`);
       return recipientEmail === userEmail.toLowerCase();
     }).length;
 
-    if (studentUnreadCount) studentUnreadCount.textContent = `${unread} unread`;
+    if (studentUnreadCount) {
+      studentUnreadCount.textContent = `${unread} unread`;
+      if (state.studentFilterMode === "unread") {
+        studentUnreadCount.style.background = "var(--accent-primary, #8b5cf6)";
+        studentUnreadCount.style.color = "#111111";
+        studentUnreadCount.style.boxShadow = "0 0 8px rgba(139, 92, 246, 0.5)";
+      } else {
+        studentUnreadCount.style.background = "rgba(167, 139, 250, 0.2)";
+        studentUnreadCount.style.color = "#a78bfa";
+        studentUnreadCount.style.boxShadow = "none";
+      }
+    }
     if (profileEmailTabBtn) {
       const badge = profileEmailTabBtn.querySelector(".email-tab-badge");
       if (unread > 0) {
@@ -6066,6 +6083,16 @@ Please verify and update my status. Thank you!`);
       if (e.target === studentEmailPreviewOverlay) {
         studentEmailPreviewOverlay.style.display = "none";
       }
+    });
+  }
+
+  // Student Unread Count Click Filter
+  if (studentUnreadCount) {
+    studentUnreadCount.addEventListener("click", (e) => {
+      e.stopPropagation();
+      state.studentFilterMode = state.studentFilterMode === "unread" ? "all" : "unread";
+      renderStudentInbox();
+      updateStudentUnreadBadge();
     });
   }
 
