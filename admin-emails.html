@@ -882,8 +882,7 @@
       const adminInboxEmails = emails.filter(e => {
         const toField = (e.to || "").toLowerCase();
         const fromField = (e.from || "").toLowerCase();
-        return (toField.includes("admin@quantumyoga.xyz") || e.direction === "received" || e.folder === "inbox") && 
-               !fromField.includes("admin@quantumyoga.xyz");
+        return toField.includes("admin@quantumyoga.xyz") && !fromField.includes("admin@quantumyoga.xyz");
       });
 
       const adminSentEmails = emails.filter(e => {

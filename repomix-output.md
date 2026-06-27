@@ -11489,8 +11489,7 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
       const adminInboxEmails = emails.filter(e => {
         const toField = (e.to || "").toLowerCase();
         const fromField = (e.from || "").toLowerCase();
-        return (toField.includes("admin@quantumyoga.xyz") || e.direction === "received" || e.folder === "inbox") && 
-               !fromField.includes("admin@quantumyoga.xyz");
+        return toField.includes("admin@quantumyoga.xyz") && !fromField.includes("admin@quantumyoga.xyz");
       });
 
       const adminSentEmails = emails.filter(e => {
@@ -23689,12 +23688,11 @@ Please verify and update my status. Thank you!`);
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    // Filter to only show emails addressed to the admin, or marked as received/inbox, but not sent by the admin
+    // Filter to strictly show emails received by the admin (addressed to admin, not sent by admin)
     let list = emails.filter(e => {
       const toField = (e.to || "").toLowerCase();
       const fromField = (e.from || "").toLowerCase();
-      return (toField.includes(connectedEmail) || e.direction === "received" || e.folder === "inbox") && 
-             !fromField.includes(connectedEmail);
+      return toField.includes(connectedEmail) && !fromField.includes(connectedEmail);
     });
 
     if (filterMode === "unread") list = list.filter(e => !e.isRead);
@@ -23957,7 +23955,7 @@ Please verify and update my status. Thank you!`);
 
     const unread = emails.filter(e => 
       !e.isRead && 
-      ((e.to || "").toLowerCase().includes(connectedEmail) || e.direction === "received" || e.folder === "inbox") && 
+      (e.to || "").toLowerCase().includes(connectedEmail) && 
       !(e.from || "").toLowerCase().includes(connectedEmail)
     ).length;
 
