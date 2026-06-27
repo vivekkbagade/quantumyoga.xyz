@@ -11699,8 +11699,8 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
         }
 
         // Add to local state and update server database
-        const newEmail = {
-          id: `resend-outbox-${Date.now()}`,
+        const senderCopy = {
+          id: `resend-outbox-sent-${Date.now()}`,
           from: fromAddress,
           to: to,
           subject: subject,
@@ -11712,7 +11712,21 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
           isRead: true
         };
 
-        emails.push(newEmail);
+        const recipientCopy = {
+          id: `resend-outbox-inbox-${Date.now()}`,
+          from: fromAddress,
+          to: to,
+          subject: subject,
+          snippet: bodyText.substring(0, 100),
+          html: bodyHtml,
+          date: new Date().toISOString(),
+          folder: 'inbox',
+          direction: 'received',
+          isRead: false
+        };
+
+        emails.push(senderCopy);
+        emails.push(recipientCopy);
         localStorage.setItem(STORAGE_KEY_EMAILS, JSON.stringify(emails));
         await saveDatabaseToServer();
         
