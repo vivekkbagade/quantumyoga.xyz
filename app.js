@@ -5463,15 +5463,21 @@ Please verify and update my status. Thank you!`);
   /**
    * Renders the entire admin Email panel (connection card + inbox + sent).
    */
-  async function renderAdminEmailTab() {
+  function renderAdminEmailTab() {
     updateEmailProviderStatusUI();
-    try {
-      await loadFromServer();
-    } catch (err) {
-      console.warn("Error loading state from server in renderAdminEmailTab:", err);
-    }
+    // Render immediately from local cache so the UI is instant and never hangs
     renderAdminInbox();
     renderAdminSentList();
+
+    // Fetch updates in the background and re-render if successful
+    loadFromServer()
+      .then(() => {
+        renderAdminInbox();
+        renderAdminSentList();
+      })
+      .catch(err => {
+        console.warn("Background state sync failed in renderAdminEmailTab:", err);
+      });
   }
 
   /**
