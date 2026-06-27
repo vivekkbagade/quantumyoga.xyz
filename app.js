@@ -5859,7 +5859,7 @@ Please verify and update my status. Thank you!`);
     const list = emails
       .filter(e => {
         const toField = (e.to || "").toLowerCase();
-        return toField.includes(userEmail.toLowerCase()) && (e.folder === "inbox" || e.direction === "received");
+        return toField.includes(userEmail.toLowerCase());
       })
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
