@@ -5439,12 +5439,12 @@ Please verify and update my status. Thank you!`);
         : "Connect your Gmail account to send & receive emails directly from this panel.";
     }
 
-    // Email tab visibility: show admin tab if clientId present OR resend configured (Task 6.9/8.8)
+    // Email tab visibility: permanently display Email tabs on administrator and student portals
     if (adminEmailTabBtn) {
-      adminEmailTabBtn.style.display = (es.clientId || (isResend && resendConfigured)) ? "inline-flex" : "none";
+      adminEmailTabBtn.style.display = "inline-flex";
     }
     if (profileEmailTabBtn) {
-      profileEmailTabBtn.style.display = (connected || (isResend && resendConfigured)) ? "inline-flex" : "none";
+      profileEmailTabBtn.style.display = "inline-flex";
     }
 
     updateAdminUnreadBadge();
