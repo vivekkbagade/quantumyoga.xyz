@@ -17402,9 +17402,6 @@ function broadcastActiveUsers() {
               <h3 style="display:flex; align-items:center; justify-content:space-between;">
                 <span>📥 Inbox</span>
                 <div style="display:flex; gap:0.5rem; align-items:center;">
-                  <a href="admin-emails.html" target="_blank" class="btn btn-secondary" style="font-size:0.7rem; padding:0.25rem 0.5rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.25rem; font-weight:600;">
-                    🖥️ Open Fullscreen
-                  </a>
                   <span id="admin-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
                 </div>
               </h3>
