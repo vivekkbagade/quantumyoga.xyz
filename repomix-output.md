@@ -16701,7 +16701,7 @@ function broadcastActiveUsers() {
           <button class="admin-sub-tab" id="admin-appointments-tab-btn" role="tab" aria-selected="false" aria-controls="admin-appointments-panel">Appointments Management</button>
           <button class="admin-sub-tab" id="admin-reports-tab-btn" role="tab" aria-selected="false" aria-controls="admin-reports-panel">Reports & Analytics</button>
           <button class="admin-sub-tab" id="admin-email-tab-btn" role="tab" aria-selected="false" aria-controls="admin-email-panel">📧 Email Inbox</button>
-          <button class="admin-sub-tab" id="admin-email-center-tab-btn" role="tab" aria-selected="false" aria-controls="admin-email-center-panel">✉️ Email Center</button>
+          <button class="admin-sub-tab" id="admin-email-center-tab-btn" role="tab" aria-selected="false" aria-controls="admin-email-center-panel" style="display: none;">✉️ Email Center</button>
           <button class="admin-sub-tab" id="admin-settings-tab-btn" role="tab" aria-selected="false" aria-controls="admin-settings-panel">System Settings</button>
         </div>
 
@@ -23642,7 +23642,7 @@ Please verify and update my status. Thank you!`);
       adminEmailTabBtn.style.display = "inline-flex";
     }
     if (adminEmailCenterTabBtn) {
-      adminEmailCenterTabBtn.style.display = "inline-flex";
+      adminEmailCenterTabBtn.style.display = "none";
     }
     if (profileEmailTabBtn) {
       profileEmailTabBtn.style.display = "inline-flex";

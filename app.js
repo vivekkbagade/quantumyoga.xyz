@@ -5463,7 +5463,7 @@ Please verify and update my status. Thank you!`);
       adminEmailTabBtn.style.display = "inline-flex";
     }
     if (adminEmailCenterTabBtn) {
-      adminEmailCenterTabBtn.style.display = "inline-flex";
+      adminEmailCenterTabBtn.style.display = "none";
     }
     if (profileEmailTabBtn) {
       profileEmailTabBtn.style.display = "inline-flex";
