@@ -16638,6 +16638,22 @@ function broadcastActiveUsers() {
               </div>
             </div>
           </div>
+
+          <!-- Student Email Preview Overlay -->
+          <div id="student-email-preview-overlay" class="email-preview-overlay" style="display:none; z-index:1000;">
+            <div class="email-preview-card">
+              <div class="email-preview-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div>
+                  <div id="student-preview-subject" style="font-size:1.1rem; font-weight:700; color:var(--text-primary);"></div>
+                  <div id="student-preview-from" style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.25rem;"></div>
+                  <div id="student-preview-date" style="font-size:0.78rem; color:var(--text-muted); margin-top:0.15rem;"></div>
+                </div>
+                <button class="modal-close" id="student-close-email-preview" aria-label="Close preview" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+              </div>
+              <div id="student-preview-body" class="email-preview-body" style="margin-top:1.5rem; padding:1.5rem; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--glass-light-border); line-height:1.6; color:var(--text-primary); font-size:0.9rem; overflow-y:auto; max-height:350px;"></div>
+            </div>
+          </div>
+
         </div>
         <!-- ==================== END STUDENT EMAIL PANEL ==================== -->
 
@@ -18523,6 +18539,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentEmailSubject = document.getElementById("student-email-subject");
   const studentEmailBody = document.getElementById("student-email-body");
   const studentEmailSendMsg = document.getElementById("student-email-send-msg");
+  const studentEmailPreviewOverlay = document.getElementById("student-email-preview-overlay");
+  const studentPreviewSubject = document.getElementById("student-preview-subject");
+  const studentPreviewFrom = document.getElementById("student-preview-from");
+  const studentPreviewDate = document.getElementById("student-preview-date");
+  const studentPreviewBody = document.getElementById("student-preview-body");
+  const studentCloseEmailPreview = document.getElementById("student-close-email-preview");
   
   // Admin UPI Settings DOM Elements
   const adminUpiSettingsForm = document.getElementById("admin-upi-settings-form");
@@ -24056,21 +24078,25 @@ Please verify and update my status. Thank you!`);
           renderStudentInbox();
           updateStudentUnreadBadge();
         }
-        // Show snippet below item as a simple detail view
-        const existing = item.querySelector(".email-detail-expand");
-        if (existing) { existing.remove(); return; }
-        const detail = document.createElement("div");
-        detail.className = "email-detail-expand";
-        detail.style.cssText = "margin-top:0.5rem;padding:0.75rem;background:rgba(0,0,0,0.2);border-radius:8px;font-size:0.82rem;color:var(--text-secondary);line-height:1.6;";
-        detail.textContent = email.snippet || "Loading…";
-        item.appendChild(detail);
-        // Attempt to load full body
+        
+        // Populate and open the student preview modal
+        if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
+        if (studentPreviewFrom) studentPreviewFrom.textContent = `From: ${email.from || "Quantum Yoga Studio"}`;
+        if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
+        if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
+
+        // Retrieve full email body
         const body = await emailGetMessageBody(email.id);
-        if (body) {
-          if (body.trim().startsWith("<")) {
-            detail.innerHTML = body;
+        if (studentPreviewBody) {
+          if (body) {
+            if (body.trim().startsWith("<")) {
+              studentPreviewBody.innerHTML = body;
+            } else {
+              studentPreviewBody.innerHTML = escapeHtml(body).replace(/\n/g, "<br>");
+            }
           } else {
-            detail.textContent = body;
+            studentPreviewBody.textContent = email.snippet || "(No message body content)";
           }
         }
       });
@@ -24126,6 +24152,21 @@ Please verify and update my status. Thank you!`);
       if (e.target === adminEmailPreviewOverlay) {
         adminEmailPreviewOverlay.style.display = "none";
         currentPreviewEmail = null;
+      }
+    });
+  }
+
+  // Student Close preview
+  if (studentCloseEmailPreview) {
+    studentCloseEmailPreview.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "none";
+    });
+  }
+  if (studentEmailPreviewOverlay) {
+    studentEmailPreviewOverlay.addEventListener("click", (e) => {
+      if (e.target === studentEmailPreviewOverlay) {
+        studentEmailPreviewOverlay.style.display = "none";
       }
     });
   }

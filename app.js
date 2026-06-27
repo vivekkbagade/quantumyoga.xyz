@@ -378,6 +378,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentEmailSubject = document.getElementById("student-email-subject");
   const studentEmailBody = document.getElementById("student-email-body");
   const studentEmailSendMsg = document.getElementById("student-email-send-msg");
+  const studentEmailPreviewOverlay = document.getElementById("student-email-preview-overlay");
+  const studentPreviewSubject = document.getElementById("student-preview-subject");
+  const studentPreviewFrom = document.getElementById("student-preview-from");
+  const studentPreviewDate = document.getElementById("student-preview-date");
+  const studentPreviewBody = document.getElementById("student-preview-body");
+  const studentCloseEmailPreview = document.getElementById("student-close-email-preview");
   
   // Admin UPI Settings DOM Elements
   const adminUpiSettingsForm = document.getElementById("admin-upi-settings-form");
@@ -5911,21 +5917,25 @@ Please verify and update my status. Thank you!`);
           renderStudentInbox();
           updateStudentUnreadBadge();
         }
-        // Show snippet below item as a simple detail view
-        const existing = item.querySelector(".email-detail-expand");
-        if (existing) { existing.remove(); return; }
-        const detail = document.createElement("div");
-        detail.className = "email-detail-expand";
-        detail.style.cssText = "margin-top:0.5rem;padding:0.75rem;background:rgba(0,0,0,0.2);border-radius:8px;font-size:0.82rem;color:var(--text-secondary);line-height:1.6;";
-        detail.textContent = email.snippet || "Loading…";
-        item.appendChild(detail);
-        // Attempt to load full body
+        
+        // Populate and open the student preview modal
+        if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
+        if (studentPreviewFrom) studentPreviewFrom.textContent = `From: ${email.from || "Quantum Yoga Studio"}`;
+        if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
+        if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
+
+        // Retrieve full email body
         const body = await emailGetMessageBody(email.id);
-        if (body) {
-          if (body.trim().startsWith("<")) {
-            detail.innerHTML = body;
+        if (studentPreviewBody) {
+          if (body) {
+            if (body.trim().startsWith("<")) {
+              studentPreviewBody.innerHTML = body;
+            } else {
+              studentPreviewBody.innerHTML = escapeHtml(body).replace(/\n/g, "<br>");
+            }
           } else {
-            detail.textContent = body;
+            studentPreviewBody.textContent = email.snippet || "(No message body content)";
           }
         }
       });
@@ -5981,6 +5991,21 @@ Please verify and update my status. Thank you!`);
       if (e.target === adminEmailPreviewOverlay) {
         adminEmailPreviewOverlay.style.display = "none";
         currentPreviewEmail = null;
+      }
+    });
+  }
+
+  // Student Close preview
+  if (studentCloseEmailPreview) {
+    studentCloseEmailPreview.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "none";
+    });
+  }
+  if (studentEmailPreviewOverlay) {
+    studentEmailPreviewOverlay.addEventListener("click", (e) => {
+      if (e.target === studentEmailPreviewOverlay) {
+        studentEmailPreviewOverlay.style.display = "none";
       }
     });
   }
