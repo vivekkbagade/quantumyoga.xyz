@@ -1016,45 +1016,7 @@
               <div id="admin-appointment-fee-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; margin-top: 0.3rem; text-align: center;">&#x2713; Saved.</div>
             </div>
 
-          <!-- Email Provider card -->
-          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md); grid-column: span 2;">
-            <h3 style="margin: 0 0 0.75rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📨 Email Provider</h3>
-            <!-- Provider toggle -->
-            <div class="email-provider-toggle" style="margin-bottom: 1rem;">
-              <button class="email-provider-btn active" id="email-provider-gmail-btn">Gmail</button>
-              <button class="email-provider-btn" id="email-provider-resend-btn">Resend</button>
-            </div>
-            <!-- Gmail config section -->
-            <div id="gmail-config-section">
-              <p style="font-size:0.78rem; font-weight:600; color:var(--text-secondary); margin:0 0 0.5rem;">Gmail OAuth2</p>
-              <form id="admin-gmail-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                  <label for="admin-gmail-client-id" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">OAuth2 Client ID:</label>
-                  <input type="text" id="admin-gmail-client-id" placeholder="xxxx.apps.googleusercontent.com" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.75rem; outline: none;">
-                </div>
-                <p style="font-size:0.7rem; color:var(--text-muted); margin:0 0 0.25rem;">Create a project at <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent-primary);">Google Cloud Console</a>, enable Gmail API, create Web Application credentials, and paste the Client ID here.</p>
-                <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Client ID</button>
-                <div id="admin-gmail-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved. Go to Email Inbox tab to connect.</div>
-              </form>
-            </div>
-            <!-- Resend config section -->
-            <div id="resend-config-section" style="display:none;">
-              <p style="font-size:0.78rem; font-weight:600; color:var(--text-secondary); margin:0 0 0.5rem;">Resend API — <a href="https://resend.com" target="_blank" style="color:var(--accent-primary); font-weight:400;">resend.com</a></p>
-              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                  <label for="resend-api-key-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">API Key:</label>
-                  <input type="password" id="resend-api-key-input" placeholder="re_…" autocomplete="off" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                  <label for="resend-from-address-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">From Address:</label>
-                  <input type="text" id="resend-from-address-input" placeholder="Quantum Yoga &lt;studio@quantumyoga.xyz&gt;" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-                </div>
-                <p style="font-size:0.7rem; color:var(--text-muted); margin:0;">Use a domain-scoped send-only API key from your <a href="https://resend.com/api-keys" target="_blank" style="color:var(--accent-primary);">Resend dashboard</a>.</p>
-                <button type="button" id="resend-settings-save-btn" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Resend Settings</button>
-                <span id="resend-settings-msg" style="display:none; font-size:0.78rem; font-weight:600;"></span>
-              </div>
-            </div>
-          </div>
+
 
           <!-- WhatsApp Settings card -->
           <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">

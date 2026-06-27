@@ -2197,18 +2197,13 @@ document.addEventListener("DOMContentLoaded", async () => {
    */
   async function resendSendEmail({ to, subject, bodyHtml, bodyText }) {
     const es = loadGmailSettings();
-    const apiKey = es.resendApiKey || "";
-    const fromAddress = es.resendFromAddress || "";
     try {
-      // Route through the local Vite proxy (/api/send-email) so the request to
-      // api.resend.com is made server-side (Node.js). Direct browser fetch to
-      // api.resend.com is intentionally blocked by Resend's CORS policy.
       const resp = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          apiKey,
-          from: fromAddress,
+          apiKey: "",
+          from: "",
           to,
           subject,
           html: bodyHtml || bodyText || ""
@@ -5426,7 +5421,7 @@ Please verify and update my status. Thank you!`);
     if (adminGmailConnectedEmail) adminGmailConnectedEmail.textContent = es.connectedEmail || "";
     if (adminGmailConnectBtn) adminGmailConnectBtn.style.display = (gmailVisible && !connected) ? "inline-flex" : "none";
     if (adminGmailDisconnectBtn) adminGmailDisconnectBtn.style.display = (gmailVisible && connected) ? "inline-flex" : "none";
-    const resendConfigured = !!(es.resendApiKey);
+    const resendConfigured = true;
     if (adminGmailRefreshBtn) adminGmailRefreshBtn.style.display = ((gmailVisible && connected) || (isResend && resendConfigured)) ? "inline-flex" : "none";
 
     // Resend badge visibility (Task 5.3)
@@ -5515,7 +5510,7 @@ Please verify and update my status. Thank you!`);
     if (list.length === 0) {
       const es = loadGmailSettings();
       const isResend = es.provider === "resend";
-      const resendConfigured = !!(es.resendApiKey);
+      const resendConfigured = true;
       const emailServiceAvailable = isResend ? resendConfigured : isGmailConnected();
 
       let msg = "";
@@ -5806,7 +5801,7 @@ Please verify and update my status. Thank you!`);
   function renderStudentEmailTab() {
     const es = loadGmailSettings();
     const isResend = es.provider === "resend";
-    const resendConfigured = !!(es.resendApiKey);
+    const resendConfigured = true;
     const gmailConnected = isGmailConnected();
     const emailServiceAvailable = gmailConnected || (isResend && resendConfigured);
 
@@ -6104,72 +6099,7 @@ Please verify and update my status. Thank you!`);
     });
   }
 
-  // Gmail Settings form — save Client ID (Task 4.2)
-  if (adminGmailSettingsForm) {
-    adminGmailSettingsForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const clientId = adminGmailClientIdInput ? adminGmailClientIdInput.value.trim() : "";
-      if (!clientId) return;
-      const gs = loadGmailSettings();
-      gs.clientId = clientId;
-      saveGmailSettings(gs);
-      if (adminGmailSettingsSuccessMsg) {
-        adminGmailSettingsSuccessMsg.style.display = "block";
-        setTimeout(() => { adminGmailSettingsSuccessMsg.style.display = "none"; }, 3000);
-      }
-      updateEmailProviderStatusUI();
-    });
-  }
 
-  // Task 4.3 — Switch to Gmail provider
-  if (emailProviderGmailBtn) {
-    emailProviderGmailBtn.addEventListener("click", () => {
-      const gs = loadGmailSettings();
-      gs.provider = "gmail";
-      saveGmailSettings(gs);
-      renderEmailProviderSettings();
-      updateEmailProviderStatusUI();
-    });
-  }
-
-  // Task 4.4 — Switch to Resend provider
-  if (emailProviderResendBtn) {
-    emailProviderResendBtn.addEventListener("click", () => {
-      const gs = loadGmailSettings();
-      gs.provider = "resend";
-      saveGmailSettings(gs);
-      renderEmailProviderSettings();
-      updateEmailProviderStatusUI();
-    });
-  }
-
-  // Task 4.5 — Save Resend API key + from-address
-  if (resendSettingsSaveBtn) {
-    resendSettingsSaveBtn.addEventListener("click", () => {
-      const apiKey = resendApiKeyInput ? resendApiKeyInput.value.trim() : "";
-      const fromAddr = resendFromAddressInput ? resendFromAddressInput.value.trim() : "";
-      if (!apiKey) {
-        if (resendSettingsMsg) {
-          resendSettingsMsg.textContent = "API key is required.";
-          resendSettingsMsg.style.color = "#ef4444";
-          resendSettingsMsg.style.display = "inline";
-          setTimeout(() => { resendSettingsMsg.style.display = "none"; }, 3000);
-        }
-        return;
-      }
-      const gs = loadGmailSettings();
-      gs.resendApiKey = apiKey;
-      gs.resendFromAddress = fromAddr;
-      saveGmailSettings(gs);
-      if (resendSettingsMsg) {
-        resendSettingsMsg.textContent = "Resend settings saved ✓";
-        resendSettingsMsg.style.color = "#10B981";
-        resendSettingsMsg.style.display = "inline";
-        setTimeout(() => { resendSettingsMsg.style.display = "none"; }, 3000);
-      }
-      updateEmailProviderStatusUI();
-    });
-  }
 
   // Student compose form submit (Task 8.4)
   if (studentComposeEmailForm) {
@@ -6178,7 +6108,7 @@ Please verify and update my status. Thank you!`);
       
       const es = loadGmailSettings();
       const isResend = es.provider === "resend";
-      const resendConfigured = !!(es.resendApiKey);
+      const resendConfigured = true;
       const gmailConnected = isGmailConnected();
 
       if (!(gmailConnected || (isResend && resendConfigured)) || !state.currentUser) return;

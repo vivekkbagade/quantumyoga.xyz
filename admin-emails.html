@@ -1050,10 +1050,7 @@
       submitBtn.disabled = true;
       submitBtn.textContent = "Sending...";
 
-      const gsRaw = localStorage.getItem(STORAGE_KEY_GMAIL_SETTINGS);
-      const gs = gsRaw ? JSON.parse(gsRaw) : {};
-      const resendApiKey = gs.resendApiKey || "";
-      const fromAddress = gs.resendFromAddress || "admin@quantumyoga.xyz";
+      const fromAddress = "admin@quantumyoga.xyz";
 
       // Formulate HTML body
       const bodyHtml = `<div style="font-family:sans-serif;color:#333;line-height:1.6;">${bodyText.replace(/\n/g, "<br>")}</div>`;
@@ -1063,8 +1060,8 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            apiKey: resendApiKey,
-            from: fromAddress,
+            apiKey: "",
+            from: "",
             to: to,
             subject: subject,
             html: bodyHtml
