@@ -24064,7 +24064,9 @@ Please verify and update my status. Thank you!`);
     const list = emails
       .filter(e => {
         const toField = (e.to || "").toLowerCase();
-        return toField.includes(userEmail.toLowerCase());
+        const match = toField.match(/<([^>]+)>/);
+        const recipientEmail = (match ? match[1] : toField).trim();
+        return recipientEmail === userEmail.toLowerCase();
       })
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -24127,10 +24129,13 @@ Please verify and update my status. Thank you!`);
     if (!state.currentUser) return;
     const emails = loadEmails();
     const userEmail = state.currentUser.email;
-    const unread = emails.filter(e =>
-      !e.isRead &&
-      (e.to || "").toLowerCase().includes(userEmail.toLowerCase())
-    ).length;
+    const unread = emails.filter(e => {
+      if (e.isRead) return false;
+      const toField = (e.to || "").toLowerCase();
+      const match = toField.match(/<([^>]+)>/);
+      const recipientEmail = (match ? match[1] : toField).trim();
+      return recipientEmail === userEmail.toLowerCase();
+    }).length;
 
     if (studentUnreadCount) studentUnreadCount.textContent = `${unread} unread`;
     if (profileEmailTabBtn) {
