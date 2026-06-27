@@ -16208,6 +16208,39 @@ function broadcastActiveUsers() {
        http://localhost as an authorized JavaScript origin. Enter the Client ID in Admin > Settings > Gmail Integration. -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://meet.jit.si/external_api.js" defer></script>
+  <style>
+    /* Folder Pills for Student inbox/sent switcher */
+    .student-folder-pills {
+      display: flex;
+      gap: 0.25rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+    }
+    .student-folder-pill {
+      background: transparent;
+      border: none;
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary, #9ca3af);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .student-folder-pill:hover {
+      color: var(--text-primary, #ffffff);
+    }
+    .student-folder-pill.active {
+      background: var(--accent-primary, #8b5cf6);
+      color: #111111;
+    }
+  </style>
 </head>
 <body>
 
@@ -16661,11 +16694,20 @@ function broadcastActiveUsers() {
 
             <!-- Right: Inbox (messages from studio) -->
             <div class="admin-panel" style="display:flex; flex-direction:column;">
-              <h3 style="display:flex; align-items:center; justify-content:space-between;">
-                📥 My Inbox
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                <h3 style="display:flex; align-items:center; gap:0.5rem; margin:0;" id="student-inbox-title-text">
+                  📥 My Inbox
+                </h3>
                 <span id="student-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
-              </h3>
-              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; overflow-y:auto; max-height:420px;">
+              </div>
+              
+              <!-- Tab switcher pills for student -->
+              <div class="student-folder-pills" style="margin-top:1rem; align-self:flex-start;">
+                <button id="student-btn-folder-inbox" class="student-folder-pill active" onclick="setStudentEmailFolder('inbox')">Inbox</button>
+                <button id="student-btn-folder-sent" class="student-folder-pill" onclick="setStudentEmailFolder('sent')">Sent</button>
+              </div>
+
+              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; overflow-y:auto; max-height:360px;">
                 <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">No messages received yet.</p>
               </div>
             </div>
@@ -18351,7 +18393,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     difficultyFilter: "all",
     activeTab: "poses", // 'poses' | 'routines' | 'profile'
     currentUser: null,
-    activeRoutineId: null
+    activeRoutineId: null,
+    studentEmailFolder: "inbox"
   };
 
   // DOM Elements
@@ -24060,29 +24103,44 @@ Please verify and update my status. Thank you!`);
     if (!studentInboxEmailList || !state.currentUser) return;
     const emails = loadEmails();
     const userEmail = state.currentUser.email;
+    const folder = state.studentEmailFolder || "inbox";
 
     const list = emails
       .filter(e => {
-        const toField = (e.to || "").toLowerCase();
-        const match = toField.match(/<([^>]+)>/);
-        const recipientEmail = (match ? match[1] : toField).trim();
-        return recipientEmail === userEmail.toLowerCase();
+        if (folder === "inbox") {
+          const toField = (e.to || "").toLowerCase();
+          const match = toField.match(/<([^>]+)>/);
+          const recipientEmail = (match ? match[1] : toField).trim();
+          return recipientEmail === userEmail.toLowerCase();
+        } else {
+          const fromField = (e.from || "").toLowerCase();
+          const match = fromField.match(/<([^>]+)>/);
+          const senderEmail = (match ? match[1] : fromField).trim();
+          return senderEmail === userEmail.toLowerCase();
+        }
       })
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (list.length === 0) {
-      studentInboxEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0;">No messages from the studio yet.</p>`;
+      const msg = folder === "inbox" ? "No messages from the studio yet." : "No sent messages yet.";
+      studentInboxEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0;">${msg}</p>`;
       return;
     }
 
     studentInboxEmailList.innerHTML = "";
     list.forEach(email => {
       const item = document.createElement("div");
-      item.className = `email-list-item${email.isRead ? "" : " unread"}`;
+      const isRead = folder === "sent" ? true : email.isRead;
+      item.className = `email-list-item${isRead ? "" : " unread"}`;
+      
+      const displayLabel = folder === "sent" 
+        ? `To: ${escapeHtml(email.to || "Quantum Yoga Studio")}`
+        : `From: ${escapeHtml(email.from || "Quantum Yoga Studio")}`;
+
       item.innerHTML = `
-        <div class="${email.isRead ? "email-read-dot" : "email-unread-dot"}"></div>
+        <div class="${isRead ? "email-read-dot" : "email-unread-dot"}"></div>
         <div class="email-content">
-          <div class="email-sender">${escapeHtml(email.from || "Quantum Yoga Studio")}</div>
+          <div class="email-sender">${displayLabel}</div>
           <div class="email-subject">${escapeHtml(email.subject || "(No Subject)")}</div>
           <div class="email-snippet">${escapeHtml(email.snippet || "")}</div>
         </div>
@@ -24091,7 +24149,7 @@ Please verify and update my status. Thank you!`);
         </div>
       `;
       item.addEventListener("click", async () => {
-        if (!email.isRead) {
+        if (folder === "inbox" && !email.isRead) {
           await emailMarkAsRead(email.id);
           renderStudentInbox();
           updateStudentUnreadBadge();
@@ -24099,7 +24157,11 @@ Please verify and update my status. Thank you!`);
         
         // Populate and open the student preview modal
         if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
-        if (studentPreviewFrom) studentPreviewFrom.textContent = `From: ${email.from || "Quantum Yoga Studio"}`;
+        if (studentPreviewFrom) {
+          studentPreviewFrom.textContent = folder === "sent"
+            ? `To: ${email.to || "Quantum Yoga Studio"}`
+            : `From: ${email.from || "Quantum Yoga Studio"}`;
+        }
         if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
         if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
@@ -27408,6 +27470,27 @@ Please verify and update my status. Thank you!`);
       return activeRoomId;
     }
 
+    function setStudentEmailFolder(folder) {
+      state.studentEmailFolder = folder;
+      const btnInbox = document.getElementById("student-btn-folder-inbox");
+      const btnSent = document.getElementById("student-btn-folder-sent");
+      if (btnInbox && btnSent) {
+        if (folder === "inbox") {
+          btnInbox.classList.add("active");
+          btnSent.classList.remove("active");
+        } else {
+          btnInbox.classList.remove("active");
+          btnSent.classList.add("active");
+        }
+      }
+      const titleText = document.getElementById("student-inbox-title-text");
+      if (titleText) {
+        titleText.innerHTML = folder === "inbox" ? "📥 My Inbox" : "📤 Sent Messages";
+      }
+      renderStudentInbox();
+    }
+
+    window.setStudentEmailFolder = setStudentEmailFolder;
     window.getActiveTimetableRoom = getActiveTimetableRoom;
 
     checkSession();
