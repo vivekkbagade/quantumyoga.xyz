@@ -24049,24 +24049,8 @@ Please verify and update my status. Thank you!`);
       studentComposeEmailForm.style.pointerEvents = "auto";
     }
 
-    if (isResend) {
-      // Show Resend inbox notice style for student inbox
-      if (studentInboxEmailList) {
-        studentInboxEmailList.innerHTML = `
-          <div style="text-align:center;padding:2rem;color:var(--text-muted);">
-            <div style="font-size:2rem;margin-bottom:0.75rem;">✉️</div>
-            <p style="font-weight:600;color:var(--text-secondary);">Inbox Unavailable</p>
-            <p style="font-size:0.8rem;margin-top:0.35rem;">Inbox is not available with the Resend provider (send-only). Switch to Gmail in Settings to view inbox.</p>
-          </div>
-        `;
-      }
-      // Remove unread badge if any
-      const badge = profileEmailTabBtn ? profileEmailTabBtn.querySelector(".email-tab-badge") : null;
-      if (badge) badge.remove();
-    } else {
-      renderStudentInbox();
-      updateStudentUnreadBadge();
-    }
+    renderStudentInbox();
+    updateStudentUnreadBadge();
   }
 
   /**
