@@ -7958,6 +7958,11 @@ Please verify and update my status. Thank you!`);
     } else if (themeName === "sunset") {
       document.documentElement.classList.add("theme-sunset");
     }
+    // Propagate theme to iframe if present
+    const iframe = document.querySelector("iframe[src='admin-emails.html']");
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage({ type: "THEME_CHANGE", theme: themeName }, "*");
+    }
   }
 
   // Theme dropdown change listener

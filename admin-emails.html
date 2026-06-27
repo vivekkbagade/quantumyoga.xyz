@@ -1107,6 +1107,51 @@
       }
     }
 
+    // Theme synchronization (Task 2.1)
+    function applyThemeFromStorage() {
+      const SITE_DEFAULT_THEME_KEY = "qy_site_default_theme";
+      const session = localStorage.getItem("qy_session");
+      let activeTheme = localStorage.getItem(SITE_DEFAULT_THEME_KEY) || "midnight";
+      
+      if (session) {
+        try {
+          const email = JSON.parse(session);
+          const users = JSON.parse(localStorage.getItem("qy_users") || "[]");
+          const user = users.find(u => u.email === email);
+          if (user && user.theme) {
+            activeTheme = user.theme;
+          }
+        } catch (_) {}
+      }
+      
+      document.documentElement.classList.remove("theme-light", "theme-sunset");
+      if (activeTheme === "light") {
+        document.documentElement.classList.add("theme-light");
+      } else if (activeTheme === "sunset") {
+        document.documentElement.classList.add("theme-sunset");
+      }
+    }
+    
+    applyThemeFromStorage();
+    
+    window.addEventListener("storage", (e) => {
+      if (e.key === "qy_site_default_theme" || e.key === "qy_users" || e.key === "qy_session") {
+        applyThemeFromStorage();
+      }
+    });
+
+    window.addEventListener("message", (e) => {
+      if (e.data && e.data.type === "THEME_CHANGE") {
+        const themeName = e.data.theme;
+        document.documentElement.classList.remove("theme-light", "theme-sunset");
+        if (themeName === "light") {
+          document.documentElement.classList.add("theme-light");
+        } else if (themeName === "sunset") {
+          document.documentElement.classList.add("theme-sunset");
+        }
+      }
+    });
+
     // Startup
     window.addEventListener("DOMContentLoaded", () => {
       // If loaded inside an iframe, hide the brand header and margins for seamless embedding
