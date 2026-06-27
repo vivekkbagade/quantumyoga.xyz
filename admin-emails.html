@@ -742,12 +742,22 @@
     function checkAdminSession() {
       const data = localStorage.getItem(STORAGE_KEY_SESSION) || sessionStorage.getItem(STORAGE_KEY_SESSION);
       if (!data) {
+        if (window.self !== window.top) {
+          console.warn("No active admin session detected inside iframe.");
+          document.body.innerHTML = `<div style="padding: 2rem; text-align: center; color: #ef4444; font-family: sans-serif;"><h3>Access Denied</h3><p>Please log in as administrator on the main portal.</p></div>`;
+          return;
+        }
         alert("Access Denied: Please log in as administrator.");
         window.location.href = "index.html";
         return;
       }
       const email = JSON.parse(data);
       if (email !== "admin@quantumyoga.xyz") {
+        if (window.self !== window.top) {
+          console.warn("Unauthorized session inside iframe.");
+          document.body.innerHTML = `<div style="padding: 2rem; text-align: center; color: #ef4444; font-family: sans-serif;"><h3>Access Denied</h3><p>Unauthorized user email: ${escapeHtml(email)}</p></div>`;
+          return;
+        }
         alert("Access Denied: Only administrators can view this page.");
         window.location.href = "index.html";
         return;

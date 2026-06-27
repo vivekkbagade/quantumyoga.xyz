@@ -5345,7 +5345,13 @@ Please verify and update my status. Thank you!`);
       renderAdminEmailTab();
     } else if (panelName === "email-center") {
       if (adminEmailCenterTabBtn) { adminEmailCenterTabBtn.classList.add("active"); adminEmailCenterTabBtn.setAttribute("aria-selected", "true"); }
-      if (adminEmailCenterPanel) adminEmailCenterPanel.style.display = "block";
+      if (adminEmailCenterPanel) {
+        adminEmailCenterPanel.style.display = "block";
+        const iframe = adminEmailCenterPanel.querySelector("iframe");
+        if (iframe && (iframe.src === "about:blank" || !iframe.src || iframe.src === window.location.href)) {
+          iframe.src = iframe.dataset.src || "admin-emails.html";
+        }
+      }
     } else if (panelName === "settings") {
       adminSettingsTabBtn.classList.add("active");
       adminSettingsTabBtn.setAttribute("aria-selected", "true");
