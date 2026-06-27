@@ -45,6 +45,7 @@ The content is organized as follows:
 .agent/workflows/opsx-propose.md
 .github/workflows/ci-cd.yml
 .gitignore
+admin-emails.html
 app.js
 data.js
 ecosystem.config.cjs
@@ -78,6 +79,16 @@ openspec/changes/admin-default-theme/design.md
 openspec/changes/admin-default-theme/proposal.md
 openspec/changes/admin-default-theme/specs/admin-default-theme/spec.md
 openspec/changes/admin-default-theme/tasks.md
+openspec/changes/admin-email-center-tab/.openspec.yaml
+openspec/changes/admin-email-center-tab/design.md
+openspec/changes/admin-email-center-tab/proposal.md
+openspec/changes/admin-email-center-tab/specs/email-communication/spec.md
+openspec/changes/admin-email-center-tab/tasks.md
+openspec/changes/admin-email-tab/.openspec.yaml
+openspec/changes/admin-email-tab/design.md
+openspec/changes/admin-email-tab/proposal.md
+openspec/changes/admin-email-tab/specs/email-communication/spec.md
+openspec/changes/admin-email-tab/tasks.md
 openspec/changes/admin-users-reports/.openspec.yaml
 openspec/changes/admin-users-reports/design.md
 openspec/changes/admin-users-reports/proposal.md
@@ -130,6 +141,11 @@ openspec/changes/custom-client-pages/design.md
 openspec/changes/custom-client-pages/proposal.md
 openspec/changes/custom-client-pages/specs/custom-client-pages/spec.md
 openspec/changes/custom-client-pages/tasks.md
+openspec/changes/email-center-theme-sync/.openspec.yaml
+openspec/changes/email-center-theme-sync/design.md
+openspec/changes/email-center-theme-sync/proposal.md
+openspec/changes/email-center-theme-sync/specs/email-communication/spec.md
+openspec/changes/email-center-theme-sync/tasks.md
 openspec/changes/fix-lead-conversion-users-sync/.openspec.yaml
 openspec/changes/fix-lead-conversion-users-sync/design.md
 openspec/changes/fix-lead-conversion-users-sync/proposal.md
@@ -232,6 +248,11 @@ openspec/changes/real-time-community-chat/proposal.md
 openspec/changes/real-time-community-chat/specs/community-chat/spec.md
 openspec/changes/real-time-community-chat/specs/user-auth-profile/spec.md
 openspec/changes/real-time-community-chat/tasks.md
+openspec/changes/remove-email-config-ui/.openspec.yaml
+openspec/changes/remove-email-config-ui/design.md
+openspec/changes/remove-email-config-ui/proposal.md
+openspec/changes/remove-email-config-ui/specs/email-communication/spec.md
+openspec/changes/remove-email-config-ui/tasks.md
 openspec/changes/resend-email-provider/.openspec.yaml
 openspec/changes/resend-email-provider/design.md
 openspec/changes/resend-email-provider/proposal.md
@@ -249,6 +270,11 @@ openspec/changes/session-expiry-idle-redirect/design.md
 openspec/changes/session-expiry-idle-redirect/proposal.md
 openspec/changes/session-expiry-idle-redirect/specs/session-management/spec.md
 openspec/changes/session-expiry-idle-redirect/tasks.md
+openspec/changes/student-email-inbox/.openspec.yaml
+openspec/changes/student-email-inbox/design.md
+openspec/changes/student-email-inbox/proposal.md
+openspec/changes/student-email-inbox/specs/email-communication/spec.md
+openspec/changes/student-email-inbox/tasks.md
 openspec/changes/upi-qr-payments/.openspec.yaml
 openspec/changes/upi-qr-payments/design.md
 openspec/changes/upi-qr-payments/proposal.md
@@ -301,1279 +327,6 @@ wiki/WhatsApp-Integration.md
 ```
 
 # Files
-
-## File: openspec/changes/add-contact-us/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-24
-````
-
-## File: openspec/changes/add-contact-us/design.md
-````markdown
-## Context
-
-Instead of a dynamic form submitting leads to a database CRM, the user wants a simple, accessible contact info panel presenting the physical address, phone number, and email ID of the yoga studio.
-
-## Goals / Non-Goals
-
-**Goals:**
-* Add a "Contact Us" link in the header navigation and footer.
-* Display the physical address, phone number, and support email ID in a glassmorphic modal overlay (`#contact-us-modal`).
-* Make telephone and email fields clickable with direct `tel:` and `mailto:` protocol schemas.
-
-**Non-Goals:**
-* Dynamic database/leads submission logic or server endpoints.
-
-## Decisions
-
-### 1. Modal-based Contact Card
-* **Decision**: Build a static, glassmorphic card modal `#contact-us-modal` triggered via navigation links.
-* **Rationale**: Offers a clean popup view without loading forms or requiring database inserts, keeping page performance lightweight.
-
-## Risks / Trade-offs
-
-* **Risk**: Stale contact details.
-  * *Mitigation*: Maintain contact details in standard static HTML/CSS variables for easy updates.
-````
-
-## File: openspec/changes/add-contact-us/proposal.md
-````markdown
-## Why
-
-Visitors and members need a simple, direct way to view the studio's official contact information (physical address, phone number, and email ID) without needing to navigate complex panels or login interfaces. 
-
-## What Changes
-
-* **Contact Info Panel**: A clean, glassmorphic Contact Us section or modal displaying the studio's physical address, phone number, and support email ID.
-* **Direct Actions**: Quick shortcut triggers to launch email client dispatches or start WhatsApp support chats directly.
-
-## Capabilities
-
-### New Capabilities
-- `contact-us`: Displays the studio's static contact information (address, phone number, and email ID) inside a public, glassmorphic modal overlay.
-
-### Modified Capabilities
-<!-- None -->
-
-## Impact
-
-* **Frontend**: Adds a Contact Us link in the navigation/footer that launches a floating contact details modal in `index.html`.
-````
-
-## File: openspec/changes/add-contact-us/specs/contact-us/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Studio Contact Details Display
-The system SHALL present a public Contact Us modal overlay displaying the studio's physical address, telephone number, and official email ID.
-
-#### Scenario: User views contact details
-- **WHEN** a user clicks the "Contact Us" link/button
-- **THEN** the system SHALL display the `#contact-us-modal` modal containing the studio's physical address, contact phone number, and support email ID.
-
-#### Scenario: Non-logged-in visitor views contact details
-- **WHEN** a visitor who is not logged in clicks the "Contact Us" link/button
-- **THEN** the system SHALL display the `#contact-us-modal` overlay directly on the landing page, bypassing any login or registration gates.
-
-#### Scenario: Contact Us visible and triggerable on login screen
-- **WHEN** the fullscreen login screen is active
-- **THEN** the Contact Us link SHALL be visible and triggerable, allowing the modal to open over the login screen.
-
-### Requirement: Interactive Call/Email Triggers
-The system SHALL support interactive protocol links to initiate contact instantly.
-
-#### Scenario: User clicks contact options
-- **WHEN** a user clicks the telephone or email ID links inside the contact modal
-- **THEN** the system SHALL launch the client's default telephone handler (using `tel:`) or email composer (using `mailto:`).
-
-### Requirement: Configurable Studio Details
-The system SHALL support dynamic administration of the studio's physical address, phone number, and email ID.
-
-#### Scenario: Admin updates contact details
-- **WHEN** an administrator saves updated contact details under the System Settings panel
-- **THEN** the system SHALL persist the settings on the server database and instantly propagate the updated values to all Contact Us links and modals across the application.
-````
-
-## File: openspec/changes/add-contact-us/tasks.md
-````markdown
-## 1. Landing Page UI
-
-- [x] 1.1 Add "Contact Us" links to the navigation header and page footer in `index.html`
-- [x] 1.2 Add the glassmorphic Contact Us modal overlay (`#contact-us-modal`) displaying the physical address, phone number, and support email ID in `index.html`
-- [x] 1.3 Add interactive `tel:` and `mailto:` links to the phone number and email fields inside the modal in `index.html`
-- [x] 1.4 Style the Contact Us modal and hover link states in `index.css`
-
-## 2. Frontend Toggle Logic
-
-- [x] 2.1 Bind Contact Us modal toggle event listeners (open/close actions and ESC key handlers) in `app.js`
-
-## 3. Verification & Build
-
-- [x] 3.1 Run `npm run build` to verify the build compiles successfully
-- [x] 3.2 Verify the contact links successfully trigger the overlay popup and protocol links work
-````
-
-## File: openspec/changes/add-student-referrals/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-24
-````
-
-## File: openspec/changes/add-student-referrals/design.md
-````markdown
-## Context
-
-The Quantum Yoga application operates as a single-page application (SPA) backed by an Express server that stores a unified state object (`db.json` / PostgreSQL / Supabase). To implement referrals, we must extend the global database schema and introduce logic for registration validation and billing discount calculations.
-
-## Goals / Non-Goals
-
-**Goals:**
-* Define configurable discount tiers inside the database configuration.
-* Automatically generate unique, easy-to-share referral codes for students.
-* Increment the referrer's referral count when a new user registers using their code.
-* Dynamically display referral stats on the user's dashboard profile.
-* Deduct the calculated discount percentage from student invoices and coaching booking fees.
-
-**Non-Goals:**
-* Implementing multi-tier or nested referral networks (MLM). Only direct, single-level referrals are rewarded.
-* Supporting cash payouts or bank transfers. Rewards are strictly discount credits applied directly to billing.
-
-## Decisions
-
-### 1. Referral Code Generation Scheme
-* **Choice**: Generate a 6-character alphanumeric uppercase code (e.g., `FLOW79`) when a student registers.
-* **Rationale**: Shareable codes are more user-friendly than long UUIDs and preserve privacy compared to email-based referral links.
-* **Alternatives Considered**: Using the student's email as their code. Rejected due to email privacy concerns.
-
-### 2. Schema Structure
-* **Choice**: Add configuration fields directly to the state schema.
-  * **Global Settings**:
-    ```javascript
-    referralTiers: [
-      { minReferrals: 1, discount: 10 },
-      { minReferrals: 2, discount: 15 },
-      { minReferrals: 3, discount: 20 }
-    ]
-    ```
-  * **User Object Extension**:
-    ```javascript
-    {
-      name: "...",
-      email: "...",
-      referralCode: "FLOW79",
-      referredBy: "referrer@email.com" || null,
-      referralsCount: 0
-    }
-    ```
-* **Rationale**: Storing these variables on the central state object fits our static database model and avoids database schema migration issues.
-
-### 3. Discount Evaluation
-* **Choice**: Calculate the discount dynamically on invoice creation.
-  * Lookup user `referralsCount`.
-  * Scan active `referralTiers` to find the highest matched tier.
-  * Deduct that percentage from the invoice or booking fee amount.
-* **Rationale**: Prevents hardcoded values and keeps billing rules configurable.
-
-## Risks / Trade-offs
-
-* **[Risk]** Self-referral abuse via fake accounts.
-  * **Mitigation**: Enforce unique email and phone validation on registration. Since invoices undergo manual UTR verification, admins can audit suspicious referral loops.
-````
-
-## File: openspec/changes/add-student-referrals/proposal.md
-````markdown
-## Why
-
-To drive organic membership growth, the studio wants to introduce a referral program where existing students can invite friends using unique referral codes. To incentivize multiple invites, the earned discount scales up incrementally based on the number of successful referrals, configurable directly by administrators.
-
-## What Changes
-
-* **Admin Referral Configurations**: Administrators can define and customize discount scaling tiers (e.g., 1 referral = 10% discount, 2 referrals = 15% discount, 3+ referrals = 20% discount) inside the System Settings panel.
-* **Unique Referral Codes**: Every registered student is assigned a unique, shareable referral code displayed in their profile portal alongside their active referral count and current unlocked discount tier.
-* **Referral Entry Point**: Adds a "Referral Code" optional field to both the student registration form and the public inquiry form.
-* **Referral Count Increment**: When a new user registers using a valid referral code, the referrer's successful referral count is incremented, immediately recalculating their discount tier.
-* **Referral Discount Application**: Automatically applies the referrer's earned discount percentage to any new billing invoices or appointment coaching fees issued to them.
-
-## Capabilities
-
-### New Capabilities
-- `student-referrals`: Covers referral code generation, registration referral validation, dynamic discount tier calculations, and automated billing discount deductions.
-
-### Modified Capabilities
-<!-- No requirement changes to existing specs, purely adding new capabilities -->
-
-## Impact
-
-* **Frontend**: `index.html` (registration form inputs, dashboard referral stats display, admin referral tiers settings card) and `app.js` (validation, configuration handlers, profile calculations).
-* **Backend**: `server.js` state persistence (`db.json`/SQL state variables) to store the referral codes, referrer mappings, and admin discount tier settings.
-````
-
-## File: openspec/changes/add-student-referrals/specs/student-referrals/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Generate Referral Code
-The system SHALL automatically generate a unique 6-character alphanumeric referral code for every newly registered student.
-
-#### Scenario: Generating code on registration
-- **WHEN** a user completes registration successfully
-- **THEN** the system SHALL generate a unique referral code and save it to the student profile.
-
-### Requirement: Registration Referral Tracking
-The system SHALL allow registering users to optionally submit a referral code, verifying its validity, mapping the relationship, and crediting the referrer student.
-
-#### Scenario: Registration with valid referral code
-- **WHEN** a user registers with a valid referral code belonging to another active student
-- **THEN** the system SHALL create the new user account and increment the referrer's successful referral count by 1.
-
-### Requirement: Configurable Referral Discount Tiers
-The system SHALL allow administrators to configure referral discount scaling tiers (minimum referral counts mapping to discount percentages) inside the System Settings panel.
-
-#### Scenario: Administrator updates discount tiers
-- **WHEN** an administrator modifies the referral milestones and discount percentages and saves the form
-- **THEN** the system SHALL save the configuration to the server database and immediately apply the updated pricing rules.
-
-### Requirement: Display Referral Metrics on Profile
-The system SHALL display the student's unique referral code, successful referrals count, and current discount percentage on their profile dashboard.
-
-#### Scenario: Student views profile dashboard
-- **WHEN** a student navigates to their profile page
-- **THEN** the system SHALL present their shareable referral code, successful referrals counter, and calculated discount rate.
-
-### Requirement: Automated Billing Discount Application
-The system SHALL automatically apply the student's current referral discount percentage to reduce any newly generated invoices or appointment coaching fees.
-
-#### Scenario: System generates invoice for referrer
-- **WHEN** a new payment invoice or appointment coaching fee is created for a student
-- **THEN** the system SHALL apply their active referral discount percentage as a deduction to the total amount due.
-````
-
-## File: openspec/changes/add-student-referrals/tasks.md
-````markdown
-## 1. Database and Server Schema
-
-- [ ] 1.1 Update default DB state and initial seeding in `server.js` to include default referral scaling tiers and initialize user state records with a unique 6-character referral code.
-
-## 2. Registration and Inquiry Integration
-
-- [ ] 2.1 Modify the registration form and public inquiry forms in `index.html` to include a "Referral Code" input field.
-- [ ] 2.2 Integrate referral code verification inside user creation logic in `app.js` to map the referrer relation and increment their referral counter.
-- [ ] 2.3 Implement the automatic 6-character uppercase alphanumeric referral code generation utility during signup.
-
-## 3. Student Dashboard Metrics
-
-- [ ] 3.1 Edit the profile container in `index.html` to display the active student's unique referral code, total successful referrals, and active discount rate.
-- [ ] 3.2 Implement front-end logic in `app.js` to calculate, render, and update referral achievements dynamically.
-
-## 4. Admin Settings and Configuration
-
-- [ ] 4.1 Insert the Referral Milestone Tiers configuration form inside the Admin Settings tab in `index.html`.
-- [ ] 4.2 Wire form event handlers, validation checks, and database synchronization in `app.js` to configure scaling tiers.
-
-## 5. Invoice Discount Calculations
-
-- [ ] 5.1 Implement billing handlers in `app.js` to evaluate a student's referral count against active tiers and deduct their discount from newly created invoices or appointments.
-
-## 6. Verification
-
-- [ ] 6.1 Run the production build command `npm run build` to verify clean compilation.
-- [ ] 6.2 Conduct manual checks on registration referral inputs and verify discount deductions on payment workflows.
-````
-
-## File: openspec/changes/admin-analytics-reports/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-24
-````
-
-## File: openspec/changes/admin-analytics-reports/design.md
-````markdown
-## Context
-
-Studio administrators want to view high-level metrics for their business. Instead of integrating bulky charting libraries, we will use raw inline SVGs dynamically populated by JavaScript.
-
-## Goals / Non-Goals
-
-**Goals:**
-*   Add a "Studio Analytics" sub-navigation view to the Admin Panel.
-*   Draw SVG charts representing monthly billing collections and scheduled classes.
-*   Add a ranking table of favorited postures and routine counts.
-*   Implement CSV file generators on the client-side using `data:text/csv` URI blobs.
-*   Implement clean print-friendly CSS formatting for PDF printing of attendance logs.
-
-**Non-Goals:**
-*   Server-side PDF rendering using third-party packages. All document generation happens on the client-side.
-
-## Decisions
-
-### 1. SVG Rendering of Charts
-*   **Decision**: Calculate coordinates dynamically and append SVG elements (rects for bars, paths/polylines for charts) using Vanilla JS.
-*   **Rationale**: Minimizes dependencies, keeps bundling lightweight, and ensures responsive rendering.
-
-### 2. Client-Side CSV Downloads
-*   **Decision**: Generate CSV format strings from localStorage array variables dynamically, convert to Blobs, and trigger downloads using mock anchor links.
-*   **Rationale**: Secure and instant download without requiring backend API generation overhead.
-
-## Risks / Trade-offs
-
-*   **Risk**: SVG chart coordinates can scale incorrectly on screen resize.
-    *   *Mitigation*: Use responsive `viewBox` settings on target SVGs.
-````
-
-## File: openspec/changes/admin-analytics-reports/proposal.md
-````markdown
-## Why
-
-Studio administrators need high-level dashboard visualizations and download capabilities to monitor monthly booking counts, financial collection progress, and posture popularity metrics. Adding dynamic interactive SVG graphs and CSV/PDF report download endpoints will provide administrators with immediate business growth insights.
-
-## What Changes
-
-*   **Analytics Sub-tab in Admin Panel**: Introduce a new "Studio Analytics" sub-view inside the Admin Panel.
-*   **Interactive SVG Charts**: Render SVG-based monthly payment revenue bar charts and class booking line charts with hover tooltip animations.
-*   **Postures Popularity Metrics**: Add statistics displaying favorited pose counts and routine execution frequencies.
-*   **CSV/PDF Export Options**: Add buttons to export financial ledger files (CSV) and attendance logs.
-
-## Capabilities
-
-### New Capabilities
-- `admin-reports-analytics`: Visualizes monthly booking trends, collections, and posture rankings using raw SVG charts. Provides one-click CSV and receipt printing/PDF formatting logs.
-
-### Modified Capabilities
-<!-- None -->
-
-## Impact
-
-*   **Frontend**: Adds a sub-navigation tab under the Admin Panel view (`index.html` & `app.js`).
-*   **Database/Storage**: Reads payments, appointments, users, and routines datasets. No schema changes are required.
-````
-
-## File: openspec/changes/admin-analytics-reports/specs/admin-reports-analytics/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Interactive SVG Visualizations
-The system SHALL display SVG-based interactive charts within the Studio Analytics panel representing payment collections and class bookings.
-
-#### Scenario: Rendering interactive analytics charts
-- **WHEN** the administrator navigates to the "Studio Analytics" sub-tab in the Admin Panel
-- **THEN** the system generates clean SVG bar charts and line charts displaying monthly collections, class bookings, and posture popularity, with hover effects revealing precise values.
-
-### Requirement: Export to CSV and PDF Reports
-The system SHALL provide export options allowing administrators to download CSV financial ledgers or launch a print-friendly PDF receipt of bookings.
-
-#### Scenario: Downloading CSV financial ledger
-- **WHEN** the administrator clicks the "Export CSV Ledger" button
-- **THEN** the browser triggers a file download containing a comma-separated list of all payment logs with dates, invoice IDs, and amounts.
-
-#### Scenario: Print/PDF formatting of studio logs
-- **WHEN** the administrator clicks the "Print Attendance Log" button
-- **THEN** the system opens a browser print window displaying a clean, receipt-like table formatted for PDF generation or physical print.
-````
-
-## File: openspec/changes/admin-analytics-reports/tasks.md
-````markdown
-## 1. Dashboard UI Elements
-
-- [x] 1.1 Add the "Studio Analytics" sub-navigation tab and content panels inside `#admin-section` in `index.html`
-- [x] 1.2 Add container divs for SVG charts (billing collections and booking trends) in `index.html`
-- [x] 1.3 Add CSV Export and Attendance Printing buttons in the analytics panel inside `index.html`
-
-## 2. Interactive SVG Logic
-
-- [x] 2.1 Write JavaScript helper functions in `app.js` to compile monthly payment data and draw an SVG bar chart
-- [x] 2.2 Write JavaScript helper functions in `app.js` to compile monthly booking dates and draw an SVG line chart
-- [x] 2.3 Implement posture popularity calculator (aggregating favorited counts from `qy_users`) and render a ranking table
-
-## 3. CSV & Receipt PDF Generators
-
-- [x] 3.1 Implement the CSV billing exporter click handler in `app.js` utilizing `Blob` downloads
-- [x] 3.2 Implement print view styles in `index.css` targeting `@media print` to present a receipt-like log table
-- [x] 3.3 Implement the Print Attendance handler in `app.js` to toggle a print view overlay and call `window.print()`
-
-## 4. Verification and Build
-
-- [x] 4.1 Run `npm run build` to verify frontend compiling
-- [x] 4.2 Validate charts load and hover values update on mock admin dashboard
-````
-
-## File: openspec/changes/guided-practice-voice-coach/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-24
-````
-
-## File: openspec/changes/guided-practice-voice-coach/design.md
-````markdown
-## Context
-
-Yoga practitioners struggle to maintain visual contact with dashboard screens during balances, forward folds, or inversions. Implementing client-side Text-to-Speech (TTS) using the browser's Web Speech API solves this problem without external backend voice api costs.
-
-## Goals / Non-Goals
-
-**Goals:**
-*   Implement a Toggle Voice Coach UI switch inside the routine preview and play viewport modals.
-*   Hook transition timers to synthesize `SpeechSynthesisUtterance` cues.
-*   Enable voice choice settings (allowing users to pick their preferred voice or set pitch/rate).
-
-**Non-Goals:**
-*   Voice recognition (speech-to-text) for command controls (e.g. telling the app to "pause" or "stop").
-*   Custom hosted voice audio files (synthesis runs 100% locally on the device).
-
-## Decisions
-
-### 1. Web Speech Synthesis (TTS) Engine
-*   **Decision**: Leverage standard `window.speechSynthesis`.
-*   **Rationale**: Supported out of the box in all modern browsers (Safari, Chrome, Firefox, Edge) without network request latency or pricing concerns.
-
-### 2. Multi-Voice Settings Panel
-*   **Decision**: Populate a drop-down selection list using `speechSynthesis.getVoices()` so users can switch speaking options.
-*   **Rationale**: Ensures a customized experience (gender/accent options) depending on user preferences.
-
-## Risks / Trade-offs
-
-*   **Risk**: Voice synthesis can overlap if triggers fire too close together.
-    *   *Mitigation*: Execute `window.speechSynthesis.cancel()` before speaking any new transition or breath phrase.
-*   **Risk**: Speech synthesis requires user interaction before it can play on page load (browser autoplay restrictions).
-    *   *Mitigation*: The toggle is inside the routine modals, which are clicked by the user, satisfying the user gesture requirement.
-````
-
-## File: openspec/changes/guided-practice-voice-coach/proposal.md
-````markdown
-## Why
-
-During guided routines, users must look at their screens to check posture changes, alignment tips, and breathing counts. This screen dependency compromises balance and flow. Incorporating a dynamic voice guide using the browser's native Web Speech API (Text-to-Speech) will create a hands-free, auditory guided practice environment, allowing students to maintain focus and alignment.
-
-## What Changes
-
-*   **Voice Coach Toggle Button**: An overlay or setting inside the routine player modal allowing users to enable/disable the interactive audio guide.
-*   **Speech Trigger Dispatchers**: Hook Speech Synthesis triggers to routine step transitions and breathing ticker ticks.
-*   **Alignment Speech Engine**: Read pose names, step durations, and specific posture alignment notes out loud as steps change.
-*   **Breathing Cadence Audio Guides**: Read breathing cues ("Inhale... Exhale...") dynamically aligned with the routine's pacing.
-
-## Capabilities
-
-### New Capabilities
-- `voice-coach`: Implements client-side Text-to-Speech guides using Web Speech API synthesis to read alignment and breathing cues hands-free.
-
-### Modified Capabilities
-<!-- None -->
-
-## Impact
-
-*   **Frontend**: Adds UI toggles to the routine video player modals and inserts speech dispatches in step transition routines (`app.js`).
-*   **Aesthetics**: Glassmorphic sound toggles, volume sliders, and animations when the voice coach is active.
-````
-
-## File: openspec/changes/guided-practice-voice-coach/specs/voice-coach/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Interactive Audio Alignment Guides
-The system SHALL narrate pose descriptions and transitions using the browser's native Web Speech API when the voice coach is enabled.
-
-#### Scenario: Audio guide triggers on pose transition
-- **WHEN** the user starts a guided routine and the step changes to a new posture
-- **THEN** the system checks if the voice coach toggle is enabled, and if so, synthetically speaks the pose name and its core alignment tip.
-
-### Requirement: Breathing Cadence Auditory Prompts
-The system SHALL narrate breathing cycles ("Inhale" and "Exhale") at regular intervals matching the pose hold pacing.
-
-#### Scenario: Breathing guides narration
-- **WHEN** a pose step hold begins
-- **THEN** the system triggers periodic audio announcements ("Inhale for 4 seconds... Exhale for 4 seconds...") matching the hold duration settings.
-````
-
-## File: openspec/changes/guided-practice-voice-coach/tasks.md
-````markdown
-## 1. Dashboard UI Settings
-
-- [x] 1.1 Add the glassmorphic Voice Coach toggle widget (`#voice-coach-toggle-wrapper`) and voice select elements inside the routine player modal in `index.html`
-- [x] 1.2 Add volume, speech rate, and speech pitch controls in the settings modal list in `index.html`
-
-## 2. Core Speech Synthesis Engine
-
-- [x] 2.1 Implement `initVoiceCoachSettings()` in `app.js` to populate available voices using `speechSynthesis.getVoices()`
-- [x] 2.2 Implement `speakVoiceCue(text)` helper in `app.js` that handles canceling active queues, setting rates, pitch, and triggering TTS output
-- [x] 2.3 Store preferred voice selections in local settings state
-
-## 3. Playback Integration
-
-- [x] 3.1 Hook `speakVoiceCue` into the routine step transition handler in `app.js` to announce step number, pose title, and details
-- [x] 3.2 Implement breathing cue scheduler to trigger periodic inhale/exhale speech prompts during pose holds
-
-## 4. Verification and Build
-
-- [x] 4.1 Run `npm run build` to verify frontend compiling
-- [x] 4.2 Validate synthesis is cancelable and transitions play smoothly on mock routine start
-````
-
-## File: openspec/changes/live-yoga-rooms-webrtc/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-24
-````
-
-## File: openspec/changes/live-yoga-rooms-webrtc/design.md
-````markdown
-## Context
-
-Currently, the Quantum Yoga platform manages scheduling and asynchronous guided video routines, but does not support live video sessions. This design introduces interactive virtual rooms inside the platform dashboard using the Jitsi Meet IFrame API. This integrates low-latency video streaming without adding high-cost WebRTC infrastructure.
-
-## Goals / Non-Goals
-
-**Goals:**
-*   Implement a virtual WebRTC video classroom directly inside a glassmorphic dashboard pane (`#live-class-section`).
-*   Allow administrators (instructors) to spin up and control active video streams.
-*   Allow students to join active classes directly from their assigned timetables.
-*   Ensure full responsiveness across desktop and mobile screens.
-
-**Non-Goals:**
-*   Hosting custom WebRTC media servers (like Kurento, Janus, or Mediasoup) on the studio server.
-*   Recording or archiving live streams.
-*   Private 1-on-1 calls.
-
-## Decisions
-
-### 1. WebRTC Provider Selection
-*   **Decision:** Jitsi Meet IFrame API over daily.co or a custom WebRTC server.
-*   **Rationale:** Jitsi Meet is fully open-source and free to embed. The `external_api.js` library allows full control over room events, participant layouts, and audio/video settings directly from our frontend client. This avoids hosting costly and complex TURN/STUN or SFU/MCU video servers.
-*   **Alternative Considered:** Daily.co (requires account creation and API limits) or custom WebSocket WebRTC signaling (too complex to scale for multi-user classrooms).
-
-### 2. Frontend Embedding
-*   **Decision:** Load the Jitsi API script dynamically or declare it in `index.html`, and instantiate `JitsiMeetExternalAPI` on an empty container (`#live-class-room-container`) inside the new chat/live section.
-*   **Rationale:** Dynamic instantiation inside a container allows us to mount and unmount the iframe room cleanly when switching tabs to prevent background audio leaks.
-
-### 3. Timetable Sync
-*   **Decision:** When a timetable slot is active, calculate the Jitsi room name dynamically based on the batch ID (e.g., `qy-room-vinyasa-mornings`) and display a "Join Class" button on the client dashboard.
-*   **Rationale:** Avoids storing active meeting URLs in the database, keeping scheduling state fully automatic and calculated from current time.
-
-## Risks / Trade-offs
-
-*   **Risk:** Jitsi public server (`meet.jit.si`) capacity or rate limits.
-    *   *Mitigation:* Jitsi Meet allows using custom instances or low-cost Jitsi-as-a-Service (JaaS) domains. We will define the domain as a variable so it can be pointed to a dedicated server easily.
-*   **Risk:** Camera/mic permissions blocking.
-    *   *Mitigation:* Check for browser capability (`navigator.mediaDevices.getUserMedia`) and display clean instructions if permissions are denied.
-````
-
-## File: openspec/changes/live-yoga-rooms-webrtc/proposal.md
-````markdown
-## Why
-
-Currently, students can view static yoga postures, follow guided routines, and discuss wellness in the community chat, but there is no way to participate in live virtual streaming sessions directly on the platform. Adding integrated virtual classrooms enables students to join interactive live stream rooms hosted by instructors without leaving their premium glassmorphic dashboard, increasing engagement and community bonding.
-
-## What Changes
-
-*   **Live Stream Container**: Integrate a WebRTC-based live streaming viewport directly inside the dashboard structure.
-*   **Instructor Room controls**: Provide administrators/instructors with the ability to launch interactive video rooms.
-*   **Student Stream Viewport**: Allow students to join the classroom video feed as viewing participants.
-*   **Navigation Integration**: Add a dedicated "Live Class" portal linked to the active weekly timetables.
-
-## Capabilities
-
-### New Capabilities
-- `live-yoga-rooms`: Virtual classroom streaming portal that overlays a WebRTC interactive live feed (via Jitsi Meet IFrame API integration) directly on the student and instructor dashboards.
-
-### Modified Capabilities
-- `class-scheduling`: Update active schedules to support launching/joining active video links for live timetabled classes.
-
-## Impact
-
-*   **Frontend UI (`index.html`, `app.js`, `index.css`)**: New navigation portal (`#nav-live-class`), streaming viewport container (`#live-class-section`), and interactive overlay components.
-*   **Backend Server (`server.js`)**: Extend database state to track room status (active, offline) and session credentials.
-*   **Dependencies**: Integrate Jitsi Meet IFrame API library (`https://8x8.vc/external_api.js` or standard Jitsi Meet client script) on the frontend.
-````
-
-## File: openspec/changes/live-yoga-rooms-webrtc/specs/class-scheduling/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Timetable Active WebRTC Room Links
-The system SHALL display an active "Join Live Class" WebRTC room link in the student's dashboard timetable when a timetabled class session is currently active or in progress.
-
-#### Scenario: Joining active class from countdown timetable
-- **WHEN** the countdown timer reaches 0 or indicates "Class in progress"
-- **THEN** the system displays a clickable "Join Live Room" button next to the timetable entry.
-````
-
-## File: openspec/changes/live-yoga-rooms-webrtc/specs/live-yoga-rooms/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Interactive Live Class Room Viewport
-The system SHALL display an interactive video streaming frame directly in the client dashboard using a low-latency WebRTC IFrame overlay.
-
-#### Scenario: User joins active live streaming room
-- **WHEN** a logged-in student visits the "Live Class" tab and the instructor is actively broadcasting
-- **THEN** the system overlays the live video session player inside the dashboard frame
-
-### Requirement: Instructor Broadcast Panel
-The system SHALL provide administrators/instructors with room controls to launch a new streaming session.
-
-#### Scenario: Instructor starts streaming
-- **WHEN** an administrator logs in, clicks the "Live Class" tab, and clicks "Launch Live Video Session"
-- **THEN** the system prompts for a room name, initializes the WebRTC media container, grants broadcast access to camera/microphone, and saves the active room name to the server database.
-
-#### Scenario: Instructor ends streaming
-- **WHEN** an administrator clicks "End Live Video Session"
-- **THEN** the system disposes of the active WebRTC instance and clears the active room name from the server database, terminating connection access for students.
-
-### Requirement: Real-Time Active Room Synchronization
-The system SHALL synchronize the active manually started WebRTC room name from the server to students' local clients in real-time.
-
-#### Scenario: Student dashboard displays active stream join button
-- **WHEN** the instructor launches a live session
-- **THEN** the student's dashboard countdown container periodically checks the database state and shows a "🔴 Live Session Active!" banner with a glowing "🎥 Join Live Room Now" action button.
-````
-
-## File: openspec/changes/live-yoga-rooms-webrtc/tasks.md
-````markdown
-Created At: 2026-06-24T20:34:53Z
-Completed At: 2026-06-24T20:34:56Z
-File Path: `file:///D:/QuantumYogaWebsite/openspec/changes/live-yoga-rooms-webrtc/tasks.md`
-
-## 1. Frontend Interface & Script Setup
-
-- [x] 1.1 Include the Jitsi Meet IFrame API external script in `index.html`
-- [x] 1.2 Add the "Live Class" navigation tab link in the top navigation panel of `index.html`
-- [x] 1.3 Create `#live-class-section` content panel containing `#live-class-room-container` inside `index.html`
-
-## 2. WebRTC Client Integration
-
-- [x] 2.1 Map selectors and set up tab navigation router logic in `app.js` to initialize WebRTC when active
-- [x] 2.2 Write instantiation code in `app.js` using `JitsiMeetExternalAPI` to mount the interactive video room
-- [x] 2.3 Write cleanup and teardown logic to dispose of the active Jitsi IFrame room on tab switch (to stop camera/microphone feed)
-
-## 3. Scheduling & Room Linking
-
-- [x] 3.1 Implement active room calculation based on user's current timetabled batch ID
-- [x] 3.2 Display a glowing "Join Live Room" CTA button next to active schedule entries in the profile dashboard
-- [x] 3.3 Add click event listeners to join the active streaming session from the dashboard timetable
-````
-
-## File: openspec/changes/practice-calendar-streak-grid/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-24
-````
-
-## File: openspec/changes/practice-calendar-streak-grid/design.md
-````markdown
-## Context
-
-Quantum Yoga students currently have a timetable but no direct gamified habit trackers. Adding a practice contribution chart (similar to GitHub's contribution heat map), streak counter, and unlocked badges will provide visual rewards and encourage regular application interaction.
-
-## Goals / Non-Goals
-
-**Goals:**
-*   Implement a contribution chart (GitHub-style calendar grid) displaying the last 365 days of user practices.
-*   Implement current vs longest practice streak counters.
-*   Award milestone badges for key streak accomplishments (e.g. 3-day, 7-day, 14-day, 30-day).
-*   Add a checkbox or trigger on the student dashboard allowing them to check off today's class/practice manually.
-
-**Non-Goals:**
-*   Integrating external fitness trackers (Apple Health, Google Fit) for automatic logging.
-*   Synchronizing peer grids in real-time (grids are shown on user profiles individually).
-
-## Decisions
-
-### 1. Client-Side Rendering of the Contribution Chart
-*   **Decision**: Render the 365-day grid using pure CSS Grid and Vanilla Javascript dynamically (a container filled with 365 pixel divs styled according to state).
-*   **Rationale**: Avoids bloated graphing libraries. CSS grid provides complete glassmorphic control, color density styling, and easy tooltip/hover effects.
-
-### 2. State Storage in User Database
-*   **Decision**: Store a list of completed practice timestamps (ISO strings or YYYY-MM-DD strings) in `state.currentUser.practice_logs` and serialize it to the server state database.
-*   **Rationale**: Keeps logging persistent across browser sessions and VM deployments. Allows easy backend calculations if needed.
-
-## Risks / Trade-offs
-
-*   **Risk**: Rendering 365 divs per user could impact loading performance.
-    *   *Mitigation*: Pre-generate the divs once during dashboard load and update cell colors on checking/unchecking practices.
-*   **Risk**: Manual logging can be manipulated or backdated.
-    *   *Mitigation*: Only allow users to check off the current date (no backdating or future logging).
-````
-
-## File: openspec/changes/practice-calendar-streak-grid/proposal.md
-````markdown
-## Why
-
-To encourage regular yoga practice, students need visual habit-building tools. Introducing a GitHub-style activity grid (practice calendar), active practice streaks, and milestones will provide visual validation, increase dashboard interactive engagement, and keep practitioners motivated.
-
-## What Changes
-
-*   **Practice Streak Grid Component**: A beautiful glassmorphic contribution chart showing the student's practice density (sessions/sessions checked off) over the year.
-*   **Streak Tracker**: Computes and displays current daily streaks and longest streaks.
-*   **Milestones & Badges**: Awards virtual milestone badges with glowing hover effects for streak achievements.
-*   **Practice Logging**: Integrates practice completion logging (e.g. marking a scheduled routine or pose workout as completed for the day).
-
-## Capabilities
-
-### New Capabilities
-- `practice-tracker`: Handles tracking practice logins/completions, computing current and longest streaks, showing the contribution grid, and awarding milestone badges.
-
-### Modified Capabilities
-<!-- None -->
-
-## Impact
-
-*   **Frontend**: Adds a new interactive sub-component or card in the student dashboard (Profile tab/section).
-*   **Database/Storage**: Adds a `practice_logs` array to the user's database state to store completion timestamps.
-````
-
-## File: openspec/changes/practice-calendar-streak-grid/specs/practice-tracker/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Interactive Practice Contribution Grid
-The system SHALL display a pixelated contribution chart showing the student's yoga practice density over the past 365 days.
-
-#### Scenario: Displaying contribution calendar density on load
-- **WHEN** the student views their profile page
-- **THEN** the system renders a contribution grid with days of the year, color-coded by practice intensity (0 for none, 1-4 for logged sessions), and hover tooltips showing date and logged count.
-
-### Requirement: Streak Counting and Milestones
-The system SHALL compute current daily practice streaks and longest practice streaks, displaying them alongside visual badges.
-
-#### Scenario: Dynamic calculation of practice streaks
-- **WHEN** a student checks off a yoga class or pose session completion
-- **THEN** the system increments their daily practice log, updates their current and longest streak values in real-time, and plays a subtle check-off animation.
-
-#### Scenario: Displaying milestone achievements
-- **WHEN** the student's current streak reaches milestone counts (e.g., 5 days, 15 days, 30 days)
-- **THEN** the system unlocks and illuminates a glowing milestone badge in the milestone section.
-````
-
-## File: openspec/changes/practice-calendar-streak-grid/tasks.md
-````markdown
-## 1. Database Model and Persistence
-
-- [x] 1.1 Update `saveToServer()` in `app.js` to serialize `practice_logs` array
-- [x] 1.2 Update `loadFromServer()` in `app.js` to retrieve and store `practice_logs` array
-
-## 2. Dashboard UI Elements
-
-- [x] 2.1 Add the practice calendar container (`#practice-calendar-container`) and streak boxes to the student profile section in `index.html`
-- [x] 2.2 Add milestone badge containers with glassmorphic styles in `index.html`
-- [x] 2.3 Implement the Check-In checkbox or button widget inside `index.html` to allow checking off today's practice
-
-## 3. Habit Tracker Logic
-
-- [x] 3.1 Implement calendar grid generation logic in `app.js` to dynamically draw the 365 contribution days
-- [x] 3.2 Implement streak counter calculator (current streak and longest streak) in `app.js` based on `practice_logs`
-- [x] 3.3 Implement check-in button click handler in `app.js` to update `practice_logs`, save to server, trigger check-off animations, and recalculate streaks
-- [x] 3.4 Implement badge illumination logic in `app.js` when milestone targets are hit
-
-## 4. Testing and Verification
-
-- [x] 4.1 Run `npm run build` to verify the frontend compilation
-- [x] 4.2 Verify calendar grids render correctly and check-ins increment daily streaks on mock login
-````
-
-## File: openspec/changes/real-time-community-chat/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-24
-````
-
-## File: openspec/changes/real-time-community-chat/design.md
-````markdown
-## Context
-
-The Quantum Yoga application currently runs an Express-based server backend to handle APIs and static asset delivery. To add real-time community chat capability, we must incorporate a bi-directional messaging solution. We will use the existing `ws` npm dependency to run a WebSocket server co-hosted on the main HTTP server port.
-
-## Goals / Non-Goals
-
-**Goals:**
-*   Implement a WebSocket connection endpoint co-hosted with the Express API server.
-*   Store the last 50 messages locally (in `db.json` or database pools) to maintain history during app restarts.
-*   Introduce a new glassmorphic "Community Chat" tab in the frontend layout.
-*   Broadcast message streams, connection lists, and message history feeds securely.
-
-**Non-Goals:**
-*   Implementing private 1-on-1 direct messaging (only a single shared community room is in scope).
-*   Rich text messaging or file uploads (text-only messages are supported).
-*   Chat moderation tools (mute, ban, block) or user reporting.
-
-## Decisions
-
-### 1. Unified HTTP & WebSocket Co-Hosting
-*   **Choice:** Co-host the WebSocket server (`ws`) on the same Express server port using Node's standard `http` server instance.
-*   **Rationale:** Avoids configuring additional ports, simplifying firewall setups and avoiding browser mixed-content/CORS errors in production VM environments.
-*   **Alternative:** running a standalone WebSocket server on a separate port (e.g. 8081). Rejected because it requires configuring extra VM port mappings and inbound security group rules.
-
-### 2. Memory/Database Message Cache
-*   **Choice:** Cache the last 50 messages in the active database state (`db.json` / postgres).
-*   **Rationale:** Keeps the chat history lightweight while ensuring messages persist when the PM2 process reloads or redeploys.
-
-## Risks / Trade-offs
-
-*   **[Risk] Out-of-memory or database size inflation:** Storing message feeds could bloat database sizes.
-    *   *Mitigation:* Enforce a strict buffer size (limit to maximum 50 messages, slicing old messages when new ones arrive).
-*   **[Risk] Unauthenticated spam:** Socket connections could be opened anonymously.
-    *   *Mitigation:* Validate session info or require user logins before broadcasting messages.
-````
-
-## File: openspec/changes/real-time-community-chat/proposal.md
-````markdown
-## Why
-
-Quantum Yoga currently lacks a live interaction channel for active members to communicate directly with instructors and peers. Adding a real-time community chat room will foster student engagement, enable instructors to share motivation instantly, and build a connected community.
-
-## What Changes
-
-*   Introduce a new WebSocket-enabled chat server module on the Express backend.
-*   Create a clean, glassmorphic UI tab in the student and admin dashboards named "Community Chat".
-*   Display real-time messages, user statuses, and user roles (Student vs. Administrator/Instructor).
-
-## Capabilities
-
-### New Capabilities
-- `community-chat`: A real-time WebSocket-based community chat room allowing active students and instructors to chat, share motivation, and ask questions.
-
-### Modified Capabilities
-- `user-auth-profile`: User profiles will be integrated to map nicknames and avatars dynamically into active chat sessions.
-
-## Impact
-
-*   **Express Backend (`server.js`):** Will incorporate a WebSocket server (`ws`) handling live connection hooks, broadcast sessions, and safety limits.
-*   **Frontend UI (`index.html` & `app.js`):** A new "Community Chat" navigation link and panel will render chat streams, message input, and list active users.
-*   **Database:** A history log structure for the last 50-100 messages will persist chat feeds across socket restarts.
-````
-
-## File: openspec/changes/real-time-community-chat/specs/community-chat/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Real-time Message Broadcasting
-The system SHALL broadcast any user-sent chat messages in real time to all currently connected clients using WebSockets.
-
-#### Scenario: Send message to chat
-- **WHEN** an authenticated user sends a message in the chat input
-- **THEN** the system broadcasts a JSON message containing the sender's name, role (Student or Admin), message body, and timestamp to all active sockets
-
-### Requirement: Message History Retention
-The system SHALL store the last 50 chat messages in the database and transmit this history to newly connected clients.
-
-#### Scenario: Join chat room
-- **WHEN** a client successfully establishes a WebSocket connection to the chat room
-- **THEN** the system SHALL immediately send the last 50 stored chat messages to populate the client's message feed
-
-### Requirement: Active User List
-The system SHALL track and display the list of currently active (connected) users in the chat room.
-
-#### Scenario: User online status updates
-- **WHEN** a user opens or closes the chat tab (connecting or disconnecting from the socket)
-- **THEN** the system SHALL broadcast an updated list of online user names to all connected clients
-````
-
-## File: openspec/changes/real-time-community-chat/specs/user-auth-profile/spec.md
-````markdown
-## ADDED Requirements
-
-### Requirement: Profile Integration in Chat
-The system SHALL retrieve and display the authenticated user's name and role (Student or Admin) from their profile when they send messages or appear online in the chat room.
-
-#### Scenario: Display profile name in sent messages
-- **WHEN** a logged-in user sends a message to the chat room
-- **THEN** the system SHALL attach their authenticated profile name and membership role to the message payload before broadcasting it
-````
-
-## File: openspec/changes/real-time-community-chat/tasks.md
-````markdown
-Created At: 2026-06-24T19:32:40Z
-Completed At: 2026-06-24T19:32:40Z
-File Path: `file:///d:/QuantumYogaWebsite/openspec/changes/real-time-community-chat/tasks.md`
-
-## 1. Backend Server Setup
-
-- [x] 1.1 Integrate WebSocket server (`ws`) package in `server.js` and bind it to the main HTTP server
-- [x] 1.2 Implement connection hooks, connection counting, and active user tracking
-- [x] 1.3 Implement message broadcast logic and message schema verification
-
-## 2. Storage & History Cache
-
-- [x] 2.1 Integrate chat messages cache structure into database adapters (local `db.json`, PG/Supabase)
-- [x] 2.2 Write retrieval logic to load and send last 50 messages on user join
-- [x] 2.3 Write message archiving logic to push new incoming messages into database state and slice over limit
-
-## 3. Frontend Chat UI Layout
-
-- [x] 3.1 Create "Community Chat" tab in `index.html` navigation bar and content section
-- [x] 3.2 Implement glassmorphic message thread layout, user list, and chat input controls
-- [x] 3.3 Add active user connection lifecycle updates to UI client script in `app.js`
-
-## 4. Chat Client Websocket Integration
-
-- [x] 4.1 Implement WebSocket client setup and connection handlers in `app.js`
-- [x] 4.2 Implement outbound message packaging (sending name, role, body, timestamp)
-- [x] 4.3 Implement inbound message parsing and DOM insertion for message updates and online user list
-````
-
-## File: wiki/Community-Chat.md
-````markdown
-# Community Chat & WebSockets
-
-Quantum Yoga includes a real-time community chat room where students and instructors can interact. This feature is powered by a co-hosted WebSocket server running on the same port as the main HTTP application.
-
----
-
-## 🔌 WebSocket Co-Hosting Architecture
-
-To simplify deployment and avoid CORS/firewall complications, the WebSocket server is bound to the existing HTTP server instance:
-
-```javascript
-import ws from 'ws';
-// ...
-const server = app.listen(PORT, ...);
-const wss = new ws.WebSocketServer({ server });
-```
-
-This configuration enables the WebSocket server to share port `80` (or `8080` in development) with Express. Clients connect using the relative protocol matching the page loading protocol:
-*   `ws://<host>` for insecure HTTP connections.
-*   `wss://<host>` for secure HTTPS connections.
-
----
-
-## 📨 Message Protocol & Schemas
-
-The client and server communicate via JSON-encoded string payloads. Below are the primary event types:
-
-### 1. User Join (`join`)
-**Direction:** Client ➔ Server  
-Sent immediately after the connection is opened to register the user's name and role.
-```json
-{
-  "type": "join",
-  "name": "Jane Doe",
-  "role": "Student" // or "Admin" for instructors
-}
-```
-
-### 2. Message History (`history`)
-**Direction:** Server ➔ Client  
-Sent to the joining user immediately after registering. Contains the last 50 archived chat messages.
-```json
-{
-  "type": "history",
-  "messages": [
-    {
-      "id": "msg-1718000000000-123",
-      "name": "Instructor Vivekk",
-      "role": "Admin",
-      "text": "Welcome to the class! Here is your daily motivation.",
-      "timestamp": "2026-06-25T00:00:00.000Z"
-    }
-  ]
-}
-```
-
-### 3. Send Message (`message`)
-**Direction:** Client ➔ Server ➔ Broadcast to All Clients  
-When a user submits a message, the client packages the input:
-```json
-{
-  "type": "message",
-  "name": "Jane Doe",
-  "role": "Student",
-  "text": "Hello, excited for the yoga flow!"
-}
-```
-The server intercepts this, creates a message object with a unique ID and ISO timestamp, saves it to the unified database state, and broadcasts the structured event:
-```json
-{
-  "type": "message",
-  "message": {
-    "id": "msg-1718000050000-456",
-    "name": "Jane Doe",
-    "role": "Student",
-    "text": "Hello, excited for the yoga flow!",
-    "timestamp": "2026-06-25T00:00:50.000Z"
-  }
-}
-```
-
-### 4. Active Online Users (`users`)
-**Direction:** Server ➔ Broadcast to All Clients  
-Sent whenever a client joins or disconnects (closes connection) to refresh the online users panel.
-```json
-{
-  "type": "users",
-  "users": [
-    { "name": "Instructor Vivekk", "role": "Admin" },
-    { "name": "Jane Doe", "role": "Student" }
-  ]
-}
-```
-
----
-
-## 💾 Storage & Persistence
-
-Chat history is persisted in the unified database (`state.chatMessages` array) using the selected adapter (PostgreSQL, Supabase, or local `db.json` fallback).
-*   **Capacity Limit:** The server caches and stores up to **50 messages**.
-*   **Rotation:** When a new message arrives, if the history size exceeds 50, the oldest message is dropped (`slice(-50)`).
-
----
-
-## 🛡️ Security & UX Controls
-
-1.  **XSS Protection:** Client renders text securely. HTML tags within incoming chat messages are escaped using `escapeHtml()` in `app.js` prior to DOM insertion:
-    ```javascript
-    function escapeHtml(text) {
-      return text.replace(/[&<>"']/g, m => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-      })[m]);
-    }
-    ```
-2.  **Auto-Scroll:** The message container automatically scrolls down to display incoming messages if the user is active in the chat tab.
-3.  **Role Styling:** Message headers are styled differently depending on the role (`Admin`/Instructors receive a gold-highlighted name and an `Instructor` badge; `Students` receive a standard student badge).
-````
-
-## File: wiki/Contact-Us.md
-````markdown
-# Contact Us Information Portal
-
-The Contact Us capability provides visitors and members with immediate, public access to the studio's official contact information directly from the landing page.
-
-## 🧭 Public Access
-
-The Contact Us links are placed in the navigation header, the page footer, and at the bottom of the fullscreen login card. Clicking any of these links will open a glassmorphic modal overlay (`#contact-us-modal`) displaying the studio's information.
-
-This modal operates independently of the authorization status, meaning users who are not logged in can view these details directly without hitting the authentication gates, and can access it directly while on the login page.
-
-## 📇 Contact Information Displayed
-
-The modal provides the following details:
-1. **Physical Address**: The location of the studio (default: `108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038`).
-2. **Phone Number**: An interactive link targeting the telephone protocol (`tel:`) so users on mobile or desktop softphone clients can initiate calls with a single click.
-3. **Email ID**: An interactive link targeting the email client protocol (`mailto:`) to immediately draft general query emails.
-
-## ⚙️ Administration & Configuration
-
-Rather than being hardcoded in HTML, the studio contact details are fully database-driven:
-
-1. **Access Settings**: Log in as an administrator (e.g. `admin@quantumyoga.xyz`) and navigate to **Admin Panel -> System Settings**.
-2. **Configure Details**: Locate the **Studio Contact Settings** card and enter the new Physical Address, Phone Number, and Email ID.
-3. **Instant Propagation**: Click **Save Studio Details** to persist updates on the server database. The new details propagate dynamically to all Contact Us triggers across the site.
-````
-
-## File: wiki/Live-Yoga-Rooms.md
-````markdown
-# Live Interactive Yoga Rooms (WebRTC)
-
-Quantum Yoga supports virtual classrooms directly inside the glassmorphic dashboard interface. This capability uses the Jitsi Meet IFrame API, providing low-latency WebRTC streams with zero media server overhead.
-
----
-
-## 🛠️ WebRTC Integration Architecture
-
-The platform embeds Jitsi Meet as a responsive iframe inside the `#live-class-room-container` DOM element. 
-
-### External Script Include
-To communicate with Jitsi rooms, the frontend loads the Jitsi external API library:
-```html
-<script src="https://meet.jit.si/external_api.js" defer></script>
-```
-
-### Instantiation
-Jitsi is instantiated dynamically inside `app.js` using `JitsiMeetExternalAPI`:
-```javascript
-const domain = "meet.jit.si";
-const options = {
-  roomName: roomName,
-  width: "100%",
-  height: "100%",
-  parentNode: container,
-  userInfo: {
-    displayName: state.currentUser ? state.currentUser.name : "Yoga Practitioner"
-  },
-  interfaceConfigOverwrite: {
-    TOOLBAR_BUTTONS: [
-      'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-      'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand'
-    ]
-  },
-  configOverwrite: {
-    startWithAudioMuted: !isInstructor,
-    startWithVideoMuted: !isInstructor,
-    prejoinPageEnabled: false
-  }
-};
-jitsiApiInstance = new JitsiMeetExternalAPI(domain, options);
-```
-
----
-
-## 🔄 Lifecycle & Resource Management
-
-WebRTC sessions require active camera and microphone hardware permissions. If a user switches to another tab (e.g. Routines, Poses, or Chat) while inside a live class, the platform **must** immediately release these hardware resources to preserve privacy and reduce battery overhead.
-
-1. **Instantiation**: Loaded when the user enters the `Live Class` tab or clicks the timetable/active room shortcut.
-2. **Teardown**: When the active tab shifts away from `#live-class-section`, the client calls `disposeLiveClassRoom()`:
-   ```javascript
-   if (jitsiApiInstance) {
-     jitsiApiInstance.dispose();
-     jitsiApiInstance = null;
-   }
-   ```
-   This terminates the iframe connection and completely stops camera/microphone hardware usage.
-
----
-
-## ⏱️ Dynamic Timetable & Active Session Integration
-
-The client tracks both scheduled class slots and manual live sessions started by the instructor:
-1. **Scheduled Checking**: Checks if the current local time falls within a scheduled timetable window (e.g., class start time up to 1 hour in the future).
-2. **Instructor Live Session (Manual)**: When an instructor clicks "Launch Live Video Session", the custom room name is saved to the shared server state under `activeLiveRoom`.
-3. **Background Sync**: Logged-in clients poll `/api/db` every 10 seconds to discover live rooms.
-4. **UI Injection**: If either a manual live stream or scheduled class is active:
-   * Displays `🔴 Live Session Active!` (or `🔴 Class in Progress!`).
-   * Appends a glowing `🎥 Join Live Room Now` button to the dashboard countdown box.
-   * Redirects the user to the active room name when clicked.
-````
-
-## File: wiki/Practice-Tracker.md
-````markdown
-# Interactive Practice Calendar & Streak Grid
-
-Quantum Yoga features an interactive Practice Tracker designed to help students build consistent daily habits.
-
----
-
-## 📅 Practice Contribution Grid
-
-The Practice Grid displays the user's practice density over the past 365 days, color-coded by intensity:
-*   **Grid Layout**: Formatted as a 7x52 CSS grid mimicking the GitHub contribution chart.
-*   **Density Mapping**:
-    *   `contrib-0` (Grey): No practice logged.
-    *   `contrib-1` (Light Green): 1 practice session logged.
-    *   `contrib-2` (Medium Green): 2 practice sessions logged.
-    *   `contrib-3` (Dark Green): 3 practice sessions logged.
-    *   `contrib-4` (Vibrant Green with Glow): 4+ practice sessions logged.
-*   **Tooltips**: Hovering over any cell displays the date and total practice sessions completed on that day.
-
----
-
-## 🔥 Daily Streak Counting
-
-The client dynamically calculates and displays:
-1.  **Current Daily Streak**: The number of consecutive days of practice leading up to today (or yesterday). A streak is maintained as long as the student logs a practice at least once every 24-48 hours.
-2.  **Longest Practice Streak**: The longest contiguous sequence of practice days achieved historically.
-
----
-
-## 🏆 Milestone Badges
-
-Virtual milestone badges are awarded when the student reaches key streak thresholds:
-*   **🌱 Sprout**: 3-day streak.
-*   **🔥 Spark**: 7-day streak.
-*   **🧘 Master**: 14-day streak.
-*   **👑 Champion**: 30-day streak.
-
-Unlocked badges change from a locked/translucent state to an illuminated state with subtle pulsing animations.
-
----
-
-## 💾 Storage & Sync
-
-*   **LocalStorage Key**: Saved under `qy_users` within each user record as a `practice_logs` array of ISO timestamps.
-*   **Database Synchronization**: Synced automatically to the server database via the `/api/db` endpoint, persisting progress across all client platforms.
-````
-
-## File: wiki/Practice-Voice-Coach.md
-````markdown
-# Guided Practice Voice Coach (Interactive Audio Guides)
-
-The Guided Practice Voice Coach integrates client-side Text-to-Speech (TTS) alignment cues and breathing cadence prompts directly into the guided routines overlay player. This allows students to practice yoga hands-free without constantly checking their device screens.
-
-## ⚙️ Technical Architecture
-
-The Voice Coach relies entirely on the client's web browser using native browser APIs:
-
-1. **Text-To-Speech Synthesis**: Powered by `window.speechSynthesis`.
-2. **Audio Queue Management**: Uses `SpeechSynthesisUtterance` to speak phrases. To prevent overlapping speech, the app invokes `window.speechSynthesis.cancel()` immediately before dispatching any new alignment or breathing cue.
-3. **Autoplay Policy Bypass**: Browser autoplay policies restrict audio until a user interaction (like clicking a button) is performed. Since the Voice Coach controls are embedded directly in the routine detail modal overlay, the user's initial interaction satisfies this restriction.
-
-## 🎛️ Settings & Controls
-
-Inside the Custom HTML5 video player overlay, the user has access to a glassmorphic Voice Coach settings panel:
-
-* **Voice Selection Dropdown**: Dynamically queries the browser device for all available voices using `speechSynthesis.getVoices()`, allowing users to select accents and genders.
-* **Volume Slider**: Controls speech synthesis output volume.
-* **Speech Rate Slider**: Speeds up or slows down the narration cadence.
-* **Speech Pitch Slider**: Adjusts the tone of the speaking voice.
-
-## ⏱️ Playback Integration
-
-When the Voice Coach is active:
-1. **Pose Transitions**: On transition to a new pose, the coach reads out the pose number, name, Sanskrit translation, and the first instruction/alignment tip.
-2. **Breathing Cadence Prompts**: During pose holds, the coach schedules periodic reminders (e.g., "Inhale for 4 seconds... Exhale for 4 seconds...") matching the pose hold pace.
-3. **Cancellation**: Toggling the Voice Coach off or closing the video modal cancels all pending speech dispatches immediately.
-````
-
-## File: wiki/Reports-and-Analytics.md
-````markdown
-# Studio Analytics & CSV/PDF Reports
-
-The Quantum Yoga Admin Panel includes an interactive Reports and Analytics dashboard to monitor business operations, collections, and student progress.
-
----
-
-## 📊 Interactive SVG Data Charts
-
-To ensure fast load times and zero dependency overhead, charts are rendered using dynamic SVGs:
-1.  **Monthly Collections (Bar Chart)**: Aggregates paid transactions over the past 6 months to display monthly revenue, complete with gradient fills and hover value overlays.
-2.  **Monthly Booking Trends (Line Chart)**: Tracks scheduled class appointments over the past 6 months using clean SVG lines and coordinates.
-
----
-
-## 🏆 Practice and Posture Rankings
-
-*   **Most Favorited Postures**: Aggregates pose bookmark lists across all users to display a ranking table of the top 5 most favorited postures.
-*   **Most Popular Routines**: Parses all student completion histories to rank the top 5 most completed routine workouts.
-
----
-
-## 📥 File Exports & Reports Printing
-
-*   **CSV Exporter**: Clicking "Export CSV Ledger" triggers a client-side Blob generation of all payment records in standard CSV format, instantly downloading the file.
-*   **Printable Attendance logs**: Uses `@media print` style blocks in CSS to isolate the completion history tables, hiding navigation menus, KPI cards, and charts, allowing clean printing or saving to PDF.
-````
-
-## File: wiki/Student-Referrals.md
-````markdown
-# Student Referral & Scaling Discounts Portal
-
-The Student Referrals capability drives organic studio growth by incentivizing current students to refer friends. It supports unique referral codes and a dynamic scaling discount tier based on successful referral counts.
-
-## 🧭 Student Referral Flows
-
-Every registered student can view and share their referrals:
-
-1. **Unique Code Generation**: During signup, the system automatically assigns a unique 6-character alphanumeric code (e.g., `FLOW88`) to the student.
-2. **Dashboard Display**: The code, along with successful invite metrics and active discount rate, is visible directly inside the student's **Profile** tab.
-3. **Sharing**: Students share their code with prospective members.
-
-## 🔀 Referral Verification
-
-When a prospective member signs up or submits an inquiry:
-
-1. **Signup Entry**: Prospective students fill out the optional **Referral Code** field in the registration card.
-2. **Validation**: The system verifies the code belongs to a valid active member.
-3. **Referral Mapping**: Upon successful registration, the new user's account is created, and the referrer's successful referral counter increments by 1.
-
-## 📈 Configurable Discount Tiers
-
-Administrators configure the business logic dynamically:
-
-1. **Settings Control**: In **Admin Panel -> System Settings**, locate the **Referral Tiers Settings** card.
-2. **Define Tiers**: Add, update, or remove discount milestones (e.g., 1 referral = 10% discount, 2 referrals = 15% discount, 3+ referrals = 20% discount).
-3. **Save**: Save changes to sync configuration to the database.
-
-## 💳 Automated Discount Deductions
-
-Referrer rewards are automatically applied:
-* When the system generates a new monthly subscription invoice or an appointment booking fee for a referrer, it calculates their highest qualified discount tier and applies the percentage deduction to the total amount due.
-````
 
 ## File: .agent/skills/openspec-apply-change/SKILL.md
 ````markdown
@@ -3279,3515 +2032,6 @@ export const YOGA_ROUTINES = [
 ];
 ````
 
-## File: index.css
-````css
-/* ==========================================================================
-   Quantum Yoga - Premium Design System & Stylesheet
-   ========================================================================== */
-
-:root {
-  /* Colors */
-  --bg-primary: #050308;
-  --bg-secondary: #0c0914;
-  --bg-card: rgba(22, 16, 36, 0.5);
-  --bg-card-hover: rgba(32, 24, 52, 0.7);
-  --border-glass: rgba(255, 255, 255, 0.06);
-  --border-glass-hover: rgba(167, 139, 250, 0.25);
-  
-  --accent-primary: #a78bfa; /* Lavender */
-  --accent-primary-rgb: 167, 139, 250;
-  --accent-secondary: #f43f5e; /* Rose */
-  --accent-secondary-rgb: 244, 63, 94;
-  --accent-teal: #2dd4bf; /* Mint/Teal */
-  
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
-  --text-dark: #111827;
-  
-  /* Fonts */
-  --font-sans: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-serif: 'Playfair Display', Georgia, Cambria, serif;
-  
-  /* Shadows & Glows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.7);
-  --card-glow: 0 0 25px rgba(167, 139, 250, 0.15);
-  --rose-glow: 0 0 25px rgba(244, 63, 94, 0.15);
-  
-  /* Transitions */
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  /* Border Radius */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-full: 9999px;
-  
-  /* Layout */
-  --max-width: 1280px;
-
-  /* Tiered Glassmorphism */
-  --glass-light-bg: rgba(255, 255, 255, 0.02);
-  --glass-light-border: rgba(255, 255, 255, 0.05);
-  --glass-light-blur: blur(8px);
-  
-  --glass-medium-bg: rgba(22, 16, 36, 0.45);
-  --glass-medium-border: rgba(255, 255, 255, 0.07);
-  --glass-medium-blur: blur(16px);
-  
-  --glass-dark-bg: rgba(12, 9, 20, 0.75);
-  --glass-dark-border: rgba(255, 255, 255, 0.1);
-  --glass-dark-blur: blur(24px);
-
-  --gpu-accelerate: translateZ(0);
-
-  /* Ambient glow colors */
-  --glow-color-1: rgba(167, 139, 250, 0.3);
-  --glow-color-2: rgba(244, 63, 94, 0.2);
-  --glow-color-3: rgba(99, 102, 241, 0.25);
-
-  /* Adaptable background components */
-  --bg-input: rgba(5, 3, 8, 0.4);
-  --bg-card-media: #100a1d;
-  --bg-tabs: rgba(22, 16, 36, 0.3);
-  --scrollbar-thumb: #231c34;
-
-  /* Spotlight coordinates */
-  --mouse-x: 50%;
-  --mouse-y: 50%;
-
-  --auth-overlay-bg: linear-gradient(rgba(17, 24, 39, 0.75), rgba(3, 7, 18, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
-  --site-bg: linear-gradient(rgba(10, 5, 20, 0.93), rgba(10, 5, 20, 0.97)), url('./quantumyoga.jpg') no-repeat center center / cover;
-}
-
-/* Base resets & scrollbar */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-  font-size: 16px;
-}
-
-body {
-  font-family: var(--font-sans);
-  background: var(--site-bg);
-  background-attachment: fixed;
-  color: var(--text-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
-  line-height: 1.6;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: var(--radius-full);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-primary);
-}
-
-/* Background Ambient Glows */
-.bg-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(140px);
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.45;
-}
-
-.bg-glow-1 {
-  width: 500px;
-  height: 500px;
-  top: -100px;
-  right: -100px;
-  background: radial-gradient(circle, var(--glow-color-1) 0%, rgba(0,0,0,0) 70%);
-  animation: float-glow 15s infinite ease-in-out alternate;
-}
-
-.bg-glow-2 {
-  width: 600px;
-  height: 600px;
-  top: 40%;
-  left: -200px;
-  background: radial-gradient(circle, var(--glow-color-2) 0%, rgba(0,0,0,0) 70%);
-  animation: float-glow 20s infinite ease-in-out alternate-reverse;
-}
-
-.bg-glow-3 {
-  width: 400px;
-  height: 400px;
-  bottom: -50px;
-  right: 10%;
-  background: radial-gradient(circle, var(--glow-color-3) 0%, rgba(0,0,0,0) 70%);
-}
-
-@keyframes float-glow {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(40px, 30px) scale(1.1);
-  }
-  100% {
-    transform: translate(-20px, -40px) scale(0.9);
-  }
-}
-
-/* Typography elements */
-h1, h2, h3, h4 {
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-p {
-  color: var(--text-secondary);
-}
-
-/* App Header */
-.app-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  z-index: 100;
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  border-bottom: 1px solid var(--glass-medium-border);
-  background: var(--glass-medium-bg);
-  transform: var(--gpu-accelerate);
-}
-
-.nav-container {
-  max-width: var(--max-width);
-  height: 100%;
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  text-decoration: none;
-  color: var(--text-primary);
-}
-
-.logo-icon {
-  font-size: 1.75rem;
-}
-
-.text-accent {
-  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-}
-
-.nav-link {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
-  padding: 0.5rem 0;
-  border-bottom: 2px solid transparent;
-  transition: var(--transition-fast);
-}
-
-.nav-link:hover, .nav-link.active {
-  color: var(--accent-primary);
-}
-
-.nav-link.active {
-  border-color: var(--accent-primary);
-}
-
-.status-badge {
-  background: rgba(244, 63, 94, 0.1);
-  color: var(--accent-secondary);
-  border: 1px solid rgba(244, 63, 94, 0.2);
-  padding: 0.4rem 0.8rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.pulse-dot {
-  width: 6px;
-  height: 6px;
-  background-color: var(--accent-secondary);
-  border-radius: 50%;
-  box-shadow: 0 0 0 rgba(244, 63, 94, 0.4);
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 6px rgba(244, 63, 94, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0);
-  }
-}
-
-/* App Main Layout */
-.app-main {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 120px 2rem 4rem 2rem;
-  min-height: calc(100vh - 160px);
-}
-
-/* Hero Section */
-.hero-section {
-  text-align: center;
-  margin-bottom: 3rem;
-  padding: 1.5rem 0;
-}
-
-.hero-badge {
-  display: inline-block;
-  background: rgba(167, 139, 250, 0.1);
-  border: 1px solid rgba(167, 139, 250, 0.2);
-  color: var(--accent-primary);
-  padding: 0.5rem 1.25rem;
-  border-radius: var(--radius-full);
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1.5rem;
-}
-
-.hero-title {
-  font-family: var(--font-serif);
-  font-size: 3.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 1.25rem;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #c084fc 0%, var(--accent-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.gradient-text-alt {
-  background: linear-gradient(135deg, var(--accent-secondary) 0%, #fda4af 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero-subtitle {
-  font-size: 1.15rem;
-  max-width: 650px;
-  margin: 0 auto;
-  color: var(--text-secondary);
-}
-
-/* Search & Filters Controls Section */
-.controls-section {
-  margin-bottom: 3rem;
-}
-
-.controls-card {
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1.5rem;
-  align-items: center;
-  box-shadow: var(--shadow-md);
-  transform: var(--gpu-accelerate);
-  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
-}
-
-.controls-card:hover {
-  border-color: var(--border-glass-hover);
-  box-shadow: var(--shadow-lg), var(--card-glow);
-}
-
-@media (max-width: 768px) {
-  .controls-card {
-    grid-template-columns: 1fr;
-  }
-}
-
-.search-box {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: var(--bg-input);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-sm);
-  padding: 0 1rem;
-  transition: var(--transition-fast);
-}
-
-.search-box:focus-within {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 10px rgba(167, 139, 250, 0.15);
-}
-
-.search-icon {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-}
-
-.search-box input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  padding: 0.9rem 1rem;
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  outline: none;
-}
-
-.search-box input::placeholder {
-  color: var(--text-muted);
-}
-
-.clear-button {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition-fast);
-}
-
-.clear-button:hover {
-  color: var(--text-primary);
-}
-
-.filter-group {
-  display: flex;
-  gap: 1rem;
-}
-
-@media (max-width: 576px) {
-  .filter-group {
-    flex-direction: column;
-  }
-}
-
-.select-wrapper {
-  position: relative;
-}
-
-.select-wrapper::after {
-  content: "▼";
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-select {
-  appearance: none;
-  background: var(--bg-input);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-sm);
-  padding: 0.9rem 2.5rem 0.9rem 1.2rem;
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  cursor: pointer;
-  outline: none;
-  transition: var(--transition-fast);
-  min-width: 180px;
-}
-
-@media (max-width: 576px) {
-  select {
-    width: 100%;
-  }
-}
-
-select:focus {
-  border-color: var(--accent-primary);
-}
-
-select option {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-/* Tabs Toggle Controls */
-.tabs-container {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
-  background: var(--bg-tabs);
-  padding: 0.4rem;
-  border-radius: var(--radius-full);
-  max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid var(--border-glass);
-}
-
-.tab-pill {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  padding: 0.75rem 1.75rem;
-  border-radius: var(--radius-full);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: var(--transition-normal);
-  outline: none;
-}
-
-.tab-pill:hover {
-  color: var(--text-primary);
-}
-
-.tab-pill.active {
-  background: linear-gradient(135deg, var(--accent-primary) 0%, #8b5cf6 100%);
-  color: var(--text-dark);
-  box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
-}
-
-/* Content Sections View Toggle */
-.content-section {
-  display: none;
-  animation: fadeIn 0.4s ease-out forwards;
-}
-
-.content-section.active {
-  display: block;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Grid Container */
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-}
-
-@media (max-width: 480px) {
-  .grid-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Pose & Routine Cards */
-.card {
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-normal);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  transform: var(--gpu-accelerate);
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: inherit;
-  background: radial-gradient(circle 220px at var(--mouse-x) var(--mouse-y), rgba(var(--accent-primary-rgb), 0.15), transparent 80%);
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.card-routine::before {
-  background: radial-gradient(circle 220px at var(--mouse-x) var(--mouse-y), rgba(var(--accent-secondary-rgb), 0.15), transparent 80%);
-}
-
-.card:hover {
-  transform: translateY(-6px);
-  border-color: var(--border-glass-hover);
-  box-shadow: var(--shadow-lg), var(--card-glow);
-}
-
-.card:hover::before {
-  opacity: 1;
-}
-
-/* Routine Card Special Glow */
-.card-routine:hover {
-  box-shadow: var(--shadow-lg), var(--rose-glow);
-  border-color: rgba(244, 63, 94, 0.25);
-}
-
-.card-media-wrapper {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  background: var(--bg-card-media);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-bottom: 1px solid var(--border-glass);
-}
-
-.card-media-wrapper svg {
-  transition: var(--transition-slow);
-}
-
-.card:hover .card-media-wrapper svg {
-  transform: scale(1.08);
-}
-
-.card-badge-group {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  z-index: 10;
-}
-
-.badge {
-  padding: 0.3rem 0.8rem;
-  border-radius: var(--radius-full);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.badge-difficulty-beginner {
-  background: rgba(45, 212, 191, 0.15);
-  color: var(--accent-teal);
-  border: 1px solid rgba(45, 212, 191, 0.3);
-}
-
-.badge-difficulty-intermediate {
-  background: rgba(167, 139, 250, 0.15);
-  color: var(--accent-primary);
-  border: 1px solid rgba(167, 139, 250, 0.3);
-}
-
-.badge-difficulty-advanced {
-  background: rgba(244, 63, 94, 0.15);
-  color: var(--accent-secondary);
-  border: 1px solid rgba(244, 63, 94, 0.3);
-}
-
-.badge-category {
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--text-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.card-content {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  position: relative;
-  z-index: 5;
-}
-
-.card-title {
-  font-size: 1.35rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
-}
-
-.card-desc {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-bottom: 1.25rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.5;
-}
-
-.card-metadata {
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-glass);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.metadata-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.metadata-icon {
-  font-size: 1rem;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.9rem;
-  padding: 0.6rem 1.25rem;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: var(--transition-fast);
-  outline: none;
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Card and Button Shimmer Effect */
-.card::after, .btn::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.12),
-    transparent
-  );
-  transform: skewX(-20deg);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.card:hover::after, .btn:hover::after {
-  left: 150%;
-  transition: left 0.85s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent-primary) 0%, #8b5cf6 100%);
-  color: var(--text-dark);
-  border: none;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.35);
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-primary);
-  border: 1px solid var(--border-glass);
-}
-
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.btn-rose {
-  background: linear-gradient(135deg, var(--accent-secondary) 0%, #e11d48 100%);
-  color: var(--text-primary);
-  border: none;
-}
-
-.btn-rose:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.35);
-}
-
-/* Empty State Styling */
-.empty-state {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: var(--bg-card);
-  border: 1px dashed var(--border-glass);
-  border-radius: var(--radius-md);
-  max-width: 500px;
-  margin: 2rem auto;
-}
-
-.empty-icon {
-  font-size: 3rem;
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.empty-state h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.empty-state p {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
-}
-
-/* Modal Overlay Base */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(4, 2, 7, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s ease;
-  padding: 2rem;
-}
-
-.modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Pose Modal Card */
-.modal-card {
-  background: var(--glass-dark-bg);
-  backdrop-filter: var(--glass-dark-blur);
-  -webkit-backdrop-filter: var(--glass-dark-blur);
-  border: 1px solid var(--glass-dark-border);
-  border-radius: var(--radius-lg);
-  max-width: 850px;
-  width: 100%;
-  max-height: 85vh;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: var(--shadow-lg), var(--card-glow);
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.modal-overlay.active .modal-card {
-  transform: scale(1) translateY(0);
-}
-
-.modal-close {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-glass);
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: var(--transition-fast);
-}
-
-.modal-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--accent-primary);
-}
-
-.modal-body {
-  padding: 3rem;
-}
-
-@media (max-width: 768px) {
-  .modal-body {
-    padding: 2rem 1.5rem;
-  }
-}
-
-/* Detailed Pose Layout */
-.pose-detail-layout {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 2.5rem;
-}
-
-@media (max-width: 768px) {
-  .pose-detail-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-.pose-detail-media {
-  background: var(--glass-light-bg);
-  backdrop-filter: var(--glass-light-blur);
-  -webkit-backdrop-filter: var(--glass-light-blur);
-  border: 1px solid var(--glass-light-border);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 320px;
-  overflow: hidden;
-  transform: var(--gpu-accelerate);
-}
-
-.pose-detail-info h2 {
-  font-family: var(--font-serif);
-  font-size: 2.25rem;
-  margin-bottom: 0.75rem;
-}
-
-.pose-detail-badges {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.pose-detail-description {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.pose-section-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--accent-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.pose-benefits-list {
-  list-style: none;
-  margin-bottom: 1.5rem;
-}
-
-.pose-benefits-list li {
-  position: relative;
-  padding-left: 1.5rem;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.4rem;
-}
-
-.pose-benefits-list li::before {
-  content: "✦";
-  position: absolute;
-  left: 0;
-  color: var(--accent-primary);
-}
-
-.pose-instructions-list {
-  padding-left: 1.25rem;
-  margin-bottom: 2rem;
-}
-
-.pose-instructions-list li {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.6rem;
-  line-height: 1.5;
-}
-
-.pose-detail-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-/* Custom HTML5 Video Player Modal Elements */
-.video-player-container {
-  background: var(--glass-dark-bg);
-  backdrop-filter: var(--glass-dark-blur);
-  -webkit-backdrop-filter: var(--glass-dark-blur);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  max-width: 960px;
-  width: 100%;
-  aspect-ratio: 16/9;
-  position: relative;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 40px rgba(167, 139, 250, 0.15);
-  border: 1px solid var(--glass-dark-border);
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.modal-overlay.active .video-player-container {
-  transform: scale(1) translateY(0);
-}
-
-.video-modal-close {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #fff;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 50;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: var(--transition-fast);
-}
-
-.video-modal-close:hover {
-  background: rgba(0, 0, 0, 0.8);
-  color: var(--accent-secondary);
-}
-
-/* Voice Coach Floating Control Widget */
-.voice-coach-widget {
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  z-index: 50;
-  width: 260px;
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-md);
-  padding: 0.85rem 1.1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  transition: all 0.3s ease;
-}
-
-.voice-coach-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.voice-coach-title {
-  font-weight: 600;
-  font-size: 0.9rem;
-  flex: 1;
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-
-.voice-settings-btn {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.7);
-  cursor: pointer;
-  font-size: 1.1rem;
-  padding: 0.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: var(--transition-fast);
-}
-
-.voice-settings-btn:hover {
-  color: var(--accent-primary);
-  transform: rotate(30deg);
-}
-
-/* Switch Toggle Styling */
-.voice-coach-switch {
-  position: relative;
-  display: inline-block;
-  width: 38px;
-  height: 20px;
-}
-
-.voice-coach-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.voice-coach-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.2);
-  transition: .3s;
-  border-radius: 20px;
-}
-
-.voice-coach-slider:before {
-  position: absolute;
-  content: "";
-  height: 14px;
-  width: 14px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .3s;
-  border-radius: 50%;
-}
-
-.voice-coach-switch input:checked + .voice-coach-slider {
-  background-color: var(--accent-primary);
-}
-
-.voice-coach-switch input:checked + .voice-coach-slider:before {
-  transform: translateX(18px);
-}
-
-/* Voice Settings Drawer */
-.voice-coach-settings-drawer {
-  margin-top: 0.85rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.settings-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.settings-group label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.voice-select-dropdown {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-sm);
-  padding: 0.35rem;
-  color: #fff;
-  font-size: 0.8rem;
-  outline: none;
-  cursor: pointer;
-  width: 100%;
-}
-
-.settings-group input[type="range"] {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
-  outline: none;
-}
-
-.settings-group input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--accent-primary);
-  cursor: pointer;
-  transition: transform 0.1s;
-}
-
-.settings-group input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-}
-
-/* Routine Walkthrough HUD Overlay */
-.routine-walkthrough-panel {
-  position: absolute;
-  top: 1.5rem;
-  right: 5.5rem;
-  z-index: 45;
-  width: 300px;
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-md);
-  padding: 1.25rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.walkthrough-pose-header h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 0;
-}
-
-.walkthrough-pose-header p {
-  font-size: 0.85rem;
-  font-style: italic;
-  color: var(--accent-secondary);
-  margin: 0.2rem 0 0 0;
-}
-
-.walkthrough-timer-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(167, 139, 250, 0.1);
-  border: 1px solid rgba(167, 139, 250, 0.25);
-  padding: 0.5rem 0.85rem;
-  border-radius: var(--radius-sm);
-  align-self: flex-start;
-}
-
-.walkthrough-timer-icon {
-  font-size: 1rem;
-}
-
-#walkthrough-timer-text {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--accent-primary);
-  font-variant-numeric: tabular-nums;
-}
-
-.walkthrough-instructions-wrap {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.75rem;
-  border-radius: var(--radius-sm);
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-#walkthrough-instructions {
-  font-size: 0.8rem;
-  line-height: 1.45;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.walkthrough-next-pose {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 0.6rem;
-}
-
-.walkthrough-next-pose strong {
-  color: var(--text-primary);
-}
-
-#custom-video-element {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  cursor: pointer;
-}
-
-/* Custom Player Controls */
-.custom-video-controls {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0) 100%);
-  padding: 2rem 1.5rem 1rem 1.5rem;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 30;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* Reveal controls on hover */
-.video-player-container:hover .custom-video-controls,
-.video-player-container:focus-within .custom-video-controls,
-.custom-video-controls.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Custom Timeline Scrub Bar */
-.timeline-container {
-  height: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.25rem;
-}
-
-.timeline-track {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-full);
-  position: relative;
-  transition: height 0.15s ease;
-}
-
-.timeline-container:hover .timeline-track {
-  height: 6px;
-}
-
-.timeline-progress {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-  border-radius: var(--radius-full);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0%;
-  z-index: 2;
-}
-
-.timeline-buffered {
-  height: 100%;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-full);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0%;
-  z-index: 1;
-}
-
-.timeline-handle {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  position: absolute;
-  top: 50%;
-  left: 0%;
-  transform: translate(-50%, -50%) scale(0);
-  z-index: 3;
-  transition: transform 0.15s ease;
-  pointer-events: none;
-}
-
-.timeline-container:hover .timeline-handle {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.controls-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.controls-left, .controls-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.control-btn {
-  background: transparent;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  border-radius: 50%;
-  transition: var(--transition-fast);
-}
-
-.control-btn:hover {
-  background: rgba(255,255,255,0.1);
-  color: var(--accent-primary);
-}
-
-.time-display {
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.8);
-  font-family: var(--font-sans);
-}
-
-/* Volume Slider */
-.volume-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 70px;
-  height: 4px;
-  border-radius: var(--radius-full);
-  background: rgba(255,255,255,0.25);
-  outline: none;
-  cursor: pointer;
-  transition: width 0.2s ease;
-}
-
-.volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--text-primary);
-  cursor: pointer;
-  transition: transform 0.1s ease;
-}
-
-.volume-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.3);
-  background: var(--accent-primary);
-}
-
-/* App Footer */
-.app-footer {
-  border-top: 1px solid var(--glass-medium-border);
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  padding: 2rem 0;
-  margin-top: auto;
-  transform: var(--gpu-accelerate);
-}
-
-.footer-content {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 2rem;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-/* Custom Guided Routine Layout in Modal */
-.routine-step-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.routine-flow-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-glass);
-  padding-bottom: 1rem;
-}
-
-.routine-flow-header h2 {
-  font-family: var(--font-serif);
-  font-size: 2rem;
-}
-
-.routine-duration-pill {
-  background: rgba(244, 63, 94, 0.12);
-  color: var(--accent-secondary);
-  border: 1px solid rgba(244, 63, 94, 0.25);
-  font-weight: 700;
-}
-
-.routine-pose-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.routine-pose-item {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 1.5rem;
-  align-items: center;
-  background: var(--glass-light-bg);
-  backdrop-filter: var(--glass-light-blur);
-  -webkit-backdrop-filter: var(--glass-light-blur);
-  border: 1px solid var(--glass-light-border);
-  padding: 1rem;
-  border-radius: var(--radius-md);
-  transition: var(--transition-fast);
-}
-
-.routine-pose-item:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: var(--border-glass-hover);
-  box-shadow: var(--shadow-sm), 0 0 15px rgba(167, 139, 250, 0.08);
-}
-
-.routine-pose-num {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--accent-primary);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(167, 139, 250, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.routine-pose-meta h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.routine-pose-meta p {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.routine-pose-duration {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-/* ==========================================================================
-   User Auth Modal & Profile Styling
-   ========================================================================== */
-
-/* Auth Tabs */
-.auth-tabs {
-  display: flex;
-  border-bottom: 1px solid var(--glass-dark-border);
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.auth-tab {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  padding: 1rem;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition-fast);
-  text-align: center;
-  border-bottom: 2px solid transparent;
-}
-
-.auth-tab:hover, .auth-tab.active {
-  color: var(--accent-primary);
-}
-
-.auth-tab.active {
-  border-bottom-color: var(--accent-primary);
-  background: rgba(167, 139, 250, 0.03);
-}
-
-/* Auth Form */
-.auth-form {
-  display: none;
-  flex-direction: column;
-  gap: 1.25rem;
-  animation: fadeIn 0.3s ease-out;
-}
-
-.auth-form.active-form {
-  display: flex;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.form-group input {
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid var(--glass-dark-border);
-  border-radius: var(--radius-sm);
-  padding: 0.8rem 1rem;
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  outline: none;
-  transition: var(--transition-fast);
-}
-
-.form-group input:focus {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
-}
-
-.form-error-msg {
-  background: rgba(244, 63, 94, 0.1);
-  color: var(--accent-secondary);
-  border: 1px solid rgba(244, 63, 94, 0.2);
-  padding: 0.75rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  text-align: center;
-}
-
-.btn-block {
-  width: 100%;
-  padding: 0.8rem;
-  font-size: 0.95rem;
-}
-
-/* Profile Section Styling */
-.profile-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  animation: fadeIn 0.4s ease-out;
-}
-
-.profile-header-card {
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  padding: 2.5rem;
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  box-shadow: var(--shadow-md);
-  transform: var(--gpu-accelerate);
-}
-
-@media (max-width: 768px) {
-  .profile-header-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 2rem 1.5rem;
-    gap: 1.5rem;
-  }
-}
-
-.profile-avatar {
-  width: 80px;
-  height: 80px;
-  background: rgba(167, 139, 250, 0.1);
-  border: 1px solid rgba(167, 139, 250, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
-}
-
-.profile-info-details {
-  flex-grow: 1;
-}
-
-.profile-info-details h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-}
-
-.profile-info-details p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-}
-
-.profile-stats {
-  display: flex;
-  gap: 2rem;
-}
-
-@media (max-width: 576px) {
-  .profile-stats {
-    width: 100%;
-    justify-content: space-around;
-  }
-}
-
-.stat-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.stat-num {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--accent-primary);
-  line-height: 1;
-  margin-bottom: 0.4rem;
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-/* Milestone and Practice Grid styles */
-.milestone-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--glass-light-border);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  opacity: 0.4;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-align: center;
-  width: 100px;
-}
-.milestone-badge.unlocked {
-  opacity: 1 !important;
-  background: rgba(16, 185, 129, 0.15) !important;
-  border-color: rgba(16, 185, 129, 0.4) !important;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
-  transform: scale(1.05);
-}
-.milestone-badge.unlocked span {
-  animation: pulse-badge 2s infinite;
-}
-@keyframes pulse-badge {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-#practice-calendar-grid {
-  display: grid;
-  grid-template-rows: repeat(7, 10px);
-  grid-auto-flow: column;
-  gap: 3px;
-  width: max-content;
-  margin: 0 auto;
-}
-
-.calendar-pixel {
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.02);
-  transition: all 0.2s ease;
-  cursor: pointer;
-  position: relative;
-}
-.calendar-pixel:hover {
-  transform: scale(1.3);
-  z-index: 10;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-}
-
-.calendar-pixel.contrib-0 { background: rgba(255, 255, 255, 0.05); }
-.calendar-pixel.contrib-1 { background: rgba(16, 185, 129, 0.2); }
-.calendar-pixel.contrib-2 { background: rgba(16, 185, 129, 0.45); }
-.calendar-pixel.contrib-3 { background: rgba(16, 185, 129, 0.7); }
-.calendar-pixel.contrib-4 { background: rgba(16, 185, 129, 0.95); box-shadow: 0 0 4px rgba(16, 185, 129, 0.4); }
-
-/* Profile content grid */
-.profile-content-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-@media (max-width: 992px) {
-  .profile-content-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.profile-panel {
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  padding: 2rem;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.profile-panel h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  border-bottom: 1px solid var(--glass-medium-border);
-  padding-bottom: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.profile-favorites-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.fav-pose-item {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid var(--glass-light-border);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
-  transition: var(--transition-fast);
-}
-
-.fav-pose-item:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(167, 139, 250, 0.2);
-}
-
-.profile-history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.history-item {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid var(--glass-light-border);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
-  transition: var(--transition-fast);
-}
-
-.history-item:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(244, 63, 94, 0.2);
-}
-
-/* Modal Auth sizing override */
-.modal-auth-card {
-  max-width: 420px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.auth-modal-body {
-  padding: 2rem 2.5rem;
-}
-
-/* ==========================================================================
-   Admin Dashboard & Controls Styling
-   ========================================================================== */
-
-.admin-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  animation: fadeIn 0.4s ease-out;
-}
-
-.admin-header-card {
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  padding: 2.5rem;
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  box-shadow: var(--shadow-md);
-}
-
-.admin-avatar {
-  width: 80px;
-  height: 80px;
-  background: rgba(244, 63, 94, 0.1);
-  border: 1px solid rgba(244, 63, 94, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  box-shadow: 0 0 20px rgba(244, 63, 94, 0.15);
-}
-
-.admin-info-details h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-}
-
-.admin-info-details p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-}
-
-/* Admin Sub-Tabs styling */
-.admin-sub-tabs {
-  display: flex;
-  gap: 1rem;
-  border-bottom: 1px solid var(--glass-medium-border);
-  padding-bottom: 0.75rem;
-}
-
-.admin-sub-tab, .admin-payments-sub-tab {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
-}
-
-.admin-sub-tab:hover, .admin-sub-tab.active, .admin-payments-sub-tab:hover, .admin-payments-sub-tab.active {
-  color: var(--text-primary);
-  background: var(--glass-light-bg);
-}
-
-.admin-sub-tab.active, .admin-payments-sub-tab.active {
-  color: var(--accent-primary);
-  box-shadow: 0 0 10px rgba(167, 139, 250, 0.1);
-}
-
-/* Glassmorphic Table */
-.admin-table-wrapper {
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  overflow-x: auto;
-  box-shadow: var(--shadow-sm);
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-}
-
-.admin-table-wrapper::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and Opera */
-}
-
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-family: var(--font-sans);
-}
-
-.admin-table th {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--glass-medium-border);
-}
-
-.admin-table td {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--glass-light-border);
-  color: var(--text-primary);
-  vertical-align: middle;
-}
-
-.admin-table tbody tr {
-  transition: var(--transition-fast);
-}
-
-.admin-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.admin-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Admin Reports Statistics Cards Grid */
-.admin-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.admin-stat-card {
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-medium-blur);
-  -webkit-backdrop-filter: var(--glass-medium-blur);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  padding: 2rem;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition-medium);
-}
-
-.admin-stat-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(167, 139, 250, 0.3);
-  box-shadow: 0 10px 20px rgba(167, 139, 250, 0.08);
-}
-
-.modal-inspect-card {
-  background: var(--glass-dark-bg);
-  backdrop-filter: var(--glass-heavy-blur);
-  -webkit-backdrop-filter: var(--glass-heavy-blur);
-  border: 1px solid var(--glass-heavy-border);
-  box-shadow: var(--shadow-lg);
-}
-
-@media (max-width: 768px) {
-  .admin-header-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 2rem 1.5rem;
-    gap: 1.5rem;
-  }
-}
-
-/* ==========================================================================
-   Fullscreen Auth Gate Styling
-   ========================================================================== */
-
-#auth-gate-fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--auth-overlay-bg);
-  z-index: 9999;
-  overflow-y: auto;
-  padding: 2rem;
-}
-
-.auth-gate-card {
-  background: var(--glass-medium-bg);
-  backdrop-filter: var(--glass-heavy-blur);
-  -webkit-backdrop-filter: var(--glass-heavy-blur);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  padding: 3rem 2.5rem;
-  max-width: 440px;
-  width: 100%;
-  box-shadow: var(--shadow-lg);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  transform: var(--gpu-accelerate);
-  animation: fadeIn 0.4s ease-out;
-}
-
-.auth-gate-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  font-family: var(--font-display);
-  font-size: 2.25rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.auth-gate-tagline {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  text-align: center;
-  line-height: 1.5;
-  margin-bottom: 0.5rem;
-}
-
-.auth-gate-body {
-  margin-top: 0.5rem;
-}
-
-#auth-gate-fullscreen .auth-tabs {
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 1px solid var(--glass-dark-border);
-}
-
-/* ==========================================================================
-   Visual Themes Overrides (Ethereal Light & Zen Sunset)
-   ========================================================================== */
-
-/* 3.1 Ethereal Light (Light Glassmorphism Theme) */
-.theme-light {
-  --auth-overlay-bg: linear-gradient(rgba(245, 244, 248, 0.75), rgba(210, 208, 224, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
-  --site-bg: linear-gradient(rgba(245, 244, 248, 0.93), rgba(210, 208, 224, 0.97)), url('./quantumyoga.jpg') no-repeat center center / cover;
-  --bg-primary: #f5f4f8; /* Soft warm-lavender off-white */
-  --bg-secondary: #e9e8f0; /* Soft cool grey-purple */
-  --bg-card: rgba(255, 255, 255, 0.45); /* Light glass background */
-  --bg-card-hover: rgba(255, 255, 255, 0.65);
-  --border-glass: rgba(167, 139, 250, 0.12);
-  --border-glass-hover: rgba(167, 139, 250, 0.45);
-  
-  --accent-primary: #7c3aed; /* Vibrant Violet for light mode readability */
-  --accent-primary-rgb: 124, 58, 237;
-  --accent-secondary: #db2777; /* Vibrant Rose */
-  --accent-secondary-rgb: 219, 39, 119;
-  --accent-teal: #0d9488;
-  
-  --text-primary: #1e1b4b; /* Deep Indigo for high contrast text */
-  --text-secondary: #475569; /* Slate gray */
-  --text-muted: #6b7280;
-  --text-dark: #f9fafb;
-  
-  --shadow-sm: 0 4px 12px rgba(167, 139, 250, 0.05);
-  --shadow-md: 0 10px 30px rgba(167, 139, 250, 0.08);
-  --shadow-lg: 0 20px 50px rgba(167, 139, 250, 0.12);
-  --card-glow: 0 0 25px rgba(124, 58, 237, 0.12);
-  --rose-glow: 0 0 25px rgba(219, 39, 119, 0.12);
-
-  --glass-light-bg: rgba(255, 255, 255, 0.25);
-  --glass-light-border: rgba(167, 139, 250, 0.08);
-  
-  --glass-medium-bg: rgba(255, 255, 255, 0.55);
-  --glass-medium-border: rgba(167, 139, 250, 0.15);
-  
-  --glass-dark-bg: rgba(255, 255, 255, 0.85);
-  --glass-dark-border: rgba(167, 139, 250, 0.22);
-  
-  --bg-input: rgba(255, 255, 255, 0.8);
-  --bg-card-media: rgba(167, 139, 250, 0.05);
-  --bg-tabs: rgba(167, 139, 250, 0.08);
-  --scrollbar-thumb: #d1d5db;
-  
-  --glow-color-1: rgba(167, 139, 250, 0.15);
-  --glow-color-2: rgba(244, 63, 94, 0.1);
-  --glow-color-3: rgba(99, 102, 241, 0.12);
-}
-
-/* 3.2 Zen Sunset (Warm Dusk/Amber Sunset Theme) */
-.theme-sunset {
-  --auth-overlay-bg: linear-gradient(rgba(42, 22, 49, 0.75), rgba(18, 10, 22, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
-  --site-bg: linear-gradient(rgba(42, 22, 49, 0.93), rgba(18, 10, 22, 0.97)), url('./quantumyoga.jpg') no-repeat center center / cover;
-  --bg-primary: #1a0f20; /* Deep dusk purple */
-  --bg-secondary: #291630; /* Medium dusk purple */
-  --bg-card: rgba(42, 22, 49, 0.5); /* Rose glass background */
-  --bg-card-hover: rgba(57, 29, 67, 0.7);
-  --border-glass: rgba(251, 146, 60, 0.15); /* Orange/amber glass border */
-  --border-glass-hover: rgba(244, 63, 94, 0.35); /* Rose border */
-  
-  --accent-primary: #fb923c; /* Amber/Orange */
-  --accent-primary-rgb: 251, 146, 60;
-  --accent-secondary: #f43f5e; /* Rose */
-  --accent-secondary-rgb: 244, 63, 94;
-  --accent-teal: #fbbf24;
-  
-  --text-primary: #fffaf3; /* Warm off-white */
-  --text-secondary: #fed7aa; /* Soft orange/amber white */
-  --text-muted: #c0b3cb; /* Muted dusk gray */
-  --text-dark: #1a0f20;
-  
-  --shadow-sm: 0 4px 12px rgba(26, 15, 32, 0.2);
-  --shadow-md: 0 10px 30px rgba(26, 15, 32, 0.3);
-  --shadow-lg: 0 20px 50px rgba(26, 15, 32, 0.4);
-  --card-glow: 0 0 25px rgba(251, 146, 60, 0.2);
-  --rose-glow: 0 0 25px rgba(244, 63, 94, 0.2);
-
-  --glass-light-bg: rgba(255, 255, 255, 0.02);
-  --glass-light-border: rgba(251, 146, 60, 0.08);
-  
-  --glass-medium-bg: rgba(42, 22, 49, 0.5);
-  --glass-medium-border: rgba(251, 146, 60, 0.12);
-  
-  --glass-dark-bg: rgba(26, 15, 32, 0.85);
-  --glass-dark-border: rgba(251, 146, 60, 0.18);
-  
-  --bg-input: rgba(26, 15, 32, 0.5);
-  --bg-card-media: #23122c;
-  --bg-tabs: rgba(42, 22, 49, 0.4);
-  --scrollbar-thumb: #3d2149;
-  
-  --glow-color-1: rgba(251, 146, 60, 0.25);
-  --glow-color-2: rgba(244, 63, 94, 0.2);
-  --glow-color-3: rgba(239, 68, 68, 0.15);
-}
-
-/* Global Transition Rules for Seamless Swapping */
-body, 
-.app-header, 
-.controls-card, 
-select, 
-.search-box, 
-.card, 
-.card-media-wrapper,
-.profile-header-card, 
-.profile-favorites-list .favorite-item, 
-.profile-history-list .history-item, 
-.tabs-container, 
-.tab-pill, 
-table, 
-th, 
-td, 
-.inspect-details-card, 
-.admin-report-card, 
-.btn,
-.profile-avatar,
-.logo {
-  transition: background var(--transition-normal), 
-              background-color var(--transition-normal), 
-              color var(--transition-normal), 
-              border-color var(--transition-normal), 
-              box-shadow var(--transition-normal);
-}
-
-/* Admin Overview Dashboard Additions */
-.admin-insights-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.admin-insight-card {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 1.25rem;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--glass-light-border);
-  transition: var(--transition-fast);
-}
-
-.admin-insight-card:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(167, 139, 250, 0.2);
-}
-
-.admin-insight-card.alert-warning {
-  border-left: 4px solid var(--accent-secondary);
-}
-
-.admin-insight-card.alert-info {
-  border-left: 4px solid var(--accent-primary);
-}
-
-.admin-insight-card.alert-success {
-  border-left: 4px solid var(--accent-teal);
-}
-
-.admin-insight-icon {
-  font-size: 1.75rem;
-}
-
-.admin-insight-content {
-  flex-grow: 1;
-}
-
-.admin-insight-content h4 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: var(--text-primary);
-}
-
-.admin-insight-content p {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
-
-.admin-timeline-feed, .admin-payments-feed {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-  max-height: 400px;
-  overflow-y: auto;
-  padding-right: 0.5rem;
-}
-
-.admin-timeline-item, .admin-payment-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid var(--glass-light-border);
-  border-radius: var(--radius-md);
-  transition: var(--transition-fast);
-}
-
-.admin-timeline-item:hover, .admin-payment-item:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.feed-item-left {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.feed-item-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.feed-item-subtitle {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.feed-item-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.25rem;
-}
-
-.feed-item-badge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.badge-paid {
-  background: rgba(45, 212, 191, 0.15);
-  color: var(--accent-teal);
-}
-
-.badge-pending {
-  background: rgba(251, 146, 60, 0.15);
-  color: #fb923c;
-}
-
-.badge-review {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-}
-
-.badge-overdue {
-  background: rgba(244, 63, 94, 0.15);
-  color: var(--accent-secondary);
-}
-
-.badge-scheduled {
-  background: rgba(167, 139, 250, 0.15);
-  color: var(--accent-primary);
-}
-
-.badge-rescheduled {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-}
-
-.badge-cancelled {
-  background: rgba(244, 63, 94, 0.15);
-  color: var(--accent-secondary);
-}
-
-.badge-refund-initiated {
-  background: rgba(167, 139, 250, 0.15);
-  color: #a78bfa;
-}
-
-.badge-refunded {
-  background: rgba(99, 102, 241, 0.15);
-  color: #818cf8;
-}
-
-.badge-active {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-}
-
-.badge-paused {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-}
-
-.badge-expired {
-  background: rgba(244, 63, 94, 0.15);
-  color: var(--accent-secondary);
-}
-
-.badge-tier-basic {
-  background: rgba(156, 163, 175, 0.15);
-  color: #d1d5db;
-}
-
-.badge-tier-premium {
-  background: rgba(139, 92, 246, 0.15);
-  color: #a78bfa;
-}
-
-.badge-tier-vip {
-  background: rgba(236, 72, 153, 0.15);
-  color: #f472b6;
-  border: 1px solid rgba(236, 72, 153, 0.3);
-}
-
-.badge-status-new {
-  background: rgba(59, 130, 246, 0.12);
-  color: #60a5fa;
-  border-color: rgba(59, 130, 246, 0.25);
-}
-
-.badge-status-contacted {
-  background: rgba(245, 158, 11, 0.12);
-  color: #f59e0b;
-  border-color: rgba(245, 158, 11, 0.25);
-}
-
-.badge-status-converted {
-  background: rgba(16, 185, 129, 0.12);
-  color: #10b981;
-  border-color: rgba(16, 185, 129, 0.25);
-}
-
-.badge-status-closed {
-  background: rgba(107, 114, 128, 0.12);
-  color: #9ca3af;
-  border-color: rgba(107, 114, 128, 0.25);
-}
-
-.feed-item-meta {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-/* Scrollbar tuning for dashboard timelines */
-.admin-timeline-feed::-webkit-scrollbar, .admin-payments-feed::-webkit-scrollbar {
-  width: 6px;
-}
-.admin-timeline-feed::-webkit-scrollbar-thumb, .admin-payments-feed::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 4px;
-}
-
-/* Student Dashboard & Client Pages Additions */
-.profile-sub-tab {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
-  outline: none;
-}
-
-.profile-sub-tab:hover, .profile-sub-tab.active {
-  color: var(--text-primary);
-  background: var(--glass-light-bg);
-}
-
-.profile-sub-tab.active {
-  color: var(--accent-primary);
-  box-shadow: 0 0 10px rgba(167, 139, 250, 0.1);
-}
-
-.profile-panel-content {
-  display: none;
-  animation: fadeIn 0.4s ease-out forwards;
-}
-
-.profile-panel-content.active-panel {
-  display: block;
-}
-
-.profile-sessions-feed::-webkit-scrollbar {
-  width: 6px;
-}
-.profile-sessions-feed::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 4px;
-}
-
-.profile-session-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.85rem 1.15rem;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid var(--glass-light-border);
-  border-radius: var(--radius-md);
-  transition: var(--transition-fast);
-}
-
-.profile-session-row:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-@media (max-width: 992px) {
-  .profile-dashboard-top-row {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* ==========================================================================
-   Payments, Reminders, & Receipts Styling
-   ========================================================================== */
-
-/* Overdue Payment Alert Banner */
-.overdue-alert-banner {
-  position: sticky;
-  top: 70px; /* height of header navbar */
-  z-index: 99;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(124, 58, 237, 0.9));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(239, 68, 68, 0.3);
-  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.25);
-  padding: 0.85rem 1.5rem;
-  transition: all var(--transition-medium);
-}
-
-.overdue-banner-content {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.overdue-banner-icon {
-  font-size: 1.25rem;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
-}
-
-.overdue-banner-text {
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  flex-grow: 1;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.overdue-banner-close {
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-}
-
-.overdue-banner-close:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-}
-
-/* Contact Us Modal Card */
-.contact-modal-card {
-  background: var(--glass-dark-bg) !important;
-  border: 1px solid var(--glass-medium-border) !important;
-  box-shadow: var(--shadow-xl), 0 0 40px rgba(124, 58, 237, 0.15) !important;
-}
-
-.contact-item a {
-  transition: var(--transition-fast);
-}
-
-.contact-item a:hover {
-  color: var(--accent-secondary) !important;
-  text-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
-}
-
-/* Detailed Receipt Modal Overlay & Layout */
-.receipt-modal-card {
-  background: var(--glass-dark-bg) !important;
-  border: 1px solid var(--glass-medium-border) !important;
-  box-shadow: var(--shadow-xl), 0 0 40px rgba(124, 58, 237, 0.15) !important;
-}
-
-.receipt-details-container {
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-}
-
-.receipt-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  border-bottom: 2px dashed var(--glass-medium-border);
-  padding-bottom: 1.5rem;
-}
-
-.receipt-header h2 {
-  font-family: var(--font-serif);
-  color: var(--accent-primary);
-  margin-bottom: 0.25rem;
-  font-size: 1.75rem;
-}
-
-.receipt-header p {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.receipt-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--glass-light-border);
-  font-size: 0.95rem;
-}
-
-.receipt-row strong {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.receipt-row span {
-  font-weight: 600;
-}
-
-.receipt-total {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem 0;
-  margin-top: 1rem;
-  font-size: 1.25rem;
-  border-top: 2px dashed var(--glass-medium-border);
-  color: var(--accent-primary);
-  font-weight: 700;
-}
-
-.receipt-stamp-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1.5rem;
-  position: relative;
-}
-
-.receipt-stamp {
-  border: 3px double rgba(167, 139, 250, 0.4);
-  color: rgba(167, 139, 250, 0.6);
-  text-transform: uppercase;
-  font-weight: 800;
-  font-size: 0.85rem;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
-  transform: rotate(-5deg);
-  letter-spacing: 0.15em;
-}
-
-.print-btn-container {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
-.btn-print-receipt {
-  width: 100%;
-}
-
-/* Print Styling Override */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  #receipt-modal, #receipt-modal * {
-    visibility: visible;
-  }
-  #receipt-modal {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: auto;
-    background: #ffffff !important;
-    color: #111111 !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-  }
-  .receipt-modal-card {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100% !important;
-    max-width: 100% !important;
-    background: #ffffff !important;
-    color: #111111 !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    transform: none !important;
-  }
-  .modal-close, .print-btn-container {
-    display: none !important;
-  }
-  .receipt-details-container {
-    color: #111111 !important;
-  }
-  .receipt-row {
-    border-bottom: 1px solid #eaeaea !important;
-    color: #111111 !important;
-  }
-  .receipt-row strong {
-    color: #444444 !important;
-  }
-  .receipt-row span {
-    color: #111111 !important;
-  }
-  .receipt-header h2 {
-    color: #7c3aed !important;
-  }
-  .receipt-header p {
-    color: #666666 !important;
-  }
-  .receipt-total {
-    border-top: 2px dashed #111111 !important;
-    color: #7c3aed !important;
-  }
-  .receipt-stamp {
-    border-color: #7c3aed !important;
-    color: #7c3aed !important;
-  }
-}
-
-/* Leads Kanban Swimlane Board Styles */
-.leads-swimlane-board {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-  align-items: start;
-  overflow-x: auto;
-  padding: 0.5rem 0.2rem;
-  scrollbar-width: thin;
-}
-
-@media (max-width: 1024px) {
-  .leads-swimlane-board {
-    display: flex;
-  }
-  .swimlane-column {
-    flex: 0 0 280px;
-  }
-}
-
-.swimlane-column {
-  background: rgba(22, 16, 36, 0.3);
-  border: 1px solid var(--glass-light-border);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  max-height: 580px;
-  min-height: 200px;
-  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
-}
-
-.swimlane-column:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: var(--shadow-sm);
-}
-
-.swimlane-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-glass);
-}
-
-.swimlane-header h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-primary);
-}
-
-.swimlane-count {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-glass);
-  color: var(--text-secondary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-full);
-}
-
-/* Color markers for columns */
-.swimlane-column[data-status="New"] .swimlane-header h3 {
-  color: var(--accent-primary);
-}
-.swimlane-column[data-status="Contacted"] .swimlane-header h3 {
-  color: var(--accent-teal);
-}
-.swimlane-column[data-status="Converted"] .swimlane-header h3 {
-  color: #10B981; /* Green */
-}
-.swimlane-column[data-status="Closed"] .swimlane-header h3 {
-  color: var(--text-muted);
-}
-
-.swimlane-cards-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  overflow-y: auto;
-  flex-grow: 1;
-  padding-right: 0.25rem;
-}
-
-.swimlane-cards-container::-webkit-scrollbar {
-  width: 4px;
-}
-.swimlane-cards-container::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-full);
-}
-
-.lead-card {
-  background: var(--glass-light-bg);
-  border: 1px solid var(--glass-light-border);
-  border-radius: var(--radius-sm);
-  padding: 0.85rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-}
-
-.lead-card:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--accent-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.1);
-}
-
-.lead-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.lead-card-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text-primary);
-}
-
-.lead-card-date {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.lead-card-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
-  word-break: break-all;
-}
-
-.lead-card-msg {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-style: italic;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-top: 0.25rem;
-  border-top: 1px dashed rgba(255, 255, 255, 0.05);
-  padding-top: 0.35rem;
-}
-
-.lead-card-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0.5rem;
-  border-top: 1px solid var(--border-glass);
-  padding-top: 0.5rem;
-}
-
-.lead-card-move-btns {
-  display: flex;
-  gap: 0.35rem;
-}
-
-.lead-move-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-glass);
-  color: var(--text-secondary);
-  border-radius: var(--radius-sm);
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 0.8rem;
-  transition: var(--transition-fast);
-}
-
-.lead-move-btn:hover {
-  background: var(--accent-primary);
-  color: var(--text-dark);
-  border-color: var(--accent-primary);
-}
-
-.lead-inspect-link {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent-primary);
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.lead-inspect-link:hover {
-  text-decoration: underline;
-  color: var(--text-primary);
-}
-
-/* ==========================================================================
-   Gmail Email Integration Styles (Tasks 6.x)
-   ========================================================================== */
-
-/* Gmail Status Card */
-/* ── Email Provider Toggle ─────────────────────────────────────────── */
-.email-provider-toggle {
-  display: inline-flex;
-  background: rgba(0,0,0,0.2);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-.email-provider-btn {
-  padding: 0.35rem 1rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-.email-provider-btn:hover {
-  background: rgba(255,255,255,0.07);
-  color: var(--text-primary);
-}
-.email-provider-btn.active {
-  background: var(--accent-primary);
-  color: #fff;
-  border-radius: inherit;
-}
-.resend-active-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: rgba(16,185,129,0.15);
-  border: 1px solid rgba(16,185,129,0.4);
-  color: #10B981;
-  font-size: 0.82rem;
-  font-weight: 700;
-  padding: 0.2rem 0.65rem;
-  border-radius: 999px;
-}
-.resend-unconfigured-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: rgba(234,179,8,0.12);
-  border: 1px solid rgba(234,179,8,0.4);
-  color: #EAB308;
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 0.2rem 0.65rem;
-  border-radius: 999px;
-}
-
-.gmail-status-card {
-
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: var(--glass-medium-bg);
-  border: 1px solid var(--glass-medium-border);
-  border-radius: var(--radius-md);
-  padding: 1rem 1.25rem;
-  box-shadow: var(--shadow-sm);
-  flex-wrap: wrap;
-}
-
-.gmail-status-icon {
-  font-size: 2rem;
-  flex-shrink: 0;
-}
-
-.gmail-status-info {
-  flex: 1;
-  min-width: 200px;
-}
-
-.gmail-status-actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.gmail-connected-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: rgba(16, 185, 129, 0.12);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-full);
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-/* Email List Items */
-.email-list-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--glass-light-border);
-  background: var(--glass-light-bg);
-  cursor: pointer;
-  transition: var(--transition-fast);
-  position: relative;
-}
-
-.email-list-item:hover {
-  border-color: var(--border-glass-hover);
-  background: rgba(167, 139, 250, 0.06);
-  transform: translateX(2px);
-}
-
-.email-list-item.unread {
-  background: rgba(167, 139, 250, 0.08);
-  border-color: rgba(167, 139, 250, 0.2);
-}
-
-.email-list-item.unread .email-sender {
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.email-list-item.unread .email-subject {
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.email-unread-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent-primary);
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 6px;
-  box-shadow: 0 0 6px rgba(167, 139, 250, 0.5);
-}
-
-.email-read-dot {
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  margin-top: 6px;
-}
-
-.email-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.email-sender {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 0.15rem;
-}
-
-.email-subject {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 0.15rem;
-}
-
-.email-snippet {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.email-meta-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.3rem;
-  flex-shrink: 0;
-}
-
-.email-date {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-/* Sent email item variant */
-.email-sent-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.65rem 0.9rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--glass-light-border);
-  background: var(--glass-light-bg);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.email-sent-item:hover {
-  border-color: rgba(244, 63, 94, 0.2);
-  background: rgba(244, 63, 94, 0.04);
-}
-
-/* Email Filter Buttons */
-.email-filter-btn {
-  padding: 0.3rem 0.75rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 1px solid var(--glass-light-border);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.email-filter-btn:hover {
-  color: var(--text-primary);
-  border-color: var(--accent-primary);
-}
-
-.email-filter-btn.active {
-  background: rgba(167, 139, 250, 0.15);
-  color: var(--accent-primary);
-  border-color: rgba(167, 139, 250, 0.4);
-}
-
-/* Email Preview Overlay */
-.email-preview-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(5, 3, 8, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-}
-
-.email-preview-card {
-  background: var(--glass-dark-bg);
-  border: 1px solid var(--glass-dark-border);
-  border-radius: var(--radius-md);
-  padding: 2rem;
-  max-width: 700px;
-  width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-  animation: fadeIn 0.25s ease-out;
-}
-
-.email-preview-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--glass-light-border);
-}
-
-.email-preview-body {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.email-preview-body iframe {
-  width: 100%;
-  border: none;
-  min-height: 300px;
-}
-
-/* Admin settings grid extension for Gmail */
-#admin-settings-panel > div {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-
-@media (max-width: 1024px) {
-  #admin-settings-panel > div {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  #admin-settings-panel > div {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Loading spinner for email fetch */
-.email-loading-spinner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 2rem;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.spinner-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent-primary);
-  border-radius: 50%;
-  animation: spinnerBounce 1.2s infinite ease-in-out;
-}
-
-.spinner-dot:nth-child(2) { animation-delay: 0.2s; }
-.spinner-dot:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes spinnerBounce {
-  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
-  40% { transform: scale(1); opacity: 1; }
-}
-
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  #admin-reports-panel, #admin-reports-panel * {
-    visibility: visible;
-  }
-  #admin-reports-panel {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background: white !important;
-    color: black !important;
-  }
-  .controls-card, .profile-dashboard-top-row, .admin-stats-grid {
-    display: none !important;
-  }
-}
-````
-
-## File: openspec/changes/add-whatsapp-functionality/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-21
-````
-
-## File: openspec/changes/add-whatsapp-functionality/design.md
-````markdown
-## Context
-
-Quantum Yoga manages student records, billing schedules, and communication through its central database state. The app currently supports email notifications (via Resend) and admin-student messaging (via Gmail OAuth). This design details the integration of WhatsApp as a primary notification channel for alerts, billing links, and booking confirmations.
-
-## Goals / Non-Goals
-
-**Goals:**
-- Provide direct WhatsApp Web action shortcuts (`https://wa.me/`) from the Admin CRM board, lead details modal, and student lists to start chats with pre-filled templates.
-- Dispatch automatic WhatsApp reminders upon class booking, rescheduling, and new/overdue invoice creation.
-- Add system settings in the admin panel to toggle WhatsApp globally, specify API keys, and custom templates.
-
-**Non-Goals:**
-- A custom interactive WhatsApp inbox in the application dashboard (we will redirect admins to WhatsApp Web/Desktop instead).
-- Verification of phone number delivery status within the platform.
-
-## Decisions
-
-### 1. Integration Method
-- **Decision:** Use a lightweight WhatsApp API proxy endpoint `/api/send-whatsapp` in `server.js`. The proxy will send HTTP requests to a configurable service provider (e.g. Twilio API or custom REST gateway).
-- **Rationale:** Keeps configuration details (API keys) secure on the backend and allows flexible provider replacement without client-side modifications.
-
-### 2. Live Chat Redirection
-- **Decision:** Implement client-side redirection using `https://wa.me/<phone>?text=<message>` for custom admin-initiated messages.
-- **Rationale:** Zero cost, requires no API credits, and works seamlessly on both mobile (WhatsApp App) and desktop (WhatsApp Web or Desktop Client).
-
-### 3. Settings Schema Extension
-- **Decision:** Save configuration in the global DB state under a new `whatsappSettings` object:
-  ```json
-  "whatsappSettings": {
-    "enabled": false,
-    "apiKey": "",
-    "gatewayUrl": "",
-    "templates": {
-      "welcome": "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
-      "invoice": "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
-      "booking": "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}."
-    }
-  }
-  ```
-
-## Risks / Trade-offs
-
-- **[Risk] Invalid or Unformatted Phone Numbers** → **Mitigation:** Sanitize phone numbers on the frontend/backend by stripping spaces, dashes, and letters, ensuring the country code prefix is added (e.g., `+91` for Indian locale).
-- **[Risk] High API Cost for Automated WhatsApp Gateways** → **Mitigation:** Provide a global toggle in settings to enable/disable automated WhatsApp alerts, falling back to free standard email alerts.
-````
-
-## File: openspec/changes/add-whatsapp-functionality/proposal.md
-````markdown
-## Why
-
-Students often miss email notifications (invoices, class reminders, booking confirmations) due to cluttered inboxes. Integrating WhatsApp communication will significantly improve response rates for pending invoices, lower session cancellation rates through timely alerts, and streamline admin communication with CRM leads.
-
-## What Changes
-
-- Add **WhatsApp Notifications** capability to send automatic alerts (welcomes, class booking confirmations, payment reminders with payment links) directly to student phone numbers.
-- Add **Admin WhatsApp Hub / Quick Link Actions** within the CRM and Invoices dashboard to initiate WhatsApp chats with students/leads.
-- Add **WhatsApp Settings Panel** in Admin System Settings to configure WhatsApp integration credentials.
-
-## Capabilities
-
-### New Capabilities
-- `whatsapp-communication`: Captures the configuration, template message schemas, and workflow triggers for sending automated notifications and launching chats with members and leads via WhatsApp.
-
-### Modified Capabilities
-- `billing-payments`: Integrating WhatsApp automated reminders for invoice generation and overdue alerts.
-- `class-scheduling`: Integrating WhatsApp notifications for booking confirmations, rescheduling, and cancellations.
-- `leads-crm`: Integrating WhatsApp chat shortcut links inside the swimlane Kanban board and CRM logs to easily communicate with prospects.
-
-## Impact
-
-- **Backend (server.js):** Additional endpoint proxies for WhatsApp messaging providers (e.g., Twilio API or custom gateway API), template storage, and webhooks.
-- **Frontend (index.html, index.css):** Configuration controls under Admin > Settings, new WhatsApp action buttons (with icons) next to invoice listings, lead cards, and appointment schedules.
-- **State Schema:** Integration keys (VPA details, active WhatsApp toggle, API key, template strings) in the DB state.
-````
-
-## File: openspec/changes/add-whatsapp-functionality/specs/billing-payments/spec.md
-````markdown
-# Billing, Invoices & Payments Delta Spec
-
-## ADDED Requirements
-
-### Requirement: WhatsApp Invoice Reminders
-The system SHALL support sending automatic invoice notifications and overdue alerts via WhatsApp when a new invoice is created or becomes overdue, containing details like Invoice ID, due date, amount, and the direct payment link.
-
-#### Scenario: Send invoice notice on creation
-- **WHEN** a new invoice is issued for a member and WhatsApp notifications are enabled
-- **THEN** the system SHALL send a WhatsApp message to the member's phone number containing the invoice details and payment link
-````
-
-## File: openspec/changes/add-whatsapp-functionality/specs/class-scheduling/spec.md
-````markdown
-# Class Scheduling & Batches Delta Spec
-
-## ADDED Requirements
-
-### Requirement: WhatsApp Appointment Alert Triggers
-The system SHALL dispatch a WhatsApp notification to the member when their private coaching session is booked, rescheduled, or cancelled.
-
-#### Scenario: Dispatch alert on booking appointment
-- **WHEN** an appointment is successfully scheduled and WhatsApp notifications are enabled
-- **THEN** the system SHALL send a WhatsApp message to the member confirming the date, time, and target routine
-
-#### Scenario: Dispatch alert on rescheduling appointment
-- **WHEN** an appointment is rescheduled and WhatsApp notifications are enabled
-- **THEN** the system SHALL send a WhatsApp message to the member confirming the updated appointment details
-````
-
-## File: openspec/changes/add-whatsapp-functionality/specs/leads-crm/spec.md
-````markdown
-# Lead Management & CRM Delta Spec
-
-## ADDED Requirements
-
-### Requirement: CRM WhatsApp Quick Action
-The system SHALL display a WhatsApp chat button on lead cards within the Kanban swimlane board and inside the Lead details modal to allow administrators to directly interact with prospects.
-
-#### Scenario: Admin starts chat from Kanban card
-- **WHEN** an admin clicks the WhatsApp icon on a lead card in the CRM swimlane board
-- **THEN** the system SHALL launch the WhatsApp Web interface with the lead's phone number prepopulated with an introductory greeting template
-````
-
-## File: openspec/changes/add-whatsapp-functionality/specs/whatsapp-communication/spec.md
-````markdown
-# WhatsApp Communication Spec
-
-This capability governs the WhatsApp message templates, administrative configuration settings, API proxying, and automated alert dispatches for client/instructor updates.
-
-## ADDED Requirements
-
-### Requirement: WhatsApp System Settings
-The system SHALL permit administrators to configure WhatsApp integration settings in the Admin System Settings panel, including a global toggle to enable/disable WhatsApp notifications, a provider API key input, and custom notification templates.
-
-#### Scenario: Admin configures WhatsApp settings
-- **WHEN** the admin visits the System Settings page, enters a valid API key, toggles "Enable WhatsApp Notifications" to active, and saves the settings
-- **THEN** the system SHALL store the WhatsApp configuration keys in the database state and display a success indicator
-
-### Requirement: Send Custom WhatsApp Message
-The system SHALL provide a backend endpoint to dispatch WhatsApp message payloads through a configured provider (e.g. Twilio API or placeholder gateway) using templates with placeholder variables.
-
-#### Scenario: Dispatch WhatsApp notification
-- **WHEN** a system event triggers a notification (e.g., booking confirmation) and WhatsApp notifications are enabled
-- **THEN** the system SHALL resolve the message placeholders and post the payload to the WhatsApp provider gateway endpoint
-
-### Requirement: Admin Chat Shortcut Action
-The system SHALL display a WhatsApp Chat shortcut button next to any member or lead phone number to allow admins to instantly launch a pre-populated chat using WhatsApp Web (`https://wa.me/`).
-
-#### Scenario: Admin initiates WhatsApp chat
-- **WHEN** the admin clicks the WhatsApp icon/button next to a member's phone number
-- **THEN** the system SHALL open a new browser tab navigating to `https://wa.me/<phone_number>?text=<encoded_prepopulated_message>`
-````
-
-## File: openspec/changes/add-whatsapp-functionality/tasks.md
-````markdown
-## 1. Backend Integration & Routing
-
-- [x] 1.1 Extend the database state schema to include the `whatsappSettings` configuration object (enabled state, API key, gateway URL, and template text strings).
-- [x] 1.2 Implement the `/api/send-whatsapp` Express POST route in `server.js` to dispatch mock or production HTTP requests to the WhatsApp provider endpoint.
-
-## 2. Admin System Settings
-
-- [x] 2.1 Add the WhatsApp Integration Settings interface to the Admin Settings panel in `index.html` (global toggle, API credentials input, template editor).
-- [x] 2.2 Bind DOM event handlers to save WhatsApp Settings changes to the database state on update.
-
-## 3. Automated Notification Triggers
-
-- [x] 3.1 Integrate a WhatsApp notification trigger inside the manual invoicing tool code when an invoice is issued or updated.
-- [x] 3.2 Integrate WhatsApp triggers inside the appointment booking, rescheduling, and cancellation event handlers.
-
-## 4. UI Dashboard WhatsApp Shortcut Actions
-
-- [x] 4.1 Update the CRM Swimlane Kanban cards in `index.html`/JavaScript to include WhatsApp direct-chat launch icons next to prospect phone numbers.
-- [x] 4.2 Add WhatsApp launch controls next to student profiles, appointment lists, and outstanding billing ledger items.
-````
-
 ## File: openspec/changes/admin-default-theme/.openspec.yaml
 ````yaml
 schema: spec-driven
@@ -7433,12 +2677,6 @@ The system SHALL automatically generate a pending billing invoice for a student 
 
 - [x] 3.1 Verify that booking a new private coaching session as a student generates a pending invoice of ₹1500 and updates student billing history
 - [x] 3.2 Verify that booking a new private coaching session as an admin for a student generates a pending invoice and immediately updates admin billing KPIs
-````
-
-## File: openspec/changes/auto-review-upi-payments/.openspec.yaml
-````yaml
-schema: spec-driven
-created: 2026-06-21
 ````
 
 ## File: openspec/changes/batch-appointment-pricing/.openspec.yaml
@@ -11523,63 +6761,6 @@ Routines bundle multiple poses into guided practice flows:
   - Automatically handles routine completion when the video plays to the end.
 ````
 
-## File: openspec/specs/deployment-ci-cd/spec.md
-````markdown
-# Deployment & CI/CD Specification
-
-## Overview
-This specification details the deployment architecture, configuration parameters, and CI/CD automated pipeline for the Quantum Yoga platform. It covers local dev server behavior, production Express configurations, PM2 process management, and GitHub Actions workflow execution.
-
----
-
-## Deployment Architecture
-
-### 1. Environments
-*   **Local Development:** Vite dev server proxying backend requests to local Express middlewares (CORS-free integration testing).
-*   **Production VM:** Node.js Express server running under PM2 serving Vite-compiled static assets and handling production database / integration APIs.
-
-### 2. Process Flow & CI/CD Orchestration
-```
-Developer Push to Git
-  ├── GitHub Actions CI Job (ubuntu-latest)
-  │     ├── Install npm dependencies (npm ci)
-  │     ├── Run test verification (npm test)
-  │     └── Compile Vite static bundle (npm run build)
-  └── GitHub Actions CD Job
-        ├── Transfer production bundle via SCP
-        └── SSH VM commands:
-              ├── Safely check/initialize db.json template
-              ├── Clean up old PM2 processes
-              ├── Install production dependencies
-              └── Restart PM2 app (quantum-yoga)
-```
-
----
-
-## Capabilities & Implementation Details
-
-### 1. Build Compilation
-*   **Assets Target Directory:** `dist/` containing optimized JS modules, CSS styling stylesheets, and hashed image assets.
-*   **Vite Configurations:** Defined in [vite.config.js](file:///d:/QuantumYogaWebsite/vite.config.js).
-
-### 2. VM Deployment & SSH Authentication
-*   **Secrets Dependency:**
-    *   `VM_SSH_IP`: VM Server public hostname/IP.
-    *   `VM_SSH_USER`: SSH login username.
-    *   `VM_SSH_KEY`: Secure private SSH credential.
-    *   `VM_DEPLOY_PATH`: Absolute destination path.
-*   **Artifacts Package Content:** `dist/`, `server.js`, `package.json`, `package-lock.json`, `ecosystem.config.cjs`, client assets (`app.js`, `data.js`, `index.css`, `index.html`, image assets).
-
-### 3. Database State Persistence
-*   **Handling `db.json`:** To preserve database updates on the VM, the raw `db.json` file is transferred as `db.json.template` and initialized only if no active `db.json` file is present.
-
-### 4. PM2 Process Manager Configuration
-*   Managed via [ecosystem.config.cjs](file:///d:/QuantumYogaWebsite/ecosystem.config.cjs).
-*   **Process Name:** `quantum-yoga`
-*   **Script Target:** `server.js`
-*   **Process Monitoring:** Configured for auto-restart, production flag, log integration, and automatic memory limit restarts (1GB limit).
-````
-
 ## File: openspec/specs/email-communication/spec.md
 ````markdown
 # Email Communication Spec
@@ -11764,14 +6945,6 @@ Each user object is defined within the root state's `users` array:
 
 ### 4. Personal Theme Configuration
 - Dropdown permitting users to set personal UI skins. Saves option to user object, instantly updating CSS root variables.
-````
-
-## File: sample_ledger.csv
-````
-Transaction Date,UTR / Transaction Ref,Transaction Description,Amount,Status
-2026-06-20,901123456789,UPI/Sarah Jenkins/Vinyasa,1500,SUCCESS
-2026-06-21,901123456790,UPI/John Doe/Coaching,1999,SUCCESS
-2026-06-21,901123456791,UPI/Jane Smith/Private,2499,SUCCESS
 ````
 
 ## File: schema.sql
@@ -12087,6 +7260,1569 @@ http.get('http://localhost:80/api/db', (res) => {
 }
 ````
 
+## File: openspec/changes/add-contact-us/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/add-contact-us/design.md
+````markdown
+## Context
+
+Instead of a dynamic form submitting leads to a database CRM, the user wants a simple, accessible contact info panel presenting the physical address, phone number, and email ID of the yoga studio.
+
+## Goals / Non-Goals
+
+**Goals:**
+* Add a "Contact Us" link in the header navigation and footer.
+* Display the physical address, phone number, and support email ID in a glassmorphic modal overlay (`#contact-us-modal`).
+* Make telephone and email fields clickable with direct `tel:` and `mailto:` protocol schemas.
+
+**Non-Goals:**
+* Dynamic database/leads submission logic or server endpoints.
+
+## Decisions
+
+### 1. Modal-based Contact Card
+* **Decision**: Build a static, glassmorphic card modal `#contact-us-modal` triggered via navigation links.
+* **Rationale**: Offers a clean popup view without loading forms or requiring database inserts, keeping page performance lightweight.
+
+## Risks / Trade-offs
+
+* **Risk**: Stale contact details.
+  * *Mitigation*: Maintain contact details in standard static HTML/CSS variables for easy updates.
+````
+
+## File: openspec/changes/add-contact-us/proposal.md
+````markdown
+## Why
+
+Visitors and members need a simple, direct way to view the studio's official contact information (physical address, phone number, and email ID) without needing to navigate complex panels or login interfaces. 
+
+## What Changes
+
+* **Contact Info Panel**: A clean, glassmorphic Contact Us section or modal displaying the studio's physical address, phone number, and support email ID.
+* **Direct Actions**: Quick shortcut triggers to launch email client dispatches or start WhatsApp support chats directly.
+
+## Capabilities
+
+### New Capabilities
+- `contact-us`: Displays the studio's static contact information (address, phone number, and email ID) inside a public, glassmorphic modal overlay.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+* **Frontend**: Adds a Contact Us link in the navigation/footer that launches a floating contact details modal in `index.html`.
+````
+
+## File: openspec/changes/add-student-referrals/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/add-student-referrals/design.md
+````markdown
+## Context
+
+The Quantum Yoga application operates as a single-page application (SPA) backed by an Express server that stores a unified state object (`db.json` / PostgreSQL / Supabase). To implement referrals, we must extend the global database schema and introduce logic for registration validation and billing discount calculations.
+
+## Goals / Non-Goals
+
+**Goals:**
+* Define configurable discount tiers inside the database configuration.
+* Automatically generate unique, easy-to-share referral codes for students.
+* Increment the referrer's referral count when a new user registers using their code.
+* Dynamically display referral stats on the user's dashboard profile.
+* Deduct the calculated discount percentage from student invoices and coaching booking fees.
+
+**Non-Goals:**
+* Implementing multi-tier or nested referral networks (MLM). Only direct, single-level referrals are rewarded.
+* Supporting cash payouts or bank transfers. Rewards are strictly discount credits applied directly to billing.
+
+## Decisions
+
+### 1. Referral Code Generation Scheme
+* **Choice**: Generate a 6-character alphanumeric uppercase code (e.g., `FLOW79`) when a student registers.
+* **Rationale**: Shareable codes are more user-friendly than long UUIDs and preserve privacy compared to email-based referral links.
+* **Alternatives Considered**: Using the student's email as their code. Rejected due to email privacy concerns.
+
+### 2. Schema Structure
+* **Choice**: Add configuration fields directly to the state schema.
+  * **Global Settings**:
+    ```javascript
+    referralTiers: [
+      { minReferrals: 1, discount: 10 },
+      { minReferrals: 2, discount: 15 },
+      { minReferrals: 3, discount: 20 }
+    ]
+    ```
+  * **User Object Extension**:
+    ```javascript
+    {
+      name: "...",
+      email: "...",
+      referralCode: "FLOW79",
+      referredBy: "referrer@email.com" || null,
+      referralsCount: 0
+    }
+    ```
+* **Rationale**: Storing these variables on the central state object fits our static database model and avoids database schema migration issues.
+
+### 3. Discount Evaluation
+* **Choice**: Calculate the discount dynamically on invoice creation.
+  * Lookup user `referralsCount`.
+  * Scan active `referralTiers` to find the highest matched tier.
+  * Deduct that percentage from the invoice or booking fee amount.
+* **Rationale**: Prevents hardcoded values and keeps billing rules configurable.
+
+## Risks / Trade-offs
+
+* **[Risk]** Self-referral abuse via fake accounts.
+  * **Mitigation**: Enforce unique email and phone validation on registration. Since invoices undergo manual UTR verification, admins can audit suspicious referral loops.
+````
+
+## File: openspec/changes/add-student-referrals/proposal.md
+````markdown
+## Why
+
+To drive organic membership growth, the studio wants to introduce a referral program where existing students can invite friends using unique referral codes. To incentivize multiple invites, the earned discount scales up incrementally based on the number of successful referrals, configurable directly by administrators.
+
+## What Changes
+
+* **Admin Referral Configurations**: Administrators can define and customize discount scaling tiers (e.g., 1 referral = 10% discount, 2 referrals = 15% discount, 3+ referrals = 20% discount) inside the System Settings panel.
+* **Unique Referral Codes**: Every registered student is assigned a unique, shareable referral code displayed in their profile portal alongside their active referral count and current unlocked discount tier.
+* **Referral Entry Point**: Adds a "Referral Code" optional field to both the student registration form and the public inquiry form.
+* **Referral Count Increment**: When a new user registers using a valid referral code, the referrer's successful referral count is incremented, immediately recalculating their discount tier.
+* **Referral Discount Application**: Automatically applies the referrer's earned discount percentage to any new billing invoices or appointment coaching fees issued to them.
+
+## Capabilities
+
+### New Capabilities
+- `student-referrals`: Covers referral code generation, registration referral validation, dynamic discount tier calculations, and automated billing discount deductions.
+
+### Modified Capabilities
+<!-- No requirement changes to existing specs, purely adding new capabilities -->
+
+## Impact
+
+* **Frontend**: `index.html` (registration form inputs, dashboard referral stats display, admin referral tiers settings card) and `app.js` (validation, configuration handlers, profile calculations).
+* **Backend**: `server.js` state persistence (`db.json`/SQL state variables) to store the referral codes, referrer mappings, and admin discount tier settings.
+````
+
+## File: openspec/changes/add-student-referrals/specs/student-referrals/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Generate Referral Code
+The system SHALL automatically generate a unique 6-character alphanumeric referral code for every newly registered student.
+
+#### Scenario: Generating code on registration
+- **WHEN** a user completes registration successfully
+- **THEN** the system SHALL generate a unique referral code and save it to the student profile.
+
+### Requirement: Registration Referral Tracking
+The system SHALL allow registering users to optionally submit a referral code, verifying its validity, mapping the relationship, and crediting the referrer student.
+
+#### Scenario: Registration with valid referral code
+- **WHEN** a user registers with a valid referral code belonging to another active student
+- **THEN** the system SHALL create the new user account and increment the referrer's successful referral count by 1.
+
+### Requirement: Configurable Referral Discount Tiers
+The system SHALL allow administrators to configure referral discount scaling tiers (minimum referral counts mapping to discount percentages) inside the System Settings panel.
+
+#### Scenario: Administrator updates discount tiers
+- **WHEN** an administrator modifies the referral milestones and discount percentages and saves the form
+- **THEN** the system SHALL save the configuration to the server database and immediately apply the updated pricing rules.
+
+### Requirement: Display Referral Metrics on Profile
+The system SHALL display the student's unique referral code, successful referrals count, and current discount percentage on their profile dashboard.
+
+#### Scenario: Student views profile dashboard
+- **WHEN** a student navigates to their profile page
+- **THEN** the system SHALL present their shareable referral code, successful referrals counter, and calculated discount rate.
+
+### Requirement: Automated Billing Discount Application
+The system SHALL automatically apply the student's current referral discount percentage to reduce any newly generated invoices or appointment coaching fees.
+
+#### Scenario: System generates invoice for referrer
+- **WHEN** a new payment invoice or appointment coaching fee is created for a student
+- **THEN** the system SHALL apply their active referral discount percentage as a deduction to the total amount due.
+````
+
+## File: openspec/changes/add-student-referrals/tasks.md
+````markdown
+## 1. Database and Server Schema
+
+- [ ] 1.1 Update default DB state and initial seeding in `server.js` to include default referral scaling tiers and initialize user state records with a unique 6-character referral code.
+
+## 2. Registration and Inquiry Integration
+
+- [ ] 2.1 Modify the registration form and public inquiry forms in `index.html` to include a "Referral Code" input field.
+- [ ] 2.2 Integrate referral code verification inside user creation logic in `app.js` to map the referrer relation and increment their referral counter.
+- [ ] 2.3 Implement the automatic 6-character uppercase alphanumeric referral code generation utility during signup.
+
+## 3. Student Dashboard Metrics
+
+- [ ] 3.1 Edit the profile container in `index.html` to display the active student's unique referral code, total successful referrals, and active discount rate.
+- [ ] 3.2 Implement front-end logic in `app.js` to calculate, render, and update referral achievements dynamically.
+
+## 4. Admin Settings and Configuration
+
+- [ ] 4.1 Insert the Referral Milestone Tiers configuration form inside the Admin Settings tab in `index.html`.
+- [ ] 4.2 Wire form event handlers, validation checks, and database synchronization in `app.js` to configure scaling tiers.
+
+## 5. Invoice Discount Calculations
+
+- [ ] 5.1 Implement billing handlers in `app.js` to evaluate a student's referral count against active tiers and deduct their discount from newly created invoices or appointments.
+
+## 6. Verification
+
+- [ ] 6.1 Run the production build command `npm run build` to verify clean compilation.
+- [ ] 6.2 Conduct manual checks on registration referral inputs and verify discount deductions on payment workflows.
+````
+
+## File: openspec/changes/add-whatsapp-functionality/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-21
+````
+
+## File: openspec/changes/add-whatsapp-functionality/design.md
+````markdown
+## Context
+
+Quantum Yoga manages student records, billing schedules, and communication through its central database state. The app currently supports email notifications (via Resend) and admin-student messaging (via Gmail OAuth). This design details the integration of WhatsApp as a primary notification channel for alerts, billing links, and booking confirmations.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Provide direct WhatsApp Web action shortcuts (`https://wa.me/`) from the Admin CRM board, lead details modal, and student lists to start chats with pre-filled templates.
+- Dispatch automatic WhatsApp reminders upon class booking, rescheduling, and new/overdue invoice creation.
+- Add system settings in the admin panel to toggle WhatsApp globally, specify API keys, and custom templates.
+
+**Non-Goals:**
+- A custom interactive WhatsApp inbox in the application dashboard (we will redirect admins to WhatsApp Web/Desktop instead).
+- Verification of phone number delivery status within the platform.
+
+## Decisions
+
+### 1. Integration Method
+- **Decision:** Use a lightweight WhatsApp API proxy endpoint `/api/send-whatsapp` in `server.js`. The proxy will send HTTP requests to a configurable service provider (e.g. Twilio API or custom REST gateway).
+- **Rationale:** Keeps configuration details (API keys) secure on the backend and allows flexible provider replacement without client-side modifications.
+
+### 2. Live Chat Redirection
+- **Decision:** Implement client-side redirection using `https://wa.me/<phone>?text=<message>` for custom admin-initiated messages.
+- **Rationale:** Zero cost, requires no API credits, and works seamlessly on both mobile (WhatsApp App) and desktop (WhatsApp Web or Desktop Client).
+
+### 3. Settings Schema Extension
+- **Decision:** Save configuration in the global DB state under a new `whatsappSettings` object:
+  ```json
+  "whatsappSettings": {
+    "enabled": false,
+    "apiKey": "",
+    "gatewayUrl": "",
+    "templates": {
+      "welcome": "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
+      "invoice": "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
+      "booking": "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}."
+    }
+  }
+  ```
+
+## Risks / Trade-offs
+
+- **[Risk] Invalid or Unformatted Phone Numbers** → **Mitigation:** Sanitize phone numbers on the frontend/backend by stripping spaces, dashes, and letters, ensuring the country code prefix is added (e.g., `+91` for Indian locale).
+- **[Risk] High API Cost for Automated WhatsApp Gateways** → **Mitigation:** Provide a global toggle in settings to enable/disable automated WhatsApp alerts, falling back to free standard email alerts.
+````
+
+## File: openspec/changes/add-whatsapp-functionality/proposal.md
+````markdown
+## Why
+
+Students often miss email notifications (invoices, class reminders, booking confirmations) due to cluttered inboxes. Integrating WhatsApp communication will significantly improve response rates for pending invoices, lower session cancellation rates through timely alerts, and streamline admin communication with CRM leads.
+
+## What Changes
+
+- Add **WhatsApp Notifications** capability to send automatic alerts (welcomes, class booking confirmations, payment reminders with payment links) directly to student phone numbers.
+- Add **Admin WhatsApp Hub / Quick Link Actions** within the CRM and Invoices dashboard to initiate WhatsApp chats with students/leads.
+- Add **WhatsApp Settings Panel** in Admin System Settings to configure WhatsApp integration credentials.
+
+## Capabilities
+
+### New Capabilities
+- `whatsapp-communication`: Captures the configuration, template message schemas, and workflow triggers for sending automated notifications and launching chats with members and leads via WhatsApp.
+
+### Modified Capabilities
+- `billing-payments`: Integrating WhatsApp automated reminders for invoice generation and overdue alerts.
+- `class-scheduling`: Integrating WhatsApp notifications for booking confirmations, rescheduling, and cancellations.
+- `leads-crm`: Integrating WhatsApp chat shortcut links inside the swimlane Kanban board and CRM logs to easily communicate with prospects.
+
+## Impact
+
+- **Backend (server.js):** Additional endpoint proxies for WhatsApp messaging providers (e.g., Twilio API or custom gateway API), template storage, and webhooks.
+- **Frontend (index.html, index.css):** Configuration controls under Admin > Settings, new WhatsApp action buttons (with icons) next to invoice listings, lead cards, and appointment schedules.
+- **State Schema:** Integration keys (VPA details, active WhatsApp toggle, API key, template strings) in the DB state.
+````
+
+## File: openspec/changes/add-whatsapp-functionality/specs/billing-payments/spec.md
+````markdown
+# Billing, Invoices & Payments Delta Spec
+
+## ADDED Requirements
+
+### Requirement: WhatsApp Invoice Reminders
+The system SHALL support sending automatic invoice notifications and overdue alerts via WhatsApp when a new invoice is created or becomes overdue, containing details like Invoice ID, due date, amount, and the direct payment link.
+
+#### Scenario: Send invoice notice on creation
+- **WHEN** a new invoice is issued for a member and WhatsApp notifications are enabled
+- **THEN** the system SHALL send a WhatsApp message to the member's phone number containing the invoice details and payment link
+````
+
+## File: openspec/changes/add-whatsapp-functionality/specs/class-scheduling/spec.md
+````markdown
+# Class Scheduling & Batches Delta Spec
+
+## ADDED Requirements
+
+### Requirement: WhatsApp Appointment Alert Triggers
+The system SHALL dispatch a WhatsApp notification to the member when their private coaching session is booked, rescheduled, or cancelled.
+
+#### Scenario: Dispatch alert on booking appointment
+- **WHEN** an appointment is successfully scheduled and WhatsApp notifications are enabled
+- **THEN** the system SHALL send a WhatsApp message to the member confirming the date, time, and target routine
+
+#### Scenario: Dispatch alert on rescheduling appointment
+- **WHEN** an appointment is rescheduled and WhatsApp notifications are enabled
+- **THEN** the system SHALL send a WhatsApp message to the member confirming the updated appointment details
+````
+
+## File: openspec/changes/add-whatsapp-functionality/specs/leads-crm/spec.md
+````markdown
+# Lead Management & CRM Delta Spec
+
+## ADDED Requirements
+
+### Requirement: CRM WhatsApp Quick Action
+The system SHALL display a WhatsApp chat button on lead cards within the Kanban swimlane board and inside the Lead details modal to allow administrators to directly interact with prospects.
+
+#### Scenario: Admin starts chat from Kanban card
+- **WHEN** an admin clicks the WhatsApp icon on a lead card in the CRM swimlane board
+- **THEN** the system SHALL launch the WhatsApp Web interface with the lead's phone number prepopulated with an introductory greeting template
+````
+
+## File: openspec/changes/add-whatsapp-functionality/specs/whatsapp-communication/spec.md
+````markdown
+# WhatsApp Communication Spec
+
+This capability governs the WhatsApp message templates, administrative configuration settings, API proxying, and automated alert dispatches for client/instructor updates.
+
+## ADDED Requirements
+
+### Requirement: WhatsApp System Settings
+The system SHALL permit administrators to configure WhatsApp integration settings in the Admin System Settings panel, including a global toggle to enable/disable WhatsApp notifications, a provider API key input, and custom notification templates.
+
+#### Scenario: Admin configures WhatsApp settings
+- **WHEN** the admin visits the System Settings page, enters a valid API key, toggles "Enable WhatsApp Notifications" to active, and saves the settings
+- **THEN** the system SHALL store the WhatsApp configuration keys in the database state and display a success indicator
+
+### Requirement: Send Custom WhatsApp Message
+The system SHALL provide a backend endpoint to dispatch WhatsApp message payloads through a configured provider (e.g. Twilio API or placeholder gateway) using templates with placeholder variables.
+
+#### Scenario: Dispatch WhatsApp notification
+- **WHEN** a system event triggers a notification (e.g., booking confirmation) and WhatsApp notifications are enabled
+- **THEN** the system SHALL resolve the message placeholders and post the payload to the WhatsApp provider gateway endpoint
+
+### Requirement: Admin Chat Shortcut Action
+The system SHALL display a WhatsApp Chat shortcut button next to any member or lead phone number to allow admins to instantly launch a pre-populated chat using WhatsApp Web (`https://wa.me/`).
+
+#### Scenario: Admin initiates WhatsApp chat
+- **WHEN** the admin clicks the WhatsApp icon/button next to a member's phone number
+- **THEN** the system SHALL open a new browser tab navigating to `https://wa.me/<phone_number>?text=<encoded_prepopulated_message>`
+````
+
+## File: openspec/changes/add-whatsapp-functionality/tasks.md
+````markdown
+## 1. Backend Integration & Routing
+
+- [x] 1.1 Extend the database state schema to include the `whatsappSettings` configuration object (enabled state, API key, gateway URL, and template text strings).
+- [x] 1.2 Implement the `/api/send-whatsapp` Express POST route in `server.js` to dispatch mock or production HTTP requests to the WhatsApp provider endpoint.
+
+## 2. Admin System Settings
+
+- [x] 2.1 Add the WhatsApp Integration Settings interface to the Admin Settings panel in `index.html` (global toggle, API credentials input, template editor).
+- [x] 2.2 Bind DOM event handlers to save WhatsApp Settings changes to the database state on update.
+
+## 3. Automated Notification Triggers
+
+- [x] 3.1 Integrate a WhatsApp notification trigger inside the manual invoicing tool code when an invoice is issued or updated.
+- [x] 3.2 Integrate WhatsApp triggers inside the appointment booking, rescheduling, and cancellation event handlers.
+
+## 4. UI Dashboard WhatsApp Shortcut Actions
+
+- [x] 4.1 Update the CRM Swimlane Kanban cards in `index.html`/JavaScript to include WhatsApp direct-chat launch icons next to prospect phone numbers.
+- [x] 4.2 Add WhatsApp launch controls next to student profiles, appointment lists, and outstanding billing ledger items.
+````
+
+## File: openspec/changes/admin-analytics-reports/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/admin-analytics-reports/design.md
+````markdown
+## Context
+
+Studio administrators want to view high-level metrics for their business. Instead of integrating bulky charting libraries, we will use raw inline SVGs dynamically populated by JavaScript.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Add a "Studio Analytics" sub-navigation view to the Admin Panel.
+*   Draw SVG charts representing monthly billing collections and scheduled classes.
+*   Add a ranking table of favorited postures and routine counts.
+*   Implement CSV file generators on the client-side using `data:text/csv` URI blobs.
+*   Implement clean print-friendly CSS formatting for PDF printing of attendance logs.
+
+**Non-Goals:**
+*   Server-side PDF rendering using third-party packages. All document generation happens on the client-side.
+
+## Decisions
+
+### 1. SVG Rendering of Charts
+*   **Decision**: Calculate coordinates dynamically and append SVG elements (rects for bars, paths/polylines for charts) using Vanilla JS.
+*   **Rationale**: Minimizes dependencies, keeps bundling lightweight, and ensures responsive rendering.
+
+### 2. Client-Side CSV Downloads
+*   **Decision**: Generate CSV format strings from localStorage array variables dynamically, convert to Blobs, and trigger downloads using mock anchor links.
+*   **Rationale**: Secure and instant download without requiring backend API generation overhead.
+
+## Risks / Trade-offs
+
+*   **Risk**: SVG chart coordinates can scale incorrectly on screen resize.
+    *   *Mitigation*: Use responsive `viewBox` settings on target SVGs.
+````
+
+## File: openspec/changes/admin-analytics-reports/proposal.md
+````markdown
+## Why
+
+Studio administrators need high-level dashboard visualizations and download capabilities to monitor monthly booking counts, financial collection progress, and posture popularity metrics. Adding dynamic interactive SVG graphs and CSV/PDF report download endpoints will provide administrators with immediate business growth insights.
+
+## What Changes
+
+*   **Analytics Sub-tab in Admin Panel**: Introduce a new "Studio Analytics" sub-view inside the Admin Panel.
+*   **Interactive SVG Charts**: Render SVG-based monthly payment revenue bar charts and class booking line charts with hover tooltip animations.
+*   **Postures Popularity Metrics**: Add statistics displaying favorited pose counts and routine execution frequencies.
+*   **CSV/PDF Export Options**: Add buttons to export financial ledger files (CSV) and attendance logs.
+
+## Capabilities
+
+### New Capabilities
+- `admin-reports-analytics`: Visualizes monthly booking trends, collections, and posture rankings using raw SVG charts. Provides one-click CSV and receipt printing/PDF formatting logs.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+*   **Frontend**: Adds a sub-navigation tab under the Admin Panel view (`index.html` & `app.js`).
+*   **Database/Storage**: Reads payments, appointments, users, and routines datasets. No schema changes are required.
+````
+
+## File: openspec/changes/admin-analytics-reports/specs/admin-reports-analytics/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive SVG Visualizations
+The system SHALL display SVG-based interactive charts within the Studio Analytics panel representing payment collections and class bookings.
+
+#### Scenario: Rendering interactive analytics charts
+- **WHEN** the administrator navigates to the "Studio Analytics" sub-tab in the Admin Panel
+- **THEN** the system generates clean SVG bar charts and line charts displaying monthly collections, class bookings, and posture popularity, with hover effects revealing precise values.
+
+### Requirement: Export to CSV and PDF Reports
+The system SHALL provide export options allowing administrators to download CSV financial ledgers or launch a print-friendly PDF receipt of bookings.
+
+#### Scenario: Downloading CSV financial ledger
+- **WHEN** the administrator clicks the "Export CSV Ledger" button
+- **THEN** the browser triggers a file download containing a comma-separated list of all payment logs with dates, invoice IDs, and amounts.
+
+#### Scenario: Print/PDF formatting of studio logs
+- **WHEN** the administrator clicks the "Print Attendance Log" button
+- **THEN** the system opens a browser print window displaying a clean, receipt-like table formatted for PDF generation or physical print.
+````
+
+## File: openspec/changes/admin-email-center-tab/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-27
+````
+
+## File: openspec/changes/admin-email-center-tab/design.md
+````markdown
+## Context
+
+Currently, the admin portal's "Email Inbox" tab completely replaces the old inline split layout with the fullscreen `admin-emails.html` iframe. To support both interfaces, we will:
+1. Revert `#admin-email-panel` back to its original inline layout (compose, inbox, sent, preview dialogs).
+2. Create a new independent sub-tab panel `#admin-email-center-panel` that contains the iframe.
+3. Wire both sub-tab button triggers inside the admin sub-navigation bar and tab switching logic in `app.js`.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Add a new tab `admin-email-center-tab-btn` and display panel `admin-email-center-panel`.
+- Restore the original HTML composition, inbox lists, and preview cards inside `index.html`.
+- Wire up tab click listeners for both panels in `app.js`.
+
+**Non-Goals:**
+- Modifying student portal tabs.
+
+## Decisions
+
+- **Keep UI distinct**: The original tab is labeled "Email Inbox" (for quick inline messaging), and the new tab is labeled "Email Center" (for folder navigation and list preview splitting). Both are managed side-by-side using the standard `setAdminSubTab` controller.
+
+## Risks / Trade-offs
+
+- **[Risk]**: Restoring the deleted inline elements may introduce syntax conflicts if handlers were not completely clean.
+  - *Mitigation*: Ensure all form listeners (e.g. `adminComposeEmailForm`) check for element existence (`if (adminComposeEmailForm) { ... }`) to avoid null pointer reference errors on pages where they do not load.
+````
+
+## File: openspec/changes/admin-email-center-tab/proposal.md
+````markdown
+## Why
+
+The administrator wants to have both email views accessible directly within the admin portal: the original simplified inline "Email Inbox" tab (featuring simple quick-compose, sent list, and inbox list with Gmail connection status check) and a brand new "Email Center" tab which hosts the full-featured standalone glassmorphic email client dashboard.
+
+## What Changes
+
+- Restore the original inline Compose Form, Sent Items, and Inbox list UI inside `#admin-email-panel` in `index.html`.
+- Add a new admin sub-navigation tab button labeled **✉️ Email Center** and a corresponding panel `#admin-email-center-panel` that hosts the iframe pointing to `admin-emails.html`.
+- Add backing state handlers, DOM queries, and click listeners in `app.js` to support both the restored Email Inbox sub-tab and the new Email Center sub-tab.
+
+## Capabilities
+
+### New Capabilities
+
+*(None)*
+
+### Modified Capabilities
+
+- `email-communication`: Expose two distinct messaging interfaces to the administrator dashboard (Email Inbox for quick communications/status, and Email Center for advanced folder filters/previewing/replies).
+
+## Impact
+
+- **`index.html`**: Restores the inline quick-compose layout in `#admin-email-panel` and adds the new `admin-email-center-panel` iframe tab.
+- **`app.js`**: Adds `adminEmailCenterTabBtn` definitions, sub-tab switching triggers, and restores the quick-compose email form click/submit handlers.
+````
+
+## File: openspec/changes/admin-email-center-tab/specs/email-communication/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Admin Email Center Dedicated Tab
+The system SHALL display a second email navigation tab button named "Email Center" in the administrator portal, allowing direct full-screen embedding of the standalone email dashboard.
+
+#### Scenario: View Email Center Panel inside Dashboard
+- **WHEN** the administrator clicks the "Email Center" navigation tab button
+- **THEN** the system SHALL display a fullscreen embedded iframe pointing to `admin-emails.html`
+````
+
+## File: openspec/changes/admin-email-center-tab/tasks.md
+````markdown
+## 1. Modify HTML Layout
+
+- [x] 1.1 Restore the original inline split layout (Compose card, Sent card, Inbox card, and Preview overlay) inside `#admin-email-panel` in `index.html`.
+- [x] 1.2 Add the new navigation sub-tab button (`admin-email-center-tab-btn`) and the new iframe-based content panel (`admin-email-center-panel`) in `index.html`.
+
+## 2. Wire Tab Navigation and Event Handlers
+
+- [x] 2.1 Add event listeners and panel controls for the new `email-center` sub-tab inside `setAdminSubTab` in `app.js`.
+- [x] 2.2 Re-enable the event handlers and DOM listeners for the restored inline quick-compose email form in `app.js`.
+
+## 3. Rebuild and Verification
+
+- [x] 3.1 Compile the production bundle using `npm run build`.
+````
+
+## File: openspec/changes/admin-email-tab/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-27
+````
+
+## File: openspec/changes/admin-email-tab/design.md
+````markdown
+## Context
+
+The Email tab buttons (`adminEmailTabBtn` on the administrator panel and `profileEmailTabBtn` on the student profile panel) are toggled dynamically on startup and status updates based on local configuration states. Because email setups now rely entirely on server-side environment variables and have no client-side configuration parameters, the client-side toggles evaluate to false, leaving the Email tab buttons invisible.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Ensure the Email sub-navigation tab buttons on both student and administrator interfaces are always displayed.
+
+**Non-Goals:**
+- Allowing configuration settings UI to be toggled.
+
+## Decisions
+
+- **Remove Visibility Toggles**: Instead of conditionally modifying the `style.display` of `adminEmailTabBtn` and `profileEmailTabBtn` based on local settings parameters, the visibility rules will be removed or hardcoded to display (`inline-flex` or default CSS stylesheet rules). This ensures both tab triggers are permanently visible and functional.
+
+## Risks / Trade-offs
+
+- **[Risk]**: Showing tabs when mail configuration is completely missing on the server will display non-functional interfaces.
+  - *Mitigation*: The email controllers show clear error states or user alerts on failed sends, which is acceptable since the server environment variables should be correctly configured.
+````
+
+## File: openspec/changes/admin-email-tab/proposal.md
+````markdown
+## Why
+
+Following the removal of the client-side configuration UI for email integrations, the Email tab button in the admin portal is being hidden because the check condition `(es.clientId || (isResend && resendConfigured))` resolves to `false` when local settings are empty. Since email configuration now relies purely on server-side environment variables, the Email tab should always be displayed to the administrator and student profiles.
+
+## What Changes
+
+- Modify `app.js` to ensure `adminEmailTabBtn` (for admin) and `profileEmailTabBtn` (for students) are always visible and displayed, rather than conditionally hidden based on client local storage configuration.
+
+## Capabilities
+
+### New Capabilities
+
+*(None)*
+
+### Modified Capabilities
+
+- `email-communication`: Update tab visibility criteria to ensure the Email tab is permanently visible on both administrator and student dashboards.
+
+## Impact
+
+- **`app.js`**: Remove the conditional display style toggling of the Email tabs.
+````
+
+## File: openspec/changes/admin-email-tab/specs/email-communication/spec.md
+````markdown
+## MODIFIED Requirements
+
+### Requirement: Email Tab Navigation Visibility
+The dashboard interfaces SHALL display the Email sub-navigation tab button permanently to administrators and students, bypassing client-side integration checking.
+
+#### Scenario: Verify Permanent Visibility of Admin Email Tab
+- **WHEN** an administrator logs in and accesses the dashboard
+- **THEN** the system SHALL show the Email tab button in the sub-navigation menu
+
+#### Scenario: Verify Permanent Visibility of Student Email Tab
+- **WHEN** a student logs in and opens their profile dashboard
+- **THEN** the system SHALL show the Email tab button in the navigation menu
+````
+
+## File: openspec/changes/admin-email-tab/tasks.md
+````markdown
+## 1. Modify Tab Visibility Logic
+
+- [x] 1.1 Remove the style display toggling inside `app.js` (`updateEmailProviderStatusUI`) to ensure `adminEmailTabBtn` and `profileEmailTabBtn` are permanently visible (`style.display = "inline-flex"`).
+
+## 2. Rebuild and Verification
+
+- [x] 2.1 Compile the production bundle using `npm run build`.
+````
+
+## File: openspec/changes/auto-review-upi-payments/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-21
+````
+
+## File: openspec/changes/email-center-theme-sync/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-27
+````
+
+## File: openspec/changes/email-center-theme-sync/design.md
+````markdown
+## Context
+
+The site's global styles rely on custom stylesheet definitions triggered by classes `.theme-light` or `.theme-sunset` placed on the root HTML element (`document.documentElement`). Because `admin-emails.html` loads within an iframe on `index.html`, it maintains a separate document context and stylesheet scope. We need a two-way synchronization mechanism (direct cross-document message dispatching and storage checking) to align themes.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Enable visual theme inheritance in `admin-emails.html` matching the parent document's choice.
+- Support real-time synchronization when the theme is changed in the parent dashboard.
+
+**Non-Goals:**
+- Creating custom theme controls inside the iframe itself.
+
+## Decisions
+
+- **PostMessage + LocalStorage synchronization**: 
+  - **On Load**: `admin-emails.html` will check localStorage key `qy_site_default_theme` and look up the current active session user's configuration to apply theme classes on boot.
+  - **On Update**: `app.js`'s `applyTheme` method will dispatch a cross-document message (`THEME_CHANGE`) to `iframe.contentWindow` whenever a user changes the theme dropdown.
+
+## Risks / Trade-offs
+
+- **[Risk]**: PostMessage calls may execute before the iframe's content has loaded.
+  - *Mitigation*: The iframe reads `localStorage` theme state immediately on document load, which guarantees proper rendering regardless of when the postMessage is delivered.
+````
+
+## File: openspec/changes/email-center-theme-sync/proposal.md
+````markdown
+## Why
+
+The standalone Email Center page (`admin-emails.html`) is rendered inside an iframe in the admin dashboard. Because it loads in its own browsing context, it does not automatically inherit theme toggles (e.g., Light or Sunset themes) applied to the parent dashboard. Synchronization is needed so that the Email Center matches the user's selected interface theme at all times.
+
+## What Changes
+
+- Implement startup theme checking and a `storage` listener inside `admin-emails.html` to apply the active theme loaded from localStorage.
+- Implement postMessage dispatch in `app.js`'s `applyTheme()` to propagate parent theme changes to the iframe.
+- Implement a postMessage message listener in `admin-emails.html` to toggle theme classes dynamically when changed in the parent dashboard.
+
+## Capabilities
+
+### New Capabilities
+
+*(None)*
+
+### Modified Capabilities
+
+- `email-communication`: Ensure the embedded full-screen email client dashboard dynamically synchronizes its visual theme with the user's selected application theme.
+
+## Impact
+
+- **`app.js`**: Dispatch postMessage events inside `applyTheme()`.
+- **`admin-emails.html`**: Retrieve active theme on startup and handle incoming postMessage events to update local document theme classes.
+````
+
+## File: openspec/changes/email-center-theme-sync/specs/email-communication/spec.md
+````markdown
+## MODIFIED Requirements
+
+### Requirement: Email Interface Visual Customization
+The standalone Email Center client SHALL match the selected visual interface theme class (midnight, light, or sunset) on startup and update dynamically when changes occur in the parent document container.
+
+#### Scenario: Verify Realtime Theme Sync in Embedded Email Center
+- **WHEN** the administrator toggles the active theme dropdown in the System Settings
+- **THEN** the system SHALL propagate a postMessage theme update to the Email Center iframe
+- **AND** the Email Center document SHALL apply the matching CSS theme class immediately
+````
+
+## File: openspec/changes/email-center-theme-sync/tasks.md
+````markdown
+## 1. Implement Theme Dispatcher in Parent
+
+- [x] 1.1 Update `applyTheme(themeName)` in `app.js` to dispatch a `THEME_CHANGE` postMessage event to the active `admin-emails.html` iframe window.
+
+## 2. Implement Theme Receiver in Standalone Page
+
+- [x] 2.1 Add theme check on startup, cross-window storage event listener, and postMessage event listener in `admin-emails.html` to toggle theme classes (`theme-light`, `theme-sunset`) on the root document.
+
+## 3. Rebuild and Verification
+
+- [x] 3.1 Compile the production bundle using `npm run build`.
+````
+
+## File: openspec/changes/guided-practice-voice-coach/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/guided-practice-voice-coach/design.md
+````markdown
+## Context
+
+Yoga practitioners struggle to maintain visual contact with dashboard screens during balances, forward folds, or inversions. Implementing client-side Text-to-Speech (TTS) using the browser's Web Speech API solves this problem without external backend voice api costs.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement a Toggle Voice Coach UI switch inside the routine preview and play viewport modals.
+*   Hook transition timers to synthesize `SpeechSynthesisUtterance` cues.
+*   Enable voice choice settings (allowing users to pick their preferred voice or set pitch/rate).
+
+**Non-Goals:**
+*   Voice recognition (speech-to-text) for command controls (e.g. telling the app to "pause" or "stop").
+*   Custom hosted voice audio files (synthesis runs 100% locally on the device).
+
+## Decisions
+
+### 1. Web Speech Synthesis (TTS) Engine
+*   **Decision**: Leverage standard `window.speechSynthesis`.
+*   **Rationale**: Supported out of the box in all modern browsers (Safari, Chrome, Firefox, Edge) without network request latency or pricing concerns.
+
+### 2. Multi-Voice Settings Panel
+*   **Decision**: Populate a drop-down selection list using `speechSynthesis.getVoices()` so users can switch speaking options.
+*   **Rationale**: Ensures a customized experience (gender/accent options) depending on user preferences.
+
+## Risks / Trade-offs
+
+*   **Risk**: Voice synthesis can overlap if triggers fire too close together.
+    *   *Mitigation*: Execute `window.speechSynthesis.cancel()` before speaking any new transition or breath phrase.
+*   **Risk**: Speech synthesis requires user interaction before it can play on page load (browser autoplay restrictions).
+    *   *Mitigation*: The toggle is inside the routine modals, which are clicked by the user, satisfying the user gesture requirement.
+````
+
+## File: openspec/changes/guided-practice-voice-coach/proposal.md
+````markdown
+## Why
+
+During guided routines, users must look at their screens to check posture changes, alignment tips, and breathing counts. This screen dependency compromises balance and flow. Incorporating a dynamic voice guide using the browser's native Web Speech API (Text-to-Speech) will create a hands-free, auditory guided practice environment, allowing students to maintain focus and alignment.
+
+## What Changes
+
+*   **Voice Coach Toggle Button**: An overlay or setting inside the routine player modal allowing users to enable/disable the interactive audio guide.
+*   **Speech Trigger Dispatchers**: Hook Speech Synthesis triggers to routine step transitions and breathing ticker ticks.
+*   **Alignment Speech Engine**: Read pose names, step durations, and specific posture alignment notes out loud as steps change.
+*   **Breathing Cadence Audio Guides**: Read breathing cues ("Inhale... Exhale...") dynamically aligned with the routine's pacing.
+
+## Capabilities
+
+### New Capabilities
+- `voice-coach`: Implements client-side Text-to-Speech guides using Web Speech API synthesis to read alignment and breathing cues hands-free.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+*   **Frontend**: Adds UI toggles to the routine video player modals and inserts speech dispatches in step transition routines (`app.js`).
+*   **Aesthetics**: Glassmorphic sound toggles, volume sliders, and animations when the voice coach is active.
+````
+
+## File: openspec/changes/guided-practice-voice-coach/specs/voice-coach/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive Audio Alignment Guides
+The system SHALL narrate pose descriptions and transitions using the browser's native Web Speech API when the voice coach is enabled.
+
+#### Scenario: Audio guide triggers on pose transition
+- **WHEN** the user starts a guided routine and the step changes to a new posture
+- **THEN** the system checks if the voice coach toggle is enabled, and if so, synthetically speaks the pose name and its core alignment tip.
+
+### Requirement: Breathing Cadence Auditory Prompts
+The system SHALL narrate breathing cycles ("Inhale" and "Exhale") at regular intervals matching the pose hold pacing.
+
+#### Scenario: Breathing guides narration
+- **WHEN** a pose step hold begins
+- **THEN** the system triggers periodic audio announcements ("Inhale for 4 seconds... Exhale for 4 seconds...") matching the hold duration settings.
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/design.md
+````markdown
+## Context
+
+Currently, the Quantum Yoga platform manages scheduling and asynchronous guided video routines, but does not support live video sessions. This design introduces interactive virtual rooms inside the platform dashboard using the Jitsi Meet IFrame API. This integrates low-latency video streaming without adding high-cost WebRTC infrastructure.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement a virtual WebRTC video classroom directly inside a glassmorphic dashboard pane (`#live-class-section`).
+*   Allow administrators (instructors) to spin up and control active video streams.
+*   Allow students to join active classes directly from their assigned timetables.
+*   Ensure full responsiveness across desktop and mobile screens.
+
+**Non-Goals:**
+*   Hosting custom WebRTC media servers (like Kurento, Janus, or Mediasoup) on the studio server.
+*   Recording or archiving live streams.
+*   Private 1-on-1 calls.
+
+## Decisions
+
+### 1. WebRTC Provider Selection
+*   **Decision:** Jitsi Meet IFrame API over daily.co or a custom WebRTC server.
+*   **Rationale:** Jitsi Meet is fully open-source and free to embed. The `external_api.js` library allows full control over room events, participant layouts, and audio/video settings directly from our frontend client. This avoids hosting costly and complex TURN/STUN or SFU/MCU video servers.
+*   **Alternative Considered:** Daily.co (requires account creation and API limits) or custom WebSocket WebRTC signaling (too complex to scale for multi-user classrooms).
+
+### 2. Frontend Embedding
+*   **Decision:** Load the Jitsi API script dynamically or declare it in `index.html`, and instantiate `JitsiMeetExternalAPI` on an empty container (`#live-class-room-container`) inside the new chat/live section.
+*   **Rationale:** Dynamic instantiation inside a container allows us to mount and unmount the iframe room cleanly when switching tabs to prevent background audio leaks.
+
+### 3. Timetable Sync
+*   **Decision:** When a timetable slot is active, calculate the Jitsi room name dynamically based on the batch ID (e.g., `qy-room-vinyasa-mornings`) and display a "Join Class" button on the client dashboard.
+*   **Rationale:** Avoids storing active meeting URLs in the database, keeping scheduling state fully automatic and calculated from current time.
+
+## Risks / Trade-offs
+
+*   **Risk:** Jitsi public server (`meet.jit.si`) capacity or rate limits.
+    *   *Mitigation:* Jitsi Meet allows using custom instances or low-cost Jitsi-as-a-Service (JaaS) domains. We will define the domain as a variable so it can be pointed to a dedicated server easily.
+*   **Risk:** Camera/mic permissions blocking.
+    *   *Mitigation:* Check for browser capability (`navigator.mediaDevices.getUserMedia`) and display clean instructions if permissions are denied.
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/proposal.md
+````markdown
+## Why
+
+Currently, students can view static yoga postures, follow guided routines, and discuss wellness in the community chat, but there is no way to participate in live virtual streaming sessions directly on the platform. Adding integrated virtual classrooms enables students to join interactive live stream rooms hosted by instructors without leaving their premium glassmorphic dashboard, increasing engagement and community bonding.
+
+## What Changes
+
+*   **Live Stream Container**: Integrate a WebRTC-based live streaming viewport directly inside the dashboard structure.
+*   **Instructor Room controls**: Provide administrators/instructors with the ability to launch interactive video rooms.
+*   **Student Stream Viewport**: Allow students to join the classroom video feed as viewing participants.
+*   **Navigation Integration**: Add a dedicated "Live Class" portal linked to the active weekly timetables.
+
+## Capabilities
+
+### New Capabilities
+- `live-yoga-rooms`: Virtual classroom streaming portal that overlays a WebRTC interactive live feed (via Jitsi Meet IFrame API integration) directly on the student and instructor dashboards.
+
+### Modified Capabilities
+- `class-scheduling`: Update active schedules to support launching/joining active video links for live timetabled classes.
+
+## Impact
+
+*   **Frontend UI (`index.html`, `app.js`, `index.css`)**: New navigation portal (`#nav-live-class`), streaming viewport container (`#live-class-section`), and interactive overlay components.
+*   **Backend Server (`server.js`)**: Extend database state to track room status (active, offline) and session credentials.
+*   **Dependencies**: Integrate Jitsi Meet IFrame API library (`https://8x8.vc/external_api.js` or standard Jitsi Meet client script) on the frontend.
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/specs/class-scheduling/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Timetable Active WebRTC Room Links
+The system SHALL display an active "Join Live Class" WebRTC room link in the student's dashboard timetable when a timetabled class session is currently active or in progress.
+
+#### Scenario: Joining active class from countdown timetable
+- **WHEN** the countdown timer reaches 0 or indicates "Class in progress"
+- **THEN** the system displays a clickable "Join Live Room" button next to the timetable entry.
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/design.md
+````markdown
+## Context
+
+Quantum Yoga students currently have a timetable but no direct gamified habit trackers. Adding a practice contribution chart (similar to GitHub's contribution heat map), streak counter, and unlocked badges will provide visual rewards and encourage regular application interaction.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement a contribution chart (GitHub-style calendar grid) displaying the last 365 days of user practices.
+*   Implement current vs longest practice streak counters.
+*   Award milestone badges for key streak accomplishments (e.g. 3-day, 7-day, 14-day, 30-day).
+*   Add a checkbox or trigger on the student dashboard allowing them to check off today's class/practice manually.
+
+**Non-Goals:**
+*   Integrating external fitness trackers (Apple Health, Google Fit) for automatic logging.
+*   Synchronizing peer grids in real-time (grids are shown on user profiles individually).
+
+## Decisions
+
+### 1. Client-Side Rendering of the Contribution Chart
+*   **Decision**: Render the 365-day grid using pure CSS Grid and Vanilla Javascript dynamically (a container filled with 365 pixel divs styled according to state).
+*   **Rationale**: Avoids bloated graphing libraries. CSS grid provides complete glassmorphic control, color density styling, and easy tooltip/hover effects.
+
+### 2. State Storage in User Database
+*   **Decision**: Store a list of completed practice timestamps (ISO strings or YYYY-MM-DD strings) in `state.currentUser.practice_logs` and serialize it to the server state database.
+*   **Rationale**: Keeps logging persistent across browser sessions and VM deployments. Allows easy backend calculations if needed.
+
+## Risks / Trade-offs
+
+*   **Risk**: Rendering 365 divs per user could impact loading performance.
+    *   *Mitigation*: Pre-generate the divs once during dashboard load and update cell colors on checking/unchecking practices.
+*   **Risk**: Manual logging can be manipulated or backdated.
+    *   *Mitigation*: Only allow users to check off the current date (no backdating or future logging).
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/proposal.md
+````markdown
+## Why
+
+To encourage regular yoga practice, students need visual habit-building tools. Introducing a GitHub-style activity grid (practice calendar), active practice streaks, and milestones will provide visual validation, increase dashboard interactive engagement, and keep practitioners motivated.
+
+## What Changes
+
+*   **Practice Streak Grid Component**: A beautiful glassmorphic contribution chart showing the student's practice density (sessions/sessions checked off) over the year.
+*   **Streak Tracker**: Computes and displays current daily streaks and longest streaks.
+*   **Milestones & Badges**: Awards virtual milestone badges with glowing hover effects for streak achievements.
+*   **Practice Logging**: Integrates practice completion logging (e.g. marking a scheduled routine or pose workout as completed for the day).
+
+## Capabilities
+
+### New Capabilities
+- `practice-tracker`: Handles tracking practice logins/completions, computing current and longest streaks, showing the contribution grid, and awarding milestone badges.
+
+### Modified Capabilities
+<!-- None -->
+
+## Impact
+
+*   **Frontend**: Adds a new interactive sub-component or card in the student dashboard (Profile tab/section).
+*   **Database/Storage**: Adds a `practice_logs` array to the user's database state to store completion timestamps.
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/specs/practice-tracker/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive Practice Contribution Grid
+The system SHALL display a pixelated contribution chart showing the student's yoga practice density over the past 365 days.
+
+#### Scenario: Displaying contribution calendar density on load
+- **WHEN** the student views their profile page
+- **THEN** the system renders a contribution grid with days of the year, color-coded by practice intensity (0 for none, 1-4 for logged sessions), and hover tooltips showing date and logged count.
+
+### Requirement: Streak Counting and Milestones
+The system SHALL compute current daily practice streaks and longest practice streaks, displaying them alongside visual badges.
+
+#### Scenario: Dynamic calculation of practice streaks
+- **WHEN** a student checks off a yoga class or pose session completion
+- **THEN** the system increments their daily practice log, updates their current and longest streak values in real-time, and plays a subtle check-off animation.
+
+#### Scenario: Displaying milestone achievements
+- **WHEN** the student's current streak reaches milestone counts (e.g., 5 days, 15 days, 30 days)
+- **THEN** the system unlocks and illuminates a glowing milestone badge in the milestone section.
+````
+
+## File: openspec/changes/practice-calendar-streak-grid/tasks.md
+````markdown
+## 1. Database Model and Persistence
+
+- [x] 1.1 Update `saveToServer()` in `app.js` to serialize `practice_logs` array
+- [x] 1.2 Update `loadFromServer()` in `app.js` to retrieve and store `practice_logs` array
+
+## 2. Dashboard UI Elements
+
+- [x] 2.1 Add the practice calendar container (`#practice-calendar-container`) and streak boxes to the student profile section in `index.html`
+- [x] 2.2 Add milestone badge containers with glassmorphic styles in `index.html`
+- [x] 2.3 Implement the Check-In checkbox or button widget inside `index.html` to allow checking off today's practice
+
+## 3. Habit Tracker Logic
+
+- [x] 3.1 Implement calendar grid generation logic in `app.js` to dynamically draw the 365 contribution days
+- [x] 3.2 Implement streak counter calculator (current streak and longest streak) in `app.js` based on `practice_logs`
+- [x] 3.3 Implement check-in button click handler in `app.js` to update `practice_logs`, save to server, trigger check-off animations, and recalculate streaks
+- [x] 3.4 Implement badge illumination logic in `app.js` when milestone targets are hit
+
+## 4. Testing and Verification
+
+- [x] 4.1 Run `npm run build` to verify the frontend compilation
+- [x] 4.2 Verify calendar grids render correctly and check-ins increment daily streaks on mock login
+````
+
+## File: openspec/changes/real-time-community-chat/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-24
+````
+
+## File: openspec/changes/real-time-community-chat/design.md
+````markdown
+## Context
+
+The Quantum Yoga application currently runs an Express-based server backend to handle APIs and static asset delivery. To add real-time community chat capability, we must incorporate a bi-directional messaging solution. We will use the existing `ws` npm dependency to run a WebSocket server co-hosted on the main HTTP server port.
+
+## Goals / Non-Goals
+
+**Goals:**
+*   Implement a WebSocket connection endpoint co-hosted with the Express API server.
+*   Store the last 50 messages locally (in `db.json` or database pools) to maintain history during app restarts.
+*   Introduce a new glassmorphic "Community Chat" tab in the frontend layout.
+*   Broadcast message streams, connection lists, and message history feeds securely.
+
+**Non-Goals:**
+*   Implementing private 1-on-1 direct messaging (only a single shared community room is in scope).
+*   Rich text messaging or file uploads (text-only messages are supported).
+*   Chat moderation tools (mute, ban, block) or user reporting.
+
+## Decisions
+
+### 1. Unified HTTP & WebSocket Co-Hosting
+*   **Choice:** Co-host the WebSocket server (`ws`) on the same Express server port using Node's standard `http` server instance.
+*   **Rationale:** Avoids configuring additional ports, simplifying firewall setups and avoiding browser mixed-content/CORS errors in production VM environments.
+*   **Alternative:** running a standalone WebSocket server on a separate port (e.g. 8081). Rejected because it requires configuring extra VM port mappings and inbound security group rules.
+
+### 2. Memory/Database Message Cache
+*   **Choice:** Cache the last 50 messages in the active database state (`db.json` / postgres).
+*   **Rationale:** Keeps the chat history lightweight while ensuring messages persist when the PM2 process reloads or redeploys.
+
+## Risks / Trade-offs
+
+*   **[Risk] Out-of-memory or database size inflation:** Storing message feeds could bloat database sizes.
+    *   *Mitigation:* Enforce a strict buffer size (limit to maximum 50 messages, slicing old messages when new ones arrive).
+*   **[Risk] Unauthenticated spam:** Socket connections could be opened anonymously.
+    *   *Mitigation:* Validate session info or require user logins before broadcasting messages.
+````
+
+## File: openspec/changes/real-time-community-chat/proposal.md
+````markdown
+## Why
+
+Quantum Yoga currently lacks a live interaction channel for active members to communicate directly with instructors and peers. Adding a real-time community chat room will foster student engagement, enable instructors to share motivation instantly, and build a connected community.
+
+## What Changes
+
+*   Introduce a new WebSocket-enabled chat server module on the Express backend.
+*   Create a clean, glassmorphic UI tab in the student and admin dashboards named "Community Chat".
+*   Display real-time messages, user statuses, and user roles (Student vs. Administrator/Instructor).
+
+## Capabilities
+
+### New Capabilities
+- `community-chat`: A real-time WebSocket-based community chat room allowing active students and instructors to chat, share motivation, and ask questions.
+
+### Modified Capabilities
+- `user-auth-profile`: User profiles will be integrated to map nicknames and avatars dynamically into active chat sessions.
+
+## Impact
+
+*   **Express Backend (`server.js`):** Will incorporate a WebSocket server (`ws`) handling live connection hooks, broadcast sessions, and safety limits.
+*   **Frontend UI (`index.html` & `app.js`):** A new "Community Chat" navigation link and panel will render chat streams, message input, and list active users.
+*   **Database:** A history log structure for the last 50-100 messages will persist chat feeds across socket restarts.
+````
+
+## File: openspec/changes/real-time-community-chat/specs/community-chat/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Real-time Message Broadcasting
+The system SHALL broadcast any user-sent chat messages in real time to all currently connected clients using WebSockets.
+
+#### Scenario: Send message to chat
+- **WHEN** an authenticated user sends a message in the chat input
+- **THEN** the system broadcasts a JSON message containing the sender's name, role (Student or Admin), message body, and timestamp to all active sockets
+
+### Requirement: Message History Retention
+The system SHALL store the last 50 chat messages in the database and transmit this history to newly connected clients.
+
+#### Scenario: Join chat room
+- **WHEN** a client successfully establishes a WebSocket connection to the chat room
+- **THEN** the system SHALL immediately send the last 50 stored chat messages to populate the client's message feed
+
+### Requirement: Active User List
+The system SHALL track and display the list of currently active (connected) users in the chat room.
+
+#### Scenario: User online status updates
+- **WHEN** a user opens or closes the chat tab (connecting or disconnecting from the socket)
+- **THEN** the system SHALL broadcast an updated list of online user names to all connected clients
+````
+
+## File: openspec/changes/real-time-community-chat/specs/user-auth-profile/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Profile Integration in Chat
+The system SHALL retrieve and display the authenticated user's name and role (Student or Admin) from their profile when they send messages or appear online in the chat room.
+
+#### Scenario: Display profile name in sent messages
+- **WHEN** a logged-in user sends a message to the chat room
+- **THEN** the system SHALL attach their authenticated profile name and membership role to the message payload before broadcasting it
+````
+
+## File: openspec/changes/remove-email-config-ui/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-27
+````
+
+## File: openspec/changes/remove-email-config-ui/design.md
+````markdown
+## Context
+
+Currently, the admin portal displays an "Email Provider" settings card to configure Gmail OAuth and Resend API integrations. This design moves the configuration purely to the server-side environment variables (.env file) to prevent storing sensitive keys in the client's local storage.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Remove the Gmail and Resend settings UI from the admin portal configuration interface.
+- Force the application client-side to assume Resend is configured and active (`resendConfigured = true`).
+- Ensure all API-based mail sends pass empty configuration fields so the backend defaults to the environment variables (`RESEND_API_KEY`, `RESEND_FROM_ADDRESS`).
+
+**Non-Goals:**
+- Implementing a database-based configuration mechanism.
+- Modifying email delivery engines beyond utilizing existing environment variables.
+
+## Decisions
+
+- **Client-side configuration mock**: Instead of looking up `localStorage` settings for Resend configuration status, `app.js` and `admin-emails.html` will hardcode or bypass configuration verification, assuming `resendConfigured` is `true`.
+- **Environment fallback routing**: When sending emails, the client leaves `apiKey` and `from` empty, causing the server proxy `/api/send-email` to use `process.env.RESEND_API_KEY` and `process.env.RESEND_FROM_ADDRESS` respectively.
+
+## Risks / Trade-offs
+
+- **[Risk]**: If the server environment variables are not set up or configured improperly, mail sends will fail silently or return a 500 without prior client-side validation.
+  - *Mitigation*: Ensure the backend proxy returns descriptive errors and prints clear warnings in PM2 logs if environment variables are missing during startup or execution.
+````
+
+## File: openspec/changes/remove-email-config-ui/proposal.md
+````markdown
+## Why
+
+Currently, the application allows administrators to configure the Resend API key and choose between email providers (Gmail and Resend) directly from the client settings panel. This introduces a security risk by storing sensitive API keys in the client's local storage and complicates administration when server environment variables are already configured with the correct Resend credentials. Removing this UI simplifies administration and improves security.
+
+## What Changes
+
+- Remove the **Email Provider** settings card (Gmail and Resend settings fields) from the Admin Settings tab.
+- Update client-side checking so that email features (Email Tab, compose, reply) are considered always active/available (falling back directly to server environment variables if local configuration is empty).
+- Update client email compose handlers to send empty `apiKey` and `from` fields, letting the server default to the environment configuration.
+
+## Capabilities
+
+### New Capabilities
+
+*(None)*
+
+### Modified Capabilities
+
+- `admin-email-inbox`: Update configuration behavior to assume the Resend provider is always active and configured using server environment variables rather than client-entered local storage settings.
+
+## Impact
+
+- **`index.html`**: Removal of the Email Provider settings card inside the settings section.
+- **`app.js`**: Update visibility and check helpers (`resendConfigured` set to `true`) and disable settings save listeners.
+- **`admin-emails.html`**: Update client compose and reply handlers to pass empty strings as Resend settings, triggering server-side environment variables fallback.
+````
+
+## File: openspec/changes/remove-email-config-ui/specs/email-communication/spec.md
+````markdown
+## MODIFIED Requirements
+
+### Requirement: Client Email Authorization Configuration Check
+The client-side application SHALL consider the Resend email service provider to be active and configured by default, enabling all compose, reply, and inbox tabs.
+
+#### Scenario: Verify Email Capability Activation
+- **WHEN** the dashboard application starts up
+- **THEN** the system SHALL show the Email tabs for both admin and student profiles as available
+
+## REMOVED Requirements
+
+### Requirement: Client-side Email Provider Settings UI
+**Reason**: Storing sensitive API keys and Client IDs in browser local storage poses security risks. Setting configurations at the server environment level is more secure.
+**Migration**: Remove settings fields for Gmail Client ID, Resend API Key, and From Address. Fall back entirely to server environment configuration.
+````
+
+## File: openspec/changes/remove-email-config-ui/tasks.md
+````markdown
+## 1. Clean Up Admin Settings UI
+
+- [x] 1.1 Remove the Email Provider card from the Settings tab inside `index.html`.
+- [x] 1.2 Disable client-side event listeners and saving handlers for Resend and Gmail credentials in `app.js`.
+
+## 2. Hardcode Configuration Check Logic
+
+- [x] 2.1 Update status checking inside `app.js` (`updateEmailProviderStatusUI`, inbox renderers) to hardcode `resendConfigured = true`.
+- [x] 2.2 Update student email tab checking in `app.js` (`renderStudentEmailTab`) to assume `resendConfigured = true` is active.
+
+## 3. Fallback Send Configuration
+
+- [x] 3.1 Modify compose/reply email submit handlers in `admin-emails.html` to transmit empty string credential fields (`apiKey: ""` and `from: ""`) to leverage server environment defaults.
+- [x] 3.2 Run local production compilation using `npm run build` and verify that the app compiles and is ready for remote deployment.
+````
+
+## File: openspec/changes/student-email-inbox/.openspec.yaml
+````yaml
+schema: spec-driven
+created: 2026-06-27
+````
+
+## File: openspec/changes/student-email-inbox/design.md
+````markdown
+## Context
+
+When administrators send emails to students (using the Resend API provider), the emails are logged in the unified database (`db.json`) under the `emails` array with `direction: 'sent'` (from the admin outbox perspective). The student inbox tab utilizes `renderStudentInbox()` in `app.js` to view their incoming messages, but its filtering logic is restricted to messages marked as incoming (`folder: 'inbox'` or `direction: 'received'`). Consequently, emails sent directly from the admin to the student are omitted from the student's view.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Update `renderStudentInbox` in `app.js` to filter emails based on the recipient's address (`e.to`) rather than the folder/direction metadata.
+
+**Non-Goals:**
+- Modifying how the database logs email entries.
+- Creating secondary inbox tabs for students.
+
+## Decisions
+
+- **Recipient-based filtering**: Modify the `emails.filter` block inside `renderStudentInbox()` to match any email where the `to` field contains the logged-in student's email address. Since all emails sent *to* the student are by definition incoming messages for that student, this accurately retrieves their entire correspondence history.
+
+## Risks / Trade-offs
+
+- **[Risk]**: If emails are sent to multiple students or in CC/BCC, the filter must check correctly.
+  - *Mitigation*: The `includes(userEmail.toLowerCase())` query resolves this by finding the student's email anywhere inside the recipient string.
+````
+
+## File: openspec/changes/student-email-inbox/proposal.md
+````markdown
+## Why
+
+Currently, when administrators send transactional or manual emails to students, these emails are stored in the database with `direction: 'sent'` and `folder: 'sent'`. Because the student inbox rendering logic restricts visible emails to those marked with `folder: 'inbox'` or `direction: 'received'`, students are unable to see any emails sent to them by the admin, resulting in a blank student inbox.
+
+## What Changes
+
+- Refactor the student inbox filter in `app.js` (`renderStudentInbox`) to display all emails addressed to the logged-in student, regardless of the folder/direction flag.
+
+## Capabilities
+
+### New Capabilities
+
+*(None)*
+
+### Modified Capabilities
+
+- `email-communication`: Update the student inbox filter criteria to correctly display all messages where the student's email is the recipient.
+
+## Impact
+
+- **`app.js`**: Refactor `renderStudentInbox` filter criteria.
+````
+
+## File: openspec/changes/student-email-inbox/specs/email-communication/spec.md
+````markdown
+## MODIFIED Requirements
+
+### Requirement: Student Inbox Message Filtering
+The student-side portal SHALL list all messages where the recipient (`to` field) matches the logged-in student's email address, regardless of whether the database record is flagged as sent or received.
+
+#### Scenario: Display Incoming Admin Correspondence in Student Portal
+- **WHEN** a student logs into their portal and visits the Email section
+- **THEN** the system SHALL display all email records addressed to them, including emails sent by the studio administrator
+````
+
+## File: openspec/changes/student-email-inbox/tasks.md
+````markdown
+## 1. Modify Student Inbox Filtering
+
+- [x] 1.1 Refactor the email filter in `renderStudentInbox()` within `app.js` to select any message where `e.to` matches the logged-in student's email, bypassing direction/folder constraints.
+
+## 2. Rebuild and Verification
+
+- [x] 2.1 Compile the production bundle using `npm run build`.
+````
+
+## File: openspec/specs/deployment-ci-cd/spec.md
+````markdown
+# Deployment & CI/CD Specification
+
+## Overview
+This specification details the deployment architecture, configuration parameters, and CI/CD automated pipeline for the Quantum Yoga platform. It covers local dev server behavior, production Express configurations, PM2 process management, and GitHub Actions workflow execution.
+
+---
+
+## Deployment Architecture
+
+### 1. Environments
+*   **Local Development:** Vite dev server proxying backend requests to local Express middlewares (CORS-free integration testing).
+*   **Production VM:** Node.js Express server running under PM2 serving Vite-compiled static assets and handling production database / integration APIs.
+
+### 2. Process Flow & CI/CD Orchestration
+```
+Developer Push to Git
+  ├── GitHub Actions CI Job (ubuntu-latest)
+  │     ├── Install npm dependencies (npm ci)
+  │     ├── Run test verification (npm test)
+  │     └── Compile Vite static bundle (npm run build)
+  └── GitHub Actions CD Job
+        ├── Transfer production bundle via SCP
+        └── SSH VM commands:
+              ├── Safely check/initialize db.json template
+              ├── Clean up old PM2 processes
+              ├── Install production dependencies
+              └── Restart PM2 app (quantum-yoga)
+```
+
+---
+
+## Capabilities & Implementation Details
+
+### 1. Build Compilation
+*   **Assets Target Directory:** `dist/` containing optimized JS modules, CSS styling stylesheets, and hashed image assets.
+*   **Vite Configurations:** Defined in [vite.config.js](file:///d:/QuantumYogaWebsite/vite.config.js).
+
+### 2. VM Deployment & SSH Authentication
+*   **Secrets Dependency:**
+    *   `VM_SSH_IP`: VM Server public hostname/IP.
+    *   `VM_SSH_USER`: SSH login username.
+    *   `VM_SSH_KEY`: Secure private SSH credential.
+    *   `VM_DEPLOY_PATH`: Absolute destination path.
+*   **Artifacts Package Content:** `dist/`, `server.js`, `package.json`, `package-lock.json`, `ecosystem.config.cjs`, client assets (`app.js`, `data.js`, `index.css`, `index.html`, image assets).
+
+### 3. Database State Persistence
+*   **Handling `db.json`:** To preserve database updates on the VM, the raw `db.json` file is transferred as `db.json.template` and initialized only if no active `db.json` file is present.
+
+### 4. PM2 Process Manager Configuration
+*   Managed via [ecosystem.config.cjs](file:///d:/QuantumYogaWebsite/ecosystem.config.cjs).
+*   **Process Name:** `quantum-yoga`
+*   **Script Target:** `server.js`
+*   **Process Monitoring:** Configured for auto-restart, production flag, log integration, and automatic memory limit restarts (1GB limit).
+````
+
+## File: package.json
+````json
+{
+  "name": "quantum-yoga-website",
+  "version": "1.0.0",
+  "description": "A premium static dashboard website for Quantum Yoga",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node server.js",
+    "test": "npx jest",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "jest": "^30.4.2",
+    "repomix": "^1.15.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "supertest": "^7.2.2",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
+    "express": "^5.2.1",
+    "pg": "^8.21.0",
+    "ws": "^8.21.0"
+  }
+}
+````
+
+## File: sample_ledger.csv
+````
+Transaction Date,UTR / Transaction Ref,Transaction Description,Amount,Status
+2026-06-20,901123456789,UPI/Sarah Jenkins/Vinyasa,1500,SUCCESS
+2026-06-21,901123456790,UPI/John Doe/Coaching,1999,SUCCESS
+2026-06-21,901123456791,UPI/Jane Smith/Private,2499,SUCCESS
+````
+
+## File: wiki/Community-Chat.md
+````markdown
+# Community Chat & WebSockets
+
+Quantum Yoga includes a real-time community chat room where students and instructors can interact. This feature is powered by a co-hosted WebSocket server running on the same port as the main HTTP application.
+
+---
+
+## 🔌 WebSocket Co-Hosting Architecture
+
+To simplify deployment and avoid CORS/firewall complications, the WebSocket server is bound to the existing HTTP server instance:
+
+```javascript
+import ws from 'ws';
+// ...
+const server = app.listen(PORT, ...);
+const wss = new ws.WebSocketServer({ server });
+```
+
+This configuration enables the WebSocket server to share port `80` (or `8080` in development) with Express. Clients connect using the relative protocol matching the page loading protocol:
+*   `ws://<host>` for insecure HTTP connections.
+*   `wss://<host>` for secure HTTPS connections.
+
+---
+
+## 📨 Message Protocol & Schemas
+
+The client and server communicate via JSON-encoded string payloads. Below are the primary event types:
+
+### 1. User Join (`join`)
+**Direction:** Client ➔ Server  
+Sent immediately after the connection is opened to register the user's name and role.
+```json
+{
+  "type": "join",
+  "name": "Jane Doe",
+  "role": "Student" // or "Admin" for instructors
+}
+```
+
+### 2. Message History (`history`)
+**Direction:** Server ➔ Client  
+Sent to the joining user immediately after registering. Contains the last 50 archived chat messages.
+```json
+{
+  "type": "history",
+  "messages": [
+    {
+      "id": "msg-1718000000000-123",
+      "name": "Instructor Vivekk",
+      "role": "Admin",
+      "text": "Welcome to the class! Here is your daily motivation.",
+      "timestamp": "2026-06-25T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+### 3. Send Message (`message`)
+**Direction:** Client ➔ Server ➔ Broadcast to All Clients  
+When a user submits a message, the client packages the input:
+```json
+{
+  "type": "message",
+  "name": "Jane Doe",
+  "role": "Student",
+  "text": "Hello, excited for the yoga flow!"
+}
+```
+The server intercepts this, creates a message object with a unique ID and ISO timestamp, saves it to the unified database state, and broadcasts the structured event:
+```json
+{
+  "type": "message",
+  "message": {
+    "id": "msg-1718000050000-456",
+    "name": "Jane Doe",
+    "role": "Student",
+    "text": "Hello, excited for the yoga flow!",
+    "timestamp": "2026-06-25T00:00:50.000Z"
+  }
+}
+```
+
+### 4. Active Online Users (`users`)
+**Direction:** Server ➔ Broadcast to All Clients  
+Sent whenever a client joins or disconnects (closes connection) to refresh the online users panel.
+```json
+{
+  "type": "users",
+  "users": [
+    { "name": "Instructor Vivekk", "role": "Admin" },
+    { "name": "Jane Doe", "role": "Student" }
+  ]
+}
+```
+
+---
+
+## 💾 Storage & Persistence
+
+Chat history is persisted in the unified database (`state.chatMessages` array) using the selected adapter (PostgreSQL, Supabase, or local `db.json` fallback).
+*   **Capacity Limit:** The server caches and stores up to **50 messages**.
+*   **Rotation:** When a new message arrives, if the history size exceeds 50, the oldest message is dropped (`slice(-50)`).
+
+---
+
+## 🛡️ Security & UX Controls
+
+1.  **XSS Protection:** Client renders text securely. HTML tags within incoming chat messages are escaped using `escapeHtml()` in `app.js` prior to DOM insertion:
+    ```javascript
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[m]);
+    }
+    ```
+2.  **Auto-Scroll:** The message container automatically scrolls down to display incoming messages if the user is active in the chat tab.
+3.  **Role Styling:** Message headers are styled differently depending on the role (`Admin`/Instructors receive a gold-highlighted name and an `Instructor` badge; `Students` receive a standard student badge).
+````
+
 ## File: wiki/Core-Yoga-Directory.md
 ````markdown
 # Core Yoga Directory
@@ -12123,6 +8859,767 @@ To avoid relying on generic external players, Quantum Yoga implements a customiz
 *   **Controls:** Clean custom progress scrubber bar, buffered media ranges, and Volume Sliders.
 *   **Synchronization:** Displays elapsed duration vs total track runtime.
 *   **Automated Events:** Listens to video termination handlers to instantly trigger routine completion records without requiring manual button clicks.
+````
+
+## File: wiki/Email-Communication.md
+````markdown
+# Email Communication Systems
+
+Quantum Yoga hosts a dual-provider email client allowing both scheduled transactional emails and direct interactive mail threads.
+
+---
+
+## ⚙️ Core Configuration
+
+The communication module runs under two separate operational modes:
+
+### 1. Resend API Client (Transactional)
+*   **Purpose:** Best for automated alerts, receipts, welcome letters, and system-triggered notifications.
+*   **Variable Required:** `RESEND_API_KEY` and `RESEND_FROM_ADDRESS` set in `.env`.
+*   **Endpoints:** 
+    *   `POST /api/send-email`: Send a customized HTML format email.
+    *   `GET /api/resend-emails`: Retrieve email log responses.
+
+### 2. Gmail OAuth2 Integration (Interactive Chat)
+*   **Purpose:** Real-time communications between active studio students and administrators.
+*   **Google Cloud Setup:**
+    1. Create a project at [Google Cloud Console](https://console.cloud.google.com).
+    2. Enable the Gmail API.
+    3. Setup OAuth Consent Screen and configure web application client credentials.
+    4. Authorize redirect origins (e.g. `http://localhost`).
+    5. Add the generated Client ID in **Admin > System Settings**.
+
+---
+
+## 📧 Interfaces
+
+### Admin Email Hub
+*   Renders Inbox and Sent tabs.
+*   Supports live unread badge counters.
+*   Includes preformatted templates for *Welcomes*, *Invoice Reminders*, and *Appointment Confirmations*.
+
+### Student Support Inbox
+*   Accessible within the member's profile portal.
+*   Shows all official notifications sent from the studio.
+*   Enables students to draft feedback/inquiries that go straight to the admin inbox.
+````
+
+## File: wiki/Lead-Management-and-CRM.md
+````markdown
+# Lead CRM & Kanban Pipeline
+
+Quantum Yoga features an integrated Customer Relationship Management (CRM) dashboard designed to capture visitor inquiries and convert them to active students.
+
+---
+
+## 📋 Leads Pipeline Schema (`leads`)
+
+*   `id`: Unique identifier (e.g. `lead-1`).
+*   `name` / `email`: Contact details.
+*   `phone`: Validated Indian formatting number (+91 XXXXX XXXXX).
+*   `message`: Freeform text from the landing page.
+*   `date`: Initial inquiry submission date.
+*   `status`: Kanban column status (`New`, `Contacted`, `Nurturing`, `Converted`, `Archived`).
+*   `logs`: Timestamped chronological list of sales/coaching interactions.
+
+---
+
+## 🗂️ Kanban Swimlane Board
+
+The Admin panel provides a multi-stage visual board to move prospects through the conversion funnel:
+
+```
++------------+     +------------+     +------------+     +------------+     +------------+
+|    New     | ──> | Contacted  | ──> | Nurturing  | ──> | Converted  | ──> |  Archived  |
++------------+     +------------+     +------------+     +------------+     +------------+
+| Lead A     |     | Lead B     |     | Lead C     |     | Lead D     |     | Lead E     |
+| [Details]  |     | [Notes]    |     | [Details]  |     | [Registered|     | [Closed]   |
++------------+     +------------+     +------------+     +------------+     +------------+
+```
+
+*   Admins can drag cards or use quick actions to update a lead's status.
+*   The search bar enables instant filtering by name, email, or message text.
+
+---
+
+## ⚡ Single-Click Active Member Conversion
+
+The conversion process automates user setup to reduce onboarding friction:
+
+1.  **Account Provisioning:** Inserts a new user record in the database using the lead's email and name.
+2.  **Credentials Generation:** Creates a secure random temporary password.
+3.  **Forced Reset Flag:** Sets `mustChangePassword` to `true` to ensure the member establishes a private password on their first login.
+4.  **Welcome Email:** Automatically drafts and sends an email containing login instructions and their temporary password via the active email service.
+5.  **Status Sync:** Moves the lead state to `Converted`.
+````
+
+## File: wiki/Practice-Tracker.md
+````markdown
+# Interactive Practice Calendar & Streak Grid
+
+Quantum Yoga features an interactive Practice Tracker designed to help students build consistent daily habits.
+
+---
+
+## 📅 Practice Contribution Grid
+
+The Practice Grid displays the user's practice density over the past 365 days, color-coded by intensity:
+*   **Grid Layout**: Formatted as a 7x52 CSS grid mimicking the GitHub contribution chart.
+*   **Density Mapping**:
+    *   `contrib-0` (Grey): No practice logged.
+    *   `contrib-1` (Light Green): 1 practice session logged.
+    *   `contrib-2` (Medium Green): 2 practice sessions logged.
+    *   `contrib-3` (Dark Green): 3 practice sessions logged.
+    *   `contrib-4` (Vibrant Green with Glow): 4+ practice sessions logged.
+*   **Tooltips**: Hovering over any cell displays the date and total practice sessions completed on that day.
+
+---
+
+## 🔥 Daily Streak Counting
+
+The client dynamically calculates and displays:
+1.  **Current Daily Streak**: The number of consecutive days of practice leading up to today (or yesterday). A streak is maintained as long as the student logs a practice at least once every 24-48 hours.
+2.  **Longest Practice Streak**: The longest contiguous sequence of practice days achieved historically.
+
+---
+
+## 🏆 Milestone Badges
+
+Virtual milestone badges are awarded when the student reaches key streak thresholds:
+*   **🌱 Sprout**: 3-day streak.
+*   **🔥 Spark**: 7-day streak.
+*   **🧘 Master**: 14-day streak.
+*   **👑 Champion**: 30-day streak.
+
+Unlocked badges change from a locked/translucent state to an illuminated state with subtle pulsing animations.
+
+---
+
+## 💾 Storage & Sync
+
+*   **LocalStorage Key**: Saved under `qy_users` within each user record as a `practice_logs` array of ISO timestamps.
+*   **Database Synchronization**: Synced automatically to the server database via the `/api/db` endpoint, persisting progress across all client platforms.
+````
+
+## File: wiki/Practice-Voice-Coach.md
+````markdown
+# Guided Practice Voice Coach (Interactive Audio Guides)
+
+The Guided Practice Voice Coach integrates client-side Text-to-Speech (TTS) alignment cues and breathing cadence prompts directly into the guided routines overlay player. This allows students to practice yoga hands-free without constantly checking their device screens.
+
+## ⚙️ Technical Architecture
+
+The Voice Coach relies entirely on the client's web browser using native browser APIs:
+
+1. **Text-To-Speech Synthesis**: Powered by `window.speechSynthesis`.
+2. **Audio Queue Management**: Uses `SpeechSynthesisUtterance` to speak phrases. To prevent overlapping speech, the app invokes `window.speechSynthesis.cancel()` immediately before dispatching any new alignment or breathing cue.
+3. **Autoplay Policy Bypass**: Browser autoplay policies restrict audio until a user interaction (like clicking a button) is performed. Since the Voice Coach controls are embedded directly in the routine detail modal overlay, the user's initial interaction satisfies this restriction.
+
+## 🎛️ Settings & Controls
+
+Inside the Custom HTML5 video player overlay, the user has access to a glassmorphic Voice Coach settings panel:
+
+* **Voice Selection Dropdown**: Dynamically queries the browser device for all available voices using `speechSynthesis.getVoices()`, allowing users to select accents and genders.
+* **Volume Slider**: Controls speech synthesis output volume.
+* **Speech Rate Slider**: Speeds up or slows down the narration cadence.
+* **Speech Pitch Slider**: Adjusts the tone of the speaking voice.
+
+## ⏱️ Playback Integration
+
+When the Voice Coach is active:
+1. **Pose Transitions**: On transition to a new pose, the coach reads out the pose number, name, Sanskrit translation, and the first instruction/alignment tip.
+2. **Breathing Cadence Prompts**: During pose holds, the coach schedules periodic reminders (e.g., "Inhale for 4 seconds... Exhale for 4 seconds...") matching the pose hold pace.
+3. **Cancellation**: Toggling the Voice Coach off or closing the video modal cancels all pending speech dispatches immediately.
+````
+
+## File: wiki/Reports-and-Analytics.md
+````markdown
+# Studio Analytics & CSV/PDF Reports
+
+The Quantum Yoga Admin Panel includes an interactive Reports and Analytics dashboard to monitor business operations, collections, and student progress.
+
+---
+
+## 📊 Interactive SVG Data Charts
+
+To ensure fast load times and zero dependency overhead, charts are rendered using dynamic SVGs:
+1.  **Monthly Collections (Bar Chart)**: Aggregates paid transactions over the past 6 months to display monthly revenue, complete with gradient fills and hover value overlays.
+2.  **Monthly Booking Trends (Line Chart)**: Tracks scheduled class appointments over the past 6 months using clean SVG lines and coordinates.
+
+---
+
+## 🏆 Practice and Posture Rankings
+
+*   **Most Favorited Postures**: Aggregates pose bookmark lists across all users to display a ranking table of the top 5 most favorited postures.
+*   **Most Popular Routines**: Parses all student completion histories to rank the top 5 most completed routine workouts.
+
+---
+
+## 📥 File Exports & Reports Printing
+
+*   **CSV Exporter**: Clicking "Export CSV Ledger" triggers a client-side Blob generation of all payment records in standard CSV format, instantly downloading the file.
+*   **Printable Attendance logs**: Uses `@media print` style blocks in CSS to isolate the completion history tables, hiding navigation menus, KPI cards, and charts, allowing clean printing or saving to PDF.
+````
+
+## File: wiki/Student-Referrals.md
+````markdown
+# Student Referral & Scaling Discounts Portal
+
+The Student Referrals capability drives organic studio growth by incentivizing current students to refer friends. It supports unique referral codes and a dynamic scaling discount tier based on successful referral counts.
+
+## 🧭 Student Referral Flows
+
+Every registered student can view and share their referrals:
+
+1. **Unique Code Generation**: During signup, the system automatically assigns a unique 6-character alphanumeric code (e.g., `FLOW88`) to the student.
+2. **Dashboard Display**: The code, along with successful invite metrics and active discount rate, is visible directly inside the student's **Profile** tab.
+3. **Sharing**: Students share their code with prospective members.
+
+## 🔀 Referral Verification
+
+When a prospective member signs up or submits an inquiry:
+
+1. **Signup Entry**: Prospective students fill out the optional **Referral Code** field in the registration card.
+2. **Validation**: The system verifies the code belongs to a valid active member.
+3. **Referral Mapping**: Upon successful registration, the new user's account is created, and the referrer's successful referral counter increments by 1.
+
+## 📈 Configurable Discount Tiers
+
+Administrators configure the business logic dynamically:
+
+1. **Settings Control**: In **Admin Panel -> System Settings**, locate the **Referral Tiers Settings** card.
+2. **Define Tiers**: Add, update, or remove discount milestones (e.g., 1 referral = 10% discount, 2 referrals = 15% discount, 3+ referrals = 20% discount).
+3. **Save**: Save changes to sync configuration to the database.
+
+## 💳 Automated Discount Deductions
+
+Referrer rewards are automatically applied:
+* When the system generates a new monthly subscription invoice or an appointment booking fee for a referrer, it calculates their highest qualified discount tier and applies the percentage deduction to the total amount due.
+````
+
+## File: wiki/WhatsApp-Integration.md
+````markdown
+# WhatsApp Integration & Alerts
+
+Quantum Yoga supports automated notifications and direct admin-student communication links via WhatsApp.
+
+---
+
+## ⚙️ Administrative Configuration
+
+Admins can configure settings under the **Admin > System Settings** panel:
+
+- **Enable Automated Alerts:** A global toggle to switch auto-notifications on or off.
+- **API Key / Token:** Auth credentials for your messaging provider.
+- **Gateway URL:** The HTTP REST endpoint (e.g. `https://api.provider.com/send`) where message payloads are forwarded.
+- **Custom Templates:** Editable message templates containing placeholder fields.
+
+### Database Settings Structure (`whatsappSettings`)
+
+Configuration is stored securely inside the global database state under the following schema:
+
+```json
+"whatsappSettings": {
+  "enabled": false,
+  "apiKey": "",
+  "gatewayUrl": "",
+  "templates": {
+    "welcome": "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
+    "invoice": "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
+    "booking": "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}."
+  }
+}
+```
+
+---
+
+## 🔔 Automated Notification Triggers
+
+Whenever critical transactions or scheduling actions occur, the backend checks settings and dispatches HTTP requests via the `/api/send-whatsapp` endpoint:
+
+1. **New Invoice Notices:** Sends invoice ID, amount, due date, and profile portal link upon invoice generation.
+2. **Coaching Bookings:** Confirms session dates, times, and selected routines when scheduled.
+3. **Rescheduling Alerts:** Informs the student of rescheduled class parameters.
+4. **Cancellations:** Notifies the student if a private session is cancelled.
+
+---
+
+## 💬 WhatsApp Direct Chat Shortcuts
+
+To enable zero-cost, manual communication between admins and users/leads, Quantum Yoga integrates custom redirect actions using the standard `https://wa.me/` protocol:
+
+* **Trigger Actions:** Quick-chat buttons next to phone numbers in the CRM Kanban cards, Member profiles, Invoices table, and Appointment lists.
+* **Auto-sanitization:** Phone strings are sanitized (stripping formatting spaces and prepending country code prefixes) to ensure redirection URLs parse successfully.
+* **Pre-populated Templates:** Launches a WhatsApp Web browser tab pre-populated with customized greetings.
+````
+
+## File: ecosystem.config.cjs
+````javascript
+module.exports = {
+  apps: [
+    {
+      name: 'quantum-yoga',
+      script: 'server.js',
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 8080
+      }
+    }
+  ]
+};
+````
+
+## File: openspec/changes/add-contact-us/tasks.md
+````markdown
+## 1. Landing Page UI
+
+- [x] 1.1 Add "Contact Us" links to the navigation header and page footer in `index.html`
+- [x] 1.2 Add the glassmorphic Contact Us modal overlay (`#contact-us-modal`) displaying the physical address, phone number, and support email ID in `index.html`
+- [x] 1.3 Add interactive `tel:` and `mailto:` links to the phone number and email fields inside the modal in `index.html`
+- [x] 1.4 Style the Contact Us modal and hover link states in `index.css`
+
+## 2. Frontend Toggle Logic
+
+- [x] 2.1 Bind Contact Us modal toggle event listeners (open/close actions and ESC key handlers) in `app.js`
+
+## 3. Verification & Build
+
+- [x] 3.1 Run `npm run build` to verify the build compiles successfully
+- [x] 3.2 Verify the contact links successfully trigger the overlay popup and protocol links work
+````
+
+## File: openspec/changes/admin-analytics-reports/tasks.md
+````markdown
+## 1. Dashboard UI Elements
+
+- [x] 1.1 Add the "Studio Analytics" sub-navigation tab and content panels inside `#admin-section` in `index.html`
+- [x] 1.2 Add container divs for SVG charts (billing collections and booking trends) in `index.html`
+- [x] 1.3 Add CSV Export and Attendance Printing buttons in the analytics panel inside `index.html`
+
+## 2. Interactive SVG Logic
+
+- [x] 2.1 Write JavaScript helper functions in `app.js` to compile monthly payment data and draw an SVG bar chart
+- [x] 2.2 Write JavaScript helper functions in `app.js` to compile monthly booking dates and draw an SVG line chart
+- [x] 2.3 Implement posture popularity calculator (aggregating favorited counts from `qy_users`) and render a ranking table
+
+## 3. CSV & Receipt PDF Generators
+
+- [x] 3.1 Implement the CSV billing exporter click handler in `app.js` utilizing `Blob` downloads
+- [x] 3.2 Implement print view styles in `index.css` targeting `@media print` to present a receipt-like log table
+- [x] 3.3 Implement the Print Attendance handler in `app.js` to toggle a print view overlay and call `window.print()`
+
+## 4. Verification and Build
+
+- [x] 4.1 Run `npm run build` to verify frontend compiling
+- [x] 4.2 Validate charts load and hover values update on mock admin dashboard
+````
+
+## File: openspec/changes/guided-practice-voice-coach/tasks.md
+````markdown
+## 1. Dashboard UI Settings
+
+- [x] 1.1 Add the glassmorphic Voice Coach toggle widget (`#voice-coach-toggle-wrapper`) and voice select elements inside the routine player modal in `index.html`
+- [x] 1.2 Add volume, speech rate, and speech pitch controls in the settings modal list in `index.html`
+
+## 2. Core Speech Synthesis Engine
+
+- [x] 2.1 Implement `initVoiceCoachSettings()` in `app.js` to populate available voices using `speechSynthesis.getVoices()`
+- [x] 2.2 Implement `speakVoiceCue(text)` helper in `app.js` that handles canceling active queues, setting rates, pitch, and triggering TTS output
+- [x] 2.3 Store preferred voice selections in local settings state
+
+## 3. Playback Integration
+
+- [x] 3.1 Hook `speakVoiceCue` into the routine step transition handler in `app.js` to announce step number, pose title, and details
+- [x] 3.2 Implement breathing cue scheduler to trigger periodic inhale/exhale speech prompts during pose holds
+
+## 4. Verification and Build
+
+- [x] 4.1 Run `npm run build` to verify frontend compiling
+- [x] 4.2 Validate synthesis is cancelable and transitions play smoothly on mock routine start
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/specs/live-yoga-rooms/spec.md
+````markdown
+## ADDED Requirements
+
+### Requirement: Interactive Live Class Room Viewport
+The system SHALL display an interactive video streaming frame directly in the client dashboard using a low-latency WebRTC IFrame overlay.
+
+#### Scenario: User joins active live streaming room
+- **WHEN** a logged-in student visits the "Live Class" tab and the instructor is actively broadcasting
+- **THEN** the system overlays the live video session player inside the dashboard frame
+
+### Requirement: Instructor Broadcast Panel
+The system SHALL provide administrators/instructors with room controls to launch a new streaming session.
+
+#### Scenario: Instructor starts streaming
+- **WHEN** an administrator logs in, clicks the "Live Class" tab, and clicks "Launch Live Video Session"
+- **THEN** the system prompts for a room name, initializes the WebRTC media container, grants broadcast access to camera/microphone, and saves the active room name to the server database.
+
+#### Scenario: Instructor ends streaming
+- **WHEN** an administrator clicks "End Live Video Session"
+- **THEN** the system disposes of the active WebRTC instance and clears the active room name from the server database, terminating connection access for students.
+
+### Requirement: Real-Time Active Room Synchronization
+The system SHALL synchronize the active manually started WebRTC room name from the server to students' local clients in real-time.
+
+#### Scenario: Student dashboard displays active stream join button
+- **WHEN** the instructor launches a live session
+- **THEN** the student's dashboard countdown container periodically checks the database state and shows a "🔴 Live Session Active!" banner with a glowing "🎥 Join Live Room Now" action button.
+````
+
+## File: openspec/changes/live-yoga-rooms-webrtc/tasks.md
+````markdown
+Created At: 2026-06-24T20:34:53Z
+Completed At: 2026-06-24T20:34:56Z
+File Path: `file:///D:/QuantumYogaWebsite/openspec/changes/live-yoga-rooms-webrtc/tasks.md`
+
+## 1. Frontend Interface & Script Setup
+
+- [x] 1.1 Include the Jitsi Meet IFrame API external script in `index.html`
+- [x] 1.2 Add the "Live Class" navigation tab link in the top navigation panel of `index.html`
+- [x] 1.3 Create `#live-class-section` content panel containing `#live-class-room-container` inside `index.html`
+
+## 2. WebRTC Client Integration
+
+- [x] 2.1 Map selectors and set up tab navigation router logic in `app.js` to initialize WebRTC when active
+- [x] 2.2 Write instantiation code in `app.js` using `JitsiMeetExternalAPI` to mount the interactive video room
+- [x] 2.3 Write cleanup and teardown logic to dispose of the active Jitsi IFrame room on tab switch (to stop camera/microphone feed)
+
+## 3. Scheduling & Room Linking
+
+- [x] 3.1 Implement active room calculation based on user's current timetabled batch ID
+- [x] 3.2 Display a glowing "Join Live Room" CTA button next to active schedule entries in the profile dashboard
+- [x] 3.3 Add click event listeners to join the active streaming session from the dashboard timetable
+````
+
+## File: openspec/changes/real-time-community-chat/tasks.md
+````markdown
+Created At: 2026-06-24T19:32:40Z
+Completed At: 2026-06-24T19:32:40Z
+File Path: `file:///d:/QuantumYogaWebsite/openspec/changes/real-time-community-chat/tasks.md`
+
+## 1. Backend Server Setup
+
+- [x] 1.1 Integrate WebSocket server (`ws`) package in `server.js` and bind it to the main HTTP server
+- [x] 1.2 Implement connection hooks, connection counting, and active user tracking
+- [x] 1.3 Implement message broadcast logic and message schema verification
+
+## 2. Storage & History Cache
+
+- [x] 2.1 Integrate chat messages cache structure into database adapters (local `db.json`, PG/Supabase)
+- [x] 2.2 Write retrieval logic to load and send last 50 messages on user join
+- [x] 2.3 Write message archiving logic to push new incoming messages into database state and slice over limit
+
+## 3. Frontend Chat UI Layout
+
+- [x] 3.1 Create "Community Chat" tab in `index.html` navigation bar and content section
+- [x] 3.2 Implement glassmorphic message thread layout, user list, and chat input controls
+- [x] 3.3 Add active user connection lifecycle updates to UI client script in `app.js`
+
+## 4. Chat Client Websocket Integration
+
+- [x] 4.1 Implement WebSocket client setup and connection handlers in `app.js`
+- [x] 4.2 Implement outbound message packaging (sending name, role, body, timestamp)
+- [x] 4.3 Implement inbound message parsing and DOM insertion for message updates and online user list
+````
+
+## File: openspec/specs/billing-payments/spec.md
+````markdown
+# Billing, Invoices & Payments Spec
+
+## Overview
+This capability handles the issuance of member invoices, overdue payments notification banners, unified UPI QR code generation, transaction tracking via UTR (Unique Transaction Reference) codes, automatic UPI payment reconciliation against an uploaded bank statement ledger, and PDF/HTML receipt generation.
+
+## Data Structures
+
+### Payments Schema (`payments`)
+Each payment record contains:
+- `id` (string): Unique invoice ID prefixed with `INV-` (e.g., `"INV-10029"`).
+- `userEmail` (string): Email of the member assigned to the invoice.
+- `description` (string): Purpose of charge (e.g., `"Monthly subscription fee"`).
+- `amount` (string): Invoice cost in Rupees (INR).
+- `dueDate` (string): YYYY-MM-DD due date.
+- `status` (string): `pending`, `paid`, `review` (Under Review), `discrepancy`, or `overdue`.
+- `paymentDate` (string, optional): Date payment was processed.
+- `lastReminderSent` (string, optional): Timestamp of last automated warning.
+- `utr` (string, optional): User-submitted UPI Unique Transaction Reference.
+- `verifiedAt` (string, optional): Timestamp of reconciliation.
+- `verificationSource` (string, optional): Reconciliation method (e.g., `"ledger"`).
+- `verificationError` (string, optional): Error details if reconciliation is flagged as discrepancy.
+
+### UPI Settings Schema (`upi_settings`)
+Admin-configured receiver credentials:
+- `vpa` (string): Virtual Payment Address (e.g., `merchant@okicici`).
+- `name` (string): Merchant Name (e.g., `Quantum Yoga Ltd.`).
+
+### UPI Ledger Schema (`upi_ledger`)
+Trusted bank transaction entries loaded via admin statement uploads:
+- `utr` (string): Cleaned transaction reference code.
+- `amount` (string): Received transaction amount.
+- `date` (string): Transaction timestamp or date from statement.
+- `senderName` (string): Name of sender / payer.
+- `details` (string): Transaction descriptions/remarks.
+- `importedAt` (string): Timestamp of the CSV import.
+
+---
+
+## Workflows & Interfaces
+
+### 1. Overdue Payment Warning Banner
+- Displays an alert banner at the top of the client dashboard if the logged-in user has *any* invoices marked as `overdue`.
+- The banner displays the overdue invoice ID and description, and includes a **"Pay Now"** shortcut link.
+
+### 2. Member Invoice Table
+- Listed under the member's Profile Billing tab.
+- Categorizes payments into status-colored rows.
+- Paid invoices show a **"View Receipt"** action.
+- Pending or Overdue invoices show a **"Pay via UPI"** action.
+
+### 3. UPI QR Code Modal & Submission
+- Initiated when clicking "Pay via UPI".
+- Displays recipient details (Merchant Name and UPI VPA).
+- Generates a **live UPI QR Code** using the standard scheme:
+  `upi://pay?pa={vpa}&pn={name}&am={amount}&tn={description}`
+- Displays a form to input the **UTR (Unique Transaction Reference)** after scanning and paying.
+- Submitting the UTR triggers the auto-verification check.
+
+### 4. Receipt Modal
+- Populated dynamically with invoice metadata.
+- Renders a clean printable receipt format featuring:
+  - Yoga studio branding logo.
+  - Payment details (Invoice ID, Date, Amount).
+  - Payer and Payee details.
+  - Transaction confirmation checkmark and reference logs.
+
+### 5. Admin Invoicing Tool
+- Admin-facing panel to issue new invoices manually.
+- Fields: Member Email, Description, Amount (INR), and Due Date.
+- Updates the payment list and triggers notification streams.
+
+### 6. Automated UPI Reconciliation & Ledger Upload
+- **Admin Statement Upload:** Admins can upload CSV bank statement ledgers via the Admin Settings panel. The system parses headers to extract UTR, amount, date, and sender details, filter duplicates, and append new transactions to the database's `upi_ledger` cache.
+- **Auto-Verification Matching:** When a UTR is submitted by a student:
+  - Exact Match (UTR + Amount): Automatically approves payment to `paid`, logs UTR, and triggers confirmation notifications.
+  - UTR Match + Amount Mismatch: Flags payment status as `discrepancy` for administrative action.
+  - UTR Not Found: Puts status under `review` (Under Review) to await manual reconcile or statement sync.
+
+### 7. Planned Reconciliation Enhancements
+- **Fuzzy Amount Matching:** The system SHALL support matching within a configurable tolerance margin (e.g. ±₹0.05) to accommodate minor banking rounding discrepancies.
+- **Date Window Verification:** The system SHALL validate that user-submitted UTR match dates fall within an acceptable range (e.g. within 30 days) of the invoice creation or due date to prevent fraudulent reuse of old transaction IDs.
+- **Statement Schema Mapping:** The system SHALL allow administrators to dynamically define custom CSV header mapping configurations in the settings panel (e.g., linking custom columns to `utr`, `amount`, and `date`).
+- **Reconciliation Log Audit:** The system SHALL maintain an administrative log of all verification activities, matching attempts, discrepancies found, and manual resolutions for compliance audits.
+````
+
+## File: wiki/Architecture.md
+````markdown
+# System Architecture & Database Setup
+
+Quantum Yoga utilizes a clean, decoupled design featuring a responsive SPA frontend and a proxy-enabled API backend.
+
+```
++-------------------------------------------------------------+
+|                         Vite Client                         |
+|  - Midnight Aura (Dark), Zen Sunset, Ethereal Light Themes  |
+|  - Custom SPA Navigation Router                             |
++-------------------------------------------------------------+
+                              │
+                              ▼ (API Requests & Proxying)
++-------------------------------------------------------------+
+|                     Express API Server                      |
+|  - Static content serving                                   |
+|  - Resend, Google Gmail OAuth & WhatsApp Proxy Endpoints    |
++-------------------------------------------------------------+
+                              │
+       ┌──────────────────────┼──────────────────────┐
+       ▼ (if DATABASE_URL)    ▼ (if SUPABASE keys)   ▼ (fallback)
++──────────────+       +──────────────+       +──────────────+
+| PostgreSQL   |       | Supabase DB  |       | Local JSON   |
+| Pool         |       | Client (Real)|       | (db.json)    |
++──────────────+       +──────────────+       +──────────────+
+```
+
+---
+
+## 💾 Unified Database Adapters
+
+Quantum Yoga features a **Unified Storage Manager** inside `server.js` that checks for database availability in the following order:
+
+1. **PostgreSQL Pool:** If `DATABASE_URL` is found in the environment, a `pg.Pool` handles persistent queries.
+2. **Supabase Client:** If no `DATABASE_URL` is configured, but `SUPABASE_URL` and `SUPABASE_KEY` are present, it initializes the `@supabase/supabase-js` client.
+3. **Local Fallback (`db.json`):** If no environment parameters are detected, the app automatically reads and writes states locally to `db.json` in the project root.
+
+### PostgreSQL Table Schema
+
+If setting up your production PostgreSQL server, run the following setup script (`schema.sql`):
+
+```sql
+CREATE TABLE IF NOT EXISTS quantum_yoga_db (
+    id VARCHAR(50) PRIMARY KEY,
+    state JSONB NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+---
+
+## ⚙️ Environment Configuration
+
+Define the following parameters in your `.env` configuration file:
+
+| Variable | Description | Example |
+|---|---|---|
+| `PORT` | The port the Express production server binds to. | `8080` |
+| `DATABASE_URL` | PostgreSQL connection URI. | `postgresql://user:pass@127.0.0.1:5432/db` |
+| `SUPABASE_URL` | Supabase project API gateway url. | `https://project.supabase.co` |
+| `SUPABASE_KEY` | Supabase project anonymized public key. | `sb_secret_key...` |
+| `RESEND_API_KEY` | Authorization key for the Resend Email Client. | `re_ApiKey...` |
+| `RESEND_FROM_ADDRESS` | Configured sender address in Resend dashboard. | `admin@quantumyoga.xyz` |
+
+---
+
+## 🛠️ Build and Deploy Commands
+
+### Development Setup
+Start the Vite dev server with Hot Module Replacement (HMR):
+```bash
+npm run dev
+```
+
+### Production Build & Launch
+Build client-side assets and spin up the Express server:
+```bash
+npm run build
+npm run start
+```
+````
+
+## File: wiki/Live-Yoga-Rooms.md
+````markdown
+# Live Interactive Yoga Rooms (WebRTC)
+
+Quantum Yoga supports virtual classrooms directly inside the glassmorphic dashboard interface. This capability uses the Jitsi Meet IFrame API, providing low-latency WebRTC streams with zero media server overhead.
+
+---
+
+## 🛠️ WebRTC Integration Architecture
+
+The platform embeds Jitsi Meet as a responsive iframe inside the `#live-class-room-container` DOM element. 
+
+### External Script Include
+To communicate with Jitsi rooms, the frontend loads the Jitsi external API library:
+```html
+<script src="https://meet.jit.si/external_api.js" defer></script>
+```
+
+### Instantiation
+Jitsi is instantiated dynamically inside `app.js` using `JitsiMeetExternalAPI`:
+```javascript
+const domain = "meet.jit.si";
+const options = {
+  roomName: roomName,
+  width: "100%",
+  height: "100%",
+  parentNode: container,
+  userInfo: {
+    displayName: state.currentUser ? state.currentUser.name : "Yoga Practitioner"
+  },
+  interfaceConfigOverwrite: {
+    TOOLBAR_BUTTONS: [
+      'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+      'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand'
+    ]
+  },
+  configOverwrite: {
+    startWithAudioMuted: !isInstructor,
+    startWithVideoMuted: !isInstructor,
+    prejoinPageEnabled: false
+  }
+};
+jitsiApiInstance = new JitsiMeetExternalAPI(domain, options);
+```
+
+---
+
+## 🔄 Lifecycle & Resource Management
+
+WebRTC sessions require active camera and microphone hardware permissions. If a user switches to another tab (e.g. Routines, Poses, or Chat) while inside a live class, the platform **must** immediately release these hardware resources to preserve privacy and reduce battery overhead.
+
+1. **Instantiation**: Loaded when the user enters the `Live Class` tab or clicks the timetable/active room shortcut.
+2. **Teardown**: When the active tab shifts away from `#live-class-section`, the client calls `disposeLiveClassRoom()`:
+   ```javascript
+   if (jitsiApiInstance) {
+     jitsiApiInstance.dispose();
+     jitsiApiInstance = null;
+   }
+   ```
+   This terminates the iframe connection and completely stops camera/microphone hardware usage.
+
+---
+
+## ⏱️ Dynamic Timetable & Active Session Integration
+
+The client tracks both scheduled class slots and manual live sessions started by the instructor:
+1. **Scheduled Checking**: Checks if the current local time falls within a scheduled timetable window (e.g., class start time up to 1 hour in the future).
+2. **Instructor Live Session (Manual)**: When an instructor clicks "Launch Live Video Session", the custom room name is saved to the shared server state under `activeLiveRoom`.
+3. **Background Sync**: Logged-in clients poll `/api/db` every 10 seconds to discover live rooms.
+4. **UI Injection**: If either a manual live stream or scheduled class is active:
+   * Displays `🔴 Live Session Active!` (or `🔴 Class in Progress!`).
+   * Appends a glowing `🎥 Join Live Room Now` button to the dashboard countdown box.
+   * Redirects the user to the active room name when clicked.
+````
+
+## File: repomix.config.json
+````json
+{
+  "output": {
+    "style": "markdown",
+    "filePath": "repomix-output.md"
+  },
+  "ignore": {
+    "customPatterns": [
+      "dist/**",
+      "node_modules/**",
+      "package-lock.json",
+      "*.jpg",
+      "*.png",
+      "*.svg",
+      "repomix-output.*"
+    ]
+  }
+}
+````
+
+## File: wiki/Contact-Us.md
+````markdown
+# Contact Us Information Portal
+
+The Contact Us capability provides visitors and members with immediate, public access to the studio's official contact information directly from the landing page.
+
+## 🧭 Public Access
+
+The Contact Us links are placed in the navigation header, the page footer, and at the bottom of the fullscreen login card. Clicking any of these links will open a glassmorphic modal overlay (`#contact-us-modal`) displaying the studio's information.
+
+This modal operates independently of the authorization status, meaning users who are not logged in can view these details directly without hitting the authentication gates, and can access it directly while on the login page.
+
+## 📇 Contact Information Displayed
+
+The modal provides the following details:
+1. **Physical Address**: The location of the studio (default: `108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038`).
+2. **Phone Number**: An interactive link targeting the telephone protocol (`tel:`) so users on mobile or desktop softphone clients can initiate calls with a single click.
+3. **Email ID**: An interactive link targeting the email client protocol (`mailto:`) to immediately draft general query emails.
+
+## ⚙️ Administration & Configuration
+
+Rather than being hardcoded in HTML, the studio contact details are fully database-driven:
+
+1. **Access Settings**: Log in as an administrator (e.g. `admin@quantumyoga.xyz`) and navigate to **Admin Panel -> System Settings**.
+2. **Configure Details**: Locate the **Studio Contact Settings** card and enter the new Physical Address, Phone Number, and Email ID.
+3. **Instant Propagation**: Click **Save Studio Details** to persist updates on the server database. The new details propagate dynamically to all Contact Us triggers across the site.
 ````
 
 ## File: wiki/Deployment-and-CI-CD.md
@@ -12291,289 +9788,6 @@ quantumyoga.xyz, www.quantumyoga.xyz {
    ```
 ````
 
-## File: wiki/Email-Communication.md
-````markdown
-# Email Communication Systems
-
-Quantum Yoga hosts a dual-provider email client allowing both scheduled transactional emails and direct interactive mail threads.
-
----
-
-## ⚙️ Core Configuration
-
-The communication module runs under two separate operational modes:
-
-### 1. Resend API Client (Transactional)
-*   **Purpose:** Best for automated alerts, receipts, welcome letters, and system-triggered notifications.
-*   **Variable Required:** `RESEND_API_KEY` and `RESEND_FROM_ADDRESS` set in `.env`.
-*   **Endpoints:** 
-    *   `POST /api/send-email`: Send a customized HTML format email.
-    *   `GET /api/resend-emails`: Retrieve email log responses.
-
-### 2. Gmail OAuth2 Integration (Interactive Chat)
-*   **Purpose:** Real-time communications between active studio students and administrators.
-*   **Google Cloud Setup:**
-    1. Create a project at [Google Cloud Console](https://console.cloud.google.com).
-    2. Enable the Gmail API.
-    3. Setup OAuth Consent Screen and configure web application client credentials.
-    4. Authorize redirect origins (e.g. `http://localhost`).
-    5. Add the generated Client ID in **Admin > System Settings**.
-
----
-
-## 📧 Interfaces
-
-### Admin Email Hub
-*   Renders Inbox and Sent tabs.
-*   Supports live unread badge counters.
-*   Includes preformatted templates for *Welcomes*, *Invoice Reminders*, and *Appointment Confirmations*.
-
-### Student Support Inbox
-*   Accessible within the member's profile portal.
-*   Shows all official notifications sent from the studio.
-*   Enables students to draft feedback/inquiries that go straight to the admin inbox.
-````
-
-## File: wiki/Lead-Management-and-CRM.md
-````markdown
-# Lead CRM & Kanban Pipeline
-
-Quantum Yoga features an integrated Customer Relationship Management (CRM) dashboard designed to capture visitor inquiries and convert them to active students.
-
----
-
-## 📋 Leads Pipeline Schema (`leads`)
-
-*   `id`: Unique identifier (e.g. `lead-1`).
-*   `name` / `email`: Contact details.
-*   `phone`: Validated Indian formatting number (+91 XXXXX XXXXX).
-*   `message`: Freeform text from the landing page.
-*   `date`: Initial inquiry submission date.
-*   `status`: Kanban column status (`New`, `Contacted`, `Nurturing`, `Converted`, `Archived`).
-*   `logs`: Timestamped chronological list of sales/coaching interactions.
-
----
-
-## 🗂️ Kanban Swimlane Board
-
-The Admin panel provides a multi-stage visual board to move prospects through the conversion funnel:
-
-```
-+------------+     +------------+     +------------+     +------------+     +------------+
-|    New     | ──> | Contacted  | ──> | Nurturing  | ──> | Converted  | ──> |  Archived  |
-+------------+     +------------+     +------------+     +------------+     +------------+
-| Lead A     |     | Lead B     |     | Lead C     |     | Lead D     |     | Lead E     |
-| [Details]  |     | [Notes]    |     | [Details]  |     | [Registered|     | [Closed]   |
-+------------+     +------------+     +------------+     +------------+     +------------+
-```
-
-*   Admins can drag cards or use quick actions to update a lead's status.
-*   The search bar enables instant filtering by name, email, or message text.
-
----
-
-## ⚡ Single-Click Active Member Conversion
-
-The conversion process automates user setup to reduce onboarding friction:
-
-1.  **Account Provisioning:** Inserts a new user record in the database using the lead's email and name.
-2.  **Credentials Generation:** Creates a secure random temporary password.
-3.  **Forced Reset Flag:** Sets `mustChangePassword` to `true` to ensure the member establishes a private password on their first login.
-4.  **Welcome Email:** Automatically drafts and sends an email containing login instructions and their temporary password via the active email service.
-5.  **Status Sync:** Moves the lead state to `Converted`.
-````
-
-## File: wiki/WhatsApp-Integration.md
-````markdown
-# WhatsApp Integration & Alerts
-
-Quantum Yoga supports automated notifications and direct admin-student communication links via WhatsApp.
-
----
-
-## ⚙️ Administrative Configuration
-
-Admins can configure settings under the **Admin > System Settings** panel:
-
-- **Enable Automated Alerts:** A global toggle to switch auto-notifications on or off.
-- **API Key / Token:** Auth credentials for your messaging provider.
-- **Gateway URL:** The HTTP REST endpoint (e.g. `https://api.provider.com/send`) where message payloads are forwarded.
-- **Custom Templates:** Editable message templates containing placeholder fields.
-
-### Database Settings Structure (`whatsappSettings`)
-
-Configuration is stored securely inside the global database state under the following schema:
-
-```json
-"whatsappSettings": {
-  "enabled": false,
-  "apiKey": "",
-  "gatewayUrl": "",
-  "templates": {
-    "welcome": "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
-    "invoice": "Hello {{name}}, a new invoice {{invoiceId}} for {{amount}} is due on {{dueDate}}. Pay here: {{link}}",
-    "booking": "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}."
-  }
-}
-```
-
----
-
-## 🔔 Automated Notification Triggers
-
-Whenever critical transactions or scheduling actions occur, the backend checks settings and dispatches HTTP requests via the `/api/send-whatsapp` endpoint:
-
-1. **New Invoice Notices:** Sends invoice ID, amount, due date, and profile portal link upon invoice generation.
-2. **Coaching Bookings:** Confirms session dates, times, and selected routines when scheduled.
-3. **Rescheduling Alerts:** Informs the student of rescheduled class parameters.
-4. **Cancellations:** Notifies the student if a private session is cancelled.
-
----
-
-## 💬 WhatsApp Direct Chat Shortcuts
-
-To enable zero-cost, manual communication between admins and users/leads, Quantum Yoga integrates custom redirect actions using the standard `https://wa.me/` protocol:
-
-* **Trigger Actions:** Quick-chat buttons next to phone numbers in the CRM Kanban cards, Member profiles, Invoices table, and Appointment lists.
-* **Auto-sanitization:** Phone strings are sanitized (stripping formatting spaces and prepending country code prefixes) to ensure redirection URLs parse successfully.
-* **Pre-populated Templates:** Launches a WhatsApp Web browser tab pre-populated with customized greetings.
-````
-
-## File: ecosystem.config.cjs
-````javascript
-module.exports = {
-  apps: [
-    {
-      name: 'quantum-yoga',
-      script: 'server.js',
-      instances: 1,
-      autorestart: true,
-      watch: false,
-      max_memory_restart: '1G',
-      env: {
-        NODE_ENV: 'production',
-        PORT: 8080
-      }
-    }
-  ]
-};
-````
-
-## File: package.json
-````json
-{
-  "name": "quantum-yoga-website",
-  "version": "1.0.0",
-  "description": "A premium static dashboard website for Quantum Yoga",
-  "main": "index.html",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "start": "node server.js",
-    "test": "npx jest",
-    "e2e": "playwright test"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.61.0",
-    "jest": "^30.4.2",
-    "repomix": "^1.15.0",
-    "rollup-plugin-copy": "^3.5.0",
-    "supertest": "^7.2.2",
-    "vite": "^5.2.0"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.108.2",
-    "express": "^5.2.1",
-    "pg": "^8.21.0",
-    "ws": "^8.21.0"
-  }
-}
-````
-
-## File: wiki/Architecture.md
-````markdown
-# System Architecture & Database Setup
-
-Quantum Yoga utilizes a clean, decoupled design featuring a responsive SPA frontend and a proxy-enabled API backend.
-
-```
-+-------------------------------------------------------------+
-|                         Vite Client                         |
-|  - Midnight Aura (Dark), Zen Sunset, Ethereal Light Themes  |
-|  - Custom SPA Navigation Router                             |
-+-------------------------------------------------------------+
-                              │
-                              ▼ (API Requests & Proxying)
-+-------------------------------------------------------------+
-|                     Express API Server                      |
-|  - Static content serving                                   |
-|  - Resend, Google Gmail OAuth & WhatsApp Proxy Endpoints    |
-+-------------------------------------------------------------+
-                              │
-       ┌──────────────────────┼──────────────────────┐
-       ▼ (if DATABASE_URL)    ▼ (if SUPABASE keys)   ▼ (fallback)
-+──────────────+       +──────────────+       +──────────────+
-| PostgreSQL   |       | Supabase DB  |       | Local JSON   |
-| Pool         |       | Client (Real)|       | (db.json)    |
-+──────────────+       +──────────────+       +──────────────+
-```
-
----
-
-## 💾 Unified Database Adapters
-
-Quantum Yoga features a **Unified Storage Manager** inside `server.js` that checks for database availability in the following order:
-
-1. **PostgreSQL Pool:** If `DATABASE_URL` is found in the environment, a `pg.Pool` handles persistent queries.
-2. **Supabase Client:** If no `DATABASE_URL` is configured, but `SUPABASE_URL` and `SUPABASE_KEY` are present, it initializes the `@supabase/supabase-js` client.
-3. **Local Fallback (`db.json`):** If no environment parameters are detected, the app automatically reads and writes states locally to `db.json` in the project root.
-
-### PostgreSQL Table Schema
-
-If setting up your production PostgreSQL server, run the following setup script (`schema.sql`):
-
-```sql
-CREATE TABLE IF NOT EXISTS quantum_yoga_db (
-    id VARCHAR(50) PRIMARY KEY,
-    state JSONB NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-```
-
----
-
-## ⚙️ Environment Configuration
-
-Define the following parameters in your `.env` configuration file:
-
-| Variable | Description | Example |
-|---|---|---|
-| `PORT` | The port the Express production server binds to. | `8080` |
-| `DATABASE_URL` | PostgreSQL connection URI. | `postgresql://user:pass@127.0.0.1:5432/db` |
-| `SUPABASE_URL` | Supabase project API gateway url. | `https://project.supabase.co` |
-| `SUPABASE_KEY` | Supabase project anonymized public key. | `sb_secret_key...` |
-| `RESEND_API_KEY` | Authorization key for the Resend Email Client. | `re_ApiKey...` |
-| `RESEND_FROM_ADDRESS` | Configured sender address in Resend dashboard. | `admin@quantumyoga.xyz` |
-
----
-
-## 🛠️ Build and Deploy Commands
-
-### Development Setup
-Start the Vite dev server with Hot Module Replacement (HMR):
-```bash
-npm run dev
-```
-
-### Production Build & Launch
-Build client-side assets and spin up the Express server:
-```bash
-npm run build
-npm run start
-```
-````
-
 ## File: .gitignore
 ````
 # Dependencies
@@ -12613,165 +9827,38 @@ db.json
 Thumbs.db
 ````
 
-## File: openspec/specs/billing-payments/spec.md
+## File: openspec/changes/add-contact-us/specs/contact-us/spec.md
 ````markdown
-# Billing, Invoices & Payments Spec
+## ADDED Requirements
 
-## Overview
-This capability handles the issuance of member invoices, overdue payments notification banners, unified UPI QR code generation, transaction tracking via UTR (Unique Transaction Reference) codes, automatic UPI payment reconciliation against an uploaded bank statement ledger, and PDF/HTML receipt generation.
+### Requirement: Studio Contact Details Display
+The system SHALL present a public Contact Us modal overlay displaying the studio's physical address, telephone number, and official email ID.
 
-## Data Structures
+#### Scenario: User views contact details
+- **WHEN** a user clicks the "Contact Us" link/button
+- **THEN** the system SHALL display the `#contact-us-modal` modal containing the studio's physical address, contact phone number, and support email ID.
 
-### Payments Schema (`payments`)
-Each payment record contains:
-- `id` (string): Unique invoice ID prefixed with `INV-` (e.g., `"INV-10029"`).
-- `userEmail` (string): Email of the member assigned to the invoice.
-- `description` (string): Purpose of charge (e.g., `"Monthly subscription fee"`).
-- `amount` (string): Invoice cost in Rupees (INR).
-- `dueDate` (string): YYYY-MM-DD due date.
-- `status` (string): `pending`, `paid`, `review` (Under Review), `discrepancy`, or `overdue`.
-- `paymentDate` (string, optional): Date payment was processed.
-- `lastReminderSent` (string, optional): Timestamp of last automated warning.
-- `utr` (string, optional): User-submitted UPI Unique Transaction Reference.
-- `verifiedAt` (string, optional): Timestamp of reconciliation.
-- `verificationSource` (string, optional): Reconciliation method (e.g., `"ledger"`).
-- `verificationError` (string, optional): Error details if reconciliation is flagged as discrepancy.
+#### Scenario: Non-logged-in visitor views contact details
+- **WHEN** a visitor who is not logged in clicks the "Contact Us" link/button
+- **THEN** the system SHALL display the `#contact-us-modal` overlay directly on the landing page, bypassing any login or registration gates.
 
-### UPI Settings Schema (`upi_settings`)
-Admin-configured receiver credentials:
-- `vpa` (string): Virtual Payment Address (e.g., `merchant@okicici`).
-- `name` (string): Merchant Name (e.g., `Quantum Yoga Ltd.`).
+#### Scenario: Contact Us visible and triggerable on login screen
+- **WHEN** the fullscreen login screen is active
+- **THEN** the Contact Us link SHALL be visible and triggerable, allowing the modal to open over the login screen.
 
-### UPI Ledger Schema (`upi_ledger`)
-Trusted bank transaction entries loaded via admin statement uploads:
-- `utr` (string): Cleaned transaction reference code.
-- `amount` (string): Received transaction amount.
-- `date` (string): Transaction timestamp or date from statement.
-- `senderName` (string): Name of sender / payer.
-- `details` (string): Transaction descriptions/remarks.
-- `importedAt` (string): Timestamp of the CSV import.
+### Requirement: Interactive Call/Email Triggers
+The system SHALL support interactive protocol links to initiate contact instantly.
 
----
+#### Scenario: User clicks contact options
+- **WHEN** a user clicks the telephone or email ID links inside the contact modal
+- **THEN** the system SHALL launch the client's default telephone handler (using `tel:`) or email composer (using `mailto:`).
 
-## Workflows & Interfaces
+### Requirement: Configurable Studio Details
+The system SHALL support dynamic administration of the studio's physical address, phone number, and email ID.
 
-### 1. Overdue Payment Warning Banner
-- Displays an alert banner at the top of the client dashboard if the logged-in user has *any* invoices marked as `overdue`.
-- The banner displays the overdue invoice ID and description, and includes a **"Pay Now"** shortcut link.
-
-### 2. Member Invoice Table
-- Listed under the member's Profile Billing tab.
-- Categorizes payments into status-colored rows.
-- Paid invoices show a **"View Receipt"** action.
-- Pending or Overdue invoices show a **"Pay via UPI"** action.
-
-### 3. UPI QR Code Modal & Submission
-- Initiated when clicking "Pay via UPI".
-- Displays recipient details (Merchant Name and UPI VPA).
-- Generates a **live UPI QR Code** using the standard scheme:
-  `upi://pay?pa={vpa}&pn={name}&am={amount}&tn={description}`
-- Displays a form to input the **UTR (Unique Transaction Reference)** after scanning and paying.
-- Submitting the UTR triggers the auto-verification check.
-
-### 4. Receipt Modal
-- Populated dynamically with invoice metadata.
-- Renders a clean printable receipt format featuring:
-  - Yoga studio branding logo.
-  - Payment details (Invoice ID, Date, Amount).
-  - Payer and Payee details.
-  - Transaction confirmation checkmark and reference logs.
-
-### 5. Admin Invoicing Tool
-- Admin-facing panel to issue new invoices manually.
-- Fields: Member Email, Description, Amount (INR), and Due Date.
-- Updates the payment list and triggers notification streams.
-
-### 6. Automated UPI Reconciliation & Ledger Upload
-- **Admin Statement Upload:** Admins can upload CSV bank statement ledgers via the Admin Settings panel. The system parses headers to extract UTR, amount, date, and sender details, filter duplicates, and append new transactions to the database's `upi_ledger` cache.
-- **Auto-Verification Matching:** When a UTR is submitted by a student:
-  - Exact Match (UTR + Amount): Automatically approves payment to `paid`, logs UTR, and triggers confirmation notifications.
-  - UTR Match + Amount Mismatch: Flags payment status as `discrepancy` for administrative action.
-  - UTR Not Found: Puts status under `review` (Under Review) to await manual reconcile or statement sync.
-
-### 7. Planned Reconciliation Enhancements
-- **Fuzzy Amount Matching:** The system SHALL support matching within a configurable tolerance margin (e.g. ±₹0.05) to accommodate minor banking rounding discrepancies.
-- **Date Window Verification:** The system SHALL validate that user-submitted UTR match dates fall within an acceptable range (e.g. within 30 days) of the invoice creation or due date to prevent fraudulent reuse of old transaction IDs.
-- **Statement Schema Mapping:** The system SHALL allow administrators to dynamically define custom CSV header mapping configurations in the settings panel (e.g., linking custom columns to `utr`, `amount`, and `date`).
-- **Reconciliation Log Audit:** The system SHALL maintain an administrative log of all verification activities, matching attempts, discrepancies found, and manual resolutions for compliance audits.
-````
-
-## File: repomix.config.json
-````json
-{
-  "output": {
-    "style": "markdown",
-    "filePath": "repomix-output.md"
-  },
-  "ignore": {
-    "customPatterns": [
-      "dist/**",
-      "node_modules/**",
-      "package-lock.json",
-      "*.jpg",
-      "*.png",
-      "*.svg",
-      "repomix-output.*"
-    ]
-  }
-}
-````
-
-## File: wiki/Home.md
-````markdown
-# Welcome to the Quantum Yoga Wiki!
-
-Quantum Yoga is a premium, fully-integrated platform designed for yoga studio management, student coaching, and guided routines. 
-
-This wiki contains comprehensive guides on the project's architecture, data models, integration guides, and core capabilities.
-
-## 🧭 Navigation
-
-### 1. [System Architecture & Database Setup](Architecture.md)
-Learn about the technologies powering Quantum Yoga, deployment steps, and configuring Supabase, PostgreSQL, or local fallback storage.
-
-### 2. [Core Yoga Capabilities](Core-Yoga-Directory.md)
-Discover the pose directories, guided routines, interactive SVG alignment maps, and the custom HTML5 video player framework.
-
-### 3. [Billing & Payments Flow](Billing-and-Payments.md)
-Read about automated invoicing, outstanding fee warning banners, standard merchant UPI QR Code generation, and client-submitted UTR validations.
-
-### 4. [Lead CRM & Kanban Pipeline](Lead-Management-and-CRM.md)
-Details on landing page wellness inquiry ingestion, lead pipeline swimlanes (Kanban), sales logging, and the single-click active member conversion logic.
-
-### 5. [Email Communication Systems](Email-Communication.md)
-A setup guide for the dual-integration engine supporting transactional emails via the Resend API and full inbox capabilities via Gmail OAuth2.
-
-### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
-Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.
-
-### 7. [Community Chat & WebSockets](Community-Chat.md)
-Learn about real-time glassmorphic chat, WebSocket connection protocol, message schemas, and database history cache persistence.
-
-### 8. [Live WebRTC Video Rooms](Live-Yoga-Rooms.md)
-Learn about interactive WebRTC virtual classrooms, Jitsi Meet IFrame API, browser camera/mic lifecycle management, and countdown timers.
-
-### 9. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
-Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
-
-### 10. [Practice Calendar & Streak Grid](Practice-Tracker.md)
-Learn about the GitHub-style contribution chart, daily streaks tracker, and milestone badges.
-
-### 11. [Studio Analytics & CSV/PDF Reports](Reports-and-Analytics.md)
-Learn about interactive SVG data charts, posture rankings, CSV exports, and printable PDF logs.
-
-### 12. [Guided Practice Voice Coach](Practice-Voice-Coach.md)
-Learn about the native Web Speech API (Text-to-Speech) voice coach alignment guides and breathing cadence cues.
-
-### 13. [Contact Us Information Portal](Contact-Us.md)
-View details on the public contact details modal and protocols.
-
-### 14. [Student Referral Program](Student-Referrals.md)
-Learn about referral codes, signup tracking, and configurable scaling discount tiers.
+#### Scenario: Admin updates contact details
+- **WHEN** an administrator saves updated contact details under the System Settings panel
+- **THEN** the system SHALL persist the settings on the server database and instantly propagate the updated values to all Contact Us links and modals across the application.
 ````
 
 ## File: openspec/changes/auto-review-upi-payments/design.md
@@ -13415,6 +10502,14 @@ export default defineConfig({
       }
     }
   ],
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        'admin-emails': path.resolve(__dirname, 'admin-emails.html')
+      }
+    }
+  },
   server: {
     port: 80
   }
@@ -13508,6 +10603,1225 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     *   If the UTR is not found (due to statement upload latency), it is set to `review` (Under Review) for manual admin audit or subsequent statement uploads.
 ````
 
+## File: admin-emails.html
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Email Center | Quantum Yoga</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Dedicated administrator console for managing student correspondence, Resend integration, and transactional notifications for Quantum Yoga.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%93%A5%3C/text%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+
+  <style>
+    /* Custom premium styling for standalone email client */
+    body {
+      background: transparent;
+      color: var(--text-primary, #f3f4f6);
+      font-family: 'Outfit', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .email-container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1.5rem;
+      min-height: 750px;
+    }
+
+    /* Glassmorphic Cards */
+    .glass-card {
+      background: var(--bg-card, rgba(17, 24, 39, 0.7));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      padding: 1.5rem;
+      gap: 1.5rem;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #a78bfa;
+      margin-bottom: 1rem;
+      text-decoration: none;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #9ca3af;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      color: #ffffff;
+      background: rgba(167, 139, 250, 0.15);
+      border: 1px solid rgba(167, 139, 250, 0.2);
+    }
+
+    .menu-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge-count {
+      background: #a78bfa;
+      color: #0f172a;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+    }
+
+    .btn-compose {
+      background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      color: #ffffff;
+      border: none;
+      padding: 0.85rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+      transition: all 0.3s ease;
+      margin-top: auto;
+    }
+
+    .btn-compose:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+    }
+
+    /* Main Email Workspace Split-screen */
+    .workspace {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      height: 100%;
+    }
+
+    .email-list-pane {
+      border-right: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+      display: flex;
+      flex-direction: column;
+      height: 750px;
+    }
+
+    .pane-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-input, rgba(15, 23, 42, 0.6));
+      border: 1px solid var(--glass-light-border, rgba(255, 255, 255, 0.1));
+      border-radius: 10px;
+      padding: 0.65rem 1rem 0.65rem 2.25rem;
+      color: var(--text-primary, #ffffff);
+      font-family: inherit;
+      box-sizing: border-box;
+      outline: none;
+      transition: border 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-primary, #a78bfa);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted, #6b7280);
+      font-size: 0.9rem;
+    }
+
+    /* Email Items List */
+    .email-items-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .email-item {
+      padding: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .email-item:hover {
+      background: var(--bg-card-hover, rgba(255, 255, 255, 0.05));
+      transform: scale(0.99);
+    }
+
+    .email-item.active {
+      background: var(--bg-tabs, rgba(167, 139, 250, 0.08));
+      border-color: var(--border-glass-hover, rgba(167, 139, 250, 0.25));
+    }
+
+    .email-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sender-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary, #e5e7eb);
+    }
+
+    .email-item.unread .sender-name {
+      color: var(--text-primary, #ffffff);
+    }
+
+    .email-item.unread {
+      background: rgba(139, 92, 246, 0.05);
+      border-left: 3.5px solid var(--accent-primary, #a78bfa);
+    }
+
+    .item-date {
+      font-size: 0.75rem;
+      color: var(--text-muted, #6b7280);
+    }
+
+    .email-subject {
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: var(--text-secondary, #d1d5db);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .email-item.unread .email-subject {
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+    }
+
+    .email-snippet {
+      font-size: 0.8rem;
+      color: var(--text-muted, #9ca3af);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Email Preview Pane */
+    .email-preview-pane {
+      display: flex;
+      flex-direction: column;
+      height: 750px;
+      background: var(--bg-primary, rgba(15, 23, 42, 0.3));
+    }
+
+    .preview-placeholder {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted, #6b7280);
+      gap: 1rem;
+    }
+
+    .preview-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    .preview-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .preview-subject {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+      margin: 0;
+    }
+
+    .preview-contacts {
+      font-size: 0.85rem;
+      color: var(--text-muted, #9ca3af);
+    }
+
+    .preview-contacts span {
+      color: var(--text-secondary, #e5e7eb);
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .preview-body-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .preview-body {
+      background: var(--bg-card, rgba(10, 15, 30, 0.5));
+      border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.05));
+      border-radius: 12px;
+      padding: 2rem;
+      line-height: 1.7;
+      color: var(--text-primary, #e5e7eb);
+      min-height: 200px;
+    }
+
+    /* Compose Email Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(3, 7, 18, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .compose-modal {
+      width: 100%;
+      max-width: 650px;
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transform: translateY(30px);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-overlay.active .compose-modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      padding: 0;
+    }
+
+    .modal-close:hover {
+      color: #ffffff;
+    }
+
+    .modal-form {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #9ca3af;
+    }
+
+    .form-input, .form-textarea {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      box-sizing: border-box;
+      transition: border 0.2s ease;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: #a78bfa;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 180px;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-primary {
+      background: #8b5cf6;
+      border: none;
+      color: #ffffff;
+      padding: 0.65rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #7c3aed;
+    }
+
+    .btn-action-small {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-outline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #d1d5db;
+    }
+
+    .btn-action-outline:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .btn-action-filled {
+      background: #8b5cf6;
+      border: none;
+      color: #ffffff;
+    }
+
+    .btn-action-filled:hover {
+      background: #7c3aed;
+    }
+
+    /* Top branding / Nav bar */
+    .brand-header {
+      padding: 1rem 2rem;
+      background: rgba(17, 24, 39, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: #a78bfa;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-portal-back {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 8px;
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-portal-back:hover {
+      background: rgba(167, 139, 250, 0.1);
+      border-color: rgba(167, 139, 250, 0.3);
+    }
+
+    .status-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #10B981;
+      color: #0f172a;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1100;
+    }
+
+    .status-toast.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .status-toast.error {
+      background: #EF4444;
+      color: #ffffff;
+    }
+
+    /* Scrollbars customization */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.1);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Brand Navbar -->
+  <header class="brand-header">
+    <div>
+      <div class="brand-title">🧘 Quantum Yoga</div>
+      <div class="brand-subtitle">Email Control Center</div>
+    </div>
+    <div style="display:flex; align-items:center; gap: 1rem;">
+      <span id="current-user-email" style="font-size:0.85rem; color:#9ca3af;">admin@quantumyoga.xyz</span>
+      <a href="index.html#admin-section" class="btn-portal-back">↩ Back to Portal</a>
+    </div>
+  </header>
+
+  <!-- Core Layout -->
+  <div class="email-container">
+    
+    <!-- Sidebar -->
+    <div class="glass-card sidebar">
+      <ul class="sidebar-menu">
+        <li class="menu-item active" id="menu-inbox" onclick="setFolderFilter('inbox')">
+          <div class="menu-item-left">
+            <span>📥</span> Inbox
+          </div>
+          <span class="badge-count" id="inbox-unread-count">0</span>
+        </li>
+        <li class="menu-item" id="menu-sent" onclick="setFolderFilter('sent')">
+          <div class="menu-item-left">
+            <span>📤</span> Sent
+          </div>
+          <span class="badge-count" id="sent-count" style="background: rgba(255,255,255,0.15); color: #fff;">0</span>
+        </li>
+        <li class="menu-item" id="menu-unread" onclick="setFolderFilter('unread')">
+          <div class="menu-item-left">
+            <span>✉️</span> Unread
+          </div>
+        </li>
+      </ul>
+
+      <button class="btn-compose" onclick="openComposeModal()">
+        <span>➕</span> Compose Email
+      </button>
+    </div>
+
+    <!-- Main split workspace -->
+    <div class="glass-card workspace">
+      
+      <!-- List Pane -->
+      <div class="email-list-pane">
+        <div class="pane-header">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="email-search" placeholder="Search sender, subject or snippet..." oninput="handleSearch()">
+          </div>
+        </div>
+        
+        <div class="email-items-scroll" id="email-list-container">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Preview Pane -->
+      <div class="email-preview-pane" id="email-preview-pane">
+        <div class="preview-placeholder">
+          <span style="font-size: 3rem;">✉️</span>
+          <span>Select an email from the inbox list to read it</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Compose Modal Dialog -->
+  <div class="modal-overlay" id="compose-modal-overlay">
+    <div class="compose-modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="compose-modal-title">New Message</h3>
+        <button class="modal-close" onclick="closeComposeModal()">&times;</button>
+      </div>
+      <form class="modal-form" id="compose-form" onsubmit="handleSendEmail(event)">
+        <input type="hidden" id="reply-parent-id">
+        <div class="form-group">
+          <label for="email-to">To</label>
+          <input type="email" id="email-to" class="form-input" placeholder="recipient@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="email-subject">Subject</label>
+          <input type="text" id="email-subject" class="form-input" placeholder="Enter subject" required>
+        </div>
+        <div class="form-group">
+          <label for="email-body">Message</label>
+          <textarea id="email-body" class="form-textarea" placeholder="Type your message here..." required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeComposeModal()">Cancel</button>
+          <button type="submit" class="btn-primary" id="btn-submit-send">Send Email</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast notification system -->
+  <div class="status-toast" id="status-toast">
+    <span id="toast-text">Action completed successfully!</span>
+  </div>
+
+  <!-- Client-side Logic Script -->
+  <script>
+    // State management
+    let emails = [];
+    let activeFilter = 'inbox'; // inbox, sent, unread
+    let searchQuery = '';
+    let selectedEmailId = null;
+
+    // LocalStorage keys consistent with app.js
+    const STORAGE_KEY_SESSION = "qy_session";
+    const STORAGE_KEY_EMAILS = "qy_emails";
+    const STORAGE_KEY_GMAIL_SETTINGS = "qy_gmail_settings";
+
+    // Enforce admin login check
+    function checkAdminSession() {
+      const data = localStorage.getItem(STORAGE_KEY_SESSION) || sessionStorage.getItem(STORAGE_KEY_SESSION);
+      if (!data) {
+        if (window.self !== window.top) {
+          console.warn("No active admin session detected inside iframe.");
+          document.body.innerHTML = `<div style="padding: 2rem; text-align: center; color: #ef4444; font-family: sans-serif;"><h3>Access Denied</h3><p>Please log in as administrator on the main portal.</p></div>`;
+          return;
+        }
+        alert("Access Denied: Please log in as administrator.");
+        window.location.href = "index.html";
+        return;
+      }
+      const email = JSON.parse(data);
+      if (email !== "admin@quantumyoga.xyz") {
+        if (window.self !== window.top) {
+          console.warn("Unauthorized session inside iframe.");
+          document.body.innerHTML = `<div style="padding: 2rem; text-align: center; color: #ef4444; font-family: sans-serif;"><h3>Access Denied</h3><p>Unauthorized user email: ${escapeHtml(email)}</p></div>`;
+          return;
+        }
+        alert("Access Denied: Only administrators can view this page.");
+        window.location.href = "index.html";
+        return;
+      }
+      document.getElementById("current-user-email").textContent = email;
+    }
+
+    // Load data from server
+    async function syncDataFromServer() {
+      try {
+        const response = await fetch('/api/db');
+        if (response.ok) {
+          const db = await response.json();
+          if (db.emails) {
+            emails = db.emails;
+            localStorage.setItem(STORAGE_KEY_EMAILS, JSON.stringify(emails));
+          }
+          if (db.gmailSettings) {
+            // Keep resend API key from local copy if server omits it
+            const localRaw = localStorage.getItem(STORAGE_KEY_GMAIL_SETTINGS);
+            const local = localRaw ? JSON.parse(localRaw) : {};
+            const merged = {
+              ...db.gmailSettings,
+              resendApiKey: local.resendApiKey || ""
+            };
+            localStorage.setItem(STORAGE_KEY_GMAIL_SETTINGS, JSON.stringify(merged));
+          }
+        }
+      } catch (err) {
+        console.warn("Could not sync from server, using local storage cache:", err);
+        const cached = localStorage.getItem(STORAGE_KEY_EMAILS);
+        if (cached) emails = JSON.parse(cached);
+      }
+      renderUI();
+    }
+
+    // Save data to server database
+    async function saveDatabaseToServer() {
+      try {
+        // Fetch current db to avoid overwriting unrelated tables
+        const response = await fetch('/api/db');
+        let db = {};
+        if (response.ok) {
+          db = await response.json();
+        }
+        db.emails = emails;
+        
+        await fetch('/api/db', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(db)
+        });
+      } catch (err) {
+        console.error("Failed to sync database to server:", err);
+      }
+    }
+
+    // Display toast message
+    function showToast(message, isError = false) {
+      const toast = document.getElementById("status-toast");
+      const text = document.getElementById("toast-text");
+      text.textContent = message;
+      if (isError) {
+        toast.classList.add("error");
+      } else {
+        toast.classList.remove("error");
+      }
+      toast.classList.add("active");
+      setTimeout(() => {
+        toast.classList.remove("active");
+      }, 4000);
+    }
+
+    // Toggle folders
+    function setFolderFilter(filter) {
+      activeFilter = filter;
+      document.querySelectorAll(".menu-item").forEach(item => item.classList.remove("active"));
+      
+      if (filter === 'inbox') document.getElementById("menu-inbox").classList.add("active");
+      if (filter === 'sent') document.getElementById("menu-sent").classList.add("active");
+      if (filter === 'unread') document.getElementById("menu-unread").classList.add("active");
+      
+      renderUI();
+    }
+
+    // Handle search input
+    function handleSearch() {
+      searchQuery = document.getElementById("email-search").value.toLowerCase().trim();
+      renderUI();
+    }
+
+    // Escape HTML helpers
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // Format dates
+    function formatEmailDate(dateStr) {
+      if (!dateStr) return "";
+      try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        const now = new Date();
+        const isToday = d.toDateString() === now.toDateString();
+        if (isToday) {
+          return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        }
+        return d.toLocaleDateString([], { month: "short", day: "numeric" });
+      } catch (e) { return dateStr; }
+    }
+
+    // Render list and preview pane
+    function renderUI() {
+      const listContainer = document.getElementById("email-list-container");
+      
+      // Calculate unread badge counts
+      const unreadCount = emails.filter(e => !e.isRead).length;
+      const sentCount = emails.filter(e => e.folder === 'sent' || e.direction === 'sent').length;
+      
+      document.getElementById("inbox-unread-count").textContent = unreadCount;
+      document.getElementById("sent-count").textContent = sentCount;
+
+      // Filter emails
+      let filtered = [...emails];
+      if (activeFilter === 'inbox') {
+        // Render inbox (not sent)
+        filtered = filtered.filter(e => e.folder !== 'sent' && e.direction !== 'sent');
+      } else if (activeFilter === 'sent') {
+        filtered = filtered.filter(e => e.folder === 'sent' || e.direction === 'sent');
+      } else if (activeFilter === 'unread') {
+        filtered = filtered.filter(e => !e.isRead);
+      }
+
+      // Filter by search query
+      if (searchQuery) {
+        filtered = filtered.filter(e => 
+          (e.from || "").toLowerCase().includes(searchQuery) ||
+          (e.to || "").toLowerCase().includes(searchQuery) ||
+          (e.subject || "").toLowerCase().includes(searchQuery) ||
+          (e.snippet || "").toLowerCase().includes(searchQuery)
+        );
+      }
+
+      // Sort chronological descending (newest first)
+      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      // Render items
+      listContainer.innerHTML = "";
+      if (filtered.length === 0) {
+        listContainer.innerHTML = `<p style="text-align:center;color:#6b7280;font-size:0.85rem;padding:3rem 0;">No emails found.</p>`;
+      } else {
+        filtered.forEach(email => {
+          const item = document.createElement("div");
+          item.className = `email-item${email.isRead ? "" : " unread"}${selectedEmailId === email.id ? " active" : ""}`;
+          item.onclick = () => selectEmail(email.id);
+          
+          item.innerHTML = `
+            <div class="email-item-header">
+              <span class="sender-name">${escapeHtml(email.from || "Unknown Sender")}</span>
+              <span class="item-date">${formatEmailDate(email.date)}</span>
+            </div>
+            <div class="email-subject">${escapeHtml(email.subject || "(No Subject)")}</div>
+            <div class="email-snippet">${escapeHtml(email.snippet || "")}</div>
+          `;
+          listContainer.appendChild(item);
+        });
+      }
+
+      // Update Preview Pane
+      updatePreviewPane();
+    }
+
+    // Select email to view
+    async function selectEmail(emailId) {
+      selectedEmailId = emailId;
+      
+      // Mark as read
+      const email = emails.find(e => e.id === emailId);
+      if (email && !email.isRead) {
+        email.isRead = true;
+        localStorage.setItem(STORAGE_KEY_EMAILS, JSON.stringify(emails));
+        saveDatabaseToServer();
+      }
+
+      renderUI();
+    }
+
+    // Render preview pane detail HTML
+    function updatePreviewPane() {
+      const pane = document.getElementById("email-preview-pane");
+      if (!selectedEmailId) {
+        pane.innerHTML = `
+          <div class="preview-placeholder">
+            <span style="font-size: 3rem;">✉️</span>
+            <span>Select an email from the inbox list to read it</span>
+          </div>
+        `;
+        return;
+      }
+
+      const email = emails.find(e => e.id === selectedEmailId);
+      if (!email) {
+        pane.innerHTML = `
+          <div class="preview-placeholder">
+            <span style="font-size: 3rem;">⚠️</span>
+            <span>Email not found</span>
+          </div>
+        `;
+        return;
+      }
+
+      pane.innerHTML = `
+        <div class="preview-header">
+          <div class="preview-meta">
+            <h2 class="preview-subject">${escapeHtml(email.subject || "(No Subject)")}</h2>
+            <div class="preview-contacts">
+              From: <span>${escapeHtml(email.from)}</span><br>
+              To: <span>${escapeHtml(email.to || "admin@quantumyoga.xyz")}</span>
+            </div>
+          </div>
+          <div class="preview-actions">
+            <span class="item-date" style="margin-right:1rem; align-self:center;">
+              ${new Date(email.date).toLocaleString()}
+            </span>
+            <button class="btn-action-small btn-action-filled" onclick="openReplyModal('${email.id}')">
+              <span>↩️</span> Reply
+            </button>
+            <button class="btn-action-small btn-action-outline" onclick="toggleUnreadStatus('${email.id}')">
+              Mark Unread
+            </button>
+          </div>
+        </div>
+        <div class="preview-body-container">
+          <div class="preview-body">
+            ${email.html || `<p>${escapeHtml(email.snippet || "")}</p>`}
+          </div>
+        </div>
+      `;
+    }
+
+    // Toggle Read/Unread status
+    function toggleUnreadStatus(emailId) {
+      const email = emails.find(e => e.id === emailId);
+      if (email) {
+        email.isRead = !email.isRead;
+        localStorage.setItem(STORAGE_KEY_EMAILS, JSON.stringify(emails));
+        saveDatabaseToServer();
+        selectedEmailId = null; // Close preview
+        renderUI();
+        showToast(email.isRead ? "Marked as read ✓" : "Marked as unread ✓");
+      }
+    }
+
+    // Modal Compose controller
+    function openComposeModal() {
+      document.getElementById("compose-modal-title").textContent = "New Message";
+      document.getElementById("reply-parent-id").value = "";
+      document.getElementById("email-to").value = "";
+      document.getElementById("email-to").disabled = false;
+      document.getElementById("email-subject").value = "";
+      document.getElementById("email-body").value = "";
+      document.getElementById("compose-modal-overlay").classList.add("active");
+    }
+
+    function openReplyModal(emailId) {
+      const email = emails.find(e => e.id === emailId);
+      if (!email) return;
+
+      document.getElementById("compose-modal-title").textContent = `Reply to ${email.from}`;
+      document.getElementById("reply-parent-id").value = email.id;
+      document.getElementById("email-to").value = email.from;
+      document.getElementById("email-to").disabled = true;
+      document.getElementById("email-subject").value = email.subject.toLowerCase().startsWith("re:") 
+        ? email.subject 
+        : `Re: ${email.subject}`;
+      document.getElementById("email-body").value = `\n\n--- On ${new Date(email.date).toLocaleString()}, ${email.from} wrote:\n> ${email.snippet}`;
+      
+      document.getElementById("compose-modal-overlay").classList.add("active");
+      document.getElementById("email-body").focus();
+      document.getElementById("email-body").setSelectionRange(0, 0);
+    }
+
+    function closeComposeModal() {
+      document.getElementById("compose-modal-overlay").classList.remove("active");
+    }
+
+    // Handle send email submit form
+    async function handleSendEmail(event) {
+      event.preventDefault();
+      
+      const to = document.getElementById("email-to").value.trim();
+      const subject = document.getElementById("email-subject").value.trim();
+      const bodyText = document.getElementById("email-body").value.trim();
+      
+      const submitBtn = document.getElementById("btn-submit-send");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+
+      const fromAddress = "admin@quantumyoga.xyz";
+
+      // Formulate HTML body
+      const bodyHtml = `<div style="font-family:sans-serif;color:#333;line-height:1.6;">${bodyText.replace(/\n/g, "<br>")}</div>`;
+
+      try {
+        const response = await fetch("/api/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            apiKey: "",
+            from: "",
+            to: to,
+            subject: subject,
+            html: bodyHtml
+          })
+        });
+
+        if (!response.ok) {
+          let errorMsg = "Mail delivery failed.";
+          try {
+            const errBody = await response.json();
+            errorMsg = errBody.error || errorMsg;
+          } catch (_) {}
+          throw new Error(errorMsg);
+        }
+
+        // Add to local state and update server database
+        const newEmail = {
+          id: `resend-outbox-${Date.now()}`,
+          from: fromAddress,
+          to: to,
+          subject: subject,
+          snippet: bodyText.substring(0, 100),
+          html: bodyHtml,
+          date: new Date().toISOString(),
+          folder: 'sent',
+          direction: 'sent',
+          isRead: true
+        };
+
+        emails.push(newEmail);
+        localStorage.setItem(STORAGE_KEY_EMAILS, JSON.stringify(emails));
+        await saveDatabaseToServer();
+        
+        closeComposeModal();
+        renderUI();
+        showToast("Email sent successfully! ✓");
+      } catch (err) {
+        console.error("Email send error:", err);
+        showToast(`Send failed: ${err.message}`, true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send Email";
+      }
+    }
+
+    // Theme synchronization (Task 2.1)
+    function applyThemeFromStorage() {
+      const SITE_DEFAULT_THEME_KEY = "qy_site_default_theme";
+      const session = localStorage.getItem("qy_session") || sessionStorage.getItem("qy_session");
+      let activeTheme = localStorage.getItem(SITE_DEFAULT_THEME_KEY) || "midnight";
+      
+      if (session) {
+        try {
+          const email = JSON.parse(session);
+          const users = JSON.parse(localStorage.getItem("qy_users") || "[]");
+          const user = users.find(u => u.email === email);
+          if (user && user.theme) {
+            activeTheme = user.theme;
+          }
+        } catch (_) {}
+      }
+      
+      document.documentElement.classList.remove("theme-light", "theme-sunset");
+      if (activeTheme === "light") {
+        document.documentElement.classList.add("theme-light");
+      } else if (activeTheme === "sunset") {
+        document.documentElement.classList.add("theme-sunset");
+      }
+    }
+    
+    applyThemeFromStorage();
+    
+    window.addEventListener("storage", (e) => {
+      if (e.key === "qy_site_default_theme" || e.key === "qy_users" || e.key === "qy_session") {
+        applyThemeFromStorage();
+      }
+    });
+
+    window.addEventListener("message", (e) => {
+      if (e.data && e.data.type === "THEME_CHANGE") {
+        const themeName = e.data.theme;
+        document.documentElement.classList.remove("theme-light", "theme-sunset");
+        if (themeName === "light") {
+          document.documentElement.classList.add("theme-light");
+        } else if (themeName === "sunset") {
+          document.documentElement.classList.add("theme-sunset");
+        }
+      }
+    });
+
+    // Startup
+    window.addEventListener("DOMContentLoaded", () => {
+      // If loaded inside an iframe, hide the brand header and margins for seamless embedding
+      if (window.self !== window.top) {
+        const brandHeader = document.querySelector(".brand-header");
+        if (brandHeader) brandHeader.style.display = "none";
+        const container = document.querySelector(".email-container");
+        if (container) {
+          container.style.margin = "0";
+          container.style.padding = "0";
+          container.style.maxWidth = "100%";
+        }
+      }
+
+      checkAdminSession();
+      syncDataFromServer();
+      
+      // Periodic background synchronization every 10 seconds
+      setInterval(syncDataFromServer, 10000);
+    });
+  </script>
+</body>
+</html>
+````
+
+## File: openspec/changes/auto-review-upi-payments/tasks.md
+````markdown
+## 1. Database & Server Setup
+
+- [x] 1.1 Extend the state model in `server.js` and `db.json` to include a `upi_ledger` cache representing received UPI bank transactions.
+- [x] 1.2 Implement the POST `/api/verify-upi` API endpoint on the Express server in `server.js` to process auto-verification matching against the `upi_ledger`.
+- [x] 1.3 Add a POST `/api/admin/upload-ledger` file upload endpoint to parse CSV and Excel bank statement files, extracting transaction details (UTR, amount, date, and other descriptions).
+
+## 2. Client Integration & Form Callbacks
+
+- [x] 2.1 Update the UPI payment submission handler in `app.js` to invoke the verification API endpoint upon student UTR entry.
+- [x] 2.2 Add alert indicators in the student UI to notify that verification is in progress (due to statement upload delays) or if it has been auto-approved.
+- [x] 2.3 Ensure email and WhatsApp triggers are instantly dispatched with UTR metadata if auto-approved.
+
+## 3. Administrative Interface Updates
+
+- [x] 3.1 Update the Admin Billing view to display transaction statuses properly (e.g. flagging unmatched/review items or showing automated approval details).
+- [x] 3.2 Add a ledger upload widget to the Admin settings tab to allow admins to upload CSV/Excel bank statements manually.
+- [x] 3.3 Ensure the ledger upload widget shows parsing summaries (e.g. "X transactions imported, Y duplicates ignored").
+
+## 4. Planned Reconciliation Enhancements
+
+- [x] 4.1 Implement configurable fuzzy amount matching tolerance (default ±₹0.05) in `/api/verify-upi` verification logic.
+- [x] 4.2 Add the 30-day date window validation check to block auto-approvals of outdated UTR submissions.
+- [x] 4.3 Add a dynamic CSV column mapping configurations panel to the Admin Settings UI and update `/api/admin/upload-ledger` to map headers dynamically.
+- [x] 4.4 Design and build a database audit log schema and render a Reconciliation Log Audit view on the Admin Dashboard.
+````
+
 ## File: .github/workflows/ci-cd.yml
 ````yaml
 name: CI/CD Pipeline
@@ -13570,6 +11884,7 @@ jobs:
           cp data.js deploy-dist/
           cp index.css deploy-dist/
           cp index.html deploy-dist/
+          cp admin-emails.html deploy-dist/
           # Copy images and other JSON configurations
           cp *.jpg deploy-dist/ || echo "No jpg files"
           cp *.png deploy-dist/ || echo "No png files"
@@ -13648,6 +11963,6200 @@ jobs:
             
             pm2 startOrReload ecosystem.config.cjs
             pm2 save
+````
+
+## File: index.css
+````css
+/* ==========================================================================
+   Quantum Yoga - Premium Design System & Stylesheet
+   ========================================================================== */
+
+:root {
+  /* Colors */
+  --bg-primary: #050308;
+  --bg-secondary: #0c0914;
+  --bg-card: rgba(22, 16, 36, 0.5);
+  --bg-card-hover: rgba(32, 24, 52, 0.7);
+  --border-glass: rgba(255, 255, 255, 0.06);
+  --border-glass-hover: rgba(167, 139, 250, 0.25);
+  
+  --accent-primary: #a78bfa; /* Lavender */
+  --accent-primary-rgb: 167, 139, 250;
+  --accent-secondary: #f43f5e; /* Rose */
+  --accent-secondary-rgb: 244, 63, 94;
+  --accent-teal: #2dd4bf; /* Mint/Teal */
+  
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --text-dark: #111827;
+  
+  /* Fonts */
+  --font-sans: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, Cambria, serif;
+  
+  /* Shadows & Glows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.7);
+  --card-glow: 0 0 25px rgba(167, 139, 250, 0.15);
+  --rose-glow: 0 0 25px rgba(244, 63, 94, 0.15);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  
+  /* Layout */
+  --max-width: 1280px;
+
+  /* Tiered Glassmorphism */
+  --glass-light-bg: rgba(255, 255, 255, 0.02);
+  --glass-light-border: rgba(255, 255, 255, 0.05);
+  --glass-light-blur: blur(8px);
+  
+  --glass-medium-bg: rgba(22, 16, 36, 0.45);
+  --glass-medium-border: rgba(255, 255, 255, 0.07);
+  --glass-medium-blur: blur(16px);
+  
+  --glass-dark-bg: rgba(12, 9, 20, 0.75);
+  --glass-dark-border: rgba(255, 255, 255, 0.1);
+  --glass-dark-blur: blur(24px);
+
+  --gpu-accelerate: translateZ(0);
+
+  /* Ambient glow colors */
+  --glow-color-1: rgba(167, 139, 250, 0.3);
+  --glow-color-2: rgba(244, 63, 94, 0.2);
+  --glow-color-3: rgba(99, 102, 241, 0.25);
+
+  /* Adaptable background components */
+  --bg-input: rgba(5, 3, 8, 0.4);
+  --bg-card-media: #100a1d;
+  --bg-tabs: rgba(22, 16, 36, 0.3);
+  --scrollbar-thumb: #231c34;
+
+  /* Spotlight coordinates */
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+
+  --auth-overlay-bg: linear-gradient(rgba(17, 24, 39, 0.75), rgba(3, 7, 18, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
+  --site-bg: linear-gradient(rgba(10, 5, 20, 0.93), rgba(10, 5, 20, 0.97)), url('./quantumyoga.jpg') no-repeat center center / cover;
+}
+
+/* Base resets & scrollbar */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--site-bg);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.6;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* Background Ambient Glows */
+.bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.45;
+}
+
+.bg-glow-1 {
+  width: 500px;
+  height: 500px;
+  top: -100px;
+  right: -100px;
+  background: radial-gradient(circle, var(--glow-color-1) 0%, rgba(0,0,0,0) 70%);
+  animation: float-glow 15s infinite ease-in-out alternate;
+}
+
+.bg-glow-2 {
+  width: 600px;
+  height: 600px;
+  top: 40%;
+  left: -200px;
+  background: radial-gradient(circle, var(--glow-color-2) 0%, rgba(0,0,0,0) 70%);
+  animation: float-glow 20s infinite ease-in-out alternate-reverse;
+}
+
+.bg-glow-3 {
+  width: 400px;
+  height: 400px;
+  bottom: -50px;
+  right: 10%;
+  background: radial-gradient(circle, var(--glow-color-3) 0%, rgba(0,0,0,0) 70%);
+}
+
+@keyframes float-glow {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(40px, 30px) scale(1.1);
+  }
+  100% {
+    transform: translate(-20px, -40px) scale(0.9);
+  }
+}
+
+/* Typography elements */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+/* App Header */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 100;
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  border-bottom: 1px solid var(--glass-medium-border);
+  background: var(--glass-medium-bg);
+  transform: var(--gpu-accelerate);
+}
+
+.nav-container {
+  max-width: var(--max-width);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.logo-icon {
+  font-size: 1.75rem;
+}
+
+.text-accent {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition-fast);
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--accent-primary);
+}
+
+.nav-link.active {
+  border-color: var(--accent-primary);
+}
+
+.status-badge {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-secondary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(244, 63, 94, 0.4);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(244, 63, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0);
+  }
+}
+
+/* App Main Layout */
+.app-main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 120px 2rem 4rem 2rem;
+  min-height: calc(100vh - 160px);
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 1.5rem 0;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  color: var(--accent-primary);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #c084fc 0%, var(--accent-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-alt {
+  background: linear-gradient(135deg, var(--accent-secondary) 0%, #fda4af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  max-width: 650px;
+  margin: 0 auto;
+  color: var(--text-secondary);
+}
+
+/* Search & Filters Controls Section */
+.controls-section {
+  margin-bottom: 3rem;
+}
+
+.controls-card {
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+  transform: var(--gpu-accelerate);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.controls-card:hover {
+  border-color: var(--border-glass-hover);
+  box-shadow: var(--shadow-lg), var(--card-glow);
+}
+
+@media (max-width: 768px) {
+  .controls-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 0 1rem;
+  transition: var(--transition-fast);
+}
+
+.search-box:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.15);
+}
+
+.search-icon {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.search-box input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0.9rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+}
+
+.clear-button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.clear-button:hover {
+  color: var(--text-primary);
+}
+
+.filter-group {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 576px) {
+  .filter-group {
+    flex-direction: column;
+  }
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper::after {
+  content: "▼";
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+select {
+  appearance: none;
+  background: var(--bg-input);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 2.5rem 0.9rem 1.2rem;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-fast);
+  min-width: 180px;
+}
+
+@media (max-width: 576px) {
+  select {
+    width: 100%;
+  }
+}
+
+select:focus {
+  border-color: var(--accent-primary);
+}
+
+select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Tabs Toggle Controls */
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  background: var(--bg-tabs);
+  padding: 0.4rem;
+  border-radius: var(--radius-full);
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid var(--border-glass);
+}
+
+.tab-pill {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  outline: none;
+}
+
+.tab-pill:hover {
+  color: var(--text-primary);
+}
+
+.tab-pill.active {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #8b5cf6 100%);
+  color: var(--text-dark);
+  box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+}
+
+/* Content Sections View Toggle */
+.content-section {
+  display: none;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.content-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Grid Container */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+@media (max-width: 480px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Pose & Routine Cards */
+.card {
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transform: var(--gpu-accelerate);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle 220px at var(--mouse-x) var(--mouse-y), rgba(var(--accent-primary-rgb), 0.15), transparent 80%);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-routine::before {
+  background: radial-gradient(circle 220px at var(--mouse-x) var(--mouse-y), rgba(var(--accent-secondary-rgb), 0.15), transparent 80%);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-glass-hover);
+  box-shadow: var(--shadow-lg), var(--card-glow);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* Routine Card Special Glow */
+.card-routine:hover {
+  box-shadow: var(--shadow-lg), var(--rose-glow);
+  border-color: rgba(244, 63, 94, 0.25);
+}
+
+.card-media-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: var(--bg-card-media);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.card-media-wrapper svg {
+  transition: var(--transition-slow);
+}
+
+.card:hover .card-media-wrapper svg {
+  transform: scale(1.08);
+}
+
+.card-badge-group {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.badge-difficulty-beginner {
+  background: rgba(45, 212, 191, 0.15);
+  color: var(--accent-teal);
+  border: 1px solid rgba(45, 212, 191, 0.3);
+}
+
+.badge-difficulty-intermediate {
+  background: rgba(167, 139, 250, 0.15);
+  color: var(--accent-primary);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+.badge-difficulty-advanced {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.badge-category {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+  z-index: 5;
+}
+
+.card-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.card-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.card-metadata {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-glass);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metadata-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.metadata-icon {
+  font-size: 1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  outline: none;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Card and Button Shimmer Effect */
+.card::after, .btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.card:hover::after, .btn:hover::after {
+  left: 150%;
+  transition: left 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #8b5cf6 100%);
+  color: var(--text-dark);
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.35);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glass);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-rose {
+  background: linear-gradient(135deg, var(--accent-secondary) 0%, #e11d48 100%);
+  color: var(--text-primary);
+  border: none;
+}
+
+.btn-rose:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.35);
+}
+
+/* Empty State Styling */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-glass);
+  border-radius: var(--radius-md);
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+/* Modal Overlay Base */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(4, 2, 7, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  padding: 2rem;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Pose Modal Card */
+.modal-card {
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-dark-blur);
+  -webkit-backdrop-filter: var(--glass-dark-blur);
+  border: 1px solid var(--glass-dark-border);
+  border-radius: var(--radius-lg);
+  max-width: 850px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: var(--shadow-lg), var(--card-glow);
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-overlay.active .modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent-primary);
+}
+
+.modal-body {
+  padding: 3rem;
+}
+
+@media (max-width: 768px) {
+  .modal-body {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Detailed Pose Layout */
+.pose-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .pose-detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pose-detail-media {
+  background: var(--glass-light-bg);
+  backdrop-filter: var(--glass-light-blur);
+  -webkit-backdrop-filter: var(--glass-light-blur);
+  border: 1px solid var(--glass-light-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 320px;
+  overflow: hidden;
+  transform: var(--gpu-accelerate);
+}
+
+.pose-detail-info h2 {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.pose-detail-badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pose-detail-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pose-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pose-benefits-list {
+  list-style: none;
+  margin-bottom: 1.5rem;
+}
+
+.pose-benefits-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.pose-benefits-list li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  color: var(--accent-primary);
+}
+
+.pose-instructions-list {
+  padding-left: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.pose-instructions-list li {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+
+.pose-detail-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Custom HTML5 Video Player Modal Elements */
+.video-player-container {
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-dark-blur);
+  -webkit-backdrop-filter: var(--glass-dark-blur);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  max-width: 960px;
+  width: 100%;
+  aspect-ratio: 16/9;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 40px rgba(167, 139, 250, 0.15);
+  border: 1px solid var(--glass-dark-border);
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-overlay.active .video-player-container {
+  transform: scale(1) translateY(0);
+}
+
+.video-modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: var(--transition-fast);
+}
+
+.video-modal-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--accent-secondary);
+}
+
+/* Voice Coach Floating Control Widget */
+.voice-coach-widget {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  width: 260px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  transition: all 0.3s ease;
+}
+
+.voice-coach-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.voice-coach-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex: 1;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.voice-settings-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: var(--transition-fast);
+}
+
+.voice-settings-btn:hover {
+  color: var(--accent-primary);
+  transform: rotate(30deg);
+}
+
+/* Switch Toggle Styling */
+.voice-coach-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+}
+
+.voice-coach-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.voice-coach-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: .3s;
+  border-radius: 20px;
+}
+
+.voice-coach-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+.voice-coach-switch input:checked + .voice-coach-slider {
+  background-color: var(--accent-primary);
+}
+
+.voice-coach-switch input:checked + .voice-coach-slider:before {
+  transform: translateX(18px);
+}
+
+/* Voice Settings Drawer */
+.voice-coach-settings-drawer {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.settings-group label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.voice-select-dropdown {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem;
+  color: #fff;
+  font-size: 0.8rem;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.settings-group input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  outline: none;
+}
+
+.settings-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.settings-group input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Routine Walkthrough HUD Overlay */
+.routine-walkthrough-panel {
+  position: absolute;
+  top: 1.5rem;
+  right: 5.5rem;
+  z-index: 45;
+  width: 300px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.walkthrough-pose-header h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.walkthrough-pose-header p {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--accent-secondary);
+  margin: 0.2rem 0 0 0;
+}
+
+.walkthrough-timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  align-self: flex-start;
+}
+
+.walkthrough-timer-icon {
+  font-size: 1rem;
+}
+
+#walkthrough-timer-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.walkthrough-instructions-wrap {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+#walkthrough-instructions {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.walkthrough-next-pose {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 0.6rem;
+}
+
+.walkthrough-next-pose strong {
+  color: var(--text-primary);
+}
+
+#custom-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+}
+
+/* Custom Player Controls */
+.custom-video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0) 100%);
+  padding: 2rem 1.5rem 1rem 1.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Reveal controls on hover */
+.video-player-container:hover .custom-video-controls,
+.video-player-container:focus-within .custom-video-controls,
+.custom-video-controls.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Custom Timeline Scrub Bar */
+.timeline-container {
+  height: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  position: relative;
+  transition: height 0.15s ease;
+}
+
+.timeline-container:hover .timeline-track {
+  height: 6px;
+}
+
+.timeline-progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  border-radius: var(--radius-full);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  z-index: 2;
+}
+
+.timeline-buffered {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  z-index: 1;
+}
+
+.timeline-handle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 3;
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+.timeline-container:hover .timeline-handle {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controls-left, .controls-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.control-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: var(--transition-fast);
+}
+
+.control-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--accent-primary);
+}
+
+.time-display {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.8);
+  font-family: var(--font-sans);
+}
+
+/* Volume Slider */
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 70px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.25);
+  outline: none;
+  cursor: pointer;
+  transition: width 0.2s ease;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  background: var(--accent-primary);
+}
+
+/* App Footer */
+.app-footer {
+  border-top: 1px solid var(--glass-medium-border);
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  padding: 2rem 0;
+  margin-top: auto;
+  transform: var(--gpu-accelerate);
+}
+
+.footer-content {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Custom Guided Routine Layout in Modal */
+.routine-step-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.routine-flow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 1rem;
+}
+
+.routine-flow-header h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+}
+
+.routine-duration-pill {
+  background: rgba(244, 63, 94, 0.12);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  font-weight: 700;
+}
+
+.routine-pose-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.routine-pose-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+  background: var(--glass-light-bg);
+  backdrop-filter: var(--glass-light-blur);
+  -webkit-backdrop-filter: var(--glass-light-blur);
+  border: 1px solid var(--glass-light-border);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.routine-pose-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border-glass-hover);
+  box-shadow: var(--shadow-sm), 0 0 15px rgba(167, 139, 250, 0.08);
+}
+
+.routine-pose-num {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.routine-pose-meta h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.routine-pose-meta p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.routine-pose-duration {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   User Auth Modal & Profile Styling
+   ========================================================================== */
+
+/* Auth Tabs */
+.auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--glass-dark-border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.auth-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 1rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-align: center;
+  border-bottom: 2px solid transparent;
+}
+
+.auth-tab:hover, .auth-tab.active {
+  color: var(--accent-primary);
+}
+
+.auth-tab.active {
+  border-bottom-color: var(--accent-primary);
+  background: rgba(167, 139, 250, 0.03);
+}
+
+/* Auth Form */
+.auth-form {
+  display: none;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.auth-form.active-form {
+  display: flex;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-group input {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--glass-dark-border);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.form-group input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+}
+
+.form-error-msg {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.btn-block {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 0.95rem;
+}
+
+/* Profile Section Styling */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.profile-header-card {
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  box-shadow: var(--shadow-md);
+  transform: var(--gpu-accelerate);
+}
+
+@media (max-width: 768px) {
+  .profile-header-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+  }
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
+}
+
+.profile-info-details {
+  flex-grow: 1;
+}
+
+.profile-info-details h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.profile-info-details p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+@media (max-width: 576px) {
+  .profile-stats {
+    width: 100%;
+    justify-content: space-around;
+  }
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Milestone and Practice Grid styles */
+.milestone-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-light-border);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  opacity: 0.4;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  width: 100px;
+}
+.milestone-badge.unlocked {
+  opacity: 1 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+  transform: scale(1.05);
+}
+.milestone-badge.unlocked span {
+  animation: pulse-badge 2s infinite;
+}
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+#practice-calendar-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-flow: column;
+  gap: 3px;
+  width: max-content;
+  margin: 0 auto;
+}
+
+.calendar-pixel {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+.calendar-pixel:hover {
+  transform: scale(1.3);
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.calendar-pixel.contrib-0 { background: rgba(255, 255, 255, 0.05); }
+.calendar-pixel.contrib-1 { background: rgba(16, 185, 129, 0.2); }
+.calendar-pixel.contrib-2 { background: rgba(16, 185, 129, 0.45); }
+.calendar-pixel.contrib-3 { background: rgba(16, 185, 129, 0.7); }
+.calendar-pixel.contrib-4 { background: rgba(16, 185, 129, 0.95); box-shadow: 0 0 4px rgba(16, 185, 129, 0.4); }
+
+/* Profile content grid */
+.profile-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 992px) {
+  .profile-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-panel {
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profile-panel h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--glass-medium-border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.profile-favorites-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fav-pose-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--glass-light-border);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.fav-pose-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(167, 139, 250, 0.2);
+}
+
+.profile-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--glass-light-border);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(244, 63, 94, 0.2);
+}
+
+/* Modal Auth sizing override */
+.modal-auth-card {
+  max-width: 420px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.auth-modal-body {
+  padding: 2rem 2.5rem;
+}
+
+/* ==========================================================================
+   Admin Dashboard & Controls Styling
+   ========================================================================== */
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.admin-header-card {
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.admin-avatar {
+  width: 80px;
+  height: 80px;
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.15);
+}
+
+.admin-info-details h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.admin-info-details p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* Admin Sub-Tabs styling */
+.admin-sub-tabs {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--glass-medium-border);
+  padding-bottom: 0.75rem;
+}
+
+.admin-sub-tab, .admin-payments-sub-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.admin-sub-tab:hover, .admin-sub-tab.active, .admin-payments-sub-tab:hover, .admin-payments-sub-tab.active {
+  color: var(--text-primary);
+  background: var(--glass-light-bg);
+}
+
+.admin-sub-tab.active, .admin-payments-sub-tab.active {
+  color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.1);
+}
+
+/* Glassmorphic Table */
+.admin-table-wrapper {
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.admin-table-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: var(--font-sans);
+}
+
+.admin-table th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--glass-medium-border);
+}
+
+.admin-table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--glass-light-border);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr {
+  transition: var(--transition-fast);
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Admin Reports Statistics Cards Grid */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.admin-stat-card {
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-medium-blur);
+  -webkit-backdrop-filter: var(--glass-medium-blur);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-medium);
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 10px 20px rgba(167, 139, 250, 0.08);
+}
+
+.modal-inspect-card {
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-heavy-blur);
+  -webkit-backdrop-filter: var(--glass-heavy-blur);
+  border: 1px solid var(--glass-heavy-border);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 768px) {
+  .admin-header-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+  }
+}
+
+/* ==========================================================================
+   Fullscreen Auth Gate Styling
+   ========================================================================== */
+
+#auth-gate-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--auth-overlay-bg);
+  z-index: 9999;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.auth-gate-card {
+  background: var(--glass-medium-bg);
+  backdrop-filter: var(--glass-heavy-blur);
+  -webkit-backdrop-filter: var(--glass-heavy-blur);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  padding: 3rem 2.5rem;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transform: var(--gpu-accelerate);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.auth-gate-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.auth-gate-tagline {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.auth-gate-body {
+  margin-top: 0.5rem;
+}
+
+#auth-gate-fullscreen .auth-tabs {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--glass-dark-border);
+}
+
+/* ==========================================================================
+   Visual Themes Overrides (Ethereal Light & Zen Sunset)
+   ========================================================================== */
+
+/* 3.1 Ethereal Light (Light Glassmorphism Theme) */
+.theme-light {
+  --auth-overlay-bg: linear-gradient(rgba(245, 244, 248, 0.75), rgba(210, 208, 224, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
+  --site-bg: linear-gradient(rgba(245, 244, 248, 0.93), rgba(210, 208, 224, 0.97)), url('./quantumyoga.jpg') no-repeat center center / cover;
+  --bg-primary: #f5f4f8; /* Soft warm-lavender off-white */
+  --bg-secondary: #e9e8f0; /* Soft cool grey-purple */
+  --bg-card: rgba(255, 255, 255, 0.45); /* Light glass background */
+  --bg-card-hover: rgba(255, 255, 255, 0.65);
+  --border-glass: rgba(167, 139, 250, 0.12);
+  --border-glass-hover: rgba(167, 139, 250, 0.45);
+  
+  --accent-primary: #7c3aed; /* Vibrant Violet for light mode readability */
+  --accent-primary-rgb: 124, 58, 237;
+  --accent-secondary: #db2777; /* Vibrant Rose */
+  --accent-secondary-rgb: 219, 39, 119;
+  --accent-teal: #0d9488;
+  
+  --text-primary: #1e1b4b; /* Deep Indigo for high contrast text */
+  --text-secondary: #475569; /* Slate gray */
+  --text-muted: #6b7280;
+  --text-dark: #f9fafb;
+  
+  --shadow-sm: 0 4px 12px rgba(167, 139, 250, 0.05);
+  --shadow-md: 0 10px 30px rgba(167, 139, 250, 0.08);
+  --shadow-lg: 0 20px 50px rgba(167, 139, 250, 0.12);
+  --card-glow: 0 0 25px rgba(124, 58, 237, 0.12);
+  --rose-glow: 0 0 25px rgba(219, 39, 119, 0.12);
+
+  --glass-light-bg: rgba(255, 255, 255, 0.25);
+  --glass-light-border: rgba(167, 139, 250, 0.08);
+  
+  --glass-medium-bg: rgba(255, 255, 255, 0.55);
+  --glass-medium-border: rgba(167, 139, 250, 0.15);
+  
+  --glass-dark-bg: rgba(255, 255, 255, 0.85);
+  --glass-dark-border: rgba(167, 139, 250, 0.22);
+  
+  --bg-input: rgba(255, 255, 255, 0.8);
+  --bg-card-media: rgba(167, 139, 250, 0.05);
+  --bg-tabs: rgba(167, 139, 250, 0.08);
+  --scrollbar-thumb: #d1d5db;
+  
+  --glow-color-1: rgba(167, 139, 250, 0.15);
+  --glow-color-2: rgba(244, 63, 94, 0.1);
+  --glow-color-3: rgba(99, 102, 241, 0.12);
+}
+
+/* 3.2 Zen Sunset (Warm Dusk/Amber Sunset Theme) */
+.theme-sunset {
+  --auth-overlay-bg: linear-gradient(rgba(42, 22, 49, 0.75), rgba(18, 10, 22, 0.95)), url('./quantumyoga.jpg') no-repeat center center / cover;
+  --site-bg: linear-gradient(rgba(42, 22, 49, 0.93), rgba(18, 10, 22, 0.97)), url('./quantumyoga.jpg') no-repeat center center / cover;
+  --bg-primary: #1a0f20; /* Deep dusk purple */
+  --bg-secondary: #291630; /* Medium dusk purple */
+  --bg-card: rgba(42, 22, 49, 0.5); /* Rose glass background */
+  --bg-card-hover: rgba(57, 29, 67, 0.7);
+  --border-glass: rgba(251, 146, 60, 0.15); /* Orange/amber glass border */
+  --border-glass-hover: rgba(244, 63, 94, 0.35); /* Rose border */
+  
+  --accent-primary: #fb923c; /* Amber/Orange */
+  --accent-primary-rgb: 251, 146, 60;
+  --accent-secondary: #f43f5e; /* Rose */
+  --accent-secondary-rgb: 244, 63, 94;
+  --accent-teal: #fbbf24;
+  
+  --text-primary: #fffaf3; /* Warm off-white */
+  --text-secondary: #fed7aa; /* Soft orange/amber white */
+  --text-muted: #c0b3cb; /* Muted dusk gray */
+  --text-dark: #1a0f20;
+  
+  --shadow-sm: 0 4px 12px rgba(26, 15, 32, 0.2);
+  --shadow-md: 0 10px 30px rgba(26, 15, 32, 0.3);
+  --shadow-lg: 0 20px 50px rgba(26, 15, 32, 0.4);
+  --card-glow: 0 0 25px rgba(251, 146, 60, 0.2);
+  --rose-glow: 0 0 25px rgba(244, 63, 94, 0.2);
+
+  --glass-light-bg: rgba(255, 255, 255, 0.02);
+  --glass-light-border: rgba(251, 146, 60, 0.08);
+  
+  --glass-medium-bg: rgba(42, 22, 49, 0.5);
+  --glass-medium-border: rgba(251, 146, 60, 0.12);
+  
+  --glass-dark-bg: rgba(26, 15, 32, 0.85);
+  --glass-dark-border: rgba(251, 146, 60, 0.18);
+  
+  --bg-input: rgba(26, 15, 32, 0.5);
+  --bg-card-media: #23122c;
+  --bg-tabs: rgba(42, 22, 49, 0.4);
+  --scrollbar-thumb: #3d2149;
+  
+  --glow-color-1: rgba(251, 146, 60, 0.25);
+  --glow-color-2: rgba(244, 63, 94, 0.2);
+  --glow-color-3: rgba(239, 68, 68, 0.15);
+}
+
+/* Global Transition Rules for Seamless Swapping */
+body, 
+.app-header, 
+.controls-card, 
+select, 
+.search-box, 
+.card, 
+.card-media-wrapper,
+.profile-header-card, 
+.profile-favorites-list .favorite-item, 
+.profile-history-list .history-item, 
+.tabs-container, 
+.tab-pill, 
+table, 
+th, 
+td, 
+.inspect-details-card, 
+.admin-report-card, 
+.btn,
+.profile-avatar,
+.logo {
+  transition: background var(--transition-normal), 
+              background-color var(--transition-normal), 
+              color var(--transition-normal), 
+              border-color var(--transition-normal), 
+              box-shadow var(--transition-normal);
+}
+
+/* Admin Overview Dashboard Additions */
+.admin-insights-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.admin-insight-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-light-border);
+  transition: var(--transition-fast);
+}
+
+.admin-insight-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(167, 139, 250, 0.2);
+}
+
+.admin-insight-card.alert-warning {
+  border-left: 4px solid var(--accent-secondary);
+}
+
+.admin-insight-card.alert-info {
+  border-left: 4px solid var(--accent-primary);
+}
+
+.admin-insight-card.alert-success {
+  border-left: 4px solid var(--accent-teal);
+}
+
+.admin-insight-icon {
+  font-size: 1.75rem;
+}
+
+.admin-insight-content {
+  flex-grow: 1;
+}
+
+.admin-insight-content h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.admin-insight-content p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.admin-timeline-feed, .admin-payments-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.admin-timeline-item, .admin-payment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--glass-light-border);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.admin-timeline-item:hover, .admin-payment-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.feed-item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.feed-item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.feed-item-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.feed-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.feed-item-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-paid {
+  background: rgba(45, 212, 191, 0.15);
+  color: var(--accent-teal);
+}
+
+.badge-pending {
+  background: rgba(251, 146, 60, 0.15);
+  color: #fb923c;
+}
+
+.badge-review {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.badge-overdue {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-secondary);
+}
+
+.badge-scheduled {
+  background: rgba(167, 139, 250, 0.15);
+  color: var(--accent-primary);
+}
+
+.badge-rescheduled {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.badge-cancelled {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-secondary);
+}
+
+.badge-refund-initiated {
+  background: rgba(167, 139, 250, 0.15);
+  color: #a78bfa;
+}
+
+.badge-refunded {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+.badge-active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.badge-paused {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.badge-expired {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-secondary);
+}
+
+.badge-tier-basic {
+  background: rgba(156, 163, 175, 0.15);
+  color: #d1d5db;
+}
+
+.badge-tier-premium {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+}
+
+.badge-tier-vip {
+  background: rgba(236, 72, 153, 0.15);
+  color: #f472b6;
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+.badge-status-new {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.badge-status-contacted {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.badge-status-converted {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.badge-status-closed {
+  background: rgba(107, 114, 128, 0.12);
+  color: #9ca3af;
+  border-color: rgba(107, 114, 128, 0.25);
+}
+
+.feed-item-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Scrollbar tuning for dashboard timelines */
+.admin-timeline-feed::-webkit-scrollbar, .admin-payments-feed::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-timeline-feed::-webkit-scrollbar-thumb, .admin-payments-feed::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+/* Student Dashboard & Client Pages Additions */
+.profile-sub-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  outline: none;
+}
+
+.profile-sub-tab:hover, .profile-sub-tab.active {
+  color: var(--text-primary);
+  background: var(--glass-light-bg);
+}
+
+.profile-sub-tab.active {
+  color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.1);
+}
+
+.profile-panel-content {
+  display: none;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.profile-panel-content.active-panel {
+  display: block;
+}
+
+.profile-sessions-feed::-webkit-scrollbar {
+  width: 6px;
+}
+.profile-sessions-feed::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+.profile-session-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.15rem;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--glass-light-border);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.profile-session-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 992px) {
+  .profile-dashboard-top-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ==========================================================================
+   Payments, Reminders, & Receipts Styling
+   ========================================================================== */
+
+/* Overdue Payment Alert Banner */
+.overdue-alert-banner {
+  position: sticky;
+  top: 70px; /* height of header navbar */
+  z-index: 99;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(124, 58, 237, 0.9));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.25);
+  padding: 0.85rem 1.5rem;
+  transition: all var(--transition-medium);
+}
+
+.overdue-banner-content {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.overdue-banner-icon {
+  font-size: 1.25rem;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+}
+
+.overdue-banner-text {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  flex-grow: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.overdue-banner-close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.overdue-banner-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Contact Us Modal Card */
+.contact-modal-card {
+  background: var(--glass-dark-bg) !important;
+  border: 1px solid var(--glass-medium-border) !important;
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(124, 58, 237, 0.15) !important;
+}
+
+.contact-item a {
+  transition: var(--transition-fast);
+}
+
+.contact-item a:hover {
+  color: var(--accent-secondary) !important;
+  text-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+}
+
+/* Detailed Receipt Modal Overlay & Layout */
+.receipt-modal-card {
+  background: var(--glass-dark-bg) !important;
+  border: 1px solid var(--glass-medium-border) !important;
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(124, 58, 237, 0.15) !important;
+}
+
+.receipt-details-container {
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px dashed var(--glass-medium-border);
+  padding-bottom: 1.5rem;
+}
+
+.receipt-header h2 {
+  font-family: var(--font-serif);
+  color: var(--accent-primary);
+  margin-bottom: 0.25rem;
+  font-size: 1.75rem;
+}
+
+.receipt-header p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--glass-light-border);
+  font-size: 0.95rem;
+}
+
+.receipt-row strong {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.receipt-row span {
+  font-weight: 600;
+}
+
+.receipt-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  border-top: 2px dashed var(--glass-medium-border);
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.receipt-stamp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  position: relative;
+}
+
+.receipt-stamp {
+  border: 3px double rgba(167, 139, 250, 0.4);
+  color: rgba(167, 139, 250, 0.6);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transform: rotate(-5deg);
+  letter-spacing: 0.15em;
+}
+
+.print-btn-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-print-receipt {
+  width: 100%;
+}
+
+/* Print Styling Override */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #receipt-modal, #receipt-modal * {
+    visibility: visible;
+  }
+  #receipt-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    background: #ffffff !important;
+    color: #111111 !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .receipt-modal-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    transform: none !important;
+  }
+  .modal-close, .print-btn-container {
+    display: none !important;
+  }
+  .receipt-details-container {
+    color: #111111 !important;
+  }
+  .receipt-row {
+    border-bottom: 1px solid #eaeaea !important;
+    color: #111111 !important;
+  }
+  .receipt-row strong {
+    color: #444444 !important;
+  }
+  .receipt-row span {
+    color: #111111 !important;
+  }
+  .receipt-header h2 {
+    color: #7c3aed !important;
+  }
+  .receipt-header p {
+    color: #666666 !important;
+  }
+  .receipt-total {
+    border-top: 2px dashed #111111 !important;
+    color: #7c3aed !important;
+  }
+  .receipt-stamp {
+    border-color: #7c3aed !important;
+    color: #7c3aed !important;
+  }
+}
+
+/* Leads Kanban Swimlane Board Styles */
+.leads-swimlane-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  overflow-x: auto;
+  padding: 0.5rem 0.2rem;
+  scrollbar-width: thin;
+}
+
+@media (max-width: 1024px) {
+  .leads-swimlane-board {
+    display: flex;
+  }
+  .swimlane-column {
+    flex: 0 0 280px;
+  }
+}
+
+.swimlane-column {
+  background: rgba(22, 16, 36, 0.3);
+  border: 1px solid var(--glass-light-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  max-height: 580px;
+  min-height: 200px;
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.swimlane-column:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-sm);
+}
+
+.swimlane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.swimlane-header h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+}
+
+.swimlane-count {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+/* Color markers for columns */
+.swimlane-column[data-status="New"] .swimlane-header h3 {
+  color: var(--accent-primary);
+}
+.swimlane-column[data-status="Contacted"] .swimlane-header h3 {
+  color: var(--accent-teal);
+}
+.swimlane-column[data-status="Converted"] .swimlane-header h3 {
+  color: #10B981; /* Green */
+}
+.swimlane-column[data-status="Closed"] .swimlane-header h3 {
+  color: var(--text-muted);
+}
+
+.swimlane-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 0.25rem;
+}
+
+.swimlane-cards-container::-webkit-scrollbar {
+  width: 4px;
+}
+.swimlane-cards-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+}
+
+.lead-card {
+  background: var(--glass-light-bg);
+  border: 1px solid var(--glass-light-border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.lead-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.1);
+}
+
+.lead-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.lead-card-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.lead-card-date {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.lead-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.lead-card-msg {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 0.25rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.05);
+  padding-top: 0.35rem;
+}
+
+.lead-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--border-glass);
+  padding-top: 0.5rem;
+}
+
+.lead-card-move-btns {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.lead-move-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: var(--transition-fast);
+}
+
+.lead-move-btn:hover {
+  background: var(--accent-primary);
+  color: var(--text-dark);
+  border-color: var(--accent-primary);
+}
+
+.lead-inspect-link {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.lead-inspect-link:hover {
+  text-decoration: underline;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Gmail Email Integration Styles (Tasks 6.x)
+   ========================================================================== */
+
+/* Gmail Status Card */
+/* ── Email Provider Toggle ─────────────────────────────────────────── */
+.email-provider-toggle {
+  display: inline-flex;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.email-provider-btn {
+  padding: 0.35rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.email-provider-btn:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-primary);
+}
+.email-provider-btn.active {
+  background: var(--accent-primary);
+  color: #fff;
+  border-radius: inherit;
+}
+.resend-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(16,185,129,0.15);
+  border: 1px solid rgba(16,185,129,0.4);
+  color: #10B981;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+}
+.resend-unconfigured-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(234,179,8,0.12);
+  border: 1px solid rgba(234,179,8,0.4);
+  color: #EAB308;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+}
+
+.gmail-status-card {
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--glass-medium-bg);
+  border: 1px solid var(--glass-medium-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.gmail-status-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.gmail-status-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.gmail-status-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.gmail-connected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* Email List Items */
+.email-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-light-border);
+  background: var(--glass-light-bg);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  position: relative;
+}
+
+.email-list-item:hover {
+  border-color: var(--border-glass-hover);
+  background: rgba(167, 139, 250, 0.06);
+  transform: translateX(2px);
+}
+
+.email-list-item.unread {
+  background: rgba(167, 139, 250, 0.08);
+  border-color: rgba(167, 139, 250, 0.2);
+}
+
+.email-list-item.unread .email-sender {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.email-list-item.unread .email-subject {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.email-unread-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.5);
+}
+
+.email-read-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.email-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.email-sender {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.15rem;
+}
+
+.email-subject {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.15rem;
+}
+
+.email-snippet {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.email-meta-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.email-date {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Sent email item variant */
+.email-sent-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-light-border);
+  background: var(--glass-light-bg);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.email-sent-item:hover {
+  border-color: rgba(244, 63, 94, 0.2);
+  background: rgba(244, 63, 94, 0.04);
+}
+
+/* Email Filter Buttons */
+.email-filter-btn {
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--glass-light-border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.email-filter-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-primary);
+}
+
+.email-filter-btn.active {
+  background: rgba(167, 139, 250, 0.15);
+  color: var(--accent-primary);
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+/* Email Preview Overlay */
+.email-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 3, 8, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.email-preview-card {
+  background: var(--glass-dark-bg);
+  border: 1px solid var(--glass-dark-border);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  max-width: 700px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.25s ease-out;
+}
+
+.email-preview-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--glass-light-border);
+}
+
+.email-preview-body {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.email-preview-body iframe {
+  width: 100%;
+  border: none;
+  min-height: 300px;
+}
+
+/* Admin settings grid extension for Gmail */
+#admin-settings-panel > div {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+@media (max-width: 1024px) {
+  #admin-settings-panel > div {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  #admin-settings-panel > div {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Loading spinner for email fetch */
+.email-loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.spinner-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+  animation: spinnerBounce 1.2s infinite ease-in-out;
+}
+
+.spinner-dot:nth-child(2) { animation-delay: 0.2s; }
+.spinner-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes spinnerBounce {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #admin-reports-panel, #admin-reports-panel * {
+    visibility: visible;
+  }
+  #admin-reports-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white !important;
+    color: black !important;
+  }
+  .controls-card, .profile-dashboard-top-row, .admin-stats-grid {
+    display: none !important;
+  }
+}
+````
+
+## File: wiki/Home.md
+````markdown
+# Welcome to the Quantum Yoga Wiki!
+
+Quantum Yoga is a premium, fully-integrated platform designed for yoga studio management, student coaching, and guided routines. 
+
+This wiki contains comprehensive guides on the project's architecture, data models, integration guides, and core capabilities.
+
+## 🧭 Navigation
+
+### 1. [System Architecture & Database Setup](Architecture.md)
+Learn about the technologies powering Quantum Yoga, deployment steps, and configuring Supabase, PostgreSQL, or local fallback storage.
+
+### 2. [Core Yoga Capabilities](Core-Yoga-Directory.md)
+Discover the pose directories, guided routines, interactive SVG alignment maps, and the custom HTML5 video player framework.
+
+### 3. [Billing & Payments Flow](Billing-and-Payments.md)
+Read about automated invoicing, outstanding fee warning banners, standard merchant UPI QR Code generation, and client-submitted UTR validations.
+
+### 4. [Lead CRM & Kanban Pipeline](Lead-Management-and-CRM.md)
+Details on landing page wellness inquiry ingestion, lead pipeline swimlanes (Kanban), sales logging, and the single-click active member conversion logic.
+
+### 5. [Email Communication Systems](Email-Communication.md)
+A setup guide for the dual-integration engine supporting transactional emails via the Resend API and full inbox capabilities via Gmail OAuth2.
+
+### 6. [WhatsApp Integration & Alerts](WhatsApp-Integration.md)
+Learn about administrative settings, automated notification triggers, and client-side chat link shortcuts.
+
+### 7. [Community Chat & WebSockets](Community-Chat.md)
+Learn about real-time glassmorphic chat, WebSocket connection protocol, message schemas, and database history cache persistence.
+
+### 8. [Live WebRTC Video Rooms](Live-Yoga-Rooms.md)
+Learn about interactive WebRTC virtual classrooms, Jitsi Meet IFrame API, browser camera/mic lifecycle management, and countdown timers.
+
+### 9. [Deployment & CI/CD Pipeline](Deployment-and-CI-CD.md)
+Detailed guide on deploying the application to a Virtual Machine (VM) and configuring automated GitHub Actions workflows.
+
+### 10. [Practice Calendar & Streak Grid](Practice-Tracker.md)
+Learn about the GitHub-style contribution chart, daily streaks tracker, and milestone badges.
+
+### 11. [Studio Analytics & CSV/PDF Reports](Reports-and-Analytics.md)
+Learn about interactive SVG data charts, posture rankings, CSV exports, and printable PDF logs.
+
+### 12. [Guided Practice Voice Coach](Practice-Voice-Coach.md)
+Learn about the native Web Speech API (Text-to-Speech) voice coach alignment guides and breathing cadence cues.
+
+### 13. [Contact Us Information Portal](Contact-Us.md)
+View details on the public contact details modal and protocols.
+
+### 14. [Student Referral Program](Student-Referrals.md)
+Learn about referral codes, signup tracking, and configurable scaling discount tiers.
+````
+
+## File: server.js
+````javascript
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import https from 'node:https';
+import http from 'node:http';
+import { createClient } from '@supabase/supabase-js';
+import ws, { WebSocketServer } from 'ws';
+import pg from 'pg';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Load environment variables from .env file on startup if not already defined
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  try {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split(/\r?\n/).forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#')) {
+        const idx = trimmed.indexOf('=');
+        if (idx !== -1) {
+          const key = trimmed.substring(0, idx).trim();
+          let val = trimmed.substring(idx + 1).trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.substring(1, val.length - 1);
+          }
+          if (key && !process.env[key]) {
+            process.env[key] = val;
+          }
+        }
+      }
+    });
+    console.log("Successfully loaded local environment configuration.");
+  } catch (e) {
+    console.warn("Could not read local .env file:", e.message);
+  }
+}
+
+const app = express();
+const PORT = process.env.PORT || 80;
+
+app.use(express.json({ limit: 52428800 }));
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Initialize Postgres Pool if DATABASE_URL is present
+let pgPool = null;
+if (process.env.DATABASE_URL) {
+  const isLocalhost = process.env.DATABASE_URL.includes('127.0.0.1') || process.env.DATABASE_URL.includes('localhost');
+  pgPool = new pg.Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: isLocalhost ? false : { rejectUnauthorized: false }
+  });
+  console.log("Database initialized with PostgreSQL connection pool.");
+}
+
+// Initialize Supabase Client if SUPABASE_URL and SUPABASE_KEY are present and DATABASE_URL is NOT present
+let supabase = null;
+if (!pgPool && process.env.SUPABASE_URL && process.env.SUPABASE_KEY) {
+  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY, {
+    realtime: {
+      transport: ws,
+    },
+  });
+  console.log("Database initialized with Supabase client.");
+}
+
+if (!pgPool && !supabase) {
+  console.warn("WARNING: Neither DATABASE_URL nor Supabase keys are configured. Falling back to local db.json file.");
+}
+
+const DEFAULT_WHATSAPP_SETTINGS = {
+  enabled: false,
+  apiKey: "",
+  gatewayUrl: "",
+  templates: {
+    welcome: "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
+    invoice: "Hello {{name}}, a new invoice {{invoiceId}} for ₹{{amount}} is due on {{dueDate}}. Pay via UPI VPA: {{upiVpa}} ({{upiName}}) or tap here: {{upiLink}}",
+    booking: "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}. Session Fee: ₹{{amount}}. Pay via UPI VPA: {{upiVpa}} ({{upiName}}) or tap here: {{upiLink}}"
+  }
+};
+
+const DEFAULT_STUDIO_CONTACT_SETTINGS = {
+  address: "108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038",
+  phone: "+91 98765 43210",
+  email: "support@quantumyoga.xyz"
+};
+
+const DEFAULT_REFERRAL_TIERS = [
+  { minReferrals: 1, discount: 10 },
+  { minReferrals: 2, discount: 15 },
+  { minReferrals: 3, discount: 20 }
+];
+
+function readLocalDb() {
+  const dbPath = path.resolve(__dirname, 'db.json');
+  if (fs.existsSync(dbPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    } catch (e) {
+      console.error('Error reading local db.json:', e);
+    }
+  }
+  return {};
+}
+
+function writeLocalDb(state) {
+  const dbPath = path.resolve(__dirname, 'db.json');
+  try {
+    fs.writeFileSync(dbPath, JSON.stringify(state, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Error writing local db.json:', e);
+  }
+}
+
+// Unified state helper functions
+async function getDbState() {
+  let state = null;
+  try {
+    if (pgPool) {
+      const res = await pgPool.query("SELECT state FROM quantum_yoga_db WHERE id = $1", ['default']);
+      state = res.rows[0] ? res.rows[0].state : null;
+    } else if (supabase) {
+      const { data, error } = await supabase
+        .from('quantum_yoga_db')
+        .select('state')
+        .eq('id', 'default')
+        .maybeSingle();
+      if (error) throw error;
+      state = data ? data.state : null;
+    }
+  } catch (err) {
+    console.warn("Database connection error in getDbState, falling back to local db.json:", err.message);
+    if (pgPool && (err.code === 'ECONNREFUSED' || err.message.includes('connect') || err.message.includes('timeout'))) {
+      console.warn("Disabling PostgreSQL connection pool to prevent request timeouts.");
+      pgPool = null;
+    }
+    state = readLocalDb();
+  }
+  if (state) {
+    if (!state.whatsappSettings) {
+      state.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+    }
+    if (!state.studioContactSettings) {
+      state.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
+    }
+    if (!state.referralTiers) {
+      state.referralTiers = DEFAULT_REFERRAL_TIERS;
+    }
+    if (!state.upi_ledger) {
+      state.upi_ledger = [];
+    }
+  }
+  return state;
+}
+
+async function setDbState(state) {
+  try {
+    if (pgPool) {
+      await pgPool.query(
+        "INSERT INTO quantum_yoga_db (id, state, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (id) DO UPDATE SET state = $2, updated_at = NOW()",
+        ['default', JSON.stringify(state)]
+      );
+      return;
+    } else if (supabase) {
+      const { error } = await supabase
+        .from('quantum_yoga_db')
+        .upsert({ id: 'default', state: state, updated_at: new Date().toISOString() });
+      if (error) throw error;
+      return;
+    }
+  } catch (err) {
+    console.warn("Database connection error in setDbState, falling back to local db.json:", err.message);
+    if (pgPool && (err.code === 'ECONNREFUSED' || err.message.includes('connect') || err.message.includes('timeout'))) {
+      console.warn("Disabling PostgreSQL connection pool to prevent request timeouts.");
+      pgPool = null;
+    }
+  }
+  writeLocalDb(state);
+}
+
+// Seed function if table is empty
+async function seedDbIfNeeded() {
+  if (!pgPool && !supabase) return;
+  try {
+    const state = await getDbState();
+    if (!state) {
+      console.log('No state found in database. Attempting to seed from db.json...');
+      const dbPath = path.resolve(__dirname, 'db.json');
+      let initialState = {};
+      if (fs.existsSync(dbPath)) {
+        try {
+          initialState = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+        } catch (e) {
+          console.error('Error reading local db.json for seeding:', e);
+        }
+      }
+      await setDbState(initialState);
+      console.log('Successfully seeded database with initial state.');
+    } else {
+      console.log('Database already has database state. Seeding skipped.');
+    }
+  } catch (err) {
+    console.error('Unexpected error in seedDbIfNeeded:', err);
+  }
+}
+
+// 1. Database endpoint
+app.all('/api/db', async (req, res) => {
+  const dbPath = path.resolve(__dirname, 'db.json');
+  if (req.method === 'GET') {
+    try {
+      const state = await getDbState();
+      if (state === null) {
+        const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
+        if (!localState.whatsappSettings) {
+          localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+        }
+        if (!localState.studioContactSettings) {
+          localState.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
+        }
+        if (!localState.referralTiers) {
+          localState.referralTiers = DEFAULT_REFERRAL_TIERS;
+        }
+        return res.json(localState);
+      }
+      res.json(state);
+    } catch (err) {
+      console.error('GET /api/db error:', err);
+      res.status(500).json({ error: err.message });
+    }
+  } else if (req.method === 'POST') {
+    try {
+      // Merge emails from incoming payload with existing database state to prevent overwriting
+      let currentState = null;
+      try {
+        currentState = await getDbState();
+      } catch (err) {
+        // Ignore read errors during fallback/merge
+      }
+      if (currentState && currentState.emails && req.body.emails) {
+        const mergedEmails = [...currentState.emails];
+        req.body.emails.forEach(incoming => {
+          const idx = mergedEmails.findIndex(e => e.id === incoming.id);
+          if (idx > -1) {
+            mergedEmails[idx] = { ...mergedEmails[idx], ...incoming };
+          } else {
+            mergedEmails.push(incoming);
+          }
+        });
+        req.body.emails = mergedEmails;
+      }
+
+      if (!pgPool && !supabase) {
+        writeLocalDb(req.body);
+        return res.json({ success: true });
+      }
+      await setDbState(req.body);
+      res.json({ success: true });
+    } catch (err) {
+      console.error('POST /api/db error:', err);
+      res.status(400).json({ error: err.message });
+    }
+  }
+});
+
+// 2. Resend Send email proxy
+app.post('/api/send-email', (req, res) => {
+  const apiKey = req.body.apiKey || process.env.RESEND_API_KEY;
+  const from = req.body.from || process.env.RESEND_FROM_ADDRESS;
+  const { to, subject, html } = req.body;
+
+  if (!apiKey) return res.status(400).json({ error: 'API key is required' });
+  if (!from) return res.status(400).json({ error: 'From address is required' });
+
+  const payload = JSON.stringify({ from, to, subject, html });
+  const options = {
+    hostname: 'api.resend.com',
+    path: '/emails',
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(payload)
+    }
+  };
+
+  const proxyReq = https.request(options, proxyRes => {
+    let data = '';
+    proxyRes.on('data', chunk => { data += chunk; });
+    proxyRes.on('end', () => {
+      res.status(proxyRes.statusCode).set('Content-Type', 'application/json').end(data);
+    });
+  });
+  proxyReq.on('error', err => res.status(500).json({ error: err.message }));
+  proxyReq.write(payload);
+  proxyReq.end();
+});
+
+// 3. Resend Get/List email proxy
+app.get('/api/resend-emails', (req, res) => {
+  const apiKey = req.query.apiKey || process.env.RESEND_API_KEY;
+  const { type, id } = req.query;
+  if (!apiKey) return res.status(400).json({ error: 'API key is required' });
+
+  let apiPath = '/emails';
+  if (id) {
+    apiPath = type === 'receiving' ? `/emails/receiving/${id}` : `/emails/${id}`;
+  } else if (type === 'receiving') {
+    apiPath = '/emails/receiving';
+  }
+
+  const options = {
+    hostname: 'api.resend.com',
+    path: apiPath,
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
+  };
+
+  const proxyReq = https.request(options, proxyRes => {
+    let data = '';
+    proxyRes.on('data', chunk => { data += chunk; });
+    proxyRes.on('end', () => {
+      res.status(proxyRes.statusCode).set('Content-Type', 'application/json').end(data);
+    });
+  });
+  proxyReq.on('error', err => res.status(500).json({ error: err.message }));
+  proxyReq.end();
+});
+
+// 4. WhatsApp Proxy Endpoints
+app.post('/api/send-whatsapp', async (req, res) => {
+  const { to, message } = req.body;
+  console.log(`[WhatsApp Outbox] Send attempt to ${to}: "${message}"`);
+  
+  const dbState = await getDbState();
+  const settings = dbState?.whatsappSettings || DEFAULT_WHATSAPP_SETTINGS;
+  
+  const enabled = settings.enabled || !!process.env.WHATSAPP_API_KEY || !!process.env.TWILIO_AUTH_TOKEN;
+  
+  // If Twilio credentials are in environment, use Twilio!
+  if (enabled && process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+    try {
+      const accountSid = process.env.TWILIO_ACCOUNT_SID;
+      const authToken = process.env.TWILIO_AUTH_TOKEN;
+      const sender = process.env.TWILIO_SENDER_NUMBER || '+14155238886';
+      
+      let recipient = to.trim();
+      if (!recipient.startsWith('whatsapp:')) {
+        let clean = recipient.replace(/\D/g, "");
+        if (clean.length === 10) clean = "91" + clean;
+        recipient = `whatsapp:+${clean}`;
+      }
+      
+      const twilioSender = sender.startsWith('whatsapp:') ? sender : `whatsapp:${sender}`;
+      
+      const payload = new URLSearchParams({
+        To: recipient,
+        From: twilioSender,
+        Body: message
+      }).toString();
+      
+      const options = {
+        hostname: 'api.twilio.com',
+        port: 443,
+        path: `/2010-04-01/Accounts/${accountSid}/Messages.json`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(payload),
+          'Authorization': 'Basic ' + Buffer.from(accountSid + ':' + authToken).toString('base64')
+        }
+      };
+      
+      const proxyReq = https.request(options, proxyRes => {
+        let responseData = '';
+        proxyRes.on('data', chunk => { responseData += chunk; });
+        proxyRes.on('end', () => {
+          console.log(`[Twilio WhatsApp Link] Status: ${proxyRes.statusCode}, Response: ${responseData}`);
+          res.status(200).json({ success: proxyRes.statusCode >= 200 && proxyRes.statusCode < 300, mock: false, providerStatus: proxyRes.statusCode });
+        });
+      });
+      proxyReq.on('error', err => {
+        console.error('[Twilio WhatsApp Link Error]', err);
+        res.status(200).json({ success: true, mock: true, error: err.message });
+      });
+      proxyReq.write(payload);
+      proxyReq.end();
+      return;
+    } catch (e) {
+      console.error('[Twilio Config Gateway Error]', e);
+    }
+  }
+
+  const apiKey = process.env.WHATSAPP_API_KEY || settings.apiKey;
+  const gatewayUrl = process.env.WHATSAPP_GATEWAY_URL || settings.gatewayUrl;
+  
+  if (enabled && apiKey && gatewayUrl) {
+    try {
+      const url = new URL(gatewayUrl);
+      const payload = JSON.stringify({
+        to,
+        message,
+        apiKey: apiKey
+      });
+      
+      const options = {
+        hostname: url.hostname,
+        port: url.port || (url.protocol === 'https:' ? 443 : 80),
+        path: url.pathname + url.search,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload)
+        }
+      };
+      
+      const reqProto = url.protocol === 'https:' ? https : http;
+      const proxyReq = reqProto.request(options, proxyRes => {
+        let responseData = '';
+        proxyRes.on('data', chunk => { responseData += chunk; });
+        proxyRes.on('end', () => {
+          console.log(`[WhatsApp Production Link] Status: ${proxyRes.statusCode}`);
+          res.status(200).json({ success: true, mock: false, providerStatus: proxyRes.statusCode });
+        });
+      });
+      proxyReq.on('error', err => {
+        console.error('[WhatsApp Production Link Error]', err);
+        res.status(200).json({ success: true, mock: true, error: err.message });
+      });
+      proxyReq.write(payload);
+      proxyReq.end();
+      return;
+    } catch (e) {
+      console.error('[WhatsApp Config Gateway Error]', e);
+    }
+  }
+  
+  // Fallback to mock success
+  res.json({ success: true, mock: true });
+});
+
+// POST /api/verify-upi
+app.post('/api/verify-upi', async (req, res) => {
+  const { invoiceId, utr, amount } = req.body;
+  if (!invoiceId || !utr || !amount) {
+    return res.status(400).json({ error: 'Missing invoiceId, utr, or amount' });
+  }
+
+  try {
+    const dbState = await getDbState();
+    if (!dbState) {
+      return res.status(500).json({ error: 'Database state could not be loaded' });
+    }
+
+    const upiLedger = dbState.upi_ledger || [];
+    const payments = dbState.payments || [];
+    
+    const payment = payments.find(p => p.id === invoiceId);
+    if (!payment) {
+      return res.status(404).json({ error: 'Invoice not found' });
+    }
+
+    // Clean inputs
+    const submittedUtr = String(utr).trim();
+    const submittedAmount = parseFloat(amount);
+
+    // Look for matching ledger entry
+    const ledgerMatch = upiLedger.find(entry => String(entry.utr).trim() === submittedUtr);
+
+    let status = 'review';
+    let matchedEntry = null;
+    let verificationError = '';
+
+    // Load reconciliation settings
+    const recSettings = dbState.reconciliationSettings || { tolerance: 0.05, maxAgeDays: 30 };
+    const tolerance = parseFloat(recSettings.tolerance) !== undefined ? parseFloat(recSettings.tolerance) : 0.05;
+    const maxAgeDays = parseInt(recSettings.maxAgeDays) !== undefined ? parseInt(recSettings.maxAgeDays) : 30;
+
+    let dateMatch = true;
+
+    if (ledgerMatch) {
+      const entryAmount = parseFloat(ledgerMatch.amount);
+      
+      // Verify date window limit
+      if (ledgerMatch.date && payment.dueDate) {
+        const ledgerDate = new Date(ledgerMatch.date);
+        const invoiceDate = new Date(payment.dueDate);
+        const diffTime = Math.abs(ledgerDate - invoiceDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays > maxAgeDays) {
+          dateMatch = false;
+        }
+      }
+
+      if (Math.abs(entryAmount - submittedAmount) <= tolerance) {
+        if (dateMatch) {
+          status = 'paid';
+          matchedEntry = ledgerMatch;
+        } else {
+          status = 'discrepancy';
+          verificationError = 'Date window exceeded';
+        }
+      } else {
+        status = 'discrepancy';
+        verificationError = 'Amount mismatch';
+      }
+    } else {
+      verificationError = 'UTR not found in ledger';
+    }
+
+    // Update payment record
+    payment.status = status;
+    payment.utr = submittedUtr;
+    if (status === 'paid') {
+      payment.paymentDate = matchedEntry?.date || new Date().toISOString().split('T')[0];
+      payment.verifiedAt = new Date().toISOString();
+      payment.verificationSource = 'ledger';
+      delete payment.verificationError;
+    } else {
+      payment.verificationError = verificationError;
+    }
+
+    // Log the reconciliation audit log
+    const auditLog = {
+      id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+      timestamp: new Date().toISOString(),
+      invoiceId,
+      utr: submittedUtr,
+      amount: submittedAmount,
+      status,
+      details: status === 'paid'
+        ? `Auto-approved: UTR matches. Amount: ₹${submittedAmount} (within tolerance of ±₹${tolerance}).`
+        : (status === 'discrepancy'
+            ? (verificationError === 'Date window exceeded'
+                ? `Discrepancy: UTR matched but transaction date (${ledgerMatch.date}) is beyond the ${maxAgeDays}-day window of invoice due date (${payment.dueDate}).`
+                : `Discrepancy: UTR matched but amount differs. Submitted: ₹${submittedAmount}, Ledger: ₹${ledgerMatch.amount}.`)
+            : `Under Review: UTR not found in bank statement ledger.`)
+    };
+
+    if (!dbState.upi_reconciliation_logs) {
+      dbState.upi_reconciliation_logs = [];
+    }
+    dbState.upi_reconciliation_logs.unshift(auditLog);
+    if (dbState.upi_reconciliation_logs.length > 500) {
+      dbState.upi_reconciliation_logs = dbState.upi_reconciliation_logs.slice(0, 500);
+    }
+
+    await setDbState(dbState);
+    res.json({ success: true, status, payment });
+  } catch (err) {
+    console.error('Error in /api/verify-upi:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/admin/upload-ledger
+app.post('/api/admin/upload-ledger', async (req, res) => {
+  const { fileContent, columnMapping } = req.body; // Expect base64/plaintext CSV and optional custom mapping
+  if (!fileContent) {
+    return res.status(400).json({ error: 'No file content provided' });
+  }
+
+  try {
+    const dbState = await getDbState();
+    if (!dbState) {
+      return res.status(500).json({ error: 'Database state could not be loaded' });
+    }
+
+    // Simple CSV parser
+    const lines = fileContent.split(/\r?\n/);
+    if (lines.length < 2) {
+      return res.status(400).json({ error: 'Invalid CSV format or empty file' });
+    }
+
+    const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
+    
+    // Find column indices using custom mapping or falling back to regex
+    let utrIdx = -1;
+    let amountIdx = -1;
+    let dateIdx = -1;
+    let senderIdx = -1;
+    let detailsIdx = -1;
+
+    if (columnMapping) {
+      const getIndex = (fieldVal) => {
+        if (!fieldVal) return -1;
+        if (/^\d+$/.test(fieldVal)) {
+          return parseInt(fieldVal);
+        }
+        return headers.findIndex(h => h.toLowerCase() === String(fieldVal).toLowerCase());
+      };
+
+      utrIdx = getIndex(columnMapping.utr);
+      amountIdx = getIndex(columnMapping.amount);
+      dateIdx = getIndex(columnMapping.date);
+      senderIdx = getIndex(columnMapping.senderName || columnMapping.sender);
+      detailsIdx = getIndex(columnMapping.details);
+    }
+
+    if (utrIdx === -1) utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
+    if (amountIdx === -1) amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
+    if (dateIdx === -1) dateIdx = headers.findIndex(h => /date/i.test(h));
+    if (senderIdx === -1) senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
+    if (detailsIdx === -1) detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
+
+    if (utrIdx === -1 || amountIdx === -1) {
+      return res.status(400).json({ error: `Could not identify required columns. Found headers: ${headers.join(', ')}. Need columns mapping to UTR/Ref and Amount.` });
+    }
+
+    const imported = [];
+    let duplicates = 0;
+    const existingUtrs = new Set((dbState.upi_ledger || []).map(entry => String(entry.utr).trim()));
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+
+      // Basic comma split handling simple quotes
+      const cols = [];
+      let current = '';
+      let inQuotes = false;
+      for (let j = 0; j < line.length; j++) {
+        const char = line[j];
+        if (char === '"' || char === "'") {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          cols.push(current.trim().replace(/^["']|["']$/g, ''));
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      cols.push(current.trim().replace(/^["']|["']$/g, ''));
+
+      if (cols.length < Math.max(utrIdx, amountIdx) + 1) continue;
+
+      const utr = cols[utrIdx]?.trim();
+      const amountStr = cols[amountIdx]?.trim();
+      if (!utr || !amountStr) continue;
+
+      // clean UTR: must be alphanumeric (12 digit typically, but let's grab the raw string minus spaces)
+      const cleanUtr = utr.replace(/\s+/g, '');
+      if (cleanUtr.length < 6) continue; // safety check for header-like/empty values
+
+      if (existingUtrs.has(cleanUtr)) {
+        duplicates++;
+        continue;
+      }
+
+      const amount = parseFloat(amountStr.replace(/[^0-9.-]/g, ''));
+      if (isNaN(amount)) continue;
+
+      const date = dateIdx !== -1 ? cols[dateIdx]?.trim() : new Date().toISOString().split('T')[0];
+      const senderName = senderIdx !== -1 ? cols[senderIdx]?.trim() : '';
+      const details = detailsIdx !== -1 ? cols[detailsIdx]?.trim() : '';
+
+      const newEntry = {
+        utr: cleanUtr,
+        amount: String(amount),
+        date: date || new Date().toISOString().split('T')[0],
+        senderName: senderName || 'Unknown',
+        details: details || 'Imported via CSV',
+        importedAt: new Date().toISOString()
+      };
+
+      imported.push(newEntry);
+      existingUtrs.add(cleanUtr);
+    }
+
+    if (!dbState.upi_ledger) {
+      dbState.upi_ledger = [];
+    }
+    dbState.upi_ledger.push(...imported);
+
+    await setDbState(dbState);
+
+    res.json({
+      success: true,
+      importedCount: imported.length,
+      duplicateCount: duplicates,
+      summary: `${imported.length} transactions imported, ${duplicates} duplicates ignored`
+    });
+  } catch (err) {
+    console.error('Error in /api/admin/upload-ledger:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Catch-all route to serve index.html for spa routing
+app.get('/*splat', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+async function getUnifiedState() {
+  const state = await getDbState();
+  if (state !== null) {
+    if (!state.chatMessages) {
+      state.chatMessages = [];
+    }
+    return state;
+  }
+  
+  const dbPath = path.resolve(__dirname, 'db.json');
+  const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
+  if (!localState.whatsappSettings) {
+    localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
+  }
+  if (!localState.upi_ledger) {
+    localState.upi_ledger = [];
+  }
+  if (!localState.chatMessages) {
+    localState.chatMessages = [];
+  }
+  return localState;
+}
+
+async function saveUnifiedState(state) {
+  if (pgPool || supabase) {
+    await setDbState(state);
+  } else {
+    const dbPath = path.resolve(__dirname, 'db.json');
+    fs.writeFileSync(dbPath, JSON.stringify(state, null, 2), 'utf8');
+  }
+}
+
+const server = app.listen(PORT, async () => {
+  console.log(`Production server running on port ${PORT}`);
+  await seedDbIfNeeded();
+});
+
+// Setup WebSocket Server co-hosted on HTTP Server port
+const wss = new WebSocketServer({ server });
+const connectedUsers = new Map();
+
+wss.on('connection', (socket) => {
+  console.log('[WebSocket] Client connected.');
+
+  socket.on('message', async (data) => {
+    try {
+      const message = JSON.parse(data);
+
+      if (message.type === 'join') {
+        connectedUsers.set(socket, { name: message.name, role: message.role });
+        
+        // Send history to user
+        const dbState = await getUnifiedState();
+        socket.send(JSON.stringify({
+          type: 'history',
+          messages: dbState.chatMessages || []
+        }));
+
+        // Broadcast updated user list
+        broadcastActiveUsers();
+      }
+
+      if (message.type === 'message') {
+        const dbState = await getUnifiedState();
+        if (!dbState.chatMessages) {
+          dbState.chatMessages = [];
+        }
+
+        const newMsg = {
+          id: 'msg-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          name: message.name,
+          role: message.role,
+          text: message.text,
+          timestamp: new Date().toISOString()
+        };
+
+        dbState.chatMessages.push(newMsg);
+        if (dbState.chatMessages.length > 50) {
+          dbState.chatMessages = dbState.chatMessages.slice(-50);
+        }
+
+        await saveUnifiedState(dbState);
+
+        // Broadcast new message
+        broadcast({
+          type: 'message',
+          message: newMsg
+        });
+      }
+    } catch (e) {
+      console.error('[WebSocket] Error processing message:', e);
+    }
+  });
+
+  socket.on('close', () => {
+    console.log('[WebSocket] Client disconnected.');
+    connectedUsers.delete(socket);
+    broadcastActiveUsers();
+  });
+});
+
+function broadcast(payload) {
+  const data = JSON.stringify(payload);
+  for (const client of wss.clients) {
+    if (client.readyState === ws.OPEN) {
+      client.send(data);
+    }
+  }
+}
+
+function broadcastActiveUsers() {
+  broadcast({
+    type: 'users',
+    users: Array.from(connectedUsers.values())
+  });
+}
+````
+
+## File: index.html
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Yoga | Elevate Your Body & Mind</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Embark on a transformative wellness journey with Quantum Yoga. Discover interactive pose alignment guides, instructional videos, and guided yoga routines in a premium dark dashboard.">
+  <meta name="keywords" content="yoga, vinyasa, hatha, yin, mindfulness, fitness, meditation, yoga poses, guided routines">
+  <meta name="author" content="Quantum Yoga">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%A7%98%3C/text%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+
+  <!-- Google Identity Services (GIS) for Gmail OAuth2 integration -->
+  <!-- SETUP: To enable Gmail integration, create a Google Cloud project at console.cloud.google.com,
+       enable the Gmail API, create OAuth2 credentials (Web Application type), and add
+       http://localhost as an authorized JavaScript origin. Enter the Client ID in Admin > Settings > Gmail Integration. -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://meet.jit.si/external_api.js" defer></script>
+</head>
+<body>
+
+  <!-- Dashboard App Wrapper -->
+  <div id="dashboard-app" style="display: none;">
+
+  <!-- Decorative Background Glows -->
+  <div class="bg-glow bg-glow-1" id="glow-1"></div>
+  <div class="bg-glow bg-glow-2" id="glow-2"></div>
+  <div class="bg-glow bg-glow-3" id="glow-3"></div>
+
+  <!-- Header & Navigation -->
+  <header class="app-header">
+    <div class="nav-container">
+      <div class="logo">
+        <span class="logo-icon">🧘</span>
+        <span class="logo-text">Quantum<span class="text-accent">Yoga</span></span>
+      </div>
+      <nav class="nav-links">
+        <a href="#poses-section" class="nav-link active" id="nav-poses">Poses</a>
+        <a href="#routines-section" class="nav-link" id="nav-routines">Routines</a>
+        <a href="#profile-section" class="nav-link" id="nav-profile" style="display: none;">Profile</a>
+        <a href="#chat-section" class="nav-link" id="nav-chat" style="display: none;">Community Chat</a>
+        <a href="#live-class-section" class="nav-link" id="nav-live-class" style="display: none;">Live Class</a>
+        <a href="#admin-section" class="nav-link" id="nav-admin" style="display: none;">Admin Panel</a>
+        <a href="#" class="nav-link" id="nav-contact-us">Contact Us</a>
+      </nav>
+      <div class="nav-actions">
+        <div id="user-nav-panel" style="display: none; align-items: center; gap: 1rem; margin-right: 1rem;">
+          <span id="nav-user-greeting" style="font-size: 0.9rem; font-weight: 500;">Hello, <span id="nav-user-name"></span></span>
+          <button class="btn btn-secondary btn-sm" id="logout-btn">Log Out</button>
+        </div>
+        <button class="btn btn-primary btn-sm" id="login-nav-btn">Log In</button>
+        <span class="status-badge"><span class="pulse-dot"></span> Live Stream</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Overdue Payment Alert Banner -->
+  <div id="overdue-payment-banner" class="overdue-alert-banner" style="display: none;">
+    <div class="overdue-banner-content">
+      <span class="overdue-banner-icon">⚠️</span>
+      <span class="overdue-banner-text" id="overdue-payment-message">Action Required: You have an outstanding overdue payment of ₹0.00.</span>
+      <button class="overdue-banner-close" id="close-overdue-banner-btn" aria-label="Close banner">&times;</button>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <main class="app-main">
+    
+    <!-- Hero Section -->
+    <section class="hero-section" id="app-hero">
+      <div class="hero-content">
+        <span class="hero-badge">Mindfulness & Motion</span>
+        <h1 class="hero-title">Harmonize Your <span class="gradient-text">Energy</span> & <span class="gradient-text-alt">Flow</span></h1>
+        <p class="hero-subtitle">
+          Explore our interactive directory of master yoga postures, structured alignment guidelines, and premium video tutorials. Elevate your practice today.
+        </p>
+      </div>
+    </section>
+
+    <!-- Poses Grid Section -->
+    <section id="poses-section" class="content-section active">
+      <!-- Search & Filters Container -->
+      <section class="controls-section">
+        <div class="controls-card">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Search poses, benefits, or categories..." autocomplete="off">
+            <button id="clear-search" class="clear-button" style="display: none;">&times;</button>
+          </div>
+          <div class="filter-group">
+            <div class="select-wrapper">
+              <select id="filter-category" aria-label="Filter by Category">
+                <option value="all">All Categories</option>
+                <option value="vinyasa">Vinyasa</option>
+                <option value="hatha">Hatha</option>
+                <option value="yin">Yin</option>
+                <option value="restorative">Restorative</option>
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="filter-difficulty" aria-label="Filter by Difficulty">
+                <option value="all">All Difficulties</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="grid-container" id="poses-grid">
+        <!-- Dynamic pose cards injected here -->
+      </div>
+      <div id="poses-empty-state" class="empty-state" style="display: none;">
+        <span class="empty-icon">🧘</span>
+        <h3>No Poses Found</h3>
+        <p>Try adjusting your search query or filters to find other yoga postures.</p>
+        <button id="reset-poses-btn" class="btn btn-primary">Reset Filters</button>
+      </div>
+    </section>
+
+    <!-- Routines Grid Section -->
+    <section id="routines-section" class="content-section">
+      <div class="grid-container" id="routines-grid">
+        <!-- Dynamic routine cards injected here -->
+      </div>
+    </section>
+
+    <!-- Profile Grid Section -->
+    <section id="profile-section" class="content-section">
+      <div class="profile-container">
+        
+        <!-- User Profile Header Info Card -->
+        <div class="profile-header-card">
+          <div class="profile-avatar">🧘</div>
+          <div class="profile-info-details">
+            <h2 id="profile-user-name">User Name</h2>
+            <p id="profile-user-email">user@email.com</p>
+            <p id="profile-user-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: -</p>
+            <div id="profile-membership-badge-wrap" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+              <span class="badge badge-category" id="profile-membership-tier" style="font-weight: 700;">Basic Member</span>
+              <span class="badge badge-category" id="profile-membership-status" style="font-weight: 700;">Active</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Expires: <span id="profile-membership-expiry">2026-07-13</span></span>
+            </div>
+            <!-- Referral Details -->
+            <div id="profile-referral-wrap" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); max-width: 450px;">
+              <span style="font-size: 0.82rem; color: var(--text-secondary);">Referral Code: <strong id="profile-referral-code" style="color: var(--accent-primary); font-family: monospace; font-size: 0.9rem; letter-spacing: 0.02em;">-</strong></span>
+              <span style="font-size: 0.82rem; color: var(--text-secondary);">|</span>
+              <span style="font-size: 0.82rem; color: var(--text-secondary);">Invited: <strong id="profile-referral-count" style="color: var(--text-primary);">0</strong></span>
+              <span style="font-size: 0.82rem; color: var(--text-secondary);">|</span>
+              <span style="font-size: 0.82rem; color: var(--text-secondary);">Active Discount: <strong id="profile-referral-discount" style="color: #10B981;">0%</strong></span>
+            </div>
+            <div class="profile-theme-wrapper" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="profile-theme-select" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">UI Theme:</label>
+              <select id="profile-theme-select" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.35rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; cursor: pointer; outline: none; transition: var(--transition-fast);">
+                <option value="midnight">Midnight Aura (Dark)</option>
+                <option value="light">Ethereal Light (Light)</option>
+                <option value="sunset">Zen Sunset (Sunset)</option>
+              </select>
+            </div>
+            <div class="profile-phone-wrapper" style="margin-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="profile-phone-input" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">Edit Phone:</label>
+              <input type="tel" id="profile-phone-input" pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number" placeholder="+91 98765 43210" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.5rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; outline: none; width: 140px;">
+              <button id="profile-phone-save-btn" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Save</button>
+              <span id="profile-phone-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.75rem;">&#x2713; Saved</span>
+            </div>
+            
+            <!-- Twilio Sandbox Opt-in Instructions Widget -->
+            <div id="profile-sandbox-optin-widget" style="margin-top: 1.25rem; padding: 1rem; background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: var(--radius-sm); max-width: 480px; display: none;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: #10B981; display: flex; align-items: center; gap: 0.35rem;">💬 Link Twilio Sandbox</span>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.35rem 0 0.75rem 0; line-height: 1.45;">
+                To receive alerts, your phone number must first join the Twilio testing sandbox:
+              </p>
+              <div style="display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;">
+                <div style="background: white; padding: 0.35rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; flex-shrink: 0; box-shadow: var(--shadow-sm);">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=https%3A%2F%2Fwa.me%2F14155238886%3Ftext%3Djoin%2520increase-selection" alt="Twilio QR Code" style="width: 130px; height: 130px;">
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; flex: 1; min-width: 200px;">
+                  <strong>Option 1:</strong> Scan the QR code with your mobile camera to launch WhatsApp.<br>
+                  <strong>Option 2:</strong> Send <code>join increase-selection</code> to <a href="https://wa.me/14155238886?text=join%20increase-selection" target="_blank" style="color: #10B981; font-weight: 700; text-decoration: underline;">+1 415 523 8886</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div class="stat-box">
+              <span class="stat-num" id="profile-stat-completed">0</span>
+              <span class="stat-label">Routines Completed</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" id="profile-stat-favorites">0</span>
+              <span class="stat-label">Favorites</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Sub-Navigation Tabs -->
+        <div class="profile-sub-tabs" style="display: flex; gap: 1rem; border-bottom: 1px solid var(--glass-medium-border); padding-bottom: 0.75rem; margin: 2rem 0 1.5rem 0;">
+          <button class="profile-sub-tab active" id="profile-dashboard-tab-btn">My Studio Dashboard</button>
+          <button class="profile-sub-tab" id="profile-practice-tab-btn">My Practice Log</button>
+          <button class="profile-sub-tab" id="profile-wellness-tab-btn">Wellness & Goals</button>
+          <button class="profile-sub-tab" id="profile-appointments-tab-btn">My Appointments</button>
+          <button class="profile-sub-tab" id="profile-email-tab-btn">📧 My Email</button>
+        </div>
+
+        <!-- My Studio Dashboard Sub-panel -->
+        <div class="profile-panel-content active-panel" id="profile-dashboard-panel">
+          <!-- Top Row: Batch Card & Upcoming Sessions -->
+          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Active Batch Card -->
+            <div class="profile-panel" id="profile-batch-card-wrapper">
+              <h3>🧘 My Batch & Schedule</h3>
+              <div id="profile-batch-details" style="margin-top: 1rem;">
+                <!-- Placeholders for batch title, timetable list, and live countdown timer -->
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                  <h4 id="profile-batch-title" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">No Active Batch</h4>
+                  <div style="background: rgba(0,0,0,0.15); border-radius: var(--radius-sm); padding: 0.75rem; border: 1px solid var(--glass-light-border);">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Timetable Schedule:</span>
+                    <div id="profile-timetable-list" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                      <p style="font-size: 0.8rem; color: var(--text-muted);">No timetable defined.</p>
+                    </div>
+                  </div>
+                  <div id="profile-batch-countdown-box" style="margin-top: 0.5rem; text-align: center; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15); border-radius: var(--radius-sm); padding: 0.75rem;">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Next Class Countdown:</span>
+                    <h4 id="profile-class-countdown" style="font-size: 1.25rem; font-weight: 800; color: var(--accent-primary); margin-top: 0.25rem;">00d 00h 00m 00s</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upcoming Scheduled Timeline -->
+            <div class="profile-panel">
+              <h3>📅 Upcoming Classes & Sessions</h3>
+              <div class="profile-sessions-feed" id="profile-sessions-feed" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 280px; overflow-y: auto; margin-top: 1rem;">
+                <!-- Dynamically loaded upcoming classes & appointments -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Billing & Payment History Log -->
+          <div class="profile-panel">
+            <h3>💳 Billing & Receipts</h3>
+            <div class="controls-card" style="margin-top: 1rem; margin-bottom: 1rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+              <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="student-billing-search-input" placeholder="Search by description or invoice ID..." autocomplete="off">
+              </div>
+              <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <label for="student-billing-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+                <div class="select-wrapper">
+                  <select id="student-billing-status-filter" aria-label="Filter by Status">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="review">Reviewing</option>
+                    <option value="paid">Paid</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="refund-initiated">Refund Initiated</option>
+                    <option value="refunded">Refunded</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="admin-table-wrapper" style="margin-top: 1rem;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Receipt</th>
+                  </tr>
+                </thead>
+                <tbody id="profile-billing-table-body">
+                  <!-- Dynamically loaded invoices -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Practice Log Sub-panel -->
+        <div class="profile-panel-content" id="profile-practice-panel" style="display: none;">
+          <!-- Practice Streak Tracker & Contribution Grid -->
+          <div class="profile-panel" style="margin-bottom: 1.5rem; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <h3 style="margin-bottom: 0.25rem;">🔥 Daily Practice Streak & Activity</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Build habits by checking off your daily yoga practice.</p>
+              </div>
+              <div id="practice-checkin-wrapper" style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-light-border); padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
+                <input type="checkbox" id="practice-today-check" style="width: 1.15rem; height: 1.15rem; cursor: pointer; accent-color: #10b981;">
+                <label for="practice-today-check" style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); cursor: pointer; user-select: none;">Completed Practice Today</label>
+              </div>
+            </div>
+            
+            <!-- Streak Stats -->
+            <div class="profile-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; width: 100%;">
+              <div class="stat-box" style="padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm);">
+                <span class="stat-num" id="practice-current-streak" style="font-size: 2.2rem; color: #10b981; text-shadow: 0 0 10px rgba(16,185,129,0.3);">0 Days</span>
+                <span class="stat-label" style="font-size: 0.8rem; margin-top: 0.25rem;">Current Streak 🔥</span>
+              </div>
+              <div class="stat-box" style="padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm);">
+                <span class="stat-num" id="practice-longest-streak" style="font-size: 2.2rem; color: #8b5cf6; text-shadow: 0 0 10px rgba(139,92,246,0.3);">0 Days</span>
+                <span class="stat-label" style="font-size: 0.8rem; margin-top: 0.25rem;">Longest Streak 🏆</span>
+              </div>
+            </div>
+
+            <!-- Milestone Badges Grid -->
+            <div style="margin-bottom: 1.5rem;">
+              <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Yoga Milestones</h4>
+              <div id="practice-milestones-grid" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="milestone-badge locked" id="badge-streak-3">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🌱</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">3 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-7">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🔥</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">7 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-14">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🧘</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">14 Day Streak</span>
+                </div>
+                <div class="milestone-badge locked" id="badge-streak-30">
+                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">👑</span>
+                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">30 Day Streak</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- GitHub Contribution Grid -->
+            <div>
+              <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Practice Density (Past 365 Days)</h4>
+              <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-light-border); border-radius: var(--radius-md); padding: 1.25rem; overflow-x: auto;">
+                <div id="practice-calendar-grid">
+                  <!-- Dynamically filled with 365 days of pixel grids -->
+                </div>
+                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; padding-right: 1rem;">
+                  <span>Less</span>
+                  <div style="width: 10px; height: 10px; background: rgba(255,255,255,0.05); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.2); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.4); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.7); border-radius: 2px;"></div>
+                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.95); border-radius: 2px;"></div>
+                  <span>More</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-content-grid">
+            <!-- Favorites List Panel -->
+            <div class="profile-panel">
+              <h3>❤️ Favorited Poses</h3>
+              <div class="profile-favorites-grid" id="profile-favorites-list">
+                <!-- Dynamically rendered favorites -->
+              </div>
+            </div>
+
+            <!-- History Panel -->
+            <div class="profile-panel">
+              <h3>⏱️ Routine History</h3>
+              <div class="profile-history-list" id="profile-history-list">
+                <!-- Dynamically rendered history -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wellness & Goals Sub-panel -->
+        <div class="profile-panel-content" id="profile-wellness-panel" style="display: none;">
+          <div class="profile-panel" style="max-width: 650px; margin: 0 auto;">
+            <h3>🧘 My Wellness Ledger</h3>
+            <form id="profile-wellness-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1.25rem;">
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                <label for="profile-goals-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Personal Yoga & Wellness Goals</label>
+                <textarea id="profile-goals-input" placeholder="What are you hoping to achieve in your yoga practice? (e.g. increase core strength, flexibility, mindfulness)" style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.95rem; outline: none; min-height: 100px; resize: vertical; transition: var(--transition-fast);"></textarea>
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                <label for="profile-health-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Physical & Injury Notes (Private)</label>
+                <textarea id="profile-health-input" placeholder="List any injuries, physical limitations, or health concerns we should be aware of to personalize your practice." style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.95rem; outline: none; min-height: 100px; resize: vertical; transition: var(--transition-fast);"></textarea>
+              </div>
+              
+              <div id="profile-wellness-success-msg" style="display: none; background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.85rem; text-align: center; font-weight: 500;">
+                �o" Wellness profile updated successfully.
+              </div>
+              
+              <button type="submit" class="btn btn-primary" id="save-wellness-btn" style="align-self: flex-start; padding: 0.75rem 1.5rem;">Save Personal Details</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Appointments Sub-panel -->
+        <div class="profile-panel-content" id="profile-appointments-section" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <h3>📅 Private Coaching Appointments</h3>
+            <button class="btn btn-primary" id="book-appointment-btn">Book New Session</button>
+          </div>
+          
+          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="student-appointments-search-input" placeholder="Search by routine name..." autocomplete="off">
+            </div>
+            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="student-appointments-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+              <div class="select-wrapper">
+                <select id="student-appointments-status-filter" aria-label="Filter by Status">
+                  <option value="all">All Statuses</option>
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="Rescheduled">Rescheduled</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <!-- Upcoming Sessions -->
+            <div class="profile-panel" style="display: flex; flex-direction: column; gap: 1rem;">
+              <h3>Upcoming Sessions</h3>
+              <div id="profile-upcoming-appointments" style="display: flex; flex-direction: column; gap: 1rem;">
+                <p class="empty-text" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No upcoming appointments scheduled.</p>
+              </div>
+            </div>
+            
+            <!-- Past / Cancelled Sessions -->
+            <div class="profile-panel" style="display: flex; flex-direction: column; gap: 1rem;">
+              <h3>History & Cancelled Sessions</h3>
+              <div id="profile-past-appointments" style="display: flex; flex-direction: column; gap: 1rem;">
+                <p class="empty-text" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No past sessions.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== STUDENT EMAIL PANEL ==================== -->
+        <div class="profile-panel-content" id="profile-email-panel" style="display:none;">
+          <!-- Gmail Connection Status (student sees read-only status) -->
+          <div id="student-gmail-status-card" class="gmail-status-card" style="margin-bottom:1.5rem;">
+            <div class="gmail-status-icon">📧</div>
+            <div class="gmail-status-info">
+              <div id="student-gmail-status-text" style="font-size:0.9rem; font-weight:600; color:var(--text-secondary);">Studio Email System</div>
+              <p id="student-gmail-hint" style="font-size:0.78rem; color:var(--text-muted); margin:0.25rem 0 0;">Send a message to the studio or view communications.</p>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:1.5rem;">
+            <!-- Left: Compose -->
+            <div class="admin-panel">
+              <h3>✏️ Message the Studio</h3>
+              <form id="student-compose-email-form" style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                  <label for="student-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
+                  <input type="text" id="student-email-subject" placeholder="How can we help?" required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                </div>
+                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                  <label for="student-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
+                  <textarea id="student-email-body" rows="6" placeholder="Type your message..." required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="student-send-email-btn" style="font-size:0.85rem;">Send Message</button>
+                <div id="student-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
+              </form>
+            </div>
+
+            <!-- Right: Inbox (messages from studio) -->
+            <div class="admin-panel" style="display:flex; flex-direction:column;">
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">
+                📥 My Inbox
+                <span id="student-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
+              </h3>
+              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; overflow-y:auto; max-height:420px;">
+                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">No messages received yet.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ==================== END STUDENT EMAIL PANEL ==================== -->
+
+      </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="admin-section" class="content-section">
+      <div class="admin-container">
+        
+        <!-- Admin Dashboard Header -->
+        <div class="admin-header-card">
+          <div class="admin-avatar">🛡️</div>
+          <div class="admin-info-details">
+            <h2>Administrative Control Panel</h2>
+            <p>Manage users, inspect metrics, and analyze yoga routines data.</p>
+          </div>
+        </div>
+
+        <!-- Admin Sub-Navigation tabs -->
+        <div class="admin-sub-tabs" role="tablist" aria-label="Admin panel sections">
+          <button class="admin-sub-tab active" id="admin-overview-tab-btn" role="tab" aria-selected="true" aria-controls="admin-overview-panel">Overview Dashboard</button>
+          <button class="admin-sub-tab" id="admin-users-tab-btn" role="tab" aria-selected="false" aria-controls="admin-users-panel">User Management</button>
+          <button class="admin-sub-tab" id="admin-payments-tab-btn" role="tab" aria-selected="false" aria-controls="admin-payments-panel">Payments & Billing</button>
+          <button class="admin-sub-tab" id="admin-leads-tab-btn" role="tab" aria-selected="false" aria-controls="admin-leads-panel">Leads Pipeline</button>
+          <button class="admin-sub-tab" id="admin-batches-tab-btn" role="tab" aria-selected="false" aria-controls="admin-batches-panel">Batches & Scheduling</button>
+          <button class="admin-sub-tab" id="admin-appointments-tab-btn" role="tab" aria-selected="false" aria-controls="admin-appointments-panel">Appointments Management</button>
+          <button class="admin-sub-tab" id="admin-reports-tab-btn" role="tab" aria-selected="false" aria-controls="admin-reports-panel">Reports & Analytics</button>
+          <button class="admin-sub-tab" id="admin-email-tab-btn" role="tab" aria-selected="false" aria-controls="admin-email-panel">📧 Email Inbox</button>
+          <button class="admin-sub-tab" id="admin-email-center-tab-btn" role="tab" aria-selected="false" aria-controls="admin-email-center-panel">✉️ Email Center</button>
+          <button class="admin-sub-tab" id="admin-settings-tab-btn" role="tab" aria-selected="false" aria-controls="admin-settings-panel">System Settings</button>
+        </div>
+
+        <!-- Admin Overview Sub-panel -->
+        <div class="admin-panel-content active-panel" id="admin-overview-panel">
+          <!-- KPI Stats Grid -->
+          <div class="admin-stats-grid" style="margin-bottom: 2rem;">
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-kpi-members">0</span>
+              <span class="stat-label">Active Members</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-kpi-revenue">₹0</span>
+              <span class="stat-label">Total Revenue</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-kpi-sessions">0</span>
+              <span class="stat-label">Sessions Today</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-kpi-unpaid">0</span>
+              <span class="stat-label">Unpaid Invoices</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Daily Insights / Alerts -->
+          <div class="admin-panel" style="margin-bottom: 2rem;">
+            <h3>💡 Daily Insights & Recommendations</h3>
+            <div class="admin-insights-container" id="admin-insights-list">
+              <!-- Dynamically populated recommendations -->
+            </div>
+          </div>
+
+          <!-- Timeline Feeds Grid -->
+          <div class="admin-timeline-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <!-- Upcoming Schedule Timeline -->
+            <div class="admin-panel">
+              <h3>📅 Today's Studio Timeline</h3>
+              <div class="admin-timeline-feed" id="admin-timeline-feed">
+                <!-- Dynamically loaded upcoming appointments/classes -->
+              </div>
+            </div>
+
+            <!-- Recent Payments Updates -->
+            <div class="admin-panel">
+              <h3>💳 Recent Payment Activity</h3>
+              <div class="admin-payments-feed" id="admin-payments-feed">
+                <!-- Dynamically loaded recent payment records -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Management Sub-panel -->
+        <div class="admin-panel-content" id="admin-users-panel" style="display: none;">
+          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="admin-users-search-input" placeholder="Search users by name or email..." autocomplete="off">
+            </div>
+            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="admin-users-tier-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Tier:</label>
+              <div class="select-wrapper">
+                <select id="admin-users-tier-filter" aria-label="Filter by Tier">
+                  <option value="all">All Tiers</option>
+                  <option value="Basic">Basic</option>
+                  <option value="Premium">Premium</option>
+                  <option value="VIP">VIP</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="admin-users-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+              <div class="select-wrapper">
+                <select id="admin-users-status-filter" aria-label="Filter by Status">
+                  <option value="all">All Statuses</option>
+                  <option value="Active">Active</option>
+                  <option value="Paused">Paused</option>
+                  <option value="Expired">Expired</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Favorites Count</th>
+                  <th>Completions Count</th>
+                  <th>Batch / Fee</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-table-body">
+                <!-- Dynamically loaded user rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Reports & Analytics Sub-panel -->
+        <div class="admin-panel-content" id="admin-reports-panel" style="display: none;">
+          
+          <!-- Statistics Cards Grid -->
+          <div class="admin-stats-grid">
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-stat-total-users">0</span>
+              <span class="stat-label">Total Users</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-stat-total-completions">0</span>
+              <span class="stat-label">Total Completions</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-stat-popular-routine" style="font-size: 1.1rem; text-align: center; word-break: break-word; font-weight: 700; height: 2rem; display: flex; align-items: center;">None</span>
+              <span class="stat-label">Most Completed Routine</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-stat-popular-pose" style="font-size: 1.1rem; text-align: center; word-break: break-word; font-weight: 700; height: 2rem; display: flex; align-items: center;">None</span>
+              <span class="stat-label">Most Favorited Pose</span>
+            </div>
+          </div>
+
+          <!-- Action Controls -->
+          <div class="controls-card" style="margin-top: 1.5rem; padding: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end;">
+            <button class="btn btn-secondary" id="btn-export-billing-csv">📥 Export CSV Ledger</button>
+            <button class="btn btn-secondary" id="btn-print-attendance">🖨️ Print Attendance Log</button>
+          </div>
+
+          <!-- Visual Graphs Grid -->
+          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="profile-panel">
+              <h3>📊 Monthly Collections (Revenue)</h3>
+              <div id="chart-collections-container" style="width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-top: 1rem; padding: 0.5rem; position: relative;">
+                <!-- Dynamically generated SVG bar chart will load here -->
+              </div>
+            </div>
+            <div class="profile-panel">
+              <h3>📈 Monthly Booking Trends (Class Count)</h3>
+              <div id="chart-bookings-container" style="width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-top: 1rem; padding: 0.5rem; position: relative;">
+                <!-- Dynamically generated SVG line chart will load here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Rankings & Popularity List -->
+          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="profile-panel">
+              <h3>🏆 Most Favorited Postures</h3>
+              <div class="admin-table-wrapper" style="margin-top: 1rem;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Pose Name</th>
+                      <th>Category</th>
+                      <th style="text-align: right;">Favorites</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-reports-poses-ranking">
+                    <!-- Dynamically filled with top favorited postures -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="profile-panel">
+              <h3>🔥 Most Popular Routines</h3>
+              <div class="admin-table-wrapper" style="margin-top: 1rem;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Routine Name</th>
+                      <th>Difficulty</th>
+                      <th style="text-align: right;">Completions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-reports-routines-ranking">
+                    <!-- Dynamically filled with top popular routines -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chronological Completion History Logs Table -->
+          <div class="admin-panel" style="margin-top: 2rem;">
+            <h3>⏱️ Chronological Completion History</h3>
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Routine</th>
+                    <th>Completed At</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-reports-table-body">
+                  <!-- Dynamically loaded completion rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Payments & Billing Sub-panel -->
+        <div class="admin-panel-content" id="admin-payments-panel" style="display: none;">
+          <!-- Admin Billing Stats/KPI Grid -->
+          <div class="admin-stats-grid" style="margin-bottom: 2rem;">
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-billing-kpi-total-invoiced">₹0</span>
+              <span class="stat-label">Total Invoiced</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-billing-kpi-paid">₹0</span>
+              <span class="stat-label">Collected Revenue</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-billing-kpi-pending">₹0</span>
+              <span class="stat-label">Pending Dues</span>
+            </div>
+            <div class="stat-box admin-stat-card">
+              <span class="stat-num" id="admin-billing-kpi-overdue">₹0</span>
+              <span class="stat-label">Overdue Balance</span>
+            </div>
+          </div>
+
+          <!-- Tab Selectors -->
+          <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
+            <button class="admin-payments-sub-tab active" id="admin-payments-ledger-tab-btn" style="background: transparent; border: none; color: var(--text-muted); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: var(--transition-fast);">🗂️ Studio Invoice Ledger</button>
+            <button class="admin-payments-sub-tab" id="admin-payments-issue-tab-btn" style="background: transparent; border: none; color: var(--text-muted); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: var(--transition-fast);">📝 Issue Manual Invoice</button>
+          </div>
+
+          <!-- Tab 1: Ledger -->
+          <div id="admin-payments-ledger-tab-panel" class="admin-panel" style="display: block; margin-bottom: 2rem;">
+            <h3>🗂️ Studio Invoice Ledger</h3>
+            <div class="controls-card" style="margin-top: 1rem; margin-bottom: 1rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+              <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="admin-payments-search-input" placeholder="Search by student or description..." autocomplete="off">
+              </div>
+              <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <label for="admin-payments-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+                <div class="select-wrapper">
+                  <select id="admin-payments-status-filter" aria-label="Filter by Status">
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="review">Reviewing</option>
+                    <option value="paid">Paid</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="refund-initiated">Refund Initiated</option>
+                    <option value="refunded">Refunded</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="admin-table-wrapper" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Student</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-payments-table-body">
+                  <!-- Dynamically populated invoices list -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 2: Issue Invoice Form -->
+          <div id="admin-payments-issue-tab-panel" class="admin-panel" style="display: none; max-width: 500px; margin-bottom: 2rem;">
+            <h3>📝 Issue Manual Invoice</h3>
+            <form id="admin-issue-invoice-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="admin-invoice-email" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Student Email</label>
+                <select id="admin-invoice-email" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); font-family: var(--font-sans); cursor: pointer; outline: none; transition: var(--transition-fast);">
+                  <!-- Dynamically populated with active student emails -->
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="admin-invoice-desc" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Description</label>
+                <input type="text" id="admin-invoice-desc" required placeholder="e.g. Monthly Gold Membership" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+              </div>
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="admin-invoice-amount" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Amount (INR)</label>
+                <input type="number" id="admin-invoice-amount" required min="1" placeholder="e.g. 79" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+              </div>
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="admin-invoice-due" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Due Date</label>
+                <input type="date" id="admin-invoice-due" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;">Create & Issue Invoice</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Leads Pipeline Sub-panel -->
+        <div class="admin-panel-content" id="admin-leads-panel" style="display: none;">
+          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="leads-search-input" placeholder="Search leads by name, email, or message..." autocomplete="off">
+            </div>
+            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <label for="leads-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
+              <div class="select-wrapper">
+                <select id="leads-status-filter" aria-label="Filter by Status">
+                  <option value="all">All Statuses</option>
+                  <option value="New">New</option>
+                  <option value="Contacted">Contacted</option>
+                  <option value="Converted">Converted</option>
+                  <option value="Closed">Closed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="leads-swimlane-board" id="leads-swimlane-board">
+            <!-- Dynamically populated columns and cards -->
+          </div>
+        </div>
+
+        <!-- Batches & Scheduling Sub-panel -->
+        <div class="admin-panel-content" id="admin-batches-panel" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-top: 1rem; margin-bottom: 2rem;">
+            <!-- Left Column: Forms -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <!-- Create Cohort Batch -->
+              <div class="admin-panel">
+                <h3>✨ Create New Cohort Batch</h3>
+                <form id="admin-create-batch-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-batch-name-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Batch Name</label>
+                    <input type="text" id="admin-batch-name-input" required placeholder="e.g. Sunrise Flow Batch" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-batch-instructor-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Instructor Name</label>
+                    <input type="text" id="admin-batch-instructor-input" placeholder="e.g. David Vance" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-batch-capacity-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Student Capacity</label>
+                    <input type="number" id="admin-batch-capacity-input" placeholder="e.g. 15" min="1" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-batch-fee-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Session Fee (&#8377;)</label>
+                    <input type="number" id="admin-batch-fee-input" placeholder="e.g. 1200" min="0" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  </div>
+                  <button type="submit" class="btn btn-primary" id="admin-create-batch-btn" style="margin-top: 0.5rem; width: 100%;">Create Batch</button>
+                </form>
+              </div>
+
+              <!-- Schedule Weekly Class -->
+              <div class="admin-panel">
+                <h3>📅 Schedule Weekly Class</h3>
+                <form id="admin-schedule-class-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-schedule-batch-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Select Batch</label>
+                    <select id="admin-schedule-batch-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; transition: var(--transition-fast);">
+                      <option value="">Choose a Batch...</option>
+                      <!-- Dynamically populated -->
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-schedule-weekday-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Day of Week</label>
+                    <select id="admin-schedule-weekday-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                      <option value="Monday">Monday</option>
+                      <option value="Tuesday">Tuesday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Thursday">Thursday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                      <option value="Sunday">Sunday</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-schedule-time-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Start Time</label>
+                    <input type="time" id="admin-schedule-time-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <label for="admin-schedule-routine-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Yoga Routine</label>
+                    <select id="admin-schedule-routine-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                      <option value="">Select Routine...</option>
+                      <!-- Dynamically populated -->
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-rose" id="admin-schedule-class-btn" style="margin-top: 0.5rem; width: 100%;">Schedule Class</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Right Column: Active Batch Cohorts -->
+            <div class="admin-panel" style="height: 100%; display: flex; flex-direction: column;">
+              <h3>🧘 Active Batch Cohorts</h3>
+              <div class="admin-table-wrapper" style="margin-top: 1rem; flex-grow: 1; max-height: 550px; overflow-y: auto;">
+                <table class="admin-table" id="admin-batches-table">
+                  <thead>
+                    <tr>
+                      <th>Batch Name</th>
+                      <th>Instructor</th>
+                      <th>Timetable Schedule</th>
+                      <th>Session Fee</th>
+                      <th style="text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-batches-table-body">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments Management Sub-panel -->
+        <div class="admin-panel-content" id="admin-appointments-panel" style="display: none;">
+          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="admin-appointments-search-input" placeholder="Search by student email or routine..." autocomplete="off">
+            </div>
+            <button class="btn btn-primary" id="admin-book-appt-btn" style="margin-bottom: 0;">Book Private Coaching</button>
+          </div>
+          
+          <div class="admin-table-wrapper">
+            <table class="admin-table" id="admin-appointments-table">
+              <thead>
+                <tr>
+                  <th>Student Email</th>
+                  <th>Yoga Routine</th>
+                  <th>Date</th>
+                  <th>Time Slot</th>
+                  <th>Fee</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-appointments-table-body">
+                <!-- Dynamically loaded appointments -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- System Settings Sub-panel -->
+        <div class="admin-panel-content" id="admin-settings-panel" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; align-items: start;">
+
+            <!-- Theme card -->
+            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">⚙️ Default Theme</h3>
+              <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                <label for="admin-default-theme-select" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Site Default Theme:</label>
+                <select id="admin-default-theme-select" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; cursor: pointer; outline: none;">
+                  <option value="midnight">Midnight Aura (Dark)</option>
+                  <option value="light">Ethereal Light (Light)</option>
+                  <option value="sunset">Zen Sunset (Sunset)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- UPI card -->
+            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">💳 UPI Payment Settings</h3>
+              <form id="admin-upi-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                  <label for="admin-upi-vpa" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">UPI VPA:</label>
+                  <input type="text" id="admin-upi-vpa" required placeholder="e.g. quantumyoga@upi" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                  <label for="admin-upi-name" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Payee Name:</label>
+                  <input type="text" id="admin-upi-name" required placeholder="e.g. Quantum Yoga Studio" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save UPI Settings</button>
+                <div id="admin-upi-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
+              </form>
+            </div>
+
+            <!-- Appointment fee card -->
+            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">🪙 Appointment Session Fee</h3>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-appointment-fee-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Default Fee per Appointment (&#8377;):</label>
+                <input type="number" id="admin-appointment-fee-input" min="0" placeholder="e.g. 1500" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <button id="admin-save-appointment-fee-btn" class="btn btn-primary" style="margin-top: 0.5rem; padding: 0.35rem 0.75rem; font-size: 0.8rem; width: 100%;">Save Fee Setting</button>
+              <div id="admin-appointment-fee-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; margin-top: 0.3rem; text-align: center;">&#x2713; Saved.</div>
+            </div>
+
+
+
+          <!-- WhatsApp Settings card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">💬 WhatsApp Integration</h3>
+            <form id="admin-whatsapp-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <input type="checkbox" id="whatsapp-enabled-checkbox" style="cursor: pointer; width: 1.1rem; height: 1.1rem; border-radius: var(--radius-sm);">
+                <label for="whatsapp-enabled-checkbox" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); cursor: pointer;">Enable Automated Alerts</label>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="whatsapp-api-key" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">API Key / Token:</label>
+                <input type="password" id="whatsapp-api-key" placeholder="API Key / Credentials" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="whatsapp-gateway-url" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Gateway URL:</label>
+                <input type="text" id="whatsapp-gateway-url" placeholder="https://api.provider.com/send" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="whatsapp-template-booking" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Booking Template:</label>
+                <textarea id="whatsapp-template-booking" rows="2" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; resize: vertical;"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save WhatsApp Settings</button>
+              <div id="admin-whatsapp-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
+            </form>
+          </div>
+
+          <!-- Studio Contact Settings card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📞 Studio Contact Settings</h3>
+            <form id="admin-contact-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-address" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Physical Address:</label>
+                <textarea id="admin-contact-address" required rows="2" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.8rem; outline: none; resize: vertical;"></textarea>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-phone" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Phone Number:</label>
+                <input type="tel" id="admin-contact-phone" required placeholder="+91 98765 43210" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-contact-email" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Email ID:</label>
+                <input type="email" id="admin-contact-email" required placeholder="support@quantumyoga.xyz" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Studio Details</button>
+              <div id="admin-contact-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
+            </form>
+          </div>
+
+          <!-- Referral Program Tiers Settings card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">🤝 Referral Program Tiers</h3>
+            <form id="admin-referral-tiers-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div id="admin-referral-tiers-list" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 180px; overflow-y: auto; padding-right: 0.2rem; margin-bottom: 0.4rem;">
+                <!-- Dynamically generated rows of milestone inputs -->
+              </div>
+              <button type="button" id="admin-add-referral-tier-btn" class="btn btn-secondary" style="padding: 0.3rem 0.5rem; font-size: 0.75rem; border-style: dashed; width: 100%;">+ Add Milestone Tier</button>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.4rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Referral Tiers</button>
+              <div id="admin-referral-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center; margin-top: 0.3rem;">&#x2713; Saved.</div>
+            </form>
+          </div>
+
+          <!-- UPI Bank Ledger CSV/Excel Upload widget -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📂 Import UPI Bank Statement</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label for="admin-ledger-file-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Select CSV Statement File:</label>
+              <input type="file" id="admin-ledger-file-input" accept=".csv" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.8rem; outline: none; width: 100%;">
+              <p style="font-size:0.7rem; color:var(--text-muted); margin:0;">Upload a CSV bank ledger statement containing columns for UTR/Reference and transaction Amount to auto-verify student claims.</p>
+              <button type="button" id="admin-ledger-upload-btn" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; width: 100%;">Upload & Parse Ledger</button>
+              <div id="admin-ledger-upload-msg" style="display: none; font-size: 0.78rem; font-weight: 600; text-align: center; margin-top: 0.3rem;"></div>
+            </div>
+          </div>
+
+          <!-- UPI Reconciliation & CSV Column Settings Card -->
+          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
+            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">⚙️ Reconciliation Settings</h3>
+            <form id="admin-reconciliation-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-recon-tolerance" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Tolerance (INR):</label>
+                <input type="number" step="0.01" id="admin-recon-tolerance" required placeholder="e.g. 0.05" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                <label for="admin-recon-max-days" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Date Limit (Days):</label>
+                <input type="number" id="admin-recon-max-days" required placeholder="e.g. 30" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.2rem; margin-top: 0.3rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.3rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem;">CSV Column Map (Headers or Index):</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem;">
+                  <div>
+                    <label for="admin-col-utr" style="font-size: 0.7rem; color: var(--text-secondary);">UTR:</label>
+                    <input type="text" id="admin-col-utr" placeholder="e.g. UTR" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
+                  </div>
+                  <div>
+                    <label for="admin-col-amount" style="font-size: 0.7rem; color: var(--text-secondary);">Amount:</label>
+                    <input type="text" id="admin-col-amount" placeholder="e.g. Amount" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
+                  </div>
+                  <div>
+                    <label for="admin-col-date" style="font-size: 0.7rem; color: var(--text-secondary);">Date:</label>
+                    <input type="text" id="admin-col-date" placeholder="e.g. Date" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
+                  </div>
+                  <div>
+                    <label for="admin-col-sender" style="font-size: 0.7rem; color: var(--text-secondary);">Sender:</label>
+                    <input type="text" id="admin-col-sender" placeholder="e.g. Sender" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.4rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Settings</button>
+              <div id="admin-reconciliation-settings-success" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center; margin-top: 0.2rem;">&#x2713; Saved.</div>
+            </form>
+          </div>
+
+        </div> <!-- Close the grid -->
+
+        <!-- Reconciliation Logs Audit Section -->
+        <div class="admin-panel" style="margin-top: 1.5rem; background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1.2rem; box-shadow: var(--shadow-md);">
+          <h3 style="margin: 0 0 0.8rem; color: var(--text-primary); display: flex; align-items: center; justify-content: space-between; font-size: 0.95rem;">
+            <span>📋 Reconciliation Audit Logs</span>
+            <button type="button" id="admin-clear-reconciliation-logs-btn" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; color: #ef4444; border-color: rgba(239, 68, 68, 0.2); background: transparent;">Clear Log History</button>
+          </h3>
+          <div class="admin-table-wrapper" style="max-height: 250px; overflow-y: auto;">
+            <table class="admin-table" style="font-size: 0.82rem;">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Invoice ID</th>
+                  <th>UTR</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Audit Details</th>
+                </tr>
+              </thead>
+              <tbody id="admin-reconciliation-logs-table-body">
+                <!-- Dynamically populated verification activities -->
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No reconciliation actions logged yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div> <!-- End of #admin-settings-panel -->
+
+        <!-- ==================== ADMIN EMAIL PANEL ==================== -->
+        <div class="admin-panel-content" id="admin-email-panel" style="display: none;">
+          <!-- Email Provider Status Card -->
+          <div id="admin-gmail-status-card" class="gmail-status-card">
+            <div class="gmail-status-icon">📧</div>
+            <div class="gmail-status-info">
+              <div id="admin-gmail-connected-label" style="display:none;">
+                <span class="gmail-connected-badge">✓ Gmail Connected</span>
+                <span id="admin-gmail-connected-email" style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.5rem;"></span>
+              </div>
+              <div id="admin-gmail-disconnected-label">
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary);">Gmail not connected</span>
+              </div>
+              <!-- Resend status badges (shown when Resend is active provider) -->
+              <div id="admin-resend-active-label" style="display:none;">
+                <span class="resend-active-badge">✓ Resend Active</span>
+                <span id="admin-resend-from-display" style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.5rem;"></span>
+              </div>
+              <div id="admin-resend-unconfigured-label" style="display:none;">
+                <span class="resend-unconfigured-badge">⚠ Resend: API key not configured — go to Settings</span>
+              </div>
+              <p id="admin-gmail-status-detail" style="font-size: 0.78rem; color: var(--text-muted); margin: 0.25rem 0 0;">Connect your Gmail account to send &amp; receive emails directly from this panel.</p>
+            </div>
+            <div class="gmail-status-actions">
+              <button class="btn btn-primary btn-sm" id="admin-gmail-connect-btn" style="font-size: 0.8rem;">Connect Gmail</button>
+              <button class="btn btn-secondary btn-sm" id="admin-gmail-disconnect-btn" style="display:none; font-size: 0.8rem; color: #ef4444; border-color: rgba(239,68,68,0.3);">Disconnect</button>
+              <button class="btn btn-secondary btn-sm" id="admin-gmail-refresh-btn" style="display:none; font-size: 0.8rem;">🔄 Refresh</button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <!-- Left: Compose + Sent -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <!-- Compose Email -->
+              <div class="admin-panel">
+                <h3>✏️ Compose Email</h3>
+                <form id="admin-compose-email-form" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                    <label for="admin-email-to" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">To:</label>
+                    <input type="email" id="admin-email-to" placeholder="recipient@email.com" required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                    <label for="admin-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
+                    <input type="text" id="admin-email-subject" placeholder="Email subject..." required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                    <label for="admin-email-template" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Template:</label>
+                    <select id="admin-email-template" style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                      <option value="custom">Custom Message</option>
+                      <option value="welcome">Welcome Email</option>
+                      <option value="invoice">Invoice Notification</option>
+                      <option value="reminder">Payment Reminder</option>
+                      <option value="appointment">Appointment Confirmation</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                    <label for="admin-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
+                    <textarea id="admin-email-body" rows="6" placeholder="Type your message here..." style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+                  </div>
+                  <div style="display:flex; gap:0.75rem; align-items:center;">
+                    <button type="submit" class="btn btn-primary" id="admin-send-email-btn" style="flex:1; font-size:0.85rem;">Send Email</button>
+                  </div>
+                  <div id="admin-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
+                </form>
+              </div>
+
+              <!-- Sent Emails -->
+              <div class="admin-panel">
+                <h3 style="display:flex; align-items:center; justify-content:space-between;">📤 Sent Items <span id="admin-sent-count" class="badge badge-category" style="font-size:0.7rem;">0</span></h3>
+                <div id="admin-sent-email-list" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; max-height:320px; overflow-y:auto;">
+                  <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:1.5rem 0;">No sent emails yet.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Inbox -->
+            <div class="admin-panel" style="display:flex; flex-direction:column;">
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">
+                <span>📥 Inbox</span>
+                <div style="display:flex; gap:0.5rem; align-items:center;">
+                  <a href="admin-emails.html" target="_blank" class="btn btn-secondary" style="font-size:0.7rem; padding:0.25rem 0.5rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.25rem; font-weight:600;">
+                    🖥️ Open Fullscreen
+                  </a>
+                  <span id="admin-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
+                </div>
+              </h3>
+
+              <div id="admin-inbox-filter" style="display:flex; gap:0.5rem; margin-bottom:0.75rem; flex-wrap:wrap;">
+                <button class="email-filter-btn active" data-filter="all" id="admin-filter-all">All</button>
+                <button class="email-filter-btn" data-filter="unread" id="admin-filter-unread">Unread</button>
+                <button class="email-filter-btn" data-filter="inbox" id="admin-filter-inbox">Inbox</button>
+              </div>
+              <div id="admin-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; flex:1; overflow-y:auto; max-height:520px;">
+                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">Connect Gmail to see your inbox messages.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email Preview Modal (inline) -->
+          <div id="admin-email-preview-overlay" class="email-preview-overlay" style="display:none;">
+            <div class="email-preview-card">
+              <div class="email-preview-header">
+                <div>
+                  <div id="admin-preview-subject" style="font-size:1rem; font-weight:700; color:var(--text-primary);"></div>
+                  <div id="admin-preview-from" style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;"></div>
+                  <div id="admin-preview-date" style="font-size:0.75rem; color:var(--text-muted);"></div>
+                </div>
+                <button class="modal-close" id="admin-close-email-preview" aria-label="Close preview">&times;</button>
+              </div>
+              <div id="admin-preview-body" class="email-preview-body"></div>
+              
+              <!-- Payment Verification Review Widget -->
+              <div id="admin-preview-payment-widget" style="display:none; margin: 1rem 0; padding: 1rem; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.25); border-radius: var(--radius-sm); flex-direction: column; gap: 0.75rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:0.85rem; font-weight:700; color:var(--accent-primary);">💳 Detected Payment Verification Request</span>
+                  <span id="admin-preview-payment-status-badge" class="feed-item-badge"></span>
+                </div>
+                <div style="font-size:0.82rem; color:var(--text-secondary); display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem 1rem;">
+                  <div><strong>Student:</strong> <span id="admin-preview-payment-student"></span></div>
+                  <div><strong>Amount:</strong> <span id="admin-preview-payment-amount"></span></div>
+                  <div><strong>Invoice/Appt:</strong> <span id="admin-preview-payment-id"></span></div>
+                  <div><strong>Extracted UTR:</strong> <code id="admin-preview-payment-tx" style="color:#fb923c; font-weight:700;"></code></div>
+                </div>
+                <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
+                  <button class="btn btn-primary btn-sm" id="admin-preview-payment-approve-btn" style="padding:0.35rem 0.75rem; font-size:0.78rem; background:#10b981; border:none; color:white;">Approve Payment</button>
+                  <button class="btn btn-secondary btn-sm" id="admin-preview-payment-decline-btn" style="padding:0.35rem 0.75rem; font-size:0.78rem; background:#ef4444; border:none; color:white;">Decline / Reject</button>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
+                <button class="btn btn-primary btn-sm" id="admin-preview-reply-btn" style="font-size:0.8rem;">↩ Reply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ==================== END ADMIN EMAIL PANEL ==================== -->
+
+        <!-- ==================== ADMIN EMAIL CENTER PANEL ==================== -->
+        <div class="admin-panel-content" id="admin-email-center-panel" style="display: none; padding: 0;">
+          <iframe src="about:blank" data-src="admin-emails.html" style="width:100%; height:820px; border:none; border-radius:16px; background:rgba(17, 24, 39, 0.4); backdrop-filter:blur(8px);"></iframe>
+        </div>
+        <!-- ==================== END ADMIN EMAIL CENTER PANEL ==================== -->
+
+      </div>
+    </section>
+
+    <!-- Community Chat Section -->
+    <section id="chat-section" class="content-section">
+      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+        
+        <!-- Header -->
+        <div class="admin-header-card" style="margin-bottom: 0;">
+          <div class="admin-avatar">💬</div>
+          <div class="admin-info-details">
+            <h2>Community Chat</h2>
+            <p>Connect with instructors and fellow practitioners in real-time.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 3fr; gap: 1.5rem;">
+          <!-- Left Panel: Online Users -->
+          <div class="admin-panel" style="display: flex; flex-direction: column;">
+            <h3>👥 Online Users</h3>
+            <div id="chat-users-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; max-height: 400px;">
+              <!-- Connected users list loaded dynamically -->
+              <p style="color: var(--text-muted); font-size: 0.85rem;">No other users online.</p>
+            </div>
+          </div>
+
+          <!-- Right Panel: Message Room -->
+          <div class="admin-panel" style="display: flex; flex-direction: column; height: 500px;">
+            <div id="chat-messages-container" style="flex: 1; overflow-y: auto; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem;">
+              <!-- History/new messages loaded dynamically -->
+              <p style="color: var(--text-muted); text-align: center; margin-top: auto; margin-bottom: auto; font-size: 0.9rem;">Welcome to the chat! Start the conversation below.</p>
+            </div>
+            
+            <form id="chat-send-form" style="display: flex; gap: 0.75rem; align-items: center;">
+              <input type="text" id="chat-message-input" placeholder="Type a message..." required autocomplete="off" style="flex: 1; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); outline: none;">
+              <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Send</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Live Class WebRTC Section -->
+    <section id="live-class-section" class="content-section">
+      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+        
+        <!-- Header -->
+        <div class="admin-header-card" style="margin-bottom: 0;">
+          <div class="admin-avatar">🎥</div>
+          <div class="admin-info-details">
+            <h2>Live Interactive Class</h2>
+            <p>Participate in virtual interactive streams hosted by studio instructors.</p>
+          </div>
+        </div>
+
+        <!-- Instructor Controls (Only visible to admin) -->
+        <div id="instructor-live-controls" style="display: none; text-align: left; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 1rem;">
+          <button id="btn-start-stream" class="btn btn-rose">🔴 Launch Live Video Session</button>
+          <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: 1rem;">Launches the public WebRTC room for active students.</span>
+        </div>
+
+        <!-- WebRTC Meeting Room Container -->
+        <div id="live-class-room-container" style="width: 100%; height: 600px; background: rgba(0, 0, 0, 0.4); border-radius: var(--radius-md); border: 1px solid var(--glass-light-border); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-top: 1rem;">
+          <div id="live-class-placeholder" style="text-align: center; padding: 2rem;">
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🧘</span>
+            <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">No Active Live Session</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 450px; margin: 0 auto;">There is no streaming class active at this moment. Join from your timetable schedule when a session starts.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>&copy; 2026 Quantum Yoga Platform. Designed for supreme alignment of mind, body, and code. | <a href="#" id="footer-contact-us" style="color: var(--accent-primary); text-decoration: underline; margin-left: 0.5rem; cursor: pointer;">Contact Us</a></p>
+    </div>
+  </footer>
+
+  <!-- Detail Modal for Pose Details -->
+  <div class="modal-overlay" id="pose-modal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="close-pose-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-body" id="pose-modal-body">
+        <!-- Dynamic modal content injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom HTML5 Overlay Video Player Modal -->
+  <div class="modal-overlay" id="video-modal" aria-hidden="true">
+    <div class="video-player-container">
+      <button class="video-modal-close" id="close-video-modal" aria-label="Close video player">&times;</button>
+      
+      <!-- Voice Coach Floating Control Widget -->
+      <div id="voice-coach-toggle-wrapper" class="voice-coach-widget">
+        <div class="voice-coach-header">
+          <label class="voice-coach-switch">
+            <input type="checkbox" id="voice-coach-toggle">
+            <span class="voice-coach-slider"></span>
+          </label>
+          <span class="voice-coach-title">🎙️ Voice Coach</span>
+          <button id="voice-settings-toggle-btn" class="voice-settings-btn" type="button" aria-label="Voice Settings">⚙️</button>
+        </div>
+        
+        <!-- Voice settings drawer -->
+        <div id="voice-coach-settings" class="voice-coach-settings-drawer" style="display: none;">
+          <div class="settings-group">
+            <label for="voice-coach-select">Voice:</label>
+            <select id="voice-coach-select" class="voice-select-dropdown"></select>
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-volume">Volume:</label>
+            <input type="range" id="voice-coach-volume" min="0" max="1" step="0.1" value="0.8">
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-rate">Speech Rate:</label>
+            <input type="range" id="voice-coach-rate" min="0.5" max="2" step="0.1" value="1.0">
+          </div>
+          <div class="settings-group">
+            <label for="voice-coach-pitch">Speech Pitch:</label>
+            <input type="range" id="voice-coach-pitch" min="0.5" max="2" step="0.1" value="1.0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Routine Walkthrough HUD Overlay -->
+      <div id="routine-walkthrough-panel" class="routine-walkthrough-panel" style="display: none;">
+        <div class="walkthrough-pose-header">
+          <h3 id="walkthrough-pose-name">Child's Pose</h3>
+          <p id="walkthrough-pose-sanskrit">Balasana</p>
+        </div>
+        <div class="walkthrough-timer-wrap">
+          <span class="walkthrough-timer-icon">⏱️</span>
+          <span id="walkthrough-timer-text">0:00</span>
+        </div>
+        <div class="walkthrough-instructions-wrap">
+          <p id="walkthrough-instructions">Deep breathing warmup...</p>
+        </div>
+        <div class="walkthrough-next-pose" id="walkthrough-next-pose-wrap">
+          <span>Next: <strong id="walkthrough-next-pose-name">-</strong></span>
+        </div>
+      </div>
+
+      <!-- Video Element -->
+      <video id="custom-video-element" preload="metadata" poster="">
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+
+      <!-- Custom Player Controls Panel -->
+      <div class="custom-video-controls">
+        
+        <!-- Progress bar container -->
+        <div class="timeline-container">
+          <div class="timeline-track" id="video-timeline">
+            <div class="timeline-buffered" id="video-buffered-bar"></div>
+            <div class="timeline-progress" id="video-progress-bar"></div>
+            <div class="timeline-handle" id="video-timeline-handle"></div>
+          </div>
+        </div>
+
+        <div class="controls-row">
+          <div class="controls-left">
+            <button class="control-btn" id="video-play-pause-btn" aria-label="Play">
+              <!-- Play Icon -->
+              <svg class="play-icon" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M8 5v14l11-7z"/>
+              </svg>
+              <!-- Pause Icon (hidden initially) -->
+              <svg class="pause-icon" viewBox="0 0 24 24" width="20" height="20" style="display: none;">
+                <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+            </button>
+            <div class="time-display">
+              <span id="video-current-time">0:00</span> / <span id="video-duration">0:00</span>
+            </div>
+          </div>
+
+          <div class="controls-right">
+            <button class="control-btn" id="video-mute-btn" aria-label="Mute">
+              <!-- Speaker Icon -->
+              <svg class="speaker-icon" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+              </svg>
+              <!-- Muted Icon (hidden initially) -->
+              <svg class="muted-icon" viewBox="0 0 24 24" width="20" height="20" style="display: none;">
+                <path fill="currentColor" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+              </svg>
+            </button>
+            <input type="range" id="video-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" aria-label="Volume">
+            
+            <button class="control-btn" id="video-fullscreen-btn" aria-label="Toggle Fullscreen">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal is removed and replaced by fullscreen gate -->
+
+  <!-- Detailed Receipt Modal Overlay -->
+  <div class="modal-overlay" id="receipt-modal" aria-hidden="true">
+    <div class="modal-card receipt-modal-card" style="max-width: 550px; width: 90%;">
+      <button class="modal-close" id="close-receipt-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-body" id="receipt-modal-body" style="padding: 2.5rem;">
+        <!-- Dynamic receipt details will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointment Booking & Rescheduling Modal -->
+  <div class="modal-overlay" id="appointment-modal" aria-hidden="true" style="display: none;">
+    <div class="modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 id="appointment-modal-title">Book Private Coaching Session</h3>
+        <button class="modal-close" id="close-appointment-modal" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="appointment-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <!-- Admin-only Student Select Dropdown -->
+        <div class="form-group" id="appointment-student-group" style="display: none; flex-direction: column; gap: 0.35rem;">
+          <label for="appointment-student-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Select Student</label>
+          <select id="appointment-student-select" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+            <!-- Dynamically populated with active student emails -->
+          </select>
+        </div>
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label for="appointment-routine-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Designated Yoga Routine</label>
+          <select id="appointment-routine-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+            <option value="">Select a Routine...</option>
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label for="appointment-date-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Date</label>
+          <input type="date" id="appointment-date-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
+        </div>
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label for="appointment-time-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Time Slot</label>
+          <select id="appointment-time-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+            <option value="">Choose a Time...</option>
+            <option value="08:00 AM">08:00 AM</option>
+            <option value="09:00 AM">09:00 AM</option>
+            <option value="10:00 AM">10:00 AM</option>
+            <option value="11:00 AM">11:00 AM</option>
+            <option value="12:00 PM">12:00 PM</option>
+            <option value="01:00 PM">01:00 PM</option>
+            <option value="02:00 PM">02:00 PM</option>
+            <option value="03:00 PM">03:00 PM</option>
+            <option value="04:00 PM">04:00 PM</option>
+            <option value="05:00 PM">05:00 PM</option>
+            <option value="06:00 PM">06:00 PM</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id="save-appointment-btn" style="margin-top: 0.5rem; width: 100%;">Schedule Appointment</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Profile Inspection Modal for Administrator -->
+  <div class="modal-overlay" id="admin-inspect-modal" aria-hidden="true">
+    <div class="modal-card modal-inspect-card" style="max-width: 900px; width: 95%;">
+      <button class="modal-close" id="close-inspect-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-body" style="padding: 2.5rem;">
+        
+        <!-- Inspected User Profile Content -->
+        <div class="profile-container" id="inspect-user-container">
+          <div class="profile-header-card" style="padding: 1.5rem; gap: 1.5rem;">
+            <div class="profile-avatar">🧘</div>
+            <div class="profile-info-details">
+              <h2 id="inspect-user-name">User Name</h2>
+              <p id="inspect-user-email">user@email.com</p>
+              <p id="inspect-user-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: -</p>
+            </div>
+            <div class="profile-stats" style="gap: 1.5rem;">
+              <div class="stat-box">
+                <span class="stat-num" id="inspect-stat-completed">0</span>
+                <span class="stat-label">Completions</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="inspect-stat-favorites">0</span>
+                <span class="stat-label">Favorites</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-content-grid" style="gap: 1.5rem;">
+            <!-- Inspected Favorites List Panel -->
+            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
+              <h3>❤️ Favorited Poses</h3>
+              <div class="profile-favorites-grid" id="inspect-favorites-list">
+                <!-- Dynamically rendered favorites -->
+              </div>
+            </div>
+
+            <!-- Inspected History Panel -->
+            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
+              <h3>⏱️ Routine History</h3>
+              <div class="profile-history-list" id="inspect-history-list">
+                <!-- Dynamically rendered history -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Admin Membership Editor Panel -->
+          <div class="profile-panel" style="padding: 1.5rem; margin-top: 1.5rem; gap: 1rem;">
+            <h3>🛡️ Membership & Administrative Settings</h3>
+            <form id="admin-inspect-membership-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;">
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-membership-tier" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Membership Tier</label>
+                <select id="inspect-membership-tier" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  <option value="Basic">Basic Member</option>
+                  <option value="Premium">Premium Member</option>
+                  <option value="Unlimited VIP">Unlimited VIP</option>
+                </select>
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-user-phone-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Phone Number</label>
+                <input type="tel" id="inspect-user-phone-input" pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number" placeholder="+91 98765 43210" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-membership-status" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Membership Status</label>
+                <select id="inspect-membership-status" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  <option value="Active">Active</option>
+                  <option value="Paused">Paused</option>
+                  <option value="Expired">Expired</option>
+                </select>
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-membership-expiry-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Expiration Date</label>
+                <input type="date" id="inspect-membership-expiry-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-user-batch" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Enrolled Cohort Batch</label>
+                <select id="inspect-user-batch" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                  <option value="">No Batch Assigned</option>
+                  <!-- Dynamically populated -->
+                </select>
+              </div>
+              
+              <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="inspect-coaching-notes" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Coaching & Instructor Notes</label>
+                <textarea id="inspect-coaching-notes" placeholder="Add coaching tips, trainer referrals, or internal notes..." style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
+              </div>
+              
+              <div style="grid-column: 1 / -1; display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
+                <button type="submit" class="btn btn-primary" id="save-inspect-membership-btn">Save Membership Settings</button>
+                <div id="inspect-membership-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem;">
+                  �o" Settings saved successfully.
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Lead Inspection Modal for Administrator -->
+  <div class="modal-overlay" id="admin-inspect-lead-modal" aria-hidden="true">
+    <div class="modal-card modal-inspect-card" style="max-width: 800px; width: 95%;">
+      <button class="modal-close" id="close-inspect-lead-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-body" style="padding: 2.5rem;">
+        
+        <!-- Inspected Lead Content -->
+        <div class="profile-container">
+          <div class="profile-header-card" style="padding: 1.5rem; gap: 1.5rem;">
+            <div class="profile-avatar">🧘</div>
+            <div class="profile-info-details">
+              <h2 id="inspect-lead-name">Lead Name</h2>
+              <p id="inspect-lead-email">lead@email.com</p>
+              <p id="inspect-lead-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: 123-456-7890</p>
+              <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span class="badge badge-category" id="inspect-lead-status-badge">New</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Submitted: <span id="inspect-lead-date">2026-06-14</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <h3 style="font-size: 1rem; color: var(--text-secondary); font-weight: 600;">Original Inquiry Message</h3>
+            <div id="inspect-lead-message" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 1rem; margin-top: 0.5rem; color: var(--text-primary); font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">
+              Inquiry message goes here...
+            </div>
+          </div>
+
+          <div class="profile-content-grid" style="gap: 1.5rem; margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <!-- Follow-up log history timeline -->
+            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
+              <h3>⏱️ Follow-up Log History</h3>
+              <div id="inspect-lead-logs" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">
+                <!-- Dynamically rendered timeline nodes -->
+              </div>
+            </div>
+
+            <!-- Follow-up and status updates form -->
+            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
+              <h3>🛡️ Pipeline & Follow-up Actions</h3>
+              <form id="inspect-lead-action-form" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
+                <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <label for="inspect-lead-status" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Lead Status</label>
+                  <select id="inspect-lead-status" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+                    <option value="New">New</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="Converted">Converted</option>
+                    <option value="Closed">Closed</option>
+                  </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <label for="inspect-lead-note-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Add Follow-up Note</label>
+                  <textarea id="inspect-lead-note-input" placeholder="Type a note from your conversation..." style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                  <button type="submit" class="btn btn-primary" id="save-lead-settings-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Save Follow-up</button>
+                  <button type="button" class="btn btn-secondary" id="convert-lead-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">Convert to Member</button>
+                </div>
+                
+                <div id="inspect-lead-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem; text-align: left; margin-top: 0.5rem;">
+                  �o" Log entry saved successfully.
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- UPI QR Code Payment Modal Overlay -->
+  <div class="modal-overlay" id="upi-payment-modal" aria-hidden="true">
+    <div class="modal-card" style="max-width: 450px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); text-align: center; position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="margin: 0; font-size: 1.25rem;">UPI Scan & Pay</h3>
+        <button class="modal-close" id="close-upi-payment-modal" aria-label="Close modal" style="position: static; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); cursor: pointer; color: var(--text-primary); font-size: 1.25rem;">&times;</button>
+      </div>
+      <div id="upi-payment-invoice-info" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); font-size: 0.9rem; text-align: left;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+          <strong style="color: var(--text-secondary);">Invoice ID:</strong>
+          <span id="upi-pay-invoice-id" style="font-family: monospace; font-weight: 600;">#INV-10029</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+          <strong style="color: var(--text-secondary);">Description:</strong>
+          <span id="upi-pay-invoice-desc">Monthly Gold Fee</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+          <strong style="color: var(--text-secondary);">Amount Due:</strong>
+          <span id="upi-pay-invoice-amount" style="font-weight: 700; color: var(--accent-primary);">₹0</span>
+        </div>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <div id="upi-qr-code-wrapper" style="background: white; padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); display: flex; align-items: center; justify-content: center; width: 176px; height: 176px; overflow: hidden;">
+          <img id="upi-qr-image" src="" alt="Scan QR Code to Pay" style="width: 160px; height: 160px;">
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; max-width: 320px;">
+          Scan this QR code using any UPI App (GPay, PhonePe, Paytm, BHIM) to transfer the fee to: <strong id="upi-pay-recipient-name" style="color: var(--text-primary);">Quantum Yoga Studio</strong> (<span id="upi-pay-recipient-vpa" style="font-family: monospace;">quantumyoga@upi</span>)
+        </p>
+      </div>
+
+      <form id="upi-payment-utr-form" style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label for="upi-payment-utr" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Transaction Ref / UTR No (12 Digits):</label>
+          <input type="text" id="upi-payment-utr" required pattern="\d{12}" minlength="12" maxlength="12" title="Please enter the exact 12-digit transaction reference or UTR number from your payment app receipt." placeholder="Enter 12-digit UPI UTR No" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; text-align: center; letter-spacing: 0.05em; font-weight: 600;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm Payment & Submit Reference</button>
+      </form>
+    </div>
+  </div>
+
+
+  </div> <!-- End #dashboard-app -->
+
+  <!-- Fullscreen Auth Gate -->
+  <div id="auth-gate-fullscreen" style="display: flex;">
+    <div class="auth-gate-card">
+      <div class="auth-gate-logo">
+        <span class="logo-icon">🧘</span>
+        <span class="logo-text">Quantum<span class="text-accent">Yoga</span></span>
+      </div>
+      <p class="auth-gate-tagline">Elevate Your Body & Mind. Please log in or register to access the dashboard.</p>
+      
+      <!-- Toggle Login/Register Forms Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="auth-login-tab-btn">Login</button>
+        <button class="auth-tab" id="auth-register-tab-btn">Register</button>
+        <button class="auth-tab" id="auth-inquire-tab-btn">Inquire</button>
+      </div>
+
+      <div class="auth-gate-body">
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form active-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" required placeholder="your.email@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required placeholder="Enter password" autocomplete="current-password">
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -0.25rem; margin-bottom: 0.5rem; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="login-remember" style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-dark-border); border-radius: var(--radius-sm); width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-primary);">
+              <label for="login-remember" style="cursor: pointer; margin-bottom: 0; font-size: 0.85rem; color: var(--text-secondary); user-select: none; font-weight: 500;">Remember Me</label>
+            </div>
+            <a href="#" id="forgot-password-link" style="font-size: 0.85rem; color: var(--accent-primary); text-decoration: none; font-weight: 500; transition: var(--transition-fast);">Forgot Password?</a>
+          </div>
+          <div class="form-error-msg" id="login-error-msg" style="display: none;"></div>
+          <button type="submit" class="btn btn-primary btn-block">Log In</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form">
+          <div class="form-group">
+            <label for="register-name">Full Name</label>
+            <input type="text" id="register-name" required placeholder="Your Name" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email Address</label>
+            <input type="email" id="register-email" required placeholder="your.email@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="register-phone">Phone Number</label>
+            <input type="tel" id="register-phone" required pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number (e.g., +91 98765 43210 or 09876543210)" placeholder="+91 98765 43210" autocomplete="tel">
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" required placeholder="Create password (minimum 6 characters)" autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label for="register-referral">Referral Code (Optional)</label>
+            <input type="text" id="register-referral" placeholder="e.g. FLOW88" style="text-transform: uppercase;">
+          </div>
+          <div class="form-error-msg" id="register-error-msg" style="display: none;"></div>
+          <button type="submit" class="btn btn-rose btn-block">Register Account</button>
+        </form>
+
+        <!-- Inquiry Form -->
+        <div id="auth-inquire-form-wrapper" class="auth-form" style="display: none;">
+          <form id="inquire-form">
+            <div class="form-group">
+              <label for="inquire-name">Full Name</label>
+              <input type="text" id="inquire-name" required placeholder="Your Name" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="inquire-email">Email Address</label>
+              <input type="email" id="inquire-email" required placeholder="your.email@example.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="inquire-phone">Phone Number</label>
+              <input type="tel" id="inquire-phone" required pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number (e.g., +91 98765 43210 or 09876543210)" placeholder="+91 98765 43210" autocomplete="tel">
+            </div>
+            <div class="form-group">
+              <label for="inquire-referral">Referral Code (Optional)</label>
+              <input type="text" id="inquire-referral" placeholder="e.g. FLOW88" style="text-transform: uppercase;">
+            </div>
+            <div class="form-group">
+              <label for="inquire-message">Message / Interest</label>
+              <textarea id="inquire-message" required placeholder="What are you hoping to find at Quantum Yoga?" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
+            </div>
+            <div id="inquire-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem; margin-bottom: 1rem; text-align: center;">
+              �o" Inquiry submitted successfully. We will contact you soon!
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="submit-inquiry-btn">Submit Inquiry</button>
+          </form>
+        </div>
+      </div>
+      
+      <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--text-secondary); border-top: 1px solid var(--glass-light-border); padding-top: 1rem;">
+        Need help? <a href="#" id="auth-contact-us-btn" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600; cursor: pointer;">Contact Us</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Us Modal Overlay -->
+  <div class="modal-overlay" id="contact-us-modal" aria-hidden="true" style="z-index: 10005;">
+    <div class="modal-card contact-modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative; color: var(--text-primary); text-align: left;">
+      <button class="modal-close" id="close-contact-modal" aria-label="Close modal">&times;</button>
+      
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-light-border); padding-bottom: 0.75rem;">
+        <span style="font-size: 1.5rem;">📞</span>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #fff;">Contact Us</h3>
+      </div>
+      
+      <div class="contact-info-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📍</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Address</h4>
+            <p id="contact-studio-address" style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
+          </div>
+        </div>
+
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📞</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Phone Number</h4>
+            <p style="font-size: 0.95rem; margin: 0;"><a id="contact-studio-phone" href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
+          </div>
+        </div>
+
+        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
+          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">✉️</span>
+          <div>
+            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Email ID</h4>
+            <p style="font-size: 0.95rem; margin: 0;"><a id="contact-studio-email" href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Force Change Password Screen -->
+  <div id="force-change-password-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 9999; align-items: center; justify-content: center; overflow-y: auto; padding: 2rem;">
+    <div class="auth-gate-card" style="max-width: 450px; width: 90%;">
+      <div class="auth-gate-logo">
+        <span class="logo-icon">🧘</span>
+        <span class="logo-text">Security<span class="text-accent">Update</span></span>
+      </div>
+      <p class="auth-gate-tagline" style="margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary);">For security purposes, you must change your temporary password to a custom password before accessing the dashboard.</p>
+      
+      <form id="force-change-password-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
+          <label for="force-new-password" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">New Password</label>
+          <input type="password" id="force-new-password" required placeholder="Minimum 6 characters" autocomplete="new-password" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+        </div>
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
+          <label for="force-confirm-password" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Confirm New Password</label>
+          <input type="password" id="force-confirm-password" required placeholder="Re-enter password" autocomplete="new-password" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+        </div>
+        <div class="form-error-msg" id="force-change-password-error-msg" style="display: none; color: #ef4444; font-weight: 600; font-size: 0.85rem; text-align: left;"></div>
+        <button type="submit" class="btn btn-rose btn-block" style="padding: 0.75rem; width: 100%;">Update Password & Continue</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal Overlay -->
+  <div class="modal-overlay" id="forgot-password-modal" aria-hidden="true" style="z-index: 10000;">
+    <div class="modal-card" style="max-width: 450px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="margin: 0; font-size: 1.25rem;">Reset Password</h3>
+        <button class="modal-close" id="close-forgot-password-modal" aria-label="Close modal" style="position: static; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); cursor: pointer; color: var(--text-primary); font-size: 1.25rem;">&times;</button>
+      </div>
+      
+      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
+        Enter your registered email address below. We will generate a new secure temporary password for your account.
+      </p>
+
+      <form id="forgot-password-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
+          <label for="forgot-email" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Email Address</label>
+          <input type="email" id="forgot-email" required placeholder="your.email@example.com" autocomplete="email" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
+        </div>
+        
+        <div class="form-error-msg" id="forgot-password-error-msg" style="display: none; color: #ef4444; font-weight: 600; font-size: 0.85rem; text-align: left;"></div>
+        
+        <div id="forgot-password-success-msg" style="display: none; background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; text-align: left; line-height: 1.4;">
+          <!-- Success message and temp password will be dynamically injected here -->
+        </div>
+
+        <button type="submit" class="btn btn-rose btn-block" style="padding: 0.75rem; width: 100%;">Generate Temporary Password</button>
+      </form>
+      
+      <div style="margin-top: 1.25rem; font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; border-top: 1px solid var(--border-glass); padding-top: 0.75rem; text-align: center;">
+        <span style="font-weight: 600; color: var(--text-secondary);">Notice:</span> This is a simulated local test reset flow.
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Declarations -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
 ````
 
 ## File: app.js
@@ -13971,6 +18480,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminLeadsTabBtn = document.getElementById("admin-leads-tab-btn");
   const adminSettingsTabBtn = document.getElementById("admin-settings-tab-btn");
   const adminEmailTabBtn = document.getElementById("admin-email-tab-btn");
+  const adminEmailCenterTabBtn = document.getElementById("admin-email-center-tab-btn");
   
   const adminOverviewPanel = document.getElementById("admin-overview-panel");
   const adminUsersPanel = document.getElementById("admin-users-panel");
@@ -13978,6 +18488,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminLeadsPanel = document.getElementById("admin-leads-panel");
   const adminSettingsPanel = document.getElementById("admin-settings-panel");
   const adminEmailPanel = document.getElementById("admin-email-panel");
+  const adminEmailCenterPanel = document.getElementById("admin-email-center-panel");
 
   // Email panel DOM elements
   const adminInboxEmailList = document.getElementById("admin-inbox-email-list");
@@ -15851,18 +20362,13 @@ document.addEventListener("DOMContentLoaded", async () => {
    */
   async function resendSendEmail({ to, subject, bodyHtml, bodyText }) {
     const es = loadGmailSettings();
-    const apiKey = es.resendApiKey || "";
-    const fromAddress = es.resendFromAddress || "";
     try {
-      // Route through the local Vite proxy (/api/send-email) so the request to
-      // api.resend.com is made server-side (Node.js). Direct browser fetch to
-      // api.resend.com is intentionally blocked by Resend's CORS policy.
       const resp = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          apiKey,
-          from: fromAddress,
+          apiKey: "",
+          from: "",
           to,
           subject,
           html: bodyHtml || bodyText || ""
@@ -18951,6 +23457,7 @@ Please verify and update my status. Thank you!`);
       btn.setAttribute("aria-selected", "false");
     });
     if (adminEmailTabBtn) adminEmailTabBtn.classList.remove("active");
+    if (adminEmailCenterTabBtn) adminEmailCenterTabBtn.classList.remove("active");
     
     adminOverviewPanel.style.display = "none";
     adminUsersPanel.style.display = "none";
@@ -18961,6 +23468,7 @@ Please verify and update my status. Thank you!`);
     adminReportsPanel.style.display = "none";
     adminSettingsPanel.style.display = "none";
     if (adminEmailPanel) adminEmailPanel.style.display = "none";
+    if (adminEmailCenterPanel) adminEmailCenterPanel.style.display = "none";
     
     if (panelName === "overview") {
       adminOverviewTabBtn.classList.add("active");
@@ -18998,6 +23506,15 @@ Please verify and update my status. Thank you!`);
       if (adminEmailTabBtn) { adminEmailTabBtn.classList.add("active"); adminEmailTabBtn.setAttribute("aria-selected", "true"); }
       if (adminEmailPanel) adminEmailPanel.style.display = "block";
       renderAdminEmailTab();
+    } else if (panelName === "email-center") {
+      if (adminEmailCenterTabBtn) { adminEmailCenterTabBtn.classList.add("active"); adminEmailCenterTabBtn.setAttribute("aria-selected", "true"); }
+      if (adminEmailCenterPanel) {
+        adminEmailCenterPanel.style.display = "block";
+        const iframe = adminEmailCenterPanel.querySelector("iframe");
+        if (iframe && (iframe.src === "about:blank" || !iframe.src || iframe.src === window.location.href)) {
+          iframe.src = iframe.dataset.src || "admin-emails.html";
+        }
+      }
     } else if (panelName === "settings") {
       adminSettingsTabBtn.classList.add("active");
       adminSettingsTabBtn.setAttribute("aria-selected", "true");
@@ -19080,7 +23597,7 @@ Please verify and update my status. Thank you!`);
     if (adminGmailConnectedEmail) adminGmailConnectedEmail.textContent = es.connectedEmail || "";
     if (adminGmailConnectBtn) adminGmailConnectBtn.style.display = (gmailVisible && !connected) ? "inline-flex" : "none";
     if (adminGmailDisconnectBtn) adminGmailDisconnectBtn.style.display = (gmailVisible && connected) ? "inline-flex" : "none";
-    const resendConfigured = !!(es.resendApiKey);
+    const resendConfigured = true;
     if (adminGmailRefreshBtn) adminGmailRefreshBtn.style.display = ((gmailVisible && connected) || (isResend && resendConfigured)) ? "inline-flex" : "none";
 
     // Resend badge visibility (Task 5.3)
@@ -19098,12 +23615,15 @@ Please verify and update my status. Thank you!`);
         : "Connect your Gmail account to send & receive emails directly from this panel.";
     }
 
-    // Email tab visibility: show admin tab if clientId present OR resend configured (Task 6.9/8.8)
+    // Email tab visibility: permanently display Email tabs on administrator and student portals
     if (adminEmailTabBtn) {
-      adminEmailTabBtn.style.display = (es.clientId || (isResend && resendConfigured)) ? "inline-flex" : "none";
+      adminEmailTabBtn.style.display = "inline-flex";
+    }
+    if (adminEmailCenterTabBtn) {
+      adminEmailCenterTabBtn.style.display = "inline-flex";
     }
     if (profileEmailTabBtn) {
-      profileEmailTabBtn.style.display = (connected || (isResend && resendConfigured)) ? "inline-flex" : "none";
+      profileEmailTabBtn.style.display = "inline-flex";
     }
 
     updateAdminUnreadBadge();
@@ -19119,8 +23639,19 @@ Please verify and update my status. Thank you!`);
    */
   function renderAdminEmailTab() {
     updateEmailProviderStatusUI();
+    // Render immediately from local cache so the UI is instant and never hangs
     renderAdminInbox();
     renderAdminSentList();
+
+    // Fetch updates in the background and re-render if successful
+    loadFromServer()
+      .then(() => {
+        renderAdminInbox();
+        renderAdminSentList();
+      })
+      .catch(err => {
+        console.warn("Background state sync failed in renderAdminEmailTab:", err);
+      });
   }
 
   /**
@@ -19149,12 +23680,7 @@ Please verify and update my status. Thank you!`);
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    let list = emails.filter(e => {
-      const isIncoming = e.folder === "inbox" || e.direction === "received";
-      const isToAdmin = (e.to || "").toLowerCase().includes(connectedEmail) || (e.to || "").toLowerCase().includes("admin@quantumyoga.xyz");
-      const isFromAdmin = (e.from || "").toLowerCase().includes(connectedEmail) || (e.from || "").toLowerCase().includes("admin@quantumyoga.xyz");
-      return isIncoming && isToAdmin && !isFromAdmin;
-    });
+    let list = [...emails];
 
     if (filterMode === "unread") list = list.filter(e => !e.isRead);
 
@@ -19163,7 +23689,7 @@ Please verify and update my status. Thank you!`);
     if (list.length === 0) {
       const es = loadGmailSettings();
       const isResend = es.provider === "resend";
-      const resendConfigured = !!(es.resendApiKey);
+      const resendConfigured = true;
       const emailServiceAvailable = isResend ? resendConfigured : isGmailConnected();
 
       let msg = "";
@@ -19414,12 +23940,7 @@ Please verify and update my status. Thank you!`);
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    const unread = emails.filter(e => {
-      const isUnreadIncoming = !e.isRead && (e.folder === "inbox" || e.direction === "received");
-      const isToAdmin = (e.to || "").toLowerCase().includes(connectedEmail) || (e.to || "").toLowerCase().includes("admin@quantumyoga.xyz");
-      const isFromAdmin = (e.from || "").toLowerCase().includes(connectedEmail) || (e.from || "").toLowerCase().includes("admin@quantumyoga.xyz");
-      return isUnreadIncoming && isToAdmin && !isFromAdmin;
-    }).length;
+    const unread = emails.filter(e => !e.isRead).length;
 
     if (adminUnreadCount) adminUnreadCount.textContent = `${unread} unread`;
     if (adminEmailTabBtn) {
@@ -19459,7 +23980,7 @@ Please verify and update my status. Thank you!`);
   function renderStudentEmailTab() {
     const es = loadGmailSettings();
     const isResend = es.provider === "resend";
-    const resendConfigured = !!(es.resendApiKey);
+    const resendConfigured = true;
     const gmailConnected = isGmailConnected();
     const emailServiceAvailable = gmailConnected || (isResend && resendConfigured);
 
@@ -19517,7 +24038,7 @@ Please verify and update my status. Thank you!`);
     const list = emails
       .filter(e => {
         const toField = (e.to || "").toLowerCase();
-        return toField.includes(userEmail.toLowerCase()) && (e.folder === "inbox" || e.direction === "received");
+        return toField.includes(userEmail.toLowerCase());
       })
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -19757,72 +24278,7 @@ Please verify and update my status. Thank you!`);
     });
   }
 
-  // Gmail Settings form — save Client ID (Task 4.2)
-  if (adminGmailSettingsForm) {
-    adminGmailSettingsForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const clientId = adminGmailClientIdInput ? adminGmailClientIdInput.value.trim() : "";
-      if (!clientId) return;
-      const gs = loadGmailSettings();
-      gs.clientId = clientId;
-      saveGmailSettings(gs);
-      if (adminGmailSettingsSuccessMsg) {
-        adminGmailSettingsSuccessMsg.style.display = "block";
-        setTimeout(() => { adminGmailSettingsSuccessMsg.style.display = "none"; }, 3000);
-      }
-      updateEmailProviderStatusUI();
-    });
-  }
 
-  // Task 4.3 — Switch to Gmail provider
-  if (emailProviderGmailBtn) {
-    emailProviderGmailBtn.addEventListener("click", () => {
-      const gs = loadGmailSettings();
-      gs.provider = "gmail";
-      saveGmailSettings(gs);
-      renderEmailProviderSettings();
-      updateEmailProviderStatusUI();
-    });
-  }
-
-  // Task 4.4 — Switch to Resend provider
-  if (emailProviderResendBtn) {
-    emailProviderResendBtn.addEventListener("click", () => {
-      const gs = loadGmailSettings();
-      gs.provider = "resend";
-      saveGmailSettings(gs);
-      renderEmailProviderSettings();
-      updateEmailProviderStatusUI();
-    });
-  }
-
-  // Task 4.5 — Save Resend API key + from-address
-  if (resendSettingsSaveBtn) {
-    resendSettingsSaveBtn.addEventListener("click", () => {
-      const apiKey = resendApiKeyInput ? resendApiKeyInput.value.trim() : "";
-      const fromAddr = resendFromAddressInput ? resendFromAddressInput.value.trim() : "";
-      if (!apiKey) {
-        if (resendSettingsMsg) {
-          resendSettingsMsg.textContent = "API key is required.";
-          resendSettingsMsg.style.color = "#ef4444";
-          resendSettingsMsg.style.display = "inline";
-          setTimeout(() => { resendSettingsMsg.style.display = "none"; }, 3000);
-        }
-        return;
-      }
-      const gs = loadGmailSettings();
-      gs.resendApiKey = apiKey;
-      gs.resendFromAddress = fromAddr;
-      saveGmailSettings(gs);
-      if (resendSettingsMsg) {
-        resendSettingsMsg.textContent = "Resend settings saved ✓";
-        resendSettingsMsg.style.color = "#10B981";
-        resendSettingsMsg.style.display = "inline";
-        setTimeout(() => { resendSettingsMsg.style.display = "none"; }, 3000);
-      }
-      updateEmailProviderStatusUI();
-    });
-  }
 
   // Student compose form submit (Task 8.4)
   if (studentComposeEmailForm) {
@@ -19831,7 +24287,7 @@ Please verify and update my status. Thank you!`);
       
       const es = loadGmailSettings();
       const isResend = es.provider === "resend";
-      const resendConfigured = !!(es.resendApiKey);
+      const resendConfigured = true;
       const gmailConnected = isGmailConnected();
 
       if (!(gmailConnected || (isResend && resendConfigured)) || !state.currentUser) return;
@@ -21555,6 +26011,9 @@ Please verify and update my status. Thank you!`);
   if (adminEmailTabBtn) {
     adminEmailTabBtn.addEventListener("click", () => setAdminSubTab("email"));
   }
+  if (adminEmailCenterTabBtn) {
+    adminEmailCenterTabBtn.addEventListener("click", () => setAdminSubTab("email-center"));
+  }
 
   // Create Batch Form Handler
   const adminBatchFeeInput = document.getElementById("admin-batch-fee-input");
@@ -21667,6 +26126,11 @@ Please verify and update my status. Thank you!`);
       document.documentElement.classList.add("theme-light");
     } else if (themeName === "sunset") {
       document.documentElement.classList.add("theme-sunset");
+    }
+    // Propagate theme to iframe if present
+    const iframe = document.querySelector("#admin-email-center-panel iframe");
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage({ type: "THEME_CHANGE", theme: themeName }, "*");
     }
   }
 
@@ -22915,2782 +27379,4 @@ Please verify and update my status. Thank you!`);
     console.error("FATAL ERROR IN DOMContentLoaded:", err, err.stack);
   }
 });
-````
-
-## File: index.html
-````html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Yoga | Elevate Your Body & Mind</title>
-  
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Embark on a transformative wellness journey with Quantum Yoga. Discover interactive pose alignment guides, instructional videos, and guided yoga routines in a premium dark dashboard.">
-  <meta name="keywords" content="yoga, vinyasa, hatha, yin, mindfulness, fitness, meditation, yoga poses, guided routines">
-  <meta name="author" content="Quantum Yoga">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%A7%98%3C/text%3E%3C/svg%3E">
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="index.css">
-
-  <!-- Google Identity Services (GIS) for Gmail OAuth2 integration -->
-  <!-- SETUP: To enable Gmail integration, create a Google Cloud project at console.cloud.google.com,
-       enable the Gmail API, create OAuth2 credentials (Web Application type), and add
-       http://localhost as an authorized JavaScript origin. Enter the Client ID in Admin > Settings > Gmail Integration. -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="https://meet.jit.si/external_api.js" defer></script>
-</head>
-<body>
-
-  <!-- Dashboard App Wrapper -->
-  <div id="dashboard-app" style="display: none;">
-
-  <!-- Decorative Background Glows -->
-  <div class="bg-glow bg-glow-1" id="glow-1"></div>
-  <div class="bg-glow bg-glow-2" id="glow-2"></div>
-  <div class="bg-glow bg-glow-3" id="glow-3"></div>
-
-  <!-- Header & Navigation -->
-  <header class="app-header">
-    <div class="nav-container">
-      <div class="logo">
-        <span class="logo-icon">🧘</span>
-        <span class="logo-text">Quantum<span class="text-accent">Yoga</span></span>
-      </div>
-      <nav class="nav-links">
-        <a href="#poses-section" class="nav-link active" id="nav-poses">Poses</a>
-        <a href="#routines-section" class="nav-link" id="nav-routines">Routines</a>
-        <a href="#profile-section" class="nav-link" id="nav-profile" style="display: none;">Profile</a>
-        <a href="#chat-section" class="nav-link" id="nav-chat" style="display: none;">Community Chat</a>
-        <a href="#live-class-section" class="nav-link" id="nav-live-class" style="display: none;">Live Class</a>
-        <a href="#admin-section" class="nav-link" id="nav-admin" style="display: none;">Admin Panel</a>
-        <a href="#" class="nav-link" id="nav-contact-us">Contact Us</a>
-      </nav>
-      <div class="nav-actions">
-        <div id="user-nav-panel" style="display: none; align-items: center; gap: 1rem; margin-right: 1rem;">
-          <span id="nav-user-greeting" style="font-size: 0.9rem; font-weight: 500;">Hello, <span id="nav-user-name"></span></span>
-          <button class="btn btn-secondary btn-sm" id="logout-btn">Log Out</button>
-        </div>
-        <button class="btn btn-primary btn-sm" id="login-nav-btn">Log In</button>
-        <span class="status-badge"><span class="pulse-dot"></span> Live Stream</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- Overdue Payment Alert Banner -->
-  <div id="overdue-payment-banner" class="overdue-alert-banner" style="display: none;">
-    <div class="overdue-banner-content">
-      <span class="overdue-banner-icon">⚠️</span>
-      <span class="overdue-banner-text" id="overdue-payment-message">Action Required: You have an outstanding overdue payment of ₹0.00.</span>
-      <button class="overdue-banner-close" id="close-overdue-banner-btn" aria-label="Close banner">&times;</button>
-    </div>
-  </div>
-
-  <!-- Main Content Layout -->
-  <main class="app-main">
-    
-    <!-- Hero Section -->
-    <section class="hero-section" id="app-hero">
-      <div class="hero-content">
-        <span class="hero-badge">Mindfulness & Motion</span>
-        <h1 class="hero-title">Harmonize Your <span class="gradient-text">Energy</span> & <span class="gradient-text-alt">Flow</span></h1>
-        <p class="hero-subtitle">
-          Explore our interactive directory of master yoga postures, structured alignment guidelines, and premium video tutorials. Elevate your practice today.
-        </p>
-      </div>
-    </section>
-
-    <!-- Poses Grid Section -->
-    <section id="poses-section" class="content-section active">
-      <!-- Search & Filters Container -->
-      <section class="controls-section">
-        <div class="controls-card">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search-input" placeholder="Search poses, benefits, or categories..." autocomplete="off">
-            <button id="clear-search" class="clear-button" style="display: none;">&times;</button>
-          </div>
-          <div class="filter-group">
-            <div class="select-wrapper">
-              <select id="filter-category" aria-label="Filter by Category">
-                <option value="all">All Categories</option>
-                <option value="vinyasa">Vinyasa</option>
-                <option value="hatha">Hatha</option>
-                <option value="yin">Yin</option>
-                <option value="restorative">Restorative</option>
-              </select>
-            </div>
-            <div class="select-wrapper">
-              <select id="filter-difficulty" aria-label="Filter by Difficulty">
-                <option value="all">All Difficulties</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
-      <div class="grid-container" id="poses-grid">
-        <!-- Dynamic pose cards injected here -->
-      </div>
-      <div id="poses-empty-state" class="empty-state" style="display: none;">
-        <span class="empty-icon">🧘</span>
-        <h3>No Poses Found</h3>
-        <p>Try adjusting your search query or filters to find other yoga postures.</p>
-        <button id="reset-poses-btn" class="btn btn-primary">Reset Filters</button>
-      </div>
-    </section>
-
-    <!-- Routines Grid Section -->
-    <section id="routines-section" class="content-section">
-      <div class="grid-container" id="routines-grid">
-        <!-- Dynamic routine cards injected here -->
-      </div>
-    </section>
-
-    <!-- Profile Grid Section -->
-    <section id="profile-section" class="content-section">
-      <div class="profile-container">
-        
-        <!-- User Profile Header Info Card -->
-        <div class="profile-header-card">
-          <div class="profile-avatar">🧘</div>
-          <div class="profile-info-details">
-            <h2 id="profile-user-name">User Name</h2>
-            <p id="profile-user-email">user@email.com</p>
-            <p id="profile-user-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: -</p>
-            <div id="profile-membership-badge-wrap" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
-              <span class="badge badge-category" id="profile-membership-tier" style="font-weight: 700;">Basic Member</span>
-              <span class="badge badge-category" id="profile-membership-status" style="font-weight: 700;">Active</span>
-              <span style="font-size: 0.8rem; color: var(--text-muted);">Expires: <span id="profile-membership-expiry">2026-07-13</span></span>
-            </div>
-            <!-- Referral Details -->
-            <div id="profile-referral-wrap" style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); max-width: 450px;">
-              <span style="font-size: 0.82rem; color: var(--text-secondary);">Referral Code: <strong id="profile-referral-code" style="color: var(--accent-primary); font-family: monospace; font-size: 0.9rem; letter-spacing: 0.02em;">-</strong></span>
-              <span style="font-size: 0.82rem; color: var(--text-secondary);">|</span>
-              <span style="font-size: 0.82rem; color: var(--text-secondary);">Invited: <strong id="profile-referral-count" style="color: var(--text-primary);">0</strong></span>
-              <span style="font-size: 0.82rem; color: var(--text-secondary);">|</span>
-              <span style="font-size: 0.82rem; color: var(--text-secondary);">Active Discount: <strong id="profile-referral-discount" style="color: #10B981;">0%</strong></span>
-            </div>
-            <div class="profile-theme-wrapper" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-              <label for="profile-theme-select" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">UI Theme:</label>
-              <select id="profile-theme-select" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.35rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; cursor: pointer; outline: none; transition: var(--transition-fast);">
-                <option value="midnight">Midnight Aura (Dark)</option>
-                <option value="light">Ethereal Light (Light)</option>
-                <option value="sunset">Zen Sunset (Sunset)</option>
-              </select>
-            </div>
-            <div class="profile-phone-wrapper" style="margin-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
-              <label for="profile-phone-input" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">Edit Phone:</label>
-              <input type="tel" id="profile-phone-input" pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number" placeholder="+91 98765 43210" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.5rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; outline: none; width: 140px;">
-              <button id="profile-phone-save-btn" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Save</button>
-              <span id="profile-phone-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.75rem;">&#x2713; Saved</span>
-            </div>
-            
-            <!-- Twilio Sandbox Opt-in Instructions Widget -->
-            <div id="profile-sandbox-optin-widget" style="margin-top: 1.25rem; padding: 1rem; background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: var(--radius-sm); max-width: 480px; display: none;">
-              <span style="font-size: 0.85rem; font-weight: 700; color: #10B981; display: flex; align-items: center; gap: 0.35rem;">💬 Link Twilio Sandbox</span>
-              <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.35rem 0 0.75rem 0; line-height: 1.45;">
-                To receive alerts, your phone number must first join the Twilio testing sandbox:
-              </p>
-              <div style="display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;">
-                <div style="background: white; padding: 0.35rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; flex-shrink: 0; box-shadow: var(--shadow-sm);">
-                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=https%3A%2F%2Fwa.me%2F14155238886%3Ftext%3Djoin%2520increase-selection" alt="Twilio QR Code" style="width: 130px; height: 130px;">
-                </div>
-                <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; flex: 1; min-width: 200px;">
-                  <strong>Option 1:</strong> Scan the QR code with your mobile camera to launch WhatsApp.<br>
-                  <strong>Option 2:</strong> Send <code>join increase-selection</code> to <a href="https://wa.me/14155238886?text=join%20increase-selection" target="_blank" style="color: #10B981; font-weight: 700; text-decoration: underline;">+1 415 523 8886</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="profile-stats">
-            <div class="stat-box">
-              <span class="stat-num" id="profile-stat-completed">0</span>
-              <span class="stat-label">Routines Completed</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-num" id="profile-stat-favorites">0</span>
-              <span class="stat-label">Favorites</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Profile Sub-Navigation Tabs -->
-        <div class="profile-sub-tabs" style="display: flex; gap: 1rem; border-bottom: 1px solid var(--glass-medium-border); padding-bottom: 0.75rem; margin: 2rem 0 1.5rem 0;">
-          <button class="profile-sub-tab active" id="profile-dashboard-tab-btn">My Studio Dashboard</button>
-          <button class="profile-sub-tab" id="profile-practice-tab-btn">My Practice Log</button>
-          <button class="profile-sub-tab" id="profile-wellness-tab-btn">Wellness & Goals</button>
-          <button class="profile-sub-tab" id="profile-appointments-tab-btn">My Appointments</button>
-          <button class="profile-sub-tab" id="profile-email-tab-btn">📧 My Email</button>
-        </div>
-
-        <!-- My Studio Dashboard Sub-panel -->
-        <div class="profile-panel-content active-panel" id="profile-dashboard-panel">
-          <!-- Top Row: Batch Card & Upcoming Sessions -->
-          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-            <!-- Active Batch Card -->
-            <div class="profile-panel" id="profile-batch-card-wrapper">
-              <h3>🧘 My Batch & Schedule</h3>
-              <div id="profile-batch-details" style="margin-top: 1rem;">
-                <!-- Placeholders for batch title, timetable list, and live countdown timer -->
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                  <h4 id="profile-batch-title" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">No Active Batch</h4>
-                  <div style="background: rgba(0,0,0,0.15); border-radius: var(--radius-sm); padding: 0.75rem; border: 1px solid var(--glass-light-border);">
-                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Timetable Schedule:</span>
-                    <div id="profile-timetable-list" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
-                      <p style="font-size: 0.8rem; color: var(--text-muted);">No timetable defined.</p>
-                    </div>
-                  </div>
-                  <div id="profile-batch-countdown-box" style="margin-top: 0.5rem; text-align: center; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15); border-radius: var(--radius-sm); padding: 0.75rem;">
-                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Next Class Countdown:</span>
-                    <h4 id="profile-class-countdown" style="font-size: 1.25rem; font-weight: 800; color: var(--accent-primary); margin-top: 0.25rem;">00d 00h 00m 00s</h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Upcoming Scheduled Timeline -->
-            <div class="profile-panel">
-              <h3>📅 Upcoming Classes & Sessions</h3>
-              <div class="profile-sessions-feed" id="profile-sessions-feed" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 280px; overflow-y: auto; margin-top: 1rem;">
-                <!-- Dynamically loaded upcoming classes & appointments -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Billing & Payment History Log -->
-          <div class="profile-panel">
-            <h3>💳 Billing & Receipts</h3>
-            <div class="controls-card" style="margin-top: 1rem; margin-bottom: 1rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-              <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="student-billing-search-input" placeholder="Search by description or invoice ID..." autocomplete="off">
-              </div>
-              <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
-                <label for="student-billing-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
-                <div class="select-wrapper">
-                  <select id="student-billing-status-filter" aria-label="Filter by Status">
-                    <option value="all">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="review">Reviewing</option>
-                    <option value="paid">Paid</option>
-                    <option value="overdue">Overdue</option>
-                    <option value="refund-initiated">Refund Initiated</option>
-                    <option value="refunded">Refunded</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="admin-table-wrapper" style="margin-top: 1rem;">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>Invoice ID</th>
-                    <th>Description</th>
-                    <th>Due Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Receipt</th>
-                  </tr>
-                </thead>
-                <tbody id="profile-billing-table-body">
-                  <!-- Dynamically loaded invoices -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- My Practice Log Sub-panel -->
-        <div class="profile-panel-content" id="profile-practice-panel" style="display: none;">
-          <!-- Practice Streak Tracker & Contribution Grid -->
-          <div class="profile-panel" style="margin-bottom: 1.5rem; text-align: left;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-              <div>
-                <h3 style="margin-bottom: 0.25rem;">🔥 Daily Practice Streak & Activity</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Build habits by checking off your daily yoga practice.</p>
-              </div>
-              <div id="practice-checkin-wrapper" style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-light-border); padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
-                <input type="checkbox" id="practice-today-check" style="width: 1.15rem; height: 1.15rem; cursor: pointer; accent-color: #10b981;">
-                <label for="practice-today-check" style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); cursor: pointer; user-select: none;">Completed Practice Today</label>
-              </div>
-            </div>
-            
-            <!-- Streak Stats -->
-            <div class="profile-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; width: 100%;">
-              <div class="stat-box" style="padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm);">
-                <span class="stat-num" id="practice-current-streak" style="font-size: 2.2rem; color: #10b981; text-shadow: 0 0 10px rgba(16,185,129,0.3);">0 Days</span>
-                <span class="stat-label" style="font-size: 0.8rem; margin-top: 0.25rem;">Current Streak 🔥</span>
-              </div>
-              <div class="stat-box" style="padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm);">
-                <span class="stat-num" id="practice-longest-streak" style="font-size: 2.2rem; color: #8b5cf6; text-shadow: 0 0 10px rgba(139,92,246,0.3);">0 Days</span>
-                <span class="stat-label" style="font-size: 0.8rem; margin-top: 0.25rem;">Longest Streak 🏆</span>
-              </div>
-            </div>
-
-            <!-- Milestone Badges Grid -->
-            <div style="margin-bottom: 1.5rem;">
-              <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Yoga Milestones</h4>
-              <div id="practice-milestones-grid" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <div class="milestone-badge locked" id="badge-streak-3">
-                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🌱</span>
-                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">3 Day Streak</span>
-                </div>
-                <div class="milestone-badge locked" id="badge-streak-7">
-                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🔥</span>
-                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">7 Day Streak</span>
-                </div>
-                <div class="milestone-badge locked" id="badge-streak-14">
-                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">🧘</span>
-                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">14 Day Streak</span>
-                </div>
-                <div class="milestone-badge locked" id="badge-streak-30">
-                  <span style="font-size: 1.75rem; display: block; margin-bottom: 0.25rem;">👑</span>
-                  <span style="font-size: 0.7rem; font-weight: 700; color: var(--text-primary);">30 Day Streak</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- GitHub Contribution Grid -->
-            <div>
-              <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Practice Density (Past 365 Days)</h4>
-              <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--glass-light-border); border-radius: var(--radius-md); padding: 1.25rem; overflow-x: auto;">
-                <div id="practice-calendar-grid">
-                  <!-- Dynamically filled with 365 days of pixel grids -->
-                </div>
-                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; padding-right: 1rem;">
-                  <span>Less</span>
-                  <div style="width: 10px; height: 10px; background: rgba(255,255,255,0.05); border-radius: 2px;"></div>
-                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.2); border-radius: 2px;"></div>
-                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.4); border-radius: 2px;"></div>
-                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.7); border-radius: 2px;"></div>
-                  <div style="width: 10px; height: 10px; background: rgba(16,185,129,0.95); border-radius: 2px;"></div>
-                  <span>More</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="profile-content-grid">
-            <!-- Favorites List Panel -->
-            <div class="profile-panel">
-              <h3>❤️ Favorited Poses</h3>
-              <div class="profile-favorites-grid" id="profile-favorites-list">
-                <!-- Dynamically rendered favorites -->
-              </div>
-            </div>
-
-            <!-- History Panel -->
-            <div class="profile-panel">
-              <h3>⏱️ Routine History</h3>
-              <div class="profile-history-list" id="profile-history-list">
-                <!-- Dynamically rendered history -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Wellness & Goals Sub-panel -->
-        <div class="profile-panel-content" id="profile-wellness-panel" style="display: none;">
-          <div class="profile-panel" style="max-width: 650px; margin: 0 auto;">
-            <h3>🧘 My Wellness Ledger</h3>
-            <form id="profile-wellness-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1.25rem;">
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.5rem;">
-                <label for="profile-goals-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Personal Yoga & Wellness Goals</label>
-                <textarea id="profile-goals-input" placeholder="What are you hoping to achieve in your yoga practice? (e.g. increase core strength, flexibility, mindfulness)" style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.95rem; outline: none; min-height: 100px; resize: vertical; transition: var(--transition-fast);"></textarea>
-              </div>
-              
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.5rem;">
-                <label for="profile-health-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Physical & Injury Notes (Private)</label>
-                <textarea id="profile-health-input" placeholder="List any injuries, physical limitations, or health concerns we should be aware of to personalize your practice." style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.95rem; outline: none; min-height: 100px; resize: vertical; transition: var(--transition-fast);"></textarea>
-              </div>
-              
-              <div id="profile-wellness-success-msg" style="display: none; background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.85rem; text-align: center; font-weight: 500;">
-                �o" Wellness profile updated successfully.
-              </div>
-              
-              <button type="submit" class="btn btn-primary" id="save-wellness-btn" style="align-self: flex-start; padding: 0.75rem 1.5rem;">Save Personal Details</button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Appointments Sub-panel -->
-        <div class="profile-panel-content" id="profile-appointments-section" style="display: none;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-            <h3>📅 Private Coaching Appointments</h3>
-            <button class="btn btn-primary" id="book-appointment-btn">Book New Session</button>
-          </div>
-          
-          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
-              <span class="search-icon">🔍</span>
-              <input type="text" id="student-appointments-search-input" placeholder="Search by routine name..." autocomplete="off">
-            </div>
-            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
-              <label for="student-appointments-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
-              <div class="select-wrapper">
-                <select id="student-appointments-status-filter" aria-label="Filter by Status">
-                  <option value="all">All Statuses</option>
-                  <option value="Scheduled">Scheduled</option>
-                  <option value="Rescheduled">Rescheduled</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          
-          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
-            <!-- Upcoming Sessions -->
-            <div class="profile-panel" style="display: flex; flex-direction: column; gap: 1rem;">
-              <h3>Upcoming Sessions</h3>
-              <div id="profile-upcoming-appointments" style="display: flex; flex-direction: column; gap: 1rem;">
-                <p class="empty-text" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No upcoming appointments scheduled.</p>
-              </div>
-            </div>
-            
-            <!-- Past / Cancelled Sessions -->
-            <div class="profile-panel" style="display: flex; flex-direction: column; gap: 1rem;">
-              <h3>History & Cancelled Sessions</h3>
-              <div id="profile-past-appointments" style="display: flex; flex-direction: column; gap: 1rem;">
-                <p class="empty-text" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No past sessions.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== STUDENT EMAIL PANEL ==================== -->
-        <div class="profile-panel-content" id="profile-email-panel" style="display:none;">
-          <!-- Gmail Connection Status (student sees read-only status) -->
-          <div id="student-gmail-status-card" class="gmail-status-card" style="margin-bottom:1.5rem;">
-            <div class="gmail-status-icon">📧</div>
-            <div class="gmail-status-info">
-              <div id="student-gmail-status-text" style="font-size:0.9rem; font-weight:600; color:var(--text-secondary);">Studio Email System</div>
-              <p id="student-gmail-hint" style="font-size:0.78rem; color:var(--text-muted); margin:0.25rem 0 0;">Send a message to the studio or view communications.</p>
-            </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:1.5rem;">
-            <!-- Left: Compose -->
-            <div class="admin-panel">
-              <h3>✏️ Message the Studio</h3>
-              <form id="student-compose-email-form" style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
-                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                  <label for="student-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
-                  <input type="text" id="student-email-subject" placeholder="How can we help?" required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                </div>
-                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                  <label for="student-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
-                  <textarea id="student-email-body" rows="6" placeholder="Type your message..." required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" id="student-send-email-btn" style="font-size:0.85rem;">Send Message</button>
-                <div id="student-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
-              </form>
-            </div>
-
-            <!-- Right: Inbox (messages from studio) -->
-            <div class="admin-panel" style="display:flex; flex-direction:column;">
-              <h3 style="display:flex; align-items:center; justify-content:space-between;">
-                📥 My Inbox
-                <span id="student-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
-              </h3>
-              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; overflow-y:auto; max-height:420px;">
-                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">No messages received yet.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- ==================== END STUDENT EMAIL PANEL ==================== -->
-
-      </div>
-    </section>
-
-    <!-- Admin Section -->
-    <section id="admin-section" class="content-section">
-      <div class="admin-container">
-        
-        <!-- Admin Dashboard Header -->
-        <div class="admin-header-card">
-          <div class="admin-avatar">🛡️</div>
-          <div class="admin-info-details">
-            <h2>Administrative Control Panel</h2>
-            <p>Manage users, inspect metrics, and analyze yoga routines data.</p>
-          </div>
-        </div>
-
-        <!-- Admin Sub-Navigation tabs -->
-        <div class="admin-sub-tabs" role="tablist" aria-label="Admin panel sections">
-          <button class="admin-sub-tab active" id="admin-overview-tab-btn" role="tab" aria-selected="true" aria-controls="admin-overview-panel">Overview Dashboard</button>
-          <button class="admin-sub-tab" id="admin-users-tab-btn" role="tab" aria-selected="false" aria-controls="admin-users-panel">User Management</button>
-          <button class="admin-sub-tab" id="admin-payments-tab-btn" role="tab" aria-selected="false" aria-controls="admin-payments-panel">Payments & Billing</button>
-          <button class="admin-sub-tab" id="admin-leads-tab-btn" role="tab" aria-selected="false" aria-controls="admin-leads-panel">Leads Pipeline</button>
-          <button class="admin-sub-tab" id="admin-batches-tab-btn" role="tab" aria-selected="false" aria-controls="admin-batches-panel">Batches & Scheduling</button>
-          <button class="admin-sub-tab" id="admin-appointments-tab-btn" role="tab" aria-selected="false" aria-controls="admin-appointments-panel">Appointments Management</button>
-          <button class="admin-sub-tab" id="admin-reports-tab-btn" role="tab" aria-selected="false" aria-controls="admin-reports-panel">Reports & Analytics</button>
-          <button class="admin-sub-tab" id="admin-email-tab-btn" role="tab" aria-selected="false" aria-controls="admin-email-panel">📧 Email Inbox</button>
-          <button class="admin-sub-tab" id="admin-settings-tab-btn" role="tab" aria-selected="false" aria-controls="admin-settings-panel">System Settings</button>
-        </div>
-
-        <!-- Admin Overview Sub-panel -->
-        <div class="admin-panel-content active-panel" id="admin-overview-panel">
-          <!-- KPI Stats Grid -->
-          <div class="admin-stats-grid" style="margin-bottom: 2rem;">
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-kpi-members">0</span>
-              <span class="stat-label">Active Members</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-kpi-revenue">₹0</span>
-              <span class="stat-label">Total Revenue</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-kpi-sessions">0</span>
-              <span class="stat-label">Sessions Today</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-kpi-unpaid">0</span>
-              <span class="stat-label">Unpaid Invoices</span>
-            </div>
-          </div>
-
-          <!-- Dynamic Daily Insights / Alerts -->
-          <div class="admin-panel" style="margin-bottom: 2rem;">
-            <h3>💡 Daily Insights & Recommendations</h3>
-            <div class="admin-insights-container" id="admin-insights-list">
-              <!-- Dynamically populated recommendations -->
-            </div>
-          </div>
-
-          <!-- Timeline Feeds Grid -->
-          <div class="admin-timeline-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-            <!-- Upcoming Schedule Timeline -->
-            <div class="admin-panel">
-              <h3>📅 Today's Studio Timeline</h3>
-              <div class="admin-timeline-feed" id="admin-timeline-feed">
-                <!-- Dynamically loaded upcoming appointments/classes -->
-              </div>
-            </div>
-
-            <!-- Recent Payments Updates -->
-            <div class="admin-panel">
-              <h3>💳 Recent Payment Activity</h3>
-              <div class="admin-payments-feed" id="admin-payments-feed">
-                <!-- Dynamically loaded recent payment records -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- User Management Sub-panel -->
-        <div class="admin-panel-content" id="admin-users-panel" style="display: none;">
-          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
-              <span class="search-icon">🔍</span>
-              <input type="text" id="admin-users-search-input" placeholder="Search users by name or email..." autocomplete="off">
-            </div>
-            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
-              <label for="admin-users-tier-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Tier:</label>
-              <div class="select-wrapper">
-                <select id="admin-users-tier-filter" aria-label="Filter by Tier">
-                  <option value="all">All Tiers</option>
-                  <option value="Basic">Basic</option>
-                  <option value="Premium">Premium</option>
-                  <option value="VIP">VIP</option>
-                </select>
-              </div>
-            </div>
-            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
-              <label for="admin-users-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
-              <div class="select-wrapper">
-                <select id="admin-users-status-filter" aria-label="Filter by Status">
-                  <option value="all">All Statuses</option>
-                  <option value="Active">Active</option>
-                  <option value="Paused">Paused</option>
-                  <option value="Expired">Expired</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="admin-table-wrapper">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Email</th>
-                  <th>Favorites Count</th>
-                  <th>Completions Count</th>
-                  <th>Batch / Fee</th>
-                  <th style="text-align: right;">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="admin-users-table-body">
-                <!-- Dynamically loaded user rows -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Reports & Analytics Sub-panel -->
-        <div class="admin-panel-content" id="admin-reports-panel" style="display: none;">
-          
-          <!-- Statistics Cards Grid -->
-          <div class="admin-stats-grid">
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-stat-total-users">0</span>
-              <span class="stat-label">Total Users</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-stat-total-completions">0</span>
-              <span class="stat-label">Total Completions</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-stat-popular-routine" style="font-size: 1.1rem; text-align: center; word-break: break-word; font-weight: 700; height: 2rem; display: flex; align-items: center;">None</span>
-              <span class="stat-label">Most Completed Routine</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-stat-popular-pose" style="font-size: 1.1rem; text-align: center; word-break: break-word; font-weight: 700; height: 2rem; display: flex; align-items: center;">None</span>
-              <span class="stat-label">Most Favorited Pose</span>
-            </div>
-          </div>
-
-          <!-- Action Controls -->
-          <div class="controls-card" style="margin-top: 1.5rem; padding: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end;">
-            <button class="btn btn-secondary" id="btn-export-billing-csv">📥 Export CSV Ledger</button>
-            <button class="btn btn-secondary" id="btn-print-attendance">🖨️ Print Attendance Log</button>
-          </div>
-
-          <!-- Visual Graphs Grid -->
-          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-            <div class="profile-panel">
-              <h3>📊 Monthly Collections (Revenue)</h3>
-              <div id="chart-collections-container" style="width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-top: 1rem; padding: 0.5rem; position: relative;">
-                <!-- Dynamically generated SVG bar chart will load here -->
-              </div>
-            </div>
-            <div class="profile-panel">
-              <h3>📈 Monthly Booking Trends (Class Count)</h3>
-              <div id="chart-bookings-container" style="width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-top: 1rem; padding: 0.5rem; position: relative;">
-                <!-- Dynamically generated SVG line chart will load here -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Rankings & Popularity List -->
-          <div class="profile-dashboard-top-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-            <div class="profile-panel">
-              <h3>🏆 Most Favorited Postures</h3>
-              <div class="admin-table-wrapper" style="margin-top: 1rem;">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Rank</th>
-                      <th>Pose Name</th>
-                      <th>Category</th>
-                      <th style="text-align: right;">Favorites</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-reports-poses-ranking">
-                    <!-- Dynamically filled with top favorited postures -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="profile-panel">
-              <h3>🔥 Most Popular Routines</h3>
-              <div class="admin-table-wrapper" style="margin-top: 1rem;">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Rank</th>
-                      <th>Routine Name</th>
-                      <th>Difficulty</th>
-                      <th style="text-align: right;">Completions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-reports-routines-ranking">
-                    <!-- Dynamically filled with top popular routines -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <!-- Chronological Completion History Logs Table -->
-          <div class="admin-panel" style="margin-top: 2rem;">
-            <h3>⏱️ Chronological Completion History</h3>
-            <div class="admin-table-wrapper">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>User</th>
-                    <th>Routine</th>
-                    <th>Completed At</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-reports-table-body">
-                  <!-- Dynamically loaded completion rows -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Payments & Billing Sub-panel -->
-        <div class="admin-panel-content" id="admin-payments-panel" style="display: none;">
-          <!-- Admin Billing Stats/KPI Grid -->
-          <div class="admin-stats-grid" style="margin-bottom: 2rem;">
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-billing-kpi-total-invoiced">₹0</span>
-              <span class="stat-label">Total Invoiced</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-billing-kpi-paid">₹0</span>
-              <span class="stat-label">Collected Revenue</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-billing-kpi-pending">₹0</span>
-              <span class="stat-label">Pending Dues</span>
-            </div>
-            <div class="stat-box admin-stat-card">
-              <span class="stat-num" id="admin-billing-kpi-overdue">₹0</span>
-              <span class="stat-label">Overdue Balance</span>
-            </div>
-          </div>
-
-          <!-- Tab Selectors -->
-          <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
-            <button class="admin-payments-sub-tab active" id="admin-payments-ledger-tab-btn" style="background: transparent; border: none; color: var(--text-muted); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: var(--transition-fast);">🗂️ Studio Invoice Ledger</button>
-            <button class="admin-payments-sub-tab" id="admin-payments-issue-tab-btn" style="background: transparent; border: none; color: var(--text-muted); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 0.5rem 1rem; border-radius: var(--radius-sm); transition: var(--transition-fast);">📝 Issue Manual Invoice</button>
-          </div>
-
-          <!-- Tab 1: Ledger -->
-          <div id="admin-payments-ledger-tab-panel" class="admin-panel" style="display: block; margin-bottom: 2rem;">
-            <h3>🗂️ Studio Invoice Ledger</h3>
-            <div class="controls-card" style="margin-top: 1rem; margin-bottom: 1rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-              <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="admin-payments-search-input" placeholder="Search by student or description..." autocomplete="off">
-              </div>
-              <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
-                <label for="admin-payments-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
-                <div class="select-wrapper">
-                  <select id="admin-payments-status-filter" aria-label="Filter by Status">
-                    <option value="all">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="review">Reviewing</option>
-                    <option value="paid">Paid</option>
-                    <option value="overdue">Overdue</option>
-                    <option value="refund-initiated">Refund Initiated</option>
-                    <option value="refunded">Refunded</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="admin-table-wrapper" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>Invoice ID</th>
-                    <th>Student</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-payments-table-body">
-                  <!-- Dynamically populated invoices list -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Tab 2: Issue Invoice Form -->
-          <div id="admin-payments-issue-tab-panel" class="admin-panel" style="display: none; max-width: 500px; margin-bottom: 2rem;">
-            <h3>📝 Issue Manual Invoice</h3>
-            <form id="admin-issue-invoice-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="admin-invoice-email" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Student Email</label>
-                <select id="admin-invoice-email" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); font-family: var(--font-sans); cursor: pointer; outline: none; transition: var(--transition-fast);">
-                  <!-- Dynamically populated with active student emails -->
-                </select>
-              </div>
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="admin-invoice-desc" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Description</label>
-                <input type="text" id="admin-invoice-desc" required placeholder="e.g. Monthly Gold Membership" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-              </div>
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="admin-invoice-amount" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Amount (INR)</label>
-                <input type="number" id="admin-invoice-amount" required min="1" placeholder="e.g. 79" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-              </div>
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="admin-invoice-due" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Due Date</label>
-                <input type="date" id="admin-invoice-due" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
-              </div>
-              <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;">Create & Issue Invoice</button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Leads Pipeline Sub-panel -->
-        <div class="admin-panel-content" id="admin-leads-panel" style="display: none;">
-          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
-              <span class="search-icon">🔍</span>
-              <input type="text" id="leads-search-input" placeholder="Search leads by name, email, or message..." autocomplete="off">
-            </div>
-            <div class="filter-group" style="margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
-              <label for="leads-status-filter" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Status:</label>
-              <div class="select-wrapper">
-                <select id="leads-status-filter" aria-label="Filter by Status">
-                  <option value="all">All Statuses</option>
-                  <option value="New">New</option>
-                  <option value="Contacted">Contacted</option>
-                  <option value="Converted">Converted</option>
-                  <option value="Closed">Closed</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="leads-swimlane-board" id="leads-swimlane-board">
-            <!-- Dynamically populated columns and cards -->
-          </div>
-        </div>
-
-        <!-- Batches & Scheduling Sub-panel -->
-        <div class="admin-panel-content" id="admin-batches-panel" style="display: none;">
-          <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-top: 1rem; margin-bottom: 2rem;">
-            <!-- Left Column: Forms -->
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-              <!-- Create Cohort Batch -->
-              <div class="admin-panel">
-                <h3>✨ Create New Cohort Batch</h3>
-                <form id="admin-create-batch-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
-                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <label for="admin-batch-name-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Batch Name</label>
-                    <input type="text" id="admin-batch-name-input" required placeholder="e.g. Sunrise Flow Batch" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <label for="admin-batch-instructor-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Instructor Name</label>
-                    <input type="text" id="admin-batch-instructor-input" placeholder="e.g. David Vance" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <label for="admin-batch-capacity-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Student Capacity</label>
-                    <input type="number" id="admin-batch-capacity-input" placeholder="e.g. 15" min="1" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <label for="admin-batch-fee-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Session Fee (&#8377;)</label>
-                    <input type="number" id="admin-batch-fee-input" placeholder="e.g. 1200" min="0" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                  </div>
-                  <button type="submit" class="btn btn-primary" id="admin-create-batch-btn" style="margin-top: 0.5rem; width: 100%;">Create Batch</button>
-                </form>
-              </div>
-
-              <!-- Schedule Weekly Class -->
-              <div class="admin-panel">
-                <h3>📅 Schedule Weekly Class</h3>
-                <form id="admin-schedule-class-form" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
-                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <label for="admin-schedule-batch-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Select Batch</label>
-                    <select id="admin-schedule-batch-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; transition: var(--transition-fast);">
-                      <option value="">Choose a Batch...</option>
-                      <!-- Dynamically populated -->
-                    </select>
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <label for="admin-schedule-weekday-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Day of Week</label>
-                    <select id="admin-schedule-weekday-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                      <option value="Monday">Monday</option>
-                      <option value="Tuesday">Tuesday</option>
-                      <option value="Wednesday">Wednesday</option>
-                      <option value="Thursday">Thursday</option>
-                      <option value="Friday">Friday</option>
-                      <option value="Saturday">Saturday</option>
-                      <option value="Sunday">Sunday</option>
-                    </select>
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <label for="admin-schedule-time-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Start Time</label>
-                    <input type="time" id="admin-schedule-time-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <label for="admin-schedule-routine-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Yoga Routine</label>
-                    <select id="admin-schedule-routine-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                      <option value="">Select Routine...</option>
-                      <!-- Dynamically populated -->
-                    </select>
-                  </div>
-                  <button type="submit" class="btn btn-rose" id="admin-schedule-class-btn" style="margin-top: 0.5rem; width: 100%;">Schedule Class</button>
-                </form>
-              </div>
-            </div>
-
-            <!-- Right Column: Active Batch Cohorts -->
-            <div class="admin-panel" style="height: 100%; display: flex; flex-direction: column;">
-              <h3>🧘 Active Batch Cohorts</h3>
-              <div class="admin-table-wrapper" style="margin-top: 1rem; flex-grow: 1; max-height: 550px; overflow-y: auto;">
-                <table class="admin-table" id="admin-batches-table">
-                  <thead>
-                    <tr>
-                      <th>Batch Name</th>
-                      <th>Instructor</th>
-                      <th>Timetable Schedule</th>
-                      <th>Session Fee</th>
-                      <th style="text-align: right;">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-batches-table-body">
-                    <!-- Dynamically populated -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Appointments Management Sub-panel -->
-        <div class="admin-panel-content" id="admin-appointments-panel" style="display: none;">
-          <div class="controls-card" style="margin-bottom: 1.5rem; padding: 1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-            <div class="search-box" style="flex: 1; min-width: 250px; margin-bottom: 0;">
-              <span class="search-icon">🔍</span>
-              <input type="text" id="admin-appointments-search-input" placeholder="Search by student email or routine..." autocomplete="off">
-            </div>
-            <button class="btn btn-primary" id="admin-book-appt-btn" style="margin-bottom: 0;">Book Private Coaching</button>
-          </div>
-          
-          <div class="admin-table-wrapper">
-            <table class="admin-table" id="admin-appointments-table">
-              <thead>
-                <tr>
-                  <th>Student Email</th>
-                  <th>Yoga Routine</th>
-                  <th>Date</th>
-                  <th>Time Slot</th>
-                  <th>Fee</th>
-                  <th>Status</th>
-                  <th style="text-align: right;">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="admin-appointments-table-body">
-                <!-- Dynamically loaded appointments -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- System Settings Sub-panel -->
-        <div class="admin-panel-content" id="admin-settings-panel" style="display: none;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; align-items: start;">
-
-            <!-- Theme card -->
-            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
-              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">⚙️ Default Theme</h3>
-              <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                <label for="admin-default-theme-select" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Site Default Theme:</label>
-                <select id="admin-default-theme-select" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.85rem; cursor: pointer; outline: none;">
-                  <option value="midnight">Midnight Aura (Dark)</option>
-                  <option value="light">Ethereal Light (Light)</option>
-                  <option value="sunset">Zen Sunset (Sunset)</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- UPI card -->
-            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
-              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">💳 UPI Payment Settings</h3>
-              <form id="admin-upi-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                  <label for="admin-upi-vpa" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">UPI VPA:</label>
-                  <input type="text" id="admin-upi-vpa" required placeholder="e.g. quantumyoga@upi" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                  <label for="admin-upi-name" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Payee Name:</label>
-                  <input type="text" id="admin-upi-name" required placeholder="e.g. Quantum Yoga Studio" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-                </div>
-                <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save UPI Settings</button>
-                <div id="admin-upi-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
-              </form>
-            </div>
-
-            <!-- Appointment fee card -->
-            <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
-              <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">🪙 Appointment Session Fee</h3>
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="admin-appointment-fee-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Default Fee per Appointment (&#8377;):</label>
-                <input type="number" id="admin-appointment-fee-input" min="0" placeholder="e.g. 1500" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-              </div>
-              <button id="admin-save-appointment-fee-btn" class="btn btn-primary" style="margin-top: 0.5rem; padding: 0.35rem 0.75rem; font-size: 0.8rem; width: 100%;">Save Fee Setting</button>
-              <div id="admin-appointment-fee-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; margin-top: 0.3rem; text-align: center;">&#x2713; Saved.</div>
-            </div>
-
-          <!-- Email Provider card -->
-          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md); grid-column: span 2;">
-            <h3 style="margin: 0 0 0.75rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📨 Email Provider</h3>
-            <!-- Provider toggle -->
-            <div class="email-provider-toggle" style="margin-bottom: 1rem;">
-              <button class="email-provider-btn active" id="email-provider-gmail-btn">Gmail</button>
-              <button class="email-provider-btn" id="email-provider-resend-btn">Resend</button>
-            </div>
-            <!-- Gmail config section -->
-            <div id="gmail-config-section">
-              <p style="font-size:0.78rem; font-weight:600; color:var(--text-secondary); margin:0 0 0.5rem;">Gmail OAuth2</p>
-              <form id="admin-gmail-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                  <label for="admin-gmail-client-id" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">OAuth2 Client ID:</label>
-                  <input type="text" id="admin-gmail-client-id" placeholder="xxxx.apps.googleusercontent.com" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.75rem; outline: none;">
-                </div>
-                <p style="font-size:0.7rem; color:var(--text-muted); margin:0 0 0.25rem;">Create a project at <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent-primary);">Google Cloud Console</a>, enable Gmail API, create Web Application credentials, and paste the Client ID here.</p>
-                <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Client ID</button>
-                <div id="admin-gmail-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved. Go to Email Inbox tab to connect.</div>
-              </form>
-            </div>
-            <!-- Resend config section -->
-            <div id="resend-config-section" style="display:none;">
-              <p style="font-size:0.78rem; font-weight:600; color:var(--text-secondary); margin:0 0 0.5rem;">Resend API — <a href="https://resend.com" target="_blank" style="color:var(--accent-primary); font-weight:400;">resend.com</a></p>
-              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                  <label for="resend-api-key-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">API Key:</label>
-                  <input type="password" id="resend-api-key-input" placeholder="re_…" autocomplete="off" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                  <label for="resend-from-address-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">From Address:</label>
-                  <input type="text" id="resend-from-address-input" placeholder="Quantum Yoga &lt;studio@quantumyoga.xyz&gt;" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-                </div>
-                <p style="font-size:0.7rem; color:var(--text-muted); margin:0;">Use a domain-scoped send-only API key from your <a href="https://resend.com/api-keys" target="_blank" style="color:var(--accent-primary);">Resend dashboard</a>.</p>
-                <button type="button" id="resend-settings-save-btn" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Resend Settings</button>
-                <span id="resend-settings-msg" style="display:none; font-size:0.78rem; font-weight:600;"></span>
-              </div>
-            </div>
-          </div>
-
-          <!-- WhatsApp Settings card -->
-          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
-            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">💬 WhatsApp Integration</h3>
-            <form id="admin-whatsapp-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
-              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                <input type="checkbox" id="whatsapp-enabled-checkbox" style="cursor: pointer; width: 1.1rem; height: 1.1rem; border-radius: var(--radius-sm);">
-                <label for="whatsapp-enabled-checkbox" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); cursor: pointer;">Enable Automated Alerts</label>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="whatsapp-api-key" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">API Key / Token:</label>
-                <input type="password" id="whatsapp-api-key" placeholder="API Key / Credentials" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="whatsapp-gateway-url" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Gateway URL:</label>
-                <input type="text" id="whatsapp-gateway-url" placeholder="https://api.provider.com/send" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="whatsapp-template-booking" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Booking Template:</label>
-                <textarea id="whatsapp-template-booking" rows="2" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; resize: vertical;"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save WhatsApp Settings</button>
-              <div id="admin-whatsapp-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
-            </form>
-          </div>
-
-          <!-- Studio Contact Settings card -->
-          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
-            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📞 Studio Contact Settings</h3>
-            <form id="admin-contact-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="admin-contact-address" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Physical Address:</label>
-                <textarea id="admin-contact-address" required rows="2" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.8rem; outline: none; resize: vertical;"></textarea>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="admin-contact-phone" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Phone Number:</label>
-                <input type="tel" id="admin-contact-phone" required placeholder="+91 98765 43210" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="admin-contact-email" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Email ID:</label>
-                <input type="email" id="admin-contact-email" required placeholder="support@quantumyoga.xyz" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-              </div>
-              <button type="submit" class="btn btn-primary" style="margin-top: 0.2rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Studio Details</button>
-              <div id="admin-contact-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center;">&#x2713; Saved.</div>
-            </form>
-          </div>
-
-          <!-- Referral Program Tiers Settings card -->
-          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
-            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">🤝 Referral Program Tiers</h3>
-            <form id="admin-referral-tiers-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
-              <div id="admin-referral-tiers-list" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 180px; overflow-y: auto; padding-right: 0.2rem; margin-bottom: 0.4rem;">
-                <!-- Dynamically generated rows of milestone inputs -->
-              </div>
-              <button type="button" id="admin-add-referral-tier-btn" class="btn btn-secondary" style="padding: 0.3rem 0.5rem; font-size: 0.75rem; border-style: dashed; width: 100%;">+ Add Milestone Tier</button>
-              <button type="submit" class="btn btn-primary" style="margin-top: 0.4rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Referral Tiers</button>
-              <div id="admin-referral-settings-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center; margin-top: 0.3rem;">&#x2713; Saved.</div>
-            </form>
-          </div>
-
-          <!-- UPI Bank Ledger CSV/Excel Upload widget -->
-          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
-            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">📂 Import UPI Bank Statement</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <label for="admin-ledger-file-input" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Select CSV Statement File:</label>
-              <input type="file" id="admin-ledger-file-input" accept=".csv" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem; color: var(--text-primary); font-size: 0.8rem; outline: none; width: 100%;">
-              <p style="font-size:0.7rem; color:var(--text-muted); margin:0;">Upload a CSV bank ledger statement containing columns for UTR/Reference and transaction Amount to auto-verify student claims.</p>
-              <button type="button" id="admin-ledger-upload-btn" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; width: 100%;">Upload & Parse Ledger</button>
-              <div id="admin-ledger-upload-msg" style="display: none; font-size: 0.78rem; font-weight: 600; text-align: center; margin-top: 0.3rem;"></div>
-            </div>
-          </div>
-
-          <!-- UPI Reconciliation & CSV Column Settings Card -->
-          <div style="background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-md);">
-            <h3 style="margin: 0 0 0.6rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem;">⚙️ Reconciliation Settings</h3>
-            <form id="admin-reconciliation-settings-form" style="display: flex; flex-direction: column; gap: 0.4rem;">
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="admin-recon-tolerance" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Tolerance (INR):</label>
-                <input type="number" step="0.01" id="admin-recon-tolerance" required placeholder="e.g. 0.05" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-                <label for="admin-recon-max-days" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">Date Limit (Days):</label>
-                <input type="number" id="admin-recon-max-days" required placeholder="e.g. 30" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; color: var(--text-primary); font-size: 0.85rem; outline: none;">
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 0.2rem; margin-top: 0.3rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.3rem;">
-                <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem;">CSV Column Map (Headers or Index):</span>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem;">
-                  <div>
-                    <label for="admin-col-utr" style="font-size: 0.7rem; color: var(--text-secondary);">UTR:</label>
-                    <input type="text" id="admin-col-utr" placeholder="e.g. UTR" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
-                  </div>
-                  <div>
-                    <label for="admin-col-amount" style="font-size: 0.7rem; color: var(--text-secondary);">Amount:</label>
-                    <input type="text" id="admin-col-amount" placeholder="e.g. Amount" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
-                  </div>
-                  <div>
-                    <label for="admin-col-date" style="font-size: 0.7rem; color: var(--text-secondary);">Date:</label>
-                    <input type="text" id="admin-col-date" placeholder="e.g. Date" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
-                  </div>
-                  <div>
-                    <label for="admin-col-sender" style="font-size: 0.7rem; color: var(--text-secondary);">Sender:</label>
-                    <input type="text" id="admin-col-sender" placeholder="e.g. Sender" style="background: rgba(0,0,0,0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.25rem 0.4rem; color: var(--text-primary); font-size: 0.75rem; outline: none; width: 100%;">
-                  </div>
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary" style="margin-top: 0.4rem; padding: 0.35rem 0.75rem; font-size: 0.8rem;">Save Settings</button>
-              <div id="admin-reconciliation-settings-success" style="display: none; color: #10B981; font-weight: 600; font-size: 0.78rem; text-align: center; margin-top: 0.2rem;">&#x2713; Saved.</div>
-            </form>
-          </div>
-
-        </div> <!-- Close the grid -->
-
-        <!-- Reconciliation Logs Audit Section -->
-        <div class="admin-panel" style="margin-top: 1.5rem; background: var(--glass-medium-bg); border: 1px solid var(--glass-medium-border); border-radius: var(--radius-md); padding: 1.2rem; box-shadow: var(--shadow-md);">
-          <h3 style="margin: 0 0 0.8rem; color: var(--text-primary); display: flex; align-items: center; justify-content: space-between; font-size: 0.95rem;">
-            <span>📋 Reconciliation Audit Logs</span>
-            <button type="button" id="admin-clear-reconciliation-logs-btn" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; color: #ef4444; border-color: rgba(239, 68, 68, 0.2); background: transparent;">Clear Log History</button>
-          </h3>
-          <div class="admin-table-wrapper" style="max-height: 250px; overflow-y: auto;">
-            <table class="admin-table" style="font-size: 0.82rem;">
-              <thead>
-                <tr>
-                  <th>Timestamp</th>
-                  <th>Invoice ID</th>
-                  <th>UTR</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Audit Details</th>
-                </tr>
-              </thead>
-              <tbody id="admin-reconciliation-logs-table-body">
-                <!-- Dynamically populated verification activities -->
-                <tr>
-                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No reconciliation actions logged yet.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- ==================== ADMIN EMAIL PANEL ==================== -->
-        <div class="admin-panel-content" id="admin-email-panel" style="display: none;">
-          <!-- Email Provider Status Card -->
-          <div id="admin-gmail-status-card" class="gmail-status-card">
-            <div class="gmail-status-icon">📧</div>
-            <div class="gmail-status-info">
-              <div id="admin-gmail-connected-label" style="display:none;">
-                <span class="gmail-connected-badge">✓ Gmail Connected</span>
-                <span id="admin-gmail-connected-email" style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.5rem;"></span>
-              </div>
-              <div id="admin-gmail-disconnected-label">
-                <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary);">Gmail not connected</span>
-              </div>
-              <!-- Resend status badges (shown when Resend is active provider) -->
-              <div id="admin-resend-active-label" style="display:none;">
-                <span class="resend-active-badge">✓ Resend Active</span>
-                <span id="admin-resend-from-display" style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 0.5rem;"></span>
-              </div>
-              <div id="admin-resend-unconfigured-label" style="display:none;">
-                <span class="resend-unconfigured-badge">⚠ Resend: API key not configured — go to Settings</span>
-              </div>
-              <p id="admin-gmail-status-detail" style="font-size: 0.78rem; color: var(--text-muted); margin: 0.25rem 0 0;">Connect your Gmail account to send &amp; receive emails directly from this panel.</p>
-            </div>
-            <div class="gmail-status-actions">
-              <button class="btn btn-primary btn-sm" id="admin-gmail-connect-btn" style="font-size: 0.8rem;">Connect Gmail</button>
-              <button class="btn btn-secondary btn-sm" id="admin-gmail-disconnect-btn" style="display:none; font-size: 0.8rem; color: #ef4444; border-color: rgba(239,68,68,0.3);">Disconnect</button>
-              <button class="btn btn-secondary btn-sm" id="admin-gmail-refresh-btn" style="display:none; font-size: 0.8rem;">🔄 Refresh</button>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; margin-top: 1.5rem;">
-            <!-- Left: Compose + Sent -->
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-              <!-- Compose Email -->
-              <div class="admin-panel">
-                <h3>✏️ Compose Email</h3>
-                <form id="admin-compose-email-form" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
-                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                    <label for="admin-email-to" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">To:</label>
-                    <input type="email" id="admin-email-to" placeholder="recipient@email.com" required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                  </div>
-                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                    <label for="admin-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
-                    <input type="text" id="admin-email-subject" placeholder="Email subject..." required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                  </div>
-                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                    <label for="admin-email-template" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Template:</label>
-                    <select id="admin-email-template" style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                      <option value="custom">Custom Message</option>
-                      <option value="welcome">Welcome Email</option>
-                      <option value="invoice">Invoice Notification</option>
-                      <option value="reminder">Payment Reminder</option>
-                      <option value="appointment">Appointment Confirmation</option>
-                    </select>
-                  </div>
-                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                    <label for="admin-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
-                    <textarea id="admin-email-body" rows="6" placeholder="Type your message here..." style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
-                  </div>
-                  <div style="display:flex; gap:0.75rem; align-items:center;">
-                    <button type="submit" class="btn btn-primary" id="admin-send-email-btn" style="flex:1; font-size:0.85rem;">Send Email</button>
-                  </div>
-                  <div id="admin-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
-                </form>
-              </div>
-
-              <!-- Sent Emails -->
-              <div class="admin-panel">
-                <h3 style="display:flex; align-items:center; justify-content:space-between;">📤 Sent Items <span id="admin-sent-count" class="badge badge-category" style="font-size:0.7rem;">0</span></h3>
-                <div id="admin-sent-email-list" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; max-height:320px; overflow-y:auto;">
-                  <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:1.5rem 0;">No sent emails yet.</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right: Inbox -->
-            <div class="admin-panel" style="display:flex; flex-direction:column;">
-              <h3 style="display:flex; align-items:center; justify-content:space-between;">
-                📥 Inbox
-                <span id="admin-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
-              </h3>
-
-              <div id="admin-inbox-filter" style="display:flex; gap:0.5rem; margin-bottom:0.75rem; flex-wrap:wrap;">
-                <button class="email-filter-btn active" data-filter="all" id="admin-filter-all">All</button>
-                <button class="email-filter-btn" data-filter="unread" id="admin-filter-unread">Unread</button>
-                <button class="email-filter-btn" data-filter="inbox" id="admin-filter-inbox">Inbox</button>
-              </div>
-              <div id="admin-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; flex:1; overflow-y:auto; max-height:520px;">
-                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">Connect Gmail to see your inbox messages.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Email Preview Modal (inline) -->
-          <div id="admin-email-preview-overlay" class="email-preview-overlay" style="display:none;">
-            <div class="email-preview-card">
-              <div class="email-preview-header">
-                <div>
-                  <div id="admin-preview-subject" style="font-size:1rem; font-weight:700; color:var(--text-primary);"></div>
-                  <div id="admin-preview-from" style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;"></div>
-                  <div id="admin-preview-date" style="font-size:0.75rem; color:var(--text-muted);"></div>
-                </div>
-                <button class="modal-close" id="admin-close-email-preview" aria-label="Close preview">&times;</button>
-              </div>
-              <div id="admin-preview-body" class="email-preview-body"></div>
-              
-              <!-- Payment Verification Review Widget -->
-              <div id="admin-preview-payment-widget" style="display:none; margin: 1rem 0; padding: 1rem; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.25); border-radius: var(--radius-sm); flex-direction: column; gap: 0.75rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span style="font-size:0.85rem; font-weight:700; color:var(--accent-primary);">💳 Detected Payment Verification Request</span>
-                  <span id="admin-preview-payment-status-badge" class="feed-item-badge"></span>
-                </div>
-                <div style="font-size:0.82rem; color:var(--text-secondary); display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem 1rem;">
-                  <div><strong>Student:</strong> <span id="admin-preview-payment-student"></span></div>
-                  <div><strong>Amount:</strong> <span id="admin-preview-payment-amount"></span></div>
-                  <div><strong>Invoice/Appt:</strong> <span id="admin-preview-payment-id"></span></div>
-                  <div><strong>Extracted UTR:</strong> <code id="admin-preview-payment-tx" style="color:#fb923c; font-weight:700;"></code></div>
-                </div>
-                <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
-                  <button class="btn btn-primary btn-sm" id="admin-preview-payment-approve-btn" style="padding:0.35rem 0.75rem; font-size:0.78rem; background:#10b981; border:none; color:white;">Approve Payment</button>
-                  <button class="btn btn-secondary btn-sm" id="admin-preview-payment-decline-btn" style="padding:0.35rem 0.75rem; font-size:0.78rem; background:#ef4444; border:none; color:white;">Decline / Reject</button>
-                </div>
-              </div>
-
-              <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
-                <button class="btn btn-primary btn-sm" id="admin-preview-reply-btn" style="font-size:0.8rem;">↩ Reply</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- ==================== END ADMIN EMAIL PANEL ==================== -->
-
-      </div>
-    </section>
-
-    <!-- Community Chat Section -->
-    <section id="chat-section" class="content-section">
-      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
-        
-        <!-- Header -->
-        <div class="admin-header-card" style="margin-bottom: 0;">
-          <div class="admin-avatar">💬</div>
-          <div class="admin-info-details">
-            <h2>Community Chat</h2>
-            <p>Connect with instructors and fellow practitioners in real-time.</p>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1.2fr 3fr; gap: 1.5rem;">
-          <!-- Left Panel: Online Users -->
-          <div class="admin-panel" style="display: flex; flex-direction: column;">
-            <h3>👥 Online Users</h3>
-            <div id="chat-users-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; max-height: 400px;">
-              <!-- Connected users list loaded dynamically -->
-              <p style="color: var(--text-muted); font-size: 0.85rem;">No other users online.</p>
-            </div>
-          </div>
-
-          <!-- Right Panel: Message Room -->
-          <div class="admin-panel" style="display: flex; flex-direction: column; height: 500px;">
-            <div id="chat-messages-container" style="flex: 1; overflow-y: auto; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem;">
-              <!-- History/new messages loaded dynamically -->
-              <p style="color: var(--text-muted); text-align: center; margin-top: auto; margin-bottom: auto; font-size: 0.9rem;">Welcome to the chat! Start the conversation below.</p>
-            </div>
-            
-            <form id="chat-send-form" style="display: flex; gap: 0.75rem; align-items: center;">
-              <input type="text" id="chat-message-input" placeholder="Type a message..." required autocomplete="off" style="flex: 1; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-sans); outline: none;">
-              <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Send</button>
-            </form>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Live Class WebRTC Section -->
-    <section id="live-class-section" class="content-section">
-      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
-        
-        <!-- Header -->
-        <div class="admin-header-card" style="margin-bottom: 0;">
-          <div class="admin-avatar">🎥</div>
-          <div class="admin-info-details">
-            <h2>Live Interactive Class</h2>
-            <p>Participate in virtual interactive streams hosted by studio instructors.</p>
-          </div>
-        </div>
-
-        <!-- Instructor Controls (Only visible to admin) -->
-        <div id="instructor-live-controls" style="display: none; text-align: left; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 1rem;">
-          <button id="btn-start-stream" class="btn btn-rose">🔴 Launch Live Video Session</button>
-          <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: 1rem;">Launches the public WebRTC room for active students.</span>
-        </div>
-
-        <!-- WebRTC Meeting Room Container -->
-        <div id="live-class-room-container" style="width: 100%; height: 600px; background: rgba(0, 0, 0, 0.4); border-radius: var(--radius-md); border: 1px solid var(--glass-light-border); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-top: 1rem;">
-          <div id="live-class-placeholder" style="text-align: center; padding: 2rem;">
-            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🧘</span>
-            <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem;">No Active Live Session</h3>
-            <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 450px; margin: 0 auto;">There is no streaming class active at this moment. Join from your timetable schedule when a session starts.</p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="app-footer">
-    <div class="footer-content">
-      <p>&copy; 2026 Quantum Yoga Platform. Designed for supreme alignment of mind, body, and code. | <a href="#" id="footer-contact-us" style="color: var(--accent-primary); text-decoration: underline; margin-left: 0.5rem; cursor: pointer;">Contact Us</a></p>
-    </div>
-  </footer>
-
-  <!-- Detail Modal for Pose Details -->
-  <div class="modal-overlay" id="pose-modal" aria-hidden="true">
-    <div class="modal-card">
-      <button class="modal-close" id="close-pose-modal" aria-label="Close modal">&times;</button>
-      <div class="modal-body" id="pose-modal-body">
-        <!-- Dynamic modal content injected here -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Custom HTML5 Overlay Video Player Modal -->
-  <div class="modal-overlay" id="video-modal" aria-hidden="true">
-    <div class="video-player-container">
-      <button class="video-modal-close" id="close-video-modal" aria-label="Close video player">&times;</button>
-      
-      <!-- Voice Coach Floating Control Widget -->
-      <div id="voice-coach-toggle-wrapper" class="voice-coach-widget">
-        <div class="voice-coach-header">
-          <label class="voice-coach-switch">
-            <input type="checkbox" id="voice-coach-toggle">
-            <span class="voice-coach-slider"></span>
-          </label>
-          <span class="voice-coach-title">🎙️ Voice Coach</span>
-          <button id="voice-settings-toggle-btn" class="voice-settings-btn" type="button" aria-label="Voice Settings">⚙️</button>
-        </div>
-        
-        <!-- Voice settings drawer -->
-        <div id="voice-coach-settings" class="voice-coach-settings-drawer" style="display: none;">
-          <div class="settings-group">
-            <label for="voice-coach-select">Voice:</label>
-            <select id="voice-coach-select" class="voice-select-dropdown"></select>
-          </div>
-          <div class="settings-group">
-            <label for="voice-coach-volume">Volume:</label>
-            <input type="range" id="voice-coach-volume" min="0" max="1" step="0.1" value="0.8">
-          </div>
-          <div class="settings-group">
-            <label for="voice-coach-rate">Speech Rate:</label>
-            <input type="range" id="voice-coach-rate" min="0.5" max="2" step="0.1" value="1.0">
-          </div>
-          <div class="settings-group">
-            <label for="voice-coach-pitch">Speech Pitch:</label>
-            <input type="range" id="voice-coach-pitch" min="0.5" max="2" step="0.1" value="1.0">
-          </div>
-        </div>
-      </div>
-
-      <!-- Routine Walkthrough HUD Overlay -->
-      <div id="routine-walkthrough-panel" class="routine-walkthrough-panel" style="display: none;">
-        <div class="walkthrough-pose-header">
-          <h3 id="walkthrough-pose-name">Child's Pose</h3>
-          <p id="walkthrough-pose-sanskrit">Balasana</p>
-        </div>
-        <div class="walkthrough-timer-wrap">
-          <span class="walkthrough-timer-icon">⏱️</span>
-          <span id="walkthrough-timer-text">0:00</span>
-        </div>
-        <div class="walkthrough-instructions-wrap">
-          <p id="walkthrough-instructions">Deep breathing warmup...</p>
-        </div>
-        <div class="walkthrough-next-pose" id="walkthrough-next-pose-wrap">
-          <span>Next: <strong id="walkthrough-next-pose-name">-</strong></span>
-        </div>
-      </div>
-
-      <!-- Video Element -->
-      <video id="custom-video-element" preload="metadata" poster="">
-        <source src="" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-
-      <!-- Custom Player Controls Panel -->
-      <div class="custom-video-controls">
-        
-        <!-- Progress bar container -->
-        <div class="timeline-container">
-          <div class="timeline-track" id="video-timeline">
-            <div class="timeline-buffered" id="video-buffered-bar"></div>
-            <div class="timeline-progress" id="video-progress-bar"></div>
-            <div class="timeline-handle" id="video-timeline-handle"></div>
-          </div>
-        </div>
-
-        <div class="controls-row">
-          <div class="controls-left">
-            <button class="control-btn" id="video-play-pause-btn" aria-label="Play">
-              <!-- Play Icon -->
-              <svg class="play-icon" viewBox="0 0 24 24" width="20" height="20">
-                <path fill="currentColor" d="M8 5v14l11-7z"/>
-              </svg>
-              <!-- Pause Icon (hidden initially) -->
-              <svg class="pause-icon" viewBox="0 0 24 24" width="20" height="20" style="display: none;">
-                <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-              </svg>
-            </button>
-            <div class="time-display">
-              <span id="video-current-time">0:00</span> / <span id="video-duration">0:00</span>
-            </div>
-          </div>
-
-          <div class="controls-right">
-            <button class="control-btn" id="video-mute-btn" aria-label="Mute">
-              <!-- Speaker Icon -->
-              <svg class="speaker-icon" viewBox="0 0 24 24" width="20" height="20">
-                <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-              </svg>
-              <!-- Muted Icon (hidden initially) -->
-              <svg class="muted-icon" viewBox="0 0 24 24" width="20" height="20" style="display: none;">
-                <path fill="currentColor" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-              </svg>
-            </button>
-            <input type="range" id="video-volume-slider" min="0" max="1" step="0.05" value="1" class="volume-slider" aria-label="Volume">
-            
-            <button class="control-btn" id="video-fullscreen-btn" aria-label="Toggle Fullscreen">
-              <svg viewBox="0 0 24 24" width="20" height="20">
-                <path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Auth Modal is removed and replaced by fullscreen gate -->
-
-  <!-- Detailed Receipt Modal Overlay -->
-  <div class="modal-overlay" id="receipt-modal" aria-hidden="true">
-    <div class="modal-card receipt-modal-card" style="max-width: 550px; width: 90%;">
-      <button class="modal-close" id="close-receipt-modal" aria-label="Close modal">&times;</button>
-      <div class="modal-body" id="receipt-modal-body" style="padding: 2.5rem;">
-        <!-- Dynamic receipt details will be injected here -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Appointment Booking & Rescheduling Modal -->
-  <div class="modal-overlay" id="appointment-modal" aria-hidden="true" style="display: none;">
-    <div class="modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 id="appointment-modal-title">Book Private Coaching Session</h3>
-        <button class="modal-close" id="close-appointment-modal" aria-label="Close modal">&times;</button>
-      </div>
-      <form id="appointment-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
-        <!-- Admin-only Student Select Dropdown -->
-        <div class="form-group" id="appointment-student-group" style="display: none; flex-direction: column; gap: 0.35rem;">
-          <label for="appointment-student-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Select Student</label>
-          <select id="appointment-student-select" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-            <!-- Dynamically populated with active student emails -->
-          </select>
-        </div>
-        
-        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label for="appointment-routine-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Designated Yoga Routine</label>
-          <select id="appointment-routine-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-            <option value="">Select a Routine...</option>
-            <!-- Dynamically populated -->
-          </select>
-        </div>
-        
-        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label for="appointment-date-input" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Date</label>
-          <input type="date" id="appointment-date-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
-        </div>
-        
-        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label for="appointment-time-select" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Time Slot</label>
-          <select id="appointment-time-select" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-            <option value="">Choose a Time...</option>
-            <option value="08:00 AM">08:00 AM</option>
-            <option value="09:00 AM">09:00 AM</option>
-            <option value="10:00 AM">10:00 AM</option>
-            <option value="11:00 AM">11:00 AM</option>
-            <option value="12:00 PM">12:00 PM</option>
-            <option value="01:00 PM">01:00 PM</option>
-            <option value="02:00 PM">02:00 PM</option>
-            <option value="03:00 PM">03:00 PM</option>
-            <option value="04:00 PM">04:00 PM</option>
-            <option value="05:00 PM">05:00 PM</option>
-            <option value="06:00 PM">06:00 PM</option>
-          </select>
-        </div>
-        
-        <button type="submit" class="btn btn-primary" id="save-appointment-btn" style="margin-top: 0.5rem; width: 100%;">Schedule Appointment</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- User Profile Inspection Modal for Administrator -->
-  <div class="modal-overlay" id="admin-inspect-modal" aria-hidden="true">
-    <div class="modal-card modal-inspect-card" style="max-width: 900px; width: 95%;">
-      <button class="modal-close" id="close-inspect-modal" aria-label="Close modal">&times;</button>
-      <div class="modal-body" style="padding: 2.5rem;">
-        
-        <!-- Inspected User Profile Content -->
-        <div class="profile-container" id="inspect-user-container">
-          <div class="profile-header-card" style="padding: 1.5rem; gap: 1.5rem;">
-            <div class="profile-avatar">🧘</div>
-            <div class="profile-info-details">
-              <h2 id="inspect-user-name">User Name</h2>
-              <p id="inspect-user-email">user@email.com</p>
-              <p id="inspect-user-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: -</p>
-            </div>
-            <div class="profile-stats" style="gap: 1.5rem;">
-              <div class="stat-box">
-                <span class="stat-num" id="inspect-stat-completed">0</span>
-                <span class="stat-label">Completions</span>
-              </div>
-              <div class="stat-box">
-                <span class="stat-num" id="inspect-stat-favorites">0</span>
-                <span class="stat-label">Favorites</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="profile-content-grid" style="gap: 1.5rem;">
-            <!-- Inspected Favorites List Panel -->
-            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
-              <h3>❤️ Favorited Poses</h3>
-              <div class="profile-favorites-grid" id="inspect-favorites-list">
-                <!-- Dynamically rendered favorites -->
-              </div>
-            </div>
-
-            <!-- Inspected History Panel -->
-            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
-              <h3>⏱️ Routine History</h3>
-              <div class="profile-history-list" id="inspect-history-list">
-                <!-- Dynamically rendered history -->
-              </div>
-            </div>
-          </div>
-          
-          <!-- Admin Membership Editor Panel -->
-          <div class="profile-panel" style="padding: 1.5rem; margin-top: 1.5rem; gap: 1rem;">
-            <h3>🛡️ Membership & Administrative Settings</h3>
-            <form id="admin-inspect-membership-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;">
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="inspect-membership-tier" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Membership Tier</label>
-                <select id="inspect-membership-tier" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                  <option value="Basic">Basic Member</option>
-                  <option value="Premium">Premium Member</option>
-                  <option value="Unlimited VIP">Unlimited VIP</option>
-                </select>
-              </div>
-              
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="inspect-user-phone-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Phone Number</label>
-                <input type="tel" id="inspect-user-phone-input" pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number" placeholder="+91 98765 43210" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-              </div>
-              
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="inspect-membership-status" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Membership Status</label>
-                <select id="inspect-membership-status" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                  <option value="Active">Active</option>
-                  <option value="Paused">Paused</option>
-                  <option value="Expired">Expired</option>
-                </select>
-              </div>
-              
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="inspect-membership-expiry-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Expiration Date</label>
-                <input type="date" id="inspect-membership-expiry-input" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; color-scheme: dark;">
-              </div>
-              
-              <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="inspect-user-batch" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Enrolled Cohort Batch</label>
-                <select id="inspect-user-batch" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                  <option value="">No Batch Assigned</option>
-                  <!-- Dynamically populated -->
-                </select>
-              </div>
-              
-              <div class="form-group" style="grid-column: 1 / -1; margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <label for="inspect-coaching-notes" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Coaching & Instructor Notes</label>
-                <textarea id="inspect-coaching-notes" placeholder="Add coaching tips, trainer referrals, or internal notes..." style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
-              </div>
-              
-              <div style="grid-column: 1 / -1; display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
-                <button type="submit" class="btn btn-primary" id="save-inspect-membership-btn">Save Membership Settings</button>
-                <div id="inspect-membership-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem;">
-                  �o" Settings saved successfully.
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Lead Inspection Modal for Administrator -->
-  <div class="modal-overlay" id="admin-inspect-lead-modal" aria-hidden="true">
-    <div class="modal-card modal-inspect-card" style="max-width: 800px; width: 95%;">
-      <button class="modal-close" id="close-inspect-lead-modal" aria-label="Close modal">&times;</button>
-      <div class="modal-body" style="padding: 2.5rem;">
-        
-        <!-- Inspected Lead Content -->
-        <div class="profile-container">
-          <div class="profile-header-card" style="padding: 1.5rem; gap: 1.5rem;">
-            <div class="profile-avatar">🧘</div>
-            <div class="profile-info-details">
-              <h2 id="inspect-lead-name">Lead Name</h2>
-              <p id="inspect-lead-email">lead@email.com</p>
-              <p id="inspect-lead-phone" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;">Phone: 123-456-7890</p>
-              <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                <span class="badge badge-category" id="inspect-lead-status-badge">New</span>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">Submitted: <span id="inspect-lead-date">2026-06-14</span></span>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top: 1.5rem;">
-            <h3 style="font-size: 1rem; color: var(--text-secondary); font-weight: 600;">Original Inquiry Message</h3>
-            <div id="inspect-lead-message" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 1rem; margin-top: 0.5rem; color: var(--text-primary); font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">
-              Inquiry message goes here...
-            </div>
-          </div>
-
-          <div class="profile-content-grid" style="gap: 1.5rem; margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-            <!-- Follow-up log history timeline -->
-            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem; display: flex; flex-direction: column;">
-              <h3>⏱️ Follow-up Log History</h3>
-              <div id="inspect-lead-logs" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">
-                <!-- Dynamically rendered timeline nodes -->
-              </div>
-            </div>
-
-            <!-- Follow-up and status updates form -->
-            <div class="profile-panel" style="padding: 1.5rem; gap: 1rem;">
-              <h3>🛡️ Pipeline & Follow-up Actions</h3>
-              <form id="inspect-lead-action-form" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
-                <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                  <label for="inspect-lead-status" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Lead Status</label>
-                  <select id="inspect-lead-status" required style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-                    <option value="New">New</option>
-                    <option value="Contacted">Contacted</option>
-                    <option value="Converted">Converted</option>
-                    <option value="Closed">Closed</option>
-                  </select>
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                  <label for="inspect-lead-note-input" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Add Follow-up Note</label>
-                  <textarea id="inspect-lead-note-input" placeholder="Type a note from your conversation..." style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
-                </div>
-                
-                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                  <button type="submit" class="btn btn-primary" id="save-lead-settings-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Save Follow-up</button>
-                  <button type="button" class="btn btn-secondary" id="convert-lead-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">Convert to Member</button>
-                </div>
-                
-                <div id="inspect-lead-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem; text-align: left; margin-top: 0.5rem;">
-                  �o" Log entry saved successfully.
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- UPI QR Code Payment Modal Overlay -->
-  <div class="modal-overlay" id="upi-payment-modal" aria-hidden="true">
-    <div class="modal-card" style="max-width: 450px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); text-align: center; position: relative;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 style="margin: 0; font-size: 1.25rem;">UPI Scan & Pay</h3>
-        <button class="modal-close" id="close-upi-payment-modal" aria-label="Close modal" style="position: static; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); cursor: pointer; color: var(--text-primary); font-size: 1.25rem;">&times;</button>
-      </div>
-      <div id="upi-payment-invoice-info" style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); font-size: 0.9rem; text-align: left;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
-          <strong style="color: var(--text-secondary);">Invoice ID:</strong>
-          <span id="upi-pay-invoice-id" style="font-family: monospace; font-weight: 600;">#INV-10029</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
-          <strong style="color: var(--text-secondary);">Description:</strong>
-          <span id="upi-pay-invoice-desc">Monthly Gold Fee</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
-          <strong style="color: var(--text-secondary);">Amount Due:</strong>
-          <span id="upi-pay-invoice-amount" style="font-weight: 700; color: var(--accent-primary);">₹0</span>
-        </div>
-      </div>
-      
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-        <div id="upi-qr-code-wrapper" style="background: white; padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-light-border); display: flex; align-items: center; justify-content: center; width: 176px; height: 176px; overflow: hidden;">
-          <img id="upi-qr-image" src="" alt="Scan QR Code to Pay" style="width: 160px; height: 160px;">
-        </div>
-        <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; max-width: 320px;">
-          Scan this QR code using any UPI App (GPay, PhonePe, Paytm, BHIM) to transfer the fee to: <strong id="upi-pay-recipient-name" style="color: var(--text-primary);">Quantum Yoga Studio</strong> (<span id="upi-pay-recipient-vpa" style="font-family: monospace;">quantumyoga@upi</span>)
-        </p>
-      </div>
-
-      <form id="upi-payment-utr-form" style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
-        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label for="upi-payment-utr" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Transaction Ref / UTR No (12 Digits):</label>
-          <input type="text" id="upi-payment-utr" required pattern="\d{12}" minlength="12" maxlength="12" title="Please enter the exact 12-digit transaction reference or UTR number from your payment app receipt." placeholder="Enter 12-digit UPI UTR No" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none; text-align: center; letter-spacing: 0.05em; font-weight: 600;">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm Payment & Submit Reference</button>
-      </form>
-    </div>
-  </div>
-
-
-  </div> <!-- End #dashboard-app -->
-
-  <!-- Fullscreen Auth Gate -->
-  <div id="auth-gate-fullscreen" style="display: flex;">
-    <div class="auth-gate-card">
-      <div class="auth-gate-logo">
-        <span class="logo-icon">🧘</span>
-        <span class="logo-text">Quantum<span class="text-accent">Yoga</span></span>
-      </div>
-      <p class="auth-gate-tagline">Elevate Your Body & Mind. Please log in or register to access the dashboard.</p>
-      
-      <!-- Toggle Login/Register Forms Tabs -->
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="auth-login-tab-btn">Login</button>
-        <button class="auth-tab" id="auth-register-tab-btn">Register</button>
-        <button class="auth-tab" id="auth-inquire-tab-btn">Inquire</button>
-      </div>
-
-      <div class="auth-gate-body">
-        <!-- Login Form -->
-        <form id="login-form" class="auth-form active-form">
-          <div class="form-group">
-            <label for="login-email">Email Address</label>
-            <input type="email" id="login-email" required placeholder="your.email@example.com" autocomplete="email">
-          </div>
-          <div class="form-group">
-            <label for="login-password">Password</label>
-            <input type="password" id="login-password" required placeholder="Enter password" autocomplete="current-password">
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -0.25rem; margin-bottom: 0.5rem; width: 100%;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" id="login-remember" style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-dark-border); border-radius: var(--radius-sm); width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-primary);">
-              <label for="login-remember" style="cursor: pointer; margin-bottom: 0; font-size: 0.85rem; color: var(--text-secondary); user-select: none; font-weight: 500;">Remember Me</label>
-            </div>
-            <a href="#" id="forgot-password-link" style="font-size: 0.85rem; color: var(--accent-primary); text-decoration: none; font-weight: 500; transition: var(--transition-fast);">Forgot Password?</a>
-          </div>
-          <div class="form-error-msg" id="login-error-msg" style="display: none;"></div>
-          <button type="submit" class="btn btn-primary btn-block">Log In</button>
-        </form>
-
-        <!-- Register Form -->
-        <form id="register-form" class="auth-form">
-          <div class="form-group">
-            <label for="register-name">Full Name</label>
-            <input type="text" id="register-name" required placeholder="Your Name" autocomplete="name">
-          </div>
-          <div class="form-group">
-            <label for="register-email">Email Address</label>
-            <input type="email" id="register-email" required placeholder="your.email@example.com" autocomplete="email">
-          </div>
-          <div class="form-group">
-            <label for="register-phone">Phone Number</label>
-            <input type="tel" id="register-phone" required pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number (e.g., +91 98765 43210 or 09876543210)" placeholder="+91 98765 43210" autocomplete="tel">
-          </div>
-          <div class="form-group">
-            <label for="register-password">Password</label>
-            <input type="password" id="register-password" required placeholder="Create password (minimum 6 characters)" autocomplete="new-password">
-          </div>
-          <div class="form-group">
-            <label for="register-referral">Referral Code (Optional)</label>
-            <input type="text" id="register-referral" placeholder="e.g. FLOW88" style="text-transform: uppercase;">
-          </div>
-          <div class="form-error-msg" id="register-error-msg" style="display: none;"></div>
-          <button type="submit" class="btn btn-rose btn-block">Register Account</button>
-        </form>
-
-        <!-- Inquiry Form -->
-        <div id="auth-inquire-form-wrapper" class="auth-form" style="display: none;">
-          <form id="inquire-form">
-            <div class="form-group">
-              <label for="inquire-name">Full Name</label>
-              <input type="text" id="inquire-name" required placeholder="Your Name" autocomplete="name">
-            </div>
-            <div class="form-group">
-              <label for="inquire-email">Email Address</label>
-              <input type="email" id="inquire-email" required placeholder="your.email@example.com" autocomplete="email">
-            </div>
-            <div class="form-group">
-              <label for="inquire-phone">Phone Number</label>
-              <input type="tel" id="inquire-phone" required pattern="(?:\+91|0)?[\s\-]?[6-9](?:[\s\-]?\d){9}" title="Please enter a valid 10-digit Indian mobile number (e.g., +91 98765 43210 or 09876543210)" placeholder="+91 98765 43210" autocomplete="tel">
-            </div>
-            <div class="form-group">
-              <label for="inquire-referral">Referral Code (Optional)</label>
-              <input type="text" id="inquire-referral" placeholder="e.g. FLOW88" style="text-transform: uppercase;">
-            </div>
-            <div class="form-group">
-              <label for="inquire-message">Message / Interest</label>
-              <textarea id="inquire-message" required placeholder="What are you hoping to find at Quantum Yoga?" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--text-primary); font-family: var(--font-sans); min-height: 80px; resize: vertical; outline: none;"></textarea>
-            </div>
-            <div id="inquire-success-msg" style="display: none; color: #10B981; font-weight: 600; font-size: 0.85rem; margin-bottom: 1rem; text-align: center;">
-              �o" Inquiry submitted successfully. We will contact you soon!
-            </div>
-            <button type="submit" class="btn btn-primary btn-block" id="submit-inquiry-btn">Submit Inquiry</button>
-          </form>
-        </div>
-      </div>
-      
-      <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--text-secondary); border-top: 1px solid var(--glass-light-border); padding-top: 1rem;">
-        Need help? <a href="#" id="auth-contact-us-btn" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600; cursor: pointer;">Contact Us</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Contact Us Modal Overlay -->
-  <div class="modal-overlay" id="contact-us-modal" aria-hidden="true" style="z-index: 10005;">
-    <div class="modal-card contact-modal-card" style="max-width: 500px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative; color: var(--text-primary); text-align: left;">
-      <button class="modal-close" id="close-contact-modal" aria-label="Close modal">&times;</button>
-      
-      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-light-border); padding-bottom: 0.75rem;">
-        <span style="font-size: 1.5rem;">📞</span>
-        <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0; color: #fff;">Contact Us</h3>
-      </div>
-      
-      <div class="contact-info-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
-        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
-          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📍</span>
-          <div>
-            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Address</h4>
-            <p id="contact-studio-address" style="font-size: 0.95rem; margin: 0; color: var(--text-primary); line-height: 1.4;">108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038</p>
-          </div>
-        </div>
-
-        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
-          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">📞</span>
-          <div>
-            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Phone Number</h4>
-            <p style="font-size: 0.95rem; margin: 0;"><a id="contact-studio-phone" href="tel:+919876543210" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">+91 98765 43210</a></p>
-          </div>
-        </div>
-
-        <div class="contact-item" style="display: flex; gap: 1rem; align-items: flex-start;">
-          <span style="font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.4));">✉️</span>
-          <div>
-            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.25rem 0;">Email ID</h4>
-            <p style="font-size: 0.95rem; margin: 0;"><a id="contact-studio-email" href="mailto:support@quantumyoga.xyz" style="color: var(--accent-primary); text-decoration: underline; font-weight: 600;">support@quantumyoga.xyz</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Fullscreen Force Change Password Screen -->
-  <div id="force-change-password-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 9999; align-items: center; justify-content: center; overflow-y: auto; padding: 2rem;">
-    <div class="auth-gate-card" style="max-width: 450px; width: 90%;">
-      <div class="auth-gate-logo">
-        <span class="logo-icon">🧘</span>
-        <span class="logo-text">Security<span class="text-accent">Update</span></span>
-      </div>
-      <p class="auth-gate-tagline" style="margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary);">For security purposes, you must change your temporary password to a custom password before accessing the dashboard.</p>
-      
-      <form id="force-change-password-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
-        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
-          <label for="force-new-password" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">New Password</label>
-          <input type="password" id="force-new-password" required placeholder="Minimum 6 characters" autocomplete="new-password" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-        </div>
-        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
-          <label for="force-confirm-password" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Confirm New Password</label>
-          <input type="password" id="force-confirm-password" required placeholder="Re-enter password" autocomplete="new-password" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-        </div>
-        <div class="form-error-msg" id="force-change-password-error-msg" style="display: none; color: #ef4444; font-weight: 600; font-size: 0.85rem; text-align: left;"></div>
-        <button type="submit" class="btn btn-rose btn-block" style="padding: 0.75rem; width: 100%;">Update Password & Continue</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Forgot Password Modal Overlay -->
-  <div class="modal-overlay" id="forgot-password-modal" aria-hidden="true" style="z-index: 10000;">
-    <div class="modal-card" style="max-width: 450px; width: 90%; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-lg); position: relative;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 style="margin: 0; font-size: 1.25rem;">Reset Password</h3>
-        <button class="modal-close" id="close-forgot-password-modal" aria-label="Close modal" style="position: static; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); cursor: pointer; color: var(--text-primary); font-size: 1.25rem;">&times;</button>
-      </div>
-      
-      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
-        Enter your registered email address below. We will generate a new secure temporary password for your account.
-      </p>
-
-      <form id="forgot-password-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
-        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.35rem; text-align: left;">
-          <label for="forgot-email" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Email Address</label>
-          <input type="email" id="forgot-email" required placeholder="your.email@example.com" autocomplete="email" style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-light-border); border-radius: var(--radius-sm); padding: 0.5rem; color: var(--text-primary); outline: none;">
-        </div>
-        
-        <div class="form-error-msg" id="forgot-password-error-msg" style="display: none; color: #ef4444; font-weight: 600; font-size: 0.85rem; text-align: left;"></div>
-        
-        <div id="forgot-password-success-msg" style="display: none; background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; text-align: left; line-height: 1.4;">
-          <!-- Success message and temp password will be dynamically injected here -->
-        </div>
-
-        <button type="submit" class="btn btn-rose btn-block" style="padding: 0.75rem; width: 100%;">Generate Temporary Password</button>
-      </form>
-      
-      <div style="margin-top: 1.25rem; font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; border-top: 1px solid var(--border-glass); padding-top: 0.75rem; text-align: center;">
-        <span style="font-weight: 600; color: var(--text-secondary);">Notice:</span> This is a simulated local test reset flow.
-      </div>
-    </div>
-  </div>
-
-  <!-- Script Declarations -->
-  <script type="module" src="app.js"></script>
-</body>
-</html>
-````
-
-## File: openspec/changes/auto-review-upi-payments/tasks.md
-````markdown
-## 1. Database & Server Setup
-
-- [x] 1.1 Extend the state model in `server.js` and `db.json` to include a `upi_ledger` cache representing received UPI bank transactions.
-- [x] 1.2 Implement the POST `/api/verify-upi` API endpoint on the Express server in `server.js` to process auto-verification matching against the `upi_ledger`.
-- [x] 1.3 Add a POST `/api/admin/upload-ledger` file upload endpoint to parse CSV and Excel bank statement files, extracting transaction details (UTR, amount, date, and other descriptions).
-
-## 2. Client Integration & Form Callbacks
-
-- [x] 2.1 Update the UPI payment submission handler in `app.js` to invoke the verification API endpoint upon student UTR entry.
-- [x] 2.2 Add alert indicators in the student UI to notify that verification is in progress (due to statement upload delays) or if it has been auto-approved.
-- [x] 2.3 Ensure email and WhatsApp triggers are instantly dispatched with UTR metadata if auto-approved.
-
-## 3. Administrative Interface Updates
-
-- [x] 3.1 Update the Admin Billing view to display transaction statuses properly (e.g. flagging unmatched/review items or showing automated approval details).
-- [x] 3.2 Add a ledger upload widget to the Admin settings tab to allow admins to upload CSV/Excel bank statements manually.
-- [x] 3.3 Ensure the ledger upload widget shows parsing summaries (e.g. "X transactions imported, Y duplicates ignored").
-
-## 4. Planned Reconciliation Enhancements
-
-- [x] 4.1 Implement configurable fuzzy amount matching tolerance (default ±₹0.05) in `/api/verify-upi` verification logic.
-- [x] 4.2 Add the 30-day date window validation check to block auto-approvals of outdated UTR submissions.
-- [x] 4.3 Add a dynamic CSV column mapping configurations panel to the Admin Settings UI and update `/api/admin/upload-ledger` to map headers dynamically.
-- [x] 4.4 Design and build a database audit log schema and render a Reconciliation Log Audit view on the Admin Dashboard.
-````
-
-## File: server.js
-````javascript
-import express from 'express';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import https from 'node:https';
-import http from 'node:http';
-import { createClient } from '@supabase/supabase-js';
-import ws, { WebSocketServer } from 'ws';
-import pg from 'pg';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const app = express();
-const PORT = process.env.PORT || 80;
-
-app.use(express.json({ limit: 52428800 }));
-app.use(express.static(path.join(__dirname, 'dist')));
-
-// Initialize Postgres Pool if DATABASE_URL is present
-let pgPool = null;
-if (process.env.DATABASE_URL) {
-  const isLocalhost = process.env.DATABASE_URL.includes('127.0.0.1') || process.env.DATABASE_URL.includes('localhost');
-  pgPool = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: isLocalhost ? false : { rejectUnauthorized: false }
-  });
-  console.log("Database initialized with PostgreSQL connection pool.");
-}
-
-// Initialize Supabase Client if SUPABASE_URL and SUPABASE_KEY are present and DATABASE_URL is NOT present
-let supabase = null;
-if (!pgPool && process.env.SUPABASE_URL && process.env.SUPABASE_KEY) {
-  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY, {
-    realtime: {
-      transport: ws,
-    },
-  });
-  console.log("Database initialized with Supabase client.");
-}
-
-if (!pgPool && !supabase) {
-  console.warn("WARNING: Neither DATABASE_URL nor Supabase keys are configured. Falling back to local db.json file.");
-}
-
-const DEFAULT_WHATSAPP_SETTINGS = {
-  enabled: false,
-  apiKey: "",
-  gatewayUrl: "",
-  templates: {
-    welcome: "Hello {{name}}, welcome to Quantum Yoga! Your temporary password is {{tempPass}}.",
-    invoice: "Hello {{name}}, a new invoice {{invoiceId}} for ₹{{amount}} is due on {{dueDate}}. Pay via UPI VPA: {{upiVpa}} ({{upiName}}) or tap here: {{upiLink}}",
-    booking: "Hi {{name}}, your private coaching for {{routine}} is confirmed for {{date}} at {{time}}. Session Fee: ₹{{amount}}. Pay via UPI VPA: {{upiVpa}} ({{upiName}}) or tap here: {{upiLink}}"
-  }
-};
-
-const DEFAULT_STUDIO_CONTACT_SETTINGS = {
-  address: "108 Prana Boulevard, Sector 4, Indiranagar, Bengaluru, KA 560038",
-  phone: "+91 98765 43210",
-  email: "support@quantumyoga.xyz"
-};
-
-const DEFAULT_REFERRAL_TIERS = [
-  { minReferrals: 1, discount: 10 },
-  { minReferrals: 2, discount: 15 },
-  { minReferrals: 3, discount: 20 }
-];
-
-// Unified state helper functions
-async function getDbState() {
-  let state = null;
-  if (pgPool) {
-    const res = await pgPool.query("SELECT state FROM quantum_yoga_db WHERE id = $1", ['default']);
-    state = res.rows[0] ? res.rows[0].state : null;
-  } else if (supabase) {
-    const { data, error } = await supabase
-      .from('quantum_yoga_db')
-      .select('state')
-      .eq('id', 'default')
-      .maybeSingle();
-    if (error) throw error;
-    state = data ? data.state : null;
-  }
-  if (state) {
-    if (!state.whatsappSettings) {
-      state.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
-    }
-    if (!state.studioContactSettings) {
-      state.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
-    }
-    if (!state.referralTiers) {
-      state.referralTiers = DEFAULT_REFERRAL_TIERS;
-    }
-    if (!state.upi_ledger) {
-      state.upi_ledger = [];
-    }
-  }
-  return state;
-}
-
-async function setDbState(state) {
-  if (pgPool) {
-    await pgPool.query(
-      "INSERT INTO quantum_yoga_db (id, state, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (id) DO UPDATE SET state = $2, updated_at = NOW()",
-      ['default', JSON.stringify(state)]
-    );
-  } else if (supabase) {
-    const { error } = await supabase
-      .from('quantum_yoga_db')
-      .upsert({ id: 'default', state: state, updated_at: new Date().toISOString() });
-    if (error) throw error;
-  }
-}
-
-// Seed function if table is empty
-async function seedDbIfNeeded() {
-  if (!pgPool && !supabase) return;
-  try {
-    const state = await getDbState();
-    if (!state) {
-      console.log('No state found in database. Attempting to seed from db.json...');
-      const dbPath = path.resolve(__dirname, 'db.json');
-      let initialState = {};
-      if (fs.existsSync(dbPath)) {
-        try {
-          initialState = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-        } catch (e) {
-          console.error('Error reading local db.json for seeding:', e);
-        }
-      }
-      await setDbState(initialState);
-      console.log('Successfully seeded database with initial state.');
-    } else {
-      console.log('Database already has database state. Seeding skipped.');
-    }
-  } catch (err) {
-    console.error('Unexpected error in seedDbIfNeeded:', err);
-  }
-}
-
-// 1. Database endpoint
-app.all('/api/db', async (req, res) => {
-  const dbPath = path.resolve(__dirname, 'db.json');
-  if (req.method === 'GET') {
-    try {
-      const state = await getDbState();
-      if (state === null) {
-        const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
-        if (!localState.whatsappSettings) {
-          localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
-        }
-        if (!localState.studioContactSettings) {
-          localState.studioContactSettings = DEFAULT_STUDIO_CONTACT_SETTINGS;
-        }
-        if (!localState.referralTiers) {
-          localState.referralTiers = DEFAULT_REFERRAL_TIERS;
-        }
-        return res.json(localState);
-      }
-      res.json(state);
-    } catch (err) {
-      console.error('GET /api/db error:', err);
-      res.status(500).json({ error: err.message });
-    }
-  } else if (req.method === 'POST') {
-    try {
-      if (!pgPool && !supabase) {
-        fs.writeFileSync(dbPath, JSON.stringify(req.body, null, 2), 'utf8');
-        return res.json({ success: true });
-      }
-      await setDbState(req.body);
-      res.json({ success: true });
-    } catch (err) {
-      console.error('POST /api/db error:', err);
-      res.status(400).json({ error: err.message });
-    }
-  }
-});
-
-// 2. Resend Send email proxy
-app.post('/api/send-email', (req, res) => {
-  const apiKey = req.body.apiKey || process.env.RESEND_API_KEY;
-  const from = req.body.from || process.env.RESEND_FROM_ADDRESS;
-  const { to, subject, html } = req.body;
-
-  if (!apiKey) return res.status(400).json({ error: 'API key is required' });
-  if (!from) return res.status(400).json({ error: 'From address is required' });
-
-  const payload = JSON.stringify({ from, to, subject, html });
-  const options = {
-    hostname: 'api.resend.com',
-    path: '/emails',
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(payload)
-    }
-  };
-
-  const proxyReq = https.request(options, proxyRes => {
-    let data = '';
-    proxyRes.on('data', chunk => { data += chunk; });
-    proxyRes.on('end', () => {
-      res.status(proxyRes.statusCode).set('Content-Type', 'application/json').end(data);
-    });
-  });
-  proxyReq.on('error', err => res.status(500).json({ error: err.message }));
-  proxyReq.write(payload);
-  proxyReq.end();
-});
-
-// 3. Resend Get/List email proxy
-app.get('/api/resend-emails', (req, res) => {
-  const apiKey = req.query.apiKey || process.env.RESEND_API_KEY;
-  const { type, id } = req.query;
-  if (!apiKey) return res.status(400).json({ error: 'API key is required' });
-
-  let apiPath = '/emails';
-  if (id) {
-    apiPath = type === 'receiving' ? `/emails/receiving/${id}` : `/emails/${id}`;
-  } else if (type === 'receiving') {
-    apiPath = '/emails/receiving';
-  }
-
-  const options = {
-    hostname: 'api.resend.com',
-    path: apiPath,
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
-  };
-
-  const proxyReq = https.request(options, proxyRes => {
-    let data = '';
-    proxyRes.on('data', chunk => { data += chunk; });
-    proxyRes.on('end', () => {
-      res.status(proxyRes.statusCode).set('Content-Type', 'application/json').end(data);
-    });
-  });
-  proxyReq.on('error', err => res.status(500).json({ error: err.message }));
-  proxyReq.end();
-});
-
-// 4. WhatsApp Proxy Endpoints
-app.post('/api/send-whatsapp', async (req, res) => {
-  const { to, message } = req.body;
-  console.log(`[WhatsApp Outbox] Send attempt to ${to}: "${message}"`);
-  
-  const dbState = await getDbState();
-  const settings = dbState?.whatsappSettings || DEFAULT_WHATSAPP_SETTINGS;
-  
-  const enabled = settings.enabled || !!process.env.WHATSAPP_API_KEY || !!process.env.TWILIO_AUTH_TOKEN;
-  
-  // If Twilio credentials are in environment, use Twilio!
-  if (enabled && process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
-    try {
-      const accountSid = process.env.TWILIO_ACCOUNT_SID;
-      const authToken = process.env.TWILIO_AUTH_TOKEN;
-      const sender = process.env.TWILIO_SENDER_NUMBER || '+14155238886';
-      
-      let recipient = to.trim();
-      if (!recipient.startsWith('whatsapp:')) {
-        let clean = recipient.replace(/\D/g, "");
-        if (clean.length === 10) clean = "91" + clean;
-        recipient = `whatsapp:+${clean}`;
-      }
-      
-      const twilioSender = sender.startsWith('whatsapp:') ? sender : `whatsapp:${sender}`;
-      
-      const payload = new URLSearchParams({
-        To: recipient,
-        From: twilioSender,
-        Body: message
-      }).toString();
-      
-      const options = {
-        hostname: 'api.twilio.com',
-        port: 443,
-        path: `/2010-04-01/Accounts/${accountSid}/Messages.json`,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': Buffer.byteLength(payload),
-          'Authorization': 'Basic ' + Buffer.from(accountSid + ':' + authToken).toString('base64')
-        }
-      };
-      
-      const proxyReq = https.request(options, proxyRes => {
-        let responseData = '';
-        proxyRes.on('data', chunk => { responseData += chunk; });
-        proxyRes.on('end', () => {
-          console.log(`[Twilio WhatsApp Link] Status: ${proxyRes.statusCode}, Response: ${responseData}`);
-          res.status(200).json({ success: proxyRes.statusCode >= 200 && proxyRes.statusCode < 300, mock: false, providerStatus: proxyRes.statusCode });
-        });
-      });
-      proxyReq.on('error', err => {
-        console.error('[Twilio WhatsApp Link Error]', err);
-        res.status(200).json({ success: true, mock: true, error: err.message });
-      });
-      proxyReq.write(payload);
-      proxyReq.end();
-      return;
-    } catch (e) {
-      console.error('[Twilio Config Gateway Error]', e);
-    }
-  }
-
-  const apiKey = process.env.WHATSAPP_API_KEY || settings.apiKey;
-  const gatewayUrl = process.env.WHATSAPP_GATEWAY_URL || settings.gatewayUrl;
-  
-  if (enabled && apiKey && gatewayUrl) {
-    try {
-      const url = new URL(gatewayUrl);
-      const payload = JSON.stringify({
-        to,
-        message,
-        apiKey: apiKey
-      });
-      
-      const options = {
-        hostname: url.hostname,
-        port: url.port || (url.protocol === 'https:' ? 443 : 80),
-        path: url.pathname + url.search,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(payload)
-        }
-      };
-      
-      const reqProto = url.protocol === 'https:' ? https : http;
-      const proxyReq = reqProto.request(options, proxyRes => {
-        let responseData = '';
-        proxyRes.on('data', chunk => { responseData += chunk; });
-        proxyRes.on('end', () => {
-          console.log(`[WhatsApp Production Link] Status: ${proxyRes.statusCode}`);
-          res.status(200).json({ success: true, mock: false, providerStatus: proxyRes.statusCode });
-        });
-      });
-      proxyReq.on('error', err => {
-        console.error('[WhatsApp Production Link Error]', err);
-        res.status(200).json({ success: true, mock: true, error: err.message });
-      });
-      proxyReq.write(payload);
-      proxyReq.end();
-      return;
-    } catch (e) {
-      console.error('[WhatsApp Config Gateway Error]', e);
-    }
-  }
-  
-  // Fallback to mock success
-  res.json({ success: true, mock: true });
-});
-
-// POST /api/verify-upi
-app.post('/api/verify-upi', async (req, res) => {
-  const { invoiceId, utr, amount } = req.body;
-  if (!invoiceId || !utr || !amount) {
-    return res.status(400).json({ error: 'Missing invoiceId, utr, or amount' });
-  }
-
-  try {
-    const dbState = await getDbState();
-    if (!dbState) {
-      return res.status(500).json({ error: 'Database state could not be loaded' });
-    }
-
-    const upiLedger = dbState.upi_ledger || [];
-    const payments = dbState.payments || [];
-    
-    const payment = payments.find(p => p.id === invoiceId);
-    if (!payment) {
-      return res.status(404).json({ error: 'Invoice not found' });
-    }
-
-    // Clean inputs
-    const submittedUtr = String(utr).trim();
-    const submittedAmount = parseFloat(amount);
-
-    // Look for matching ledger entry
-    const ledgerMatch = upiLedger.find(entry => String(entry.utr).trim() === submittedUtr);
-
-    let status = 'review';
-    let matchedEntry = null;
-    let verificationError = '';
-
-    // Load reconciliation settings
-    const recSettings = dbState.reconciliationSettings || { tolerance: 0.05, maxAgeDays: 30 };
-    const tolerance = parseFloat(recSettings.tolerance) !== undefined ? parseFloat(recSettings.tolerance) : 0.05;
-    const maxAgeDays = parseInt(recSettings.maxAgeDays) !== undefined ? parseInt(recSettings.maxAgeDays) : 30;
-
-    let dateMatch = true;
-
-    if (ledgerMatch) {
-      const entryAmount = parseFloat(ledgerMatch.amount);
-      
-      // Verify date window limit
-      if (ledgerMatch.date && payment.dueDate) {
-        const ledgerDate = new Date(ledgerMatch.date);
-        const invoiceDate = new Date(payment.dueDate);
-        const diffTime = Math.abs(ledgerDate - invoiceDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays > maxAgeDays) {
-          dateMatch = false;
-        }
-      }
-
-      if (Math.abs(entryAmount - submittedAmount) <= tolerance) {
-        if (dateMatch) {
-          status = 'paid';
-          matchedEntry = ledgerMatch;
-        } else {
-          status = 'discrepancy';
-          verificationError = 'Date window exceeded';
-        }
-      } else {
-        status = 'discrepancy';
-        verificationError = 'Amount mismatch';
-      }
-    } else {
-      verificationError = 'UTR not found in ledger';
-    }
-
-    // Update payment record
-    payment.status = status;
-    payment.utr = submittedUtr;
-    if (status === 'paid') {
-      payment.paymentDate = matchedEntry?.date || new Date().toISOString().split('T')[0];
-      payment.verifiedAt = new Date().toISOString();
-      payment.verificationSource = 'ledger';
-      delete payment.verificationError;
-    } else {
-      payment.verificationError = verificationError;
-    }
-
-    // Log the reconciliation audit log
-    const auditLog = {
-      id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-      timestamp: new Date().toISOString(),
-      invoiceId,
-      utr: submittedUtr,
-      amount: submittedAmount,
-      status,
-      details: status === 'paid'
-        ? `Auto-approved: UTR matches. Amount: ₹${submittedAmount} (within tolerance of ±₹${tolerance}).`
-        : (status === 'discrepancy'
-            ? (verificationError === 'Date window exceeded'
-                ? `Discrepancy: UTR matched but transaction date (${ledgerMatch.date}) is beyond the ${maxAgeDays}-day window of invoice due date (${payment.dueDate}).`
-                : `Discrepancy: UTR matched but amount differs. Submitted: ₹${submittedAmount}, Ledger: ₹${ledgerMatch.amount}.`)
-            : `Under Review: UTR not found in bank statement ledger.`)
-    };
-
-    if (!dbState.upi_reconciliation_logs) {
-      dbState.upi_reconciliation_logs = [];
-    }
-    dbState.upi_reconciliation_logs.unshift(auditLog);
-    if (dbState.upi_reconciliation_logs.length > 500) {
-      dbState.upi_reconciliation_logs = dbState.upi_reconciliation_logs.slice(0, 500);
-    }
-
-    await setDbState(dbState);
-    res.json({ success: true, status, payment });
-  } catch (err) {
-    console.error('Error in /api/verify-upi:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// POST /api/admin/upload-ledger
-app.post('/api/admin/upload-ledger', async (req, res) => {
-  const { fileContent, columnMapping } = req.body; // Expect base64/plaintext CSV and optional custom mapping
-  if (!fileContent) {
-    return res.status(400).json({ error: 'No file content provided' });
-  }
-
-  try {
-    const dbState = await getDbState();
-    if (!dbState) {
-      return res.status(500).json({ error: 'Database state could not be loaded' });
-    }
-
-    // Simple CSV parser
-    const lines = fileContent.split(/\r?\n/);
-    if (lines.length < 2) {
-      return res.status(400).json({ error: 'Invalid CSV format or empty file' });
-    }
-
-    const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
-    
-    // Find column indices using custom mapping or falling back to regex
-    let utrIdx = -1;
-    let amountIdx = -1;
-    let dateIdx = -1;
-    let senderIdx = -1;
-    let detailsIdx = -1;
-
-    if (columnMapping) {
-      const getIndex = (fieldVal) => {
-        if (!fieldVal) return -1;
-        if (/^\d+$/.test(fieldVal)) {
-          return parseInt(fieldVal);
-        }
-        return headers.findIndex(h => h.toLowerCase() === String(fieldVal).toLowerCase());
-      };
-
-      utrIdx = getIndex(columnMapping.utr);
-      amountIdx = getIndex(columnMapping.amount);
-      dateIdx = getIndex(columnMapping.date);
-      senderIdx = getIndex(columnMapping.senderName || columnMapping.sender);
-      detailsIdx = getIndex(columnMapping.details);
-    }
-
-    if (utrIdx === -1) utrIdx = headers.findIndex(h => /utr|ref|transaction\s*(?:ref|id)|reference/i.test(h));
-    if (amountIdx === -1) amountIdx = headers.findIndex(h => /amount|value|sum/i.test(h));
-    if (dateIdx === -1) dateIdx = headers.findIndex(h => /date/i.test(h));
-    if (senderIdx === -1) senderIdx = headers.findIndex(h => /sender|name|from|payer/i.test(h));
-    if (detailsIdx === -1) detailsIdx = headers.findIndex(h => /details|desc|remarks|memo/i.test(h));
-
-    if (utrIdx === -1 || amountIdx === -1) {
-      return res.status(400).json({ error: `Could not identify required columns. Found headers: ${headers.join(', ')}. Need columns mapping to UTR/Ref and Amount.` });
-    }
-
-    const imported = [];
-    let duplicates = 0;
-    const existingUtrs = new Set((dbState.upi_ledger || []).map(entry => String(entry.utr).trim()));
-
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (!line) continue;
-
-      // Basic comma split handling simple quotes
-      const cols = [];
-      let current = '';
-      let inQuotes = false;
-      for (let j = 0; j < line.length; j++) {
-        const char = line[j];
-        if (char === '"' || char === "'") {
-          inQuotes = !inQuotes;
-        } else if (char === ',' && !inQuotes) {
-          cols.push(current.trim().replace(/^["']|["']$/g, ''));
-          current = '';
-        } else {
-          current += char;
-        }
-      }
-      cols.push(current.trim().replace(/^["']|["']$/g, ''));
-
-      if (cols.length < Math.max(utrIdx, amountIdx) + 1) continue;
-
-      const utr = cols[utrIdx]?.trim();
-      const amountStr = cols[amountIdx]?.trim();
-      if (!utr || !amountStr) continue;
-
-      // clean UTR: must be alphanumeric (12 digit typically, but let's grab the raw string minus spaces)
-      const cleanUtr = utr.replace(/\s+/g, '');
-      if (cleanUtr.length < 6) continue; // safety check for header-like/empty values
-
-      if (existingUtrs.has(cleanUtr)) {
-        duplicates++;
-        continue;
-      }
-
-      const amount = parseFloat(amountStr.replace(/[^0-9.-]/g, ''));
-      if (isNaN(amount)) continue;
-
-      const date = dateIdx !== -1 ? cols[dateIdx]?.trim() : new Date().toISOString().split('T')[0];
-      const senderName = senderIdx !== -1 ? cols[senderIdx]?.trim() : '';
-      const details = detailsIdx !== -1 ? cols[detailsIdx]?.trim() : '';
-
-      const newEntry = {
-        utr: cleanUtr,
-        amount: String(amount),
-        date: date || new Date().toISOString().split('T')[0],
-        senderName: senderName || 'Unknown',
-        details: details || 'Imported via CSV',
-        importedAt: new Date().toISOString()
-      };
-
-      imported.push(newEntry);
-      existingUtrs.add(cleanUtr);
-    }
-
-    if (!dbState.upi_ledger) {
-      dbState.upi_ledger = [];
-    }
-    dbState.upi_ledger.push(...imported);
-
-    await setDbState(dbState);
-
-    res.json({
-      success: true,
-      importedCount: imported.length,
-      duplicateCount: duplicates,
-      summary: `${imported.length} transactions imported, ${duplicates} duplicates ignored`
-    });
-  } catch (err) {
-    console.error('Error in /api/admin/upload-ledger:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Catch-all route to serve index.html for spa routing
-app.get('/*splat', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
-async function getUnifiedState() {
-  const state = await getDbState();
-  if (state !== null) {
-    if (!state.chatMessages) {
-      state.chatMessages = [];
-    }
-    return state;
-  }
-  
-  const dbPath = path.resolve(__dirname, 'db.json');
-  const localState = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, 'utf8')) : {};
-  if (!localState.whatsappSettings) {
-    localState.whatsappSettings = DEFAULT_WHATSAPP_SETTINGS;
-  }
-  if (!localState.upi_ledger) {
-    localState.upi_ledger = [];
-  }
-  if (!localState.chatMessages) {
-    localState.chatMessages = [];
-  }
-  return localState;
-}
-
-async function saveUnifiedState(state) {
-  if (pgPool || supabase) {
-    await setDbState(state);
-  } else {
-    const dbPath = path.resolve(__dirname, 'db.json');
-    fs.writeFileSync(dbPath, JSON.stringify(state, null, 2), 'utf8');
-  }
-}
-
-const server = app.listen(PORT, async () => {
-  console.log(`Production server running on port ${PORT}`);
-  await seedDbIfNeeded();
-});
-
-// Setup WebSocket Server co-hosted on HTTP Server port
-const wss = new WebSocketServer({ server });
-const connectedUsers = new Map();
-
-wss.on('connection', (socket) => {
-  console.log('[WebSocket] Client connected.');
-
-  socket.on('message', async (data) => {
-    try {
-      const message = JSON.parse(data);
-
-      if (message.type === 'join') {
-        connectedUsers.set(socket, { name: message.name, role: message.role });
-        
-        // Send history to user
-        const dbState = await getUnifiedState();
-        socket.send(JSON.stringify({
-          type: 'history',
-          messages: dbState.chatMessages || []
-        }));
-
-        // Broadcast updated user list
-        broadcastActiveUsers();
-      }
-
-      if (message.type === 'message') {
-        const dbState = await getUnifiedState();
-        if (!dbState.chatMessages) {
-          dbState.chatMessages = [];
-        }
-
-        const newMsg = {
-          id: 'msg-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-          name: message.name,
-          role: message.role,
-          text: message.text,
-          timestamp: new Date().toISOString()
-        };
-
-        dbState.chatMessages.push(newMsg);
-        if (dbState.chatMessages.length > 50) {
-          dbState.chatMessages = dbState.chatMessages.slice(-50);
-        }
-
-        await saveUnifiedState(dbState);
-
-        // Broadcast new message
-        broadcast({
-          type: 'message',
-          message: newMsg
-        });
-      }
-    } catch (e) {
-      console.error('[WebSocket] Error processing message:', e);
-    }
-  });
-
-  socket.on('close', () => {
-    console.log('[WebSocket] Client disconnected.');
-    connectedUsers.delete(socket);
-    broadcastActiveUsers();
-  });
-});
-
-function broadcast(payload) {
-  const data = JSON.stringify(payload);
-  for (const client of wss.clients) {
-    if (client.readyState === ws.OPEN) {
-      client.send(data);
-    }
-  }
-}
-
-function broadcastActiveUsers() {
-  broadcast({
-    type: 'users',
-    users: Array.from(connectedUsers.values())
-  });
-}
 ````

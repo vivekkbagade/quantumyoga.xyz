@@ -7965,7 +7965,7 @@ Please verify and update my status. Thank you!`);
       document.documentElement.classList.add("theme-sunset");
     }
     // Propagate theme to iframe if present
-    const iframe = document.querySelector("iframe[src='admin-emails.html']");
+    const iframe = document.querySelector("#admin-email-center-panel iframe");
     if (iframe && iframe.contentWindow) {
       iframe.contentWindow.postMessage({ type: "THEME_CHANGE", theme: themeName }, "*");
     }
