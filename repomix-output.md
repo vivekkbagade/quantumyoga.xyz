@@ -10698,13 +10698,13 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
       padding: 0.75rem 1rem;
       border-radius: 10px;
       cursor: pointer;
-      color: #9ca3af;
+      color: var(--text-secondary, #9ca3af);
       font-weight: 500;
       transition: all 0.2s ease;
     }
 
     .menu-item:hover, .menu-item.active {
-      color: #ffffff;
+      color: var(--text-primary, #ffffff);
       background: rgba(167, 139, 250, 0.15);
       border: 1px solid rgba(167, 139, 250, 0.2);
     }
@@ -10976,8 +10976,8 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     .compose-modal {
       width: 100%;
       max-width: 650px;
-      background: #0f172a;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--bg-primary, #0f172a);
+      border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.1));
       border-radius: 16px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
       transform: translateY(30px);
@@ -10993,7 +10993,7 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
 
     .modal-header {
       padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -11002,14 +11002,14 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     .modal-title {
       font-size: 1.15rem;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--text-primary, #ffffff);
       margin: 0;
     }
 
     .modal-close {
       background: none;
       border: none;
-      color: #9ca3af;
+      color: var(--text-muted, #9ca3af);
       font-size: 1.5rem;
       cursor: pointer;
       transition: color 0.2s ease;
@@ -11017,7 +11017,7 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     }
 
     .modal-close:hover {
-      color: #ffffff;
+      color: var(--text-primary, #ffffff);
     }
 
     .modal-form {
@@ -11036,15 +11036,15 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     .form-group label {
       font-size: 0.85rem;
       font-weight: 600;
-      color: #9ca3af;
+      color: var(--text-secondary, #9ca3af);
     }
 
     .form-input, .form-textarea {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--bg-input, rgba(15, 23, 42, 0.7));
+      border: 1px solid var(--glass-light-border, rgba(255, 255, 255, 0.08));
       border-radius: 8px;
       padding: 0.75rem 1rem;
-      color: #ffffff;
+      color: var(--text-primary, #ffffff);
       font-family: inherit;
       font-size: 0.9rem;
       outline: none;
@@ -11053,7 +11053,7 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     }
 
     .form-input:focus, .form-textarea:focus {
-      border-color: #a78bfa;
+      border-color: var(--accent-primary, #a78bfa);
     }
 
     .form-textarea {
@@ -11063,7 +11063,7 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
 
     .modal-footer {
       padding: 1rem 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
       display: flex;
       justify-content: flex-end;
       gap: 0.75rem;
@@ -11071,8 +11071,8 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
 
     .btn-secondary {
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #ffffff;
+      border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.1));
+      color: var(--text-primary, #ffffff);
       padding: 0.65rem 1.25rem;
       border-radius: 8px;
       font-weight: 600;
@@ -11081,13 +11081,13 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--bg-card-hover, rgba(255, 255, 255, 0.05));
     }
 
     .btn-primary {
-      background: #8b5cf6;
+      background: var(--accent-primary, #8b5cf6);
       border: none;
-      color: #ffffff;
+      color: var(--text-dark, #ffffff);
       padding: 0.65rem 1.5rem;
       border-radius: 8px;
       font-weight: 600;
@@ -11096,7 +11096,8 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     }
 
     .btn-primary:hover {
-      background: #7c3aed;
+      background: var(--accent-primary, #7c3aed);
+      filter: brightness(0.9);
     }
 
     .btn-action-small {
@@ -11113,30 +11114,31 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
 
     .btn-action-outline {
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #d1d5db;
+      border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.1));
+      color: var(--text-secondary, #d1d5db);
     }
 
     .btn-action-outline:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
+      border-color: var(--border-glass-hover, rgba(255, 255, 255, 0.2));
+      color: var(--text-primary, #ffffff);
     }
 
     .btn-action-filled {
-      background: #8b5cf6;
+      background: var(--accent-primary, #8b5cf6);
       border: none;
-      color: #ffffff;
+      color: var(--text-dark, #ffffff);
     }
 
     .btn-action-filled:hover {
-      background: #7c3aed;
+      background: var(--accent-primary, #7c3aed);
+      filter: brightness(0.9);
     }
 
     /* Top branding / Nav bar */
     .brand-header {
       padding: 1rem 2rem;
-      background: rgba(17, 24, 39, 0.8);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--bg-secondary, rgba(17, 24, 39, 0.8));
+      border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -11145,7 +11147,7 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     .brand-title {
       font-weight: 800;
       font-size: 1.5rem;
-      color: #ffffff;
+      color: var(--text-primary, #ffffff);
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -11153,17 +11155,17 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
 
     .brand-subtitle {
       font-size: 0.85rem;
-      color: #a78bfa;
+      color: var(--accent-primary, #a78bfa);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
     .btn-portal-back {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: var(--bg-tabs, rgba(255, 255, 255, 0.05));
+      border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.10));
       border-radius: 8px;
-      color: #ffffff;
+      color: var(--text-primary, #ffffff);
       padding: 0.5rem 1rem;
       font-size: 0.85rem;
       text-decoration: none;
@@ -11234,7 +11236,7 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
       <div class="brand-subtitle">Email Control Center</div>
     </div>
     <div style="display:flex; align-items:center; gap: 1rem;">
-      <span id="current-user-email" style="font-size:0.85rem; color:#9ca3af;">admin@quantumyoga.xyz</span>
+      <span id="current-user-email" style="font-size:0.85rem; color:var(--text-muted, #9ca3af);">admin@quantumyoga.xyz</span>
       <a href="index.html#admin-section" class="btn-portal-back">↩ Back to Portal</a>
     </div>
   </header>
