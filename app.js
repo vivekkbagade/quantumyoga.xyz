@@ -5508,16 +5508,19 @@ Please verify and update my status. Thank you!`);
     } catch (e) { return dateStr; }
   }
 
-  /**
-   * Renders the inbox email list with search/filter support (Task 6.1).
-   */
   function renderAdminInbox(filterMode = "all") {
     if (!adminInboxEmailList) return;
     const emails = loadEmails();
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    let list = [...emails];
+    // Filter to only show emails addressed to the admin, or marked as received/inbox, but not sent by the admin
+    let list = emails.filter(e => {
+      const toField = (e.to || "").toLowerCase();
+      const fromField = (e.from || "").toLowerCase();
+      return (toField.includes(connectedEmail) || e.direction === "received" || e.folder === "inbox") && 
+             !fromField.includes(connectedEmail);
+    });
 
     if (filterMode === "unread") list = list.filter(e => !e.isRead);
 
@@ -5777,7 +5780,11 @@ Please verify and update my status. Thank you!`);
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    const unread = emails.filter(e => !e.isRead).length;
+    const unread = emails.filter(e => 
+      !e.isRead && 
+      ((e.to || "").toLowerCase().includes(connectedEmail) || e.direction === "received" || e.folder === "inbox") && 
+      !(e.from || "").toLowerCase().includes(connectedEmail)
+    ).length;
 
     if (adminUnreadCount) adminUnreadCount.textContent = `${unread} unread`;
     if (adminEmailTabBtn) {
@@ -5936,8 +5943,7 @@ Please verify and update my status. Thank you!`);
     const userEmail = state.currentUser.email;
     const unread = emails.filter(e =>
       !e.isRead &&
-      (e.to || "").toLowerCase().includes(userEmail.toLowerCase()) &&
-      (e.folder === "inbox" || e.direction === "received")
+      (e.to || "").toLowerCase().includes(userEmail.toLowerCase())
     ).length;
 
     if (studentUnreadCount) studentUnreadCount.textContent = `${unread} unread`;

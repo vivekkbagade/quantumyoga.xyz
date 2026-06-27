@@ -11486,22 +11486,35 @@ To expedite approvals while preserving cost-free direct UPI transaction lanes, Q
     function renderUI() {
       const listContainer = document.getElementById("email-list-container");
       
+      const adminInboxEmails = emails.filter(e => {
+        const toField = (e.to || "").toLowerCase();
+        const fromField = (e.from || "").toLowerCase();
+        return (toField.includes("admin@quantumyoga.xyz") || e.direction === "received" || e.folder === "inbox") && 
+               !fromField.includes("admin@quantumyoga.xyz");
+      });
+
+      const adminSentEmails = emails.filter(e => {
+        const fromField = (e.from || "").toLowerCase();
+        return fromField.includes("admin@quantumyoga.xyz") || e.direction === "sent" || e.folder === "sent";
+      });
+
+      const adminUnreadEmails = adminInboxEmails.filter(e => !e.isRead);
+
       // Calculate unread badge counts
-      const unreadCount = emails.filter(e => !e.isRead).length;
-      const sentCount = emails.filter(e => e.folder === 'sent' || e.direction === 'sent').length;
+      const unreadCount = adminUnreadEmails.length;
+      const sentCount = adminSentEmails.length;
       
       document.getElementById("inbox-unread-count").textContent = unreadCount;
       document.getElementById("sent-count").textContent = sentCount;
 
       // Filter emails
-      let filtered = [...emails];
+      let filtered = [];
       if (activeFilter === 'inbox') {
-        // Render inbox (not sent)
-        filtered = filtered.filter(e => e.folder !== 'sent' && e.direction !== 'sent');
+        filtered = adminInboxEmails;
       } else if (activeFilter === 'sent') {
-        filtered = filtered.filter(e => e.folder === 'sent' || e.direction === 'sent');
+        filtered = adminSentEmails;
       } else if (activeFilter === 'unread') {
-        filtered = filtered.filter(e => !e.isRead);
+        filtered = adminUnreadEmails;
       }
 
       // Filter by search query
@@ -23670,16 +23683,19 @@ Please verify and update my status. Thank you!`);
     } catch (e) { return dateStr; }
   }
 
-  /**
-   * Renders the inbox email list with search/filter support (Task 6.1).
-   */
   function renderAdminInbox(filterMode = "all") {
     if (!adminInboxEmailList) return;
     const emails = loadEmails();
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    let list = [...emails];
+    // Filter to only show emails addressed to the admin, or marked as received/inbox, but not sent by the admin
+    let list = emails.filter(e => {
+      const toField = (e.to || "").toLowerCase();
+      const fromField = (e.from || "").toLowerCase();
+      return (toField.includes(connectedEmail) || e.direction === "received" || e.folder === "inbox") && 
+             !fromField.includes(connectedEmail);
+    });
 
     if (filterMode === "unread") list = list.filter(e => !e.isRead);
 
@@ -23939,7 +23955,11 @@ Please verify and update my status. Thank you!`);
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    const unread = emails.filter(e => !e.isRead).length;
+    const unread = emails.filter(e => 
+      !e.isRead && 
+      ((e.to || "").toLowerCase().includes(connectedEmail) || e.direction === "received" || e.folder === "inbox") && 
+      !(e.from || "").toLowerCase().includes(connectedEmail)
+    ).length;
 
     if (adminUnreadCount) adminUnreadCount.textContent = `${unread} unread`;
     if (adminEmailTabBtn) {
@@ -24098,8 +24118,7 @@ Please verify and update my status. Thank you!`);
     const userEmail = state.currentUser.email;
     const unread = emails.filter(e =>
       !e.isRead &&
-      (e.to || "").toLowerCase().includes(userEmail.toLowerCase()) &&
-      (e.folder === "inbox" || e.direction === "received")
+      (e.to || "").toLowerCase().includes(userEmail.toLowerCase())
     ).length;
 
     if (studentUnreadCount) studentUnreadCount.textContent = `${unread} unread`;
