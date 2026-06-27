@@ -317,6 +317,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminLeadsTabBtn = document.getElementById("admin-leads-tab-btn");
   const adminSettingsTabBtn = document.getElementById("admin-settings-tab-btn");
   const adminEmailTabBtn = document.getElementById("admin-email-tab-btn");
+  const adminEmailCenterTabBtn = document.getElementById("admin-email-center-tab-btn");
   
   const adminOverviewPanel = document.getElementById("admin-overview-panel");
   const adminUsersPanel = document.getElementById("admin-users-panel");
@@ -324,6 +325,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminLeadsPanel = document.getElementById("admin-leads-panel");
   const adminSettingsPanel = document.getElementById("admin-settings-panel");
   const adminEmailPanel = document.getElementById("admin-email-panel");
+  const adminEmailCenterPanel = document.getElementById("admin-email-center-panel");
 
   // Email panel DOM elements
   const adminInboxEmailList = document.getElementById("admin-inbox-email-list");
@@ -5292,6 +5294,7 @@ Please verify and update my status. Thank you!`);
       btn.setAttribute("aria-selected", "false");
     });
     if (adminEmailTabBtn) adminEmailTabBtn.classList.remove("active");
+    if (adminEmailCenterTabBtn) adminEmailCenterTabBtn.classList.remove("active");
     
     adminOverviewPanel.style.display = "none";
     adminUsersPanel.style.display = "none";
@@ -5302,6 +5305,7 @@ Please verify and update my status. Thank you!`);
     adminReportsPanel.style.display = "none";
     adminSettingsPanel.style.display = "none";
     if (adminEmailPanel) adminEmailPanel.style.display = "none";
+    if (adminEmailCenterPanel) adminEmailCenterPanel.style.display = "none";
     
     if (panelName === "overview") {
       adminOverviewTabBtn.classList.add("active");
@@ -5339,6 +5343,9 @@ Please verify and update my status. Thank you!`);
       if (adminEmailTabBtn) { adminEmailTabBtn.classList.add("active"); adminEmailTabBtn.setAttribute("aria-selected", "true"); }
       if (adminEmailPanel) adminEmailPanel.style.display = "block";
       renderAdminEmailTab();
+    } else if (panelName === "email-center") {
+      if (adminEmailCenterTabBtn) { adminEmailCenterTabBtn.classList.add("active"); adminEmailCenterTabBtn.setAttribute("aria-selected", "true"); }
+      if (adminEmailCenterPanel) adminEmailCenterPanel.style.display = "block";
     } else if (panelName === "settings") {
       adminSettingsTabBtn.classList.add("active");
       adminSettingsTabBtn.setAttribute("aria-selected", "true");
@@ -5442,6 +5449,9 @@ Please verify and update my status. Thank you!`);
     // Email tab visibility: permanently display Email tabs on administrator and student portals
     if (adminEmailTabBtn) {
       adminEmailTabBtn.style.display = "inline-flex";
+    }
+    if (adminEmailCenterTabBtn) {
+      adminEmailCenterTabBtn.style.display = "inline-flex";
     }
     if (profileEmailTabBtn) {
       profileEmailTabBtn.style.display = "inline-flex";
@@ -7831,6 +7841,9 @@ Please verify and update my status. Thank you!`);
 
   if (adminEmailTabBtn) {
     adminEmailTabBtn.addEventListener("click", () => setAdminSubTab("email"));
+  }
+  if (adminEmailCenterTabBtn) {
+    adminEmailCenterTabBtn.addEventListener("click", () => setAdminSubTab("email-center"));
   }
 
   // Create Batch Form Handler
