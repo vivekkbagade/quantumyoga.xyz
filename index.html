@@ -1247,48 +1247,48 @@
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem; margin-top: 1.5rem;">
-            <!-- Left: Compose + Sent -->
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-              <!-- Compose Email -->
-              <div class="admin-panel">
-                <h3>✏️ Compose Email</h3>
-                <form id="admin-compose-email-form" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
-                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                    <label for="admin-email-to" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">To:</label>
-                    <input type="email" id="admin-email-to" placeholder="recipient@email.com" required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                  </div>
-                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                    <label for="admin-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
-                    <input type="text" id="admin-email-subject" placeholder="Email subject..." required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                  </div>
-                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                    <label for="admin-email-template" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Template:</label>
-                    <select id="admin-email-template" style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                      <option value="custom">Custom Message</option>
-                      <option value="welcome">Welcome Email</option>
-                      <option value="invoice">Invoice Notification</option>
-                      <option value="reminder">Payment Reminder</option>
-                      <option value="appointment">Appointment Confirmation</option>
-                    </select>
-                  </div>
-                  <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                    <label for="admin-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
-                    <textarea id="admin-email-body" rows="6" placeholder="Type your message here..." style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
-                  </div>
-                  <div style="display:flex; gap:0.75rem; align-items:center;">
-                    <button type="submit" class="btn btn-primary" id="admin-send-email-btn" style="flex:1; font-size:0.85rem;">Send Email</button>
-                  </div>
-                  <div id="admin-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
-                </form>
-              </div>
-
-              <!-- Sent Emails -->
-              <div class="admin-panel">
-                <h3 style="display:flex; align-items:center; justify-content:space-between;">📤 Sent Items <span id="admin-sent-count" class="badge badge-category" style="font-size:0.7rem;">0</span></h3>
-                <div id="admin-sent-email-list" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; max-height:320px; overflow-y:auto;">
-                  <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:1.5rem 0;">No sent emails yet.</p>
+          <!-- Top: Full Width Compose -->
+          <div class="admin-panel" style="margin-top: 1.5rem;">
+            <h3>✏️ Compose Email</h3>
+            <form id="admin-compose-email-form" style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                  <label for="admin-email-to" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">To:</label>
+                  <input type="email" id="admin-email-to" placeholder="recipient@email.com" required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
                 </div>
+                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                  <label for="admin-email-template" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Template:</label>
+                  <select id="admin-email-template" style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+                    <option value="custom">Custom Message</option>
+                    <option value="welcome">Welcome Email</option>
+                    <option value="invoice">Invoice Notification</option>
+                    <option value="reminder">Payment Reminder</option>
+                    <option value="appointment">Appointment Confirmation</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                <label for="admin-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
+                <input type="text" id="admin-email-subject" placeholder="Email subject..." required style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+              </div>
+              <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                <label for="admin-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
+                <textarea id="admin-email-body" rows="5" placeholder="Type your message here..." style="background: rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+              </div>
+              <div style="display:flex; gap:0.75rem; align-items:center;">
+                <button type="submit" class="btn btn-primary" id="admin-send-email-btn" style="flex:1; font-size:0.85rem;">Send Email</button>
+              </div>
+              <div id="admin-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
+            </form>
+          </div>
+
+          <!-- Bottom: Side-by-Side Sent Items & Inbox -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <!-- Left: Sent Items -->
+            <div class="admin-panel" style="display:flex; flex-direction:column;">
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">📤 Sent Items <span id="admin-sent-count" class="badge badge-category" style="font-size:0.7rem;">0</span></h3>
+              <div id="admin-sent-email-list" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; flex:1; max-height:420px; overflow-y:auto;">
+                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:1.5rem 0;">No sent emails yet.</p>
               </div>
             </div>
 
@@ -1305,7 +1305,7 @@
                 <button class="email-filter-btn active" data-filter="all" id="admin-filter-all">All</button>
                 <button class="email-filter-btn" data-filter="unread" id="admin-filter-unread">Unread</button>
               </div>
-              <div id="admin-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; flex:1; overflow-y:auto; max-height:520px;">
+              <div id="admin-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; flex:1; overflow-y:auto; max-height:420px;">
                 <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">Connect Gmail to see your inbox messages.</p>
               </div>
             </div>
