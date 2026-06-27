@@ -1112,6 +1112,18 @@
 
     // Startup
     window.addEventListener("DOMContentLoaded", () => {
+      // If loaded inside an iframe, hide the brand header and margins for seamless embedding
+      if (window.self !== window.top) {
+        const brandHeader = document.querySelector(".brand-header");
+        if (brandHeader) brandHeader.style.display = "none";
+        const container = document.querySelector(".email-container");
+        if (container) {
+          container.style.margin = "0";
+          container.style.padding = "0";
+          container.style.maxWidth = "100%";
+        }
+      }
+
       checkAdminSession();
       syncDataFromServer();
       
