@@ -5463,8 +5463,13 @@ Please verify and update my status. Thank you!`);
   /**
    * Renders the entire admin Email panel (connection card + inbox + sent).
    */
-  function renderAdminEmailTab() {
+  async function renderAdminEmailTab() {
     updateEmailProviderStatusUI();
+    try {
+      await loadFromServer();
+    } catch (err) {
+      console.warn("Error loading state from server in renderAdminEmailTab:", err);
+    }
     renderAdminInbox();
     renderAdminSentList();
   }
@@ -5495,12 +5500,7 @@ Please verify and update my status. Thank you!`);
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    let list = emails.filter(e => {
-      const isIncoming = e.folder === "inbox" || e.direction === "received";
-      const isToAdmin = (e.to || "").toLowerCase().includes(connectedEmail) || (e.to || "").toLowerCase().includes("admin@quantumyoga.xyz");
-      const isFromAdmin = (e.from || "").toLowerCase().includes(connectedEmail) || (e.from || "").toLowerCase().includes("admin@quantumyoga.xyz");
-      return isIncoming && isToAdmin && !isFromAdmin;
-    });
+    let list = [...emails];
 
     if (filterMode === "unread") list = list.filter(e => !e.isRead);
 
@@ -5760,12 +5760,7 @@ Please verify and update my status. Thank you!`);
     const gs = loadGmailSettings();
     const connectedEmail = (gs.connectedEmail || "admin@quantumyoga.xyz").toLowerCase();
 
-    const unread = emails.filter(e => {
-      const isUnreadIncoming = !e.isRead && (e.folder === "inbox" || e.direction === "received");
-      const isToAdmin = (e.to || "").toLowerCase().includes(connectedEmail) || (e.to || "").toLowerCase().includes("admin@quantumyoga.xyz");
-      const isFromAdmin = (e.from || "").toLowerCase().includes(connectedEmail) || (e.from || "").toLowerCase().includes("admin@quantumyoga.xyz");
-      return isUnreadIncoming && isToAdmin && !isFromAdmin;
-    }).length;
+    const unread = emails.filter(e => !e.isRead).length;
 
     if (adminUnreadCount) adminUnreadCount.textContent = `${unread} unread`;
     if (adminEmailTabBtn) {

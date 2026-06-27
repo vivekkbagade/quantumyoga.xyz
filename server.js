@@ -9,6 +9,34 @@ import ws, { WebSocketServer } from 'ws';
 import pg from 'pg';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Load environment variables from .env file on startup if not already defined
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  try {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split(/\r?\n/).forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#')) {
+        const idx = trimmed.indexOf('=');
+        if (idx !== -1) {
+          const key = trimmed.substring(0, idx).trim();
+          let val = trimmed.substring(idx + 1).trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.substring(1, val.length - 1);
+          }
+          if (key && !process.env[key]) {
+            process.env[key] = val;
+          }
+        }
+      }
+    });
+    console.log("Successfully loaded local environment configuration.");
+  } catch (e) {
+    console.warn("Could not read local .env file:", e.message);
+  }
+}
+
 const app = express();
 const PORT = process.env.PORT || 80;
 
@@ -64,20 +92,50 @@ const DEFAULT_REFERRAL_TIERS = [
   { minReferrals: 3, discount: 20 }
 ];
 
+function readLocalDb() {
+  const dbPath = path.resolve(__dirname, 'db.json');
+  if (fs.existsSync(dbPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    } catch (e) {
+      console.error('Error reading local db.json:', e);
+    }
+  }
+  return {};
+}
+
+function writeLocalDb(state) {
+  const dbPath = path.resolve(__dirname, 'db.json');
+  try {
+    fs.writeFileSync(dbPath, JSON.stringify(state, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Error writing local db.json:', e);
+  }
+}
+
 // Unified state helper functions
 async function getDbState() {
   let state = null;
-  if (pgPool) {
-    const res = await pgPool.query("SELECT state FROM quantum_yoga_db WHERE id = $1", ['default']);
-    state = res.rows[0] ? res.rows[0].state : null;
-  } else if (supabase) {
-    const { data, error } = await supabase
-      .from('quantum_yoga_db')
-      .select('state')
-      .eq('id', 'default')
-      .maybeSingle();
-    if (error) throw error;
-    state = data ? data.state : null;
+  try {
+    if (pgPool) {
+      const res = await pgPool.query("SELECT state FROM quantum_yoga_db WHERE id = $1", ['default']);
+      state = res.rows[0] ? res.rows[0].state : null;
+    } else if (supabase) {
+      const { data, error } = await supabase
+        .from('quantum_yoga_db')
+        .select('state')
+        .eq('id', 'default')
+        .maybeSingle();
+      if (error) throw error;
+      state = data ? data.state : null;
+    }
+  } catch (err) {
+    console.warn("Database connection error in getDbState, falling back to local db.json:", err.message);
+    if (pgPool && (err.code === 'ECONNREFUSED' || err.message.includes('connect') || err.message.includes('timeout'))) {
+      console.warn("Disabling PostgreSQL connection pool to prevent request timeouts.");
+      pgPool = null;
+    }
+    state = readLocalDb();
   }
   if (state) {
     if (!state.whatsappSettings) {
@@ -97,17 +155,28 @@ async function getDbState() {
 }
 
 async function setDbState(state) {
-  if (pgPool) {
-    await pgPool.query(
-      "INSERT INTO quantum_yoga_db (id, state, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (id) DO UPDATE SET state = $2, updated_at = NOW()",
-      ['default', JSON.stringify(state)]
-    );
-  } else if (supabase) {
-    const { error } = await supabase
-      .from('quantum_yoga_db')
-      .upsert({ id: 'default', state: state, updated_at: new Date().toISOString() });
-    if (error) throw error;
+  try {
+    if (pgPool) {
+      await pgPool.query(
+        "INSERT INTO quantum_yoga_db (id, state, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (id) DO UPDATE SET state = $2, updated_at = NOW()",
+        ['default', JSON.stringify(state)]
+      );
+      return;
+    } else if (supabase) {
+      const { error } = await supabase
+        .from('quantum_yoga_db')
+        .upsert({ id: 'default', state: state, updated_at: new Date().toISOString() });
+      if (error) throw error;
+      return;
+    }
+  } catch (err) {
+    console.warn("Database connection error in setDbState, falling back to local db.json:", err.message);
+    if (pgPool && (err.code === 'ECONNREFUSED' || err.message.includes('connect') || err.message.includes('timeout'))) {
+      console.warn("Disabling PostgreSQL connection pool to prevent request timeouts.");
+      pgPool = null;
+    }
   }
+  writeLocalDb(state);
 }
 
 // Seed function if table is empty
@@ -162,8 +231,28 @@ app.all('/api/db', async (req, res) => {
     }
   } else if (req.method === 'POST') {
     try {
+      // Merge emails from incoming payload with existing database state to prevent overwriting
+      let currentState = null;
+      try {
+        currentState = await getDbState();
+      } catch (err) {
+        // Ignore read errors during fallback/merge
+      }
+      if (currentState && currentState.emails && req.body.emails) {
+        const mergedEmails = [...currentState.emails];
+        req.body.emails.forEach(incoming => {
+          const idx = mergedEmails.findIndex(e => e.id === incoming.id);
+          if (idx > -1) {
+            mergedEmails[idx] = { ...mergedEmails[idx], ...incoming };
+          } else {
+            mergedEmails.push(incoming);
+          }
+        });
+        req.body.emails = mergedEmails;
+      }
+
       if (!pgPool && !supabase) {
-        fs.writeFileSync(dbPath, JSON.stringify(req.body, null, 2), 'utf8');
+        writeLocalDb(req.body);
         return res.json({ success: true });
       }
       await setDbState(req.body);
