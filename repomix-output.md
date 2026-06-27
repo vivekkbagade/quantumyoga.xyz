@@ -16718,9 +16718,12 @@ function broadcastActiveUsers() {
             <div class="email-preview-card">
               <div class="email-preview-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
                 <div>
-                  <div id="student-preview-subject" style="font-size:1.1rem; font-weight:700; color:var(--text-primary);"></div>
-                  <div id="student-preview-from" style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.25rem;"></div>
-                  <div id="student-preview-date" style="font-size:0.78rem; color:var(--text-muted); margin-top:0.15rem;"></div>
+                  <div id="student-preview-subject" style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.5rem;"></div>
+                  <div style="font-size:0.8rem; color:var(--text-muted); display:flex; flex-direction:column; gap:0.25rem;">
+                    <div><strong>From:</strong> <span id="student-preview-from" style="color:var(--text-secondary);"></span></div>
+                    <div><strong>To:</strong> <span id="student-preview-to" style="color:var(--text-secondary);"></span></div>
+                    <div><strong>Date:</strong> <span id="student-preview-date"></span></div>
+                  </div>
                 </div>
                 <button class="modal-close" id="student-close-email-preview" aria-label="Close preview" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
               </div>
@@ -17497,9 +17500,12 @@ function broadcastActiveUsers() {
             <div class="email-preview-card">
               <div class="email-preview-header">
                 <div>
-                  <div id="admin-preview-subject" style="font-size:1rem; font-weight:700; color:var(--text-primary);"></div>
-                  <div id="admin-preview-from" style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;"></div>
-                  <div id="admin-preview-date" style="font-size:0.75rem; color:var(--text-muted);"></div>
+                  <div id="admin-preview-subject" style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.5rem;"></div>
+                  <div style="font-size:0.8rem; color:var(--text-muted); display:flex; flex-direction:column; gap:0.25rem;">
+                    <div><strong>From:</strong> <span id="admin-preview-from" style="color:var(--text-secondary);"></span></div>
+                    <div><strong>To:</strong> <span id="admin-preview-to" style="color:var(--text-secondary);"></span></div>
+                    <div><strong>Date:</strong> <span id="admin-preview-date"></span></div>
+                  </div>
                 </div>
                 <button class="modal-close" id="admin-close-email-preview" aria-label="Close preview">&times;</button>
               </div>
@@ -18572,6 +18578,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminEmailPreviewOverlay = document.getElementById("admin-email-preview-overlay");
   const adminPreviewSubject = document.getElementById("admin-preview-subject");
   const adminPreviewFrom = document.getElementById("admin-preview-from");
+  const adminPreviewTo = document.getElementById("admin-preview-to");
   const adminPreviewDate = document.getElementById("admin-preview-date");
   const adminPreviewBody = document.getElementById("admin-preview-body");
   const adminCloseEmailPreview = document.getElementById("admin-close-email-preview");
@@ -18618,6 +18625,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentEmailPreviewOverlay = document.getElementById("student-email-preview-overlay");
   const studentPreviewSubject = document.getElementById("student-preview-subject");
   const studentPreviewFrom = document.getElementById("student-preview-from");
+  const studentPreviewTo = document.getElementById("student-preview-to");
   const studentPreviewDate = document.getElementById("student-preview-date");
   const studentPreviewBody = document.getElementById("student-preview-body");
   const studentCloseEmailPreview = document.getElementById("student-close-email-preview");
@@ -23861,10 +23869,8 @@ Please verify and update my status. Thank you!`);
     currentPreviewEmail = email;
 
     if (adminPreviewSubject) adminPreviewSubject.textContent = email.subject || "(No Subject)";
-    if (adminPreviewFrom) {
-      const isSent = email.folder === "sent" || email.direction === "sent";
-      adminPreviewFrom.textContent = isSent ? `To: ${email.to || ""}` : `From: ${email.from || ""}`;
-    }
+    if (adminPreviewFrom) adminPreviewFrom.textContent = email.from || "";
+    if (adminPreviewTo) adminPreviewTo.textContent = email.to || "";
     if (adminPreviewDate) adminPreviewDate.textContent = email.date ? new Date(email.date).toLocaleString() : "";
     if (adminPreviewBody) adminPreviewBody.innerHTML = `<div class="email-loading-spinner"><div class="spinner-dot"></div><div class="spinner-dot"></div><div class="spinner-dot"></div></div>`;
     if (adminEmailPreviewOverlay) adminEmailPreviewOverlay.style.display = "flex";
@@ -24157,7 +24163,8 @@ Please verify and update my status. Thank you!`);
         
         // Populate and open the student preview modal
         if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
-        if (studentPreviewFrom) studentPreviewFrom.textContent = `From: ${email.from || "Quantum Yoga Studio"}`;
+        if (studentPreviewFrom) studentPreviewFrom.textContent = email.from || "Quantum Yoga Studio";
+        if (studentPreviewTo) studentPreviewTo.textContent = email.to || "";
         if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
         if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
@@ -24222,7 +24229,8 @@ Please verify and update my status. Thank you!`);
       item.addEventListener("click", async () => {
         // Populate and open the student preview modal
         if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
-        if (studentPreviewFrom) studentPreviewFrom.textContent = `To: ${email.to || "Quantum Yoga Studio"}`;
+        if (studentPreviewFrom) studentPreviewFrom.textContent = email.from || "";
+        if (studentPreviewTo) studentPreviewTo.textContent = email.to || "Quantum Yoga Studio";
         if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
         if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
