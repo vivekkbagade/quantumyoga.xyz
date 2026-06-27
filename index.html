@@ -493,40 +493,40 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:1.5rem;">
-            <!-- Left: Compose -->
-            <div class="admin-panel">
-              <h3>✏️ Message the Studio</h3>
-              <form id="student-compose-email-form" style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
-                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                  <label for="student-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
-                  <input type="text" id="student-email-subject" placeholder="How can we help?" required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                </div>
-                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                  <label for="student-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
-                  <textarea id="student-email-body" rows="6" placeholder="Type your message..." required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" id="student-send-email-btn" style="font-size:0.85rem;">Send Message</button>
-                <div id="student-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
-              </form>
+          <!-- Top: Full Width Compose -->
+          <div class="admin-panel">
+            <h3>✏️ Message the Studio</h3>
+            <form id="student-compose-email-form" style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+              <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                <label for="student-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
+                <input type="text" id="student-email-subject" placeholder="How can we help?" required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+              </div>
+              <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                <label for="student-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
+                <textarea id="student-email-body" rows="5" placeholder="Type your message..." required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" id="student-send-email-btn" style="font-size:0.85rem;">Send Message</button>
+              <div id="student-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
+            </form>
+          </div>
+
+          <!-- Bottom: Side-by-Side Sent Items & Inbox -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <!-- Left: Sent Items -->
+            <div class="admin-panel" style="display:flex; flex-direction:column;">
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">📤 Sent Items <span id="student-sent-count" class="badge badge-category" style="font-size:0.7rem;">0</span></h3>
+              <div id="student-sent-email-list" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; flex:1; max-height:420px; overflow-y:auto;">
+                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:1.5rem 0;">No sent emails yet.</p>
+              </div>
             </div>
 
-            <!-- Right: Inbox (messages from studio) -->
+            <!-- Right: Inbox -->
             <div class="admin-panel" style="display:flex; flex-direction:column;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                <h3 style="display:flex; align-items:center; gap:0.5rem; margin:0;" id="student-inbox-title-text">
-                  📥 My Inbox
-                </h3>
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">
+                <span>📥 Inbox</span>
                 <span id="student-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
-              </div>
-              
-              <!-- Tab switcher pills for student -->
-              <div class="student-folder-pills" style="margin-top:1rem; align-self:flex-start;">
-                <button id="student-btn-folder-inbox" class="student-folder-pill active" onclick="setStudentEmailFolder('inbox')">Inbox</button>
-                <button id="student-btn-folder-sent" class="student-folder-pill" onclick="setStudentEmailFolder('sent')">Sent</button>
-              </div>
-
-              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; overflow-y:auto; max-height:360px;">
+              </h3>
+              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; flex:1; overflow-y:auto; max-height:420px;">
                 <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">No messages received yet.</p>
               </div>
             </div>

@@ -385,6 +385,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentPreviewDate = document.getElementById("student-preview-date");
   const studentPreviewBody = document.getElementById("student-preview-body");
   const studentCloseEmailPreview = document.getElementById("student-close-email-preview");
+  const studentSentEmailList = document.getElementById("student-sent-email-list");
+  const studentSentCount = document.getElementById("student-sent-count");
   
   // Admin UPI Settings DOM Elements
   const adminUpiSettingsForm = document.getElementById("admin-upi-settings-form");
@@ -5858,6 +5860,7 @@ Please verify and update my status. Thank you!`);
     }
 
     renderStudentInbox();
+    renderStudentSent();
     updateStudentUnreadBadge();
   }
 
@@ -5868,44 +5871,30 @@ Please verify and update my status. Thank you!`);
     if (!studentInboxEmailList || !state.currentUser) return;
     const emails = loadEmails();
     const userEmail = state.currentUser.email;
-    const folder = state.studentEmailFolder || "inbox";
 
     const list = emails
       .filter(e => {
-        if (folder === "inbox") {
-          const toField = (e.to || "").toLowerCase();
-          const match = toField.match(/<([^>]+)>/);
-          const recipientEmail = (match ? match[1] : toField).trim();
-          return recipientEmail === userEmail.toLowerCase();
-        } else {
-          const fromField = (e.from || "").toLowerCase();
-          const match = fromField.match(/<([^>]+)>/);
-          const senderEmail = (match ? match[1] : fromField).trim();
-          return senderEmail === userEmail.toLowerCase();
-        }
+        const toField = (e.to || "").toLowerCase();
+        const match = toField.match(/<([^>]+)>/);
+        const recipientEmail = (match ? match[1] : toField).trim();
+        return recipientEmail === userEmail.toLowerCase();
       })
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (list.length === 0) {
-      const msg = folder === "inbox" ? "No messages from the studio yet." : "No sent messages yet.";
-      studentInboxEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0;">${msg}</p>`;
+      studentInboxEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0;">No messages received yet.</p>`;
       return;
     }
 
     studentInboxEmailList.innerHTML = "";
     list.forEach(email => {
       const item = document.createElement("div");
-      const isRead = folder === "sent" ? true : email.isRead;
-      item.className = `email-list-item${isRead ? "" : " unread"}`;
+      item.className = `email-list-item${email.isRead ? "" : " unread"}`;
       
-      const displayLabel = folder === "sent" 
-        ? `To: ${escapeHtml(email.to || "Quantum Yoga Studio")}`
-        : `From: ${escapeHtml(email.from || "Quantum Yoga Studio")}`;
-
       item.innerHTML = `
-        <div class="${isRead ? "email-read-dot" : "email-unread-dot"}"></div>
+        <div class="${email.isRead ? "email-read-dot" : "email-unread-dot"}"></div>
         <div class="email-content">
-          <div class="email-sender">${displayLabel}</div>
+          <div class="email-sender">From: ${escapeHtml(email.from || "Quantum Yoga Studio")}</div>
           <div class="email-subject">${escapeHtml(email.subject || "(No Subject)")}</div>
           <div class="email-snippet">${escapeHtml(email.snippet || "")}</div>
         </div>
@@ -5914,7 +5903,7 @@ Please verify and update my status. Thank you!`);
         </div>
       `;
       item.addEventListener("click", async () => {
-        if (folder === "inbox" && !email.isRead) {
+        if (!email.isRead) {
           await emailMarkAsRead(email.id);
           renderStudentInbox();
           updateStudentUnreadBadge();
@@ -5922,11 +5911,7 @@ Please verify and update my status. Thank you!`);
         
         // Populate and open the student preview modal
         if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
-        if (studentPreviewFrom) {
-          studentPreviewFrom.textContent = folder === "sent"
-            ? `To: ${email.to || "Quantum Yoga Studio"}`
-            : `From: ${email.from || "Quantum Yoga Studio"}`;
-        }
+        if (studentPreviewFrom) studentPreviewFrom.textContent = `From: ${email.from || "Quantum Yoga Studio"}`;
         if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
         if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
@@ -5946,6 +5931,71 @@ Please verify and update my status. Thank you!`);
         }
       });
       studentInboxEmailList.appendChild(item);
+    });
+  }
+
+  /**
+   * Renders the student sent items list — messages sent by the student.
+   */
+  function renderStudentSent() {
+    if (!studentSentEmailList || !state.currentUser) return;
+    const emails = loadEmails();
+    const userEmail = state.currentUser.email;
+
+    const list = emails
+      .filter(e => {
+        const fromField = (e.from || "").toLowerCase();
+        const match = fromField.match(/<([^>]+)>/);
+        const senderEmail = (match ? match[1] : fromField).trim();
+        return senderEmail === userEmail.toLowerCase();
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (studentSentCount) studentSentCount.textContent = list.length;
+
+    if (list.length === 0) {
+      studentSentEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:1.5rem 0;">No sent messages yet.</p>`;
+      return;
+    }
+
+    studentSentEmailList.innerHTML = "";
+    list.forEach(email => {
+      const item = document.createElement("div");
+      item.className = `email-list-item`;
+      item.innerHTML = `
+        <div class="email-read-dot"></div>
+        <div class="email-content">
+          <div class="email-sender">To: ${escapeHtml(email.to || "Quantum Yoga Studio")}</div>
+          <div class="email-subject">${escapeHtml(email.subject || "(No Subject)")}</div>
+          <div class="email-snippet">${escapeHtml(email.snippet || "")}</div>
+        </div>
+        <div class="email-meta-right">
+          <span class="email-date">${formatEmailDate(email.date)}</span>
+        </div>
+      `;
+      item.addEventListener("click", async () => {
+        // Populate and open the student preview modal
+        if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
+        if (studentPreviewFrom) studentPreviewFrom.textContent = `To: ${email.to || "Quantum Yoga Studio"}`;
+        if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
+        if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
+
+        // Retrieve full email body
+        const body = await emailGetMessageBody(email.id);
+        if (studentPreviewBody) {
+          if (body) {
+            if (body.trim().startsWith("<")) {
+              studentPreviewBody.innerHTML = body;
+            } else {
+              studentPreviewBody.innerHTML = escapeHtml(body).replace(/\n/g, "<br>");
+            }
+          } else {
+            studentPreviewBody.textContent = email.snippet || "(No message body content)";
+          }
+        }
+      });
+      studentSentEmailList.appendChild(item);
     });
   }
 
@@ -6218,6 +6268,9 @@ Please verify and update my status. Thank you!`);
           studentEmailSendMsg.style.color = "#10b981";
           studentEmailSendMsg.textContent = "✓ Message sent to the studio!";
           studentComposeEmailForm.reset();
+          renderStudentInbox();
+          renderStudentSent();
+          updateStudentUnreadBadge();
         } else {
           studentEmailSendMsg.style.color = "#ef4444";
           studentEmailSendMsg.textContent = `Failed: ${result.error || "Unknown error"}`;
@@ -9235,27 +9288,6 @@ Please verify and update my status. Thank you!`);
       return activeRoomId;
     }
 
-    function setStudentEmailFolder(folder) {
-      state.studentEmailFolder = folder;
-      const btnInbox = document.getElementById("student-btn-folder-inbox");
-      const btnSent = document.getElementById("student-btn-folder-sent");
-      if (btnInbox && btnSent) {
-        if (folder === "inbox") {
-          btnInbox.classList.add("active");
-          btnSent.classList.remove("active");
-        } else {
-          btnInbox.classList.remove("active");
-          btnSent.classList.add("active");
-        }
-      }
-      const titleText = document.getElementById("student-inbox-title-text");
-      if (titleText) {
-        titleText.innerHTML = folder === "inbox" ? "📥 My Inbox" : "📤 Sent Messages";
-      }
-      renderStudentInbox();
-    }
-
-    window.setStudentEmailFolder = setStudentEmailFolder;
     window.getActiveTimetableRoom = getActiveTimetableRoom;
 
     checkSession();

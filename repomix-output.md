@@ -16674,40 +16674,40 @@ function broadcastActiveUsers() {
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:1.5rem;">
-            <!-- Left: Compose -->
-            <div class="admin-panel">
-              <h3>✏️ Message the Studio</h3>
-              <form id="student-compose-email-form" style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
-                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                  <label for="student-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
-                  <input type="text" id="student-email-subject" placeholder="How can we help?" required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
-                </div>
-                <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
-                  <label for="student-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
-                  <textarea id="student-email-body" rows="6" placeholder="Type your message..." required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" id="student-send-email-btn" style="font-size:0.85rem;">Send Message</button>
-                <div id="student-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
-              </form>
+          <!-- Top: Full Width Compose -->
+          <div class="admin-panel">
+            <h3>✏️ Message the Studio</h3>
+            <form id="student-compose-email-form" style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1rem;">
+              <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                <label for="student-email-subject" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Subject:</label>
+                <input type="text" id="student-email-subject" placeholder="How can we help?" required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.45rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none;">
+              </div>
+              <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; gap:0.3rem;">
+                <label for="student-email-body" style="font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Message:</label>
+                <textarea id="student-email-body" rows="5" placeholder="Type your message..." required style="background:rgba(0,0,0,0.25); border:1px solid var(--glass-light-border); border-radius:var(--radius-sm); padding:0.5rem 0.6rem; color:var(--text-primary); font-size:0.85rem; outline:none; resize:vertical;"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" id="student-send-email-btn" style="font-size:0.85rem;">Send Message</button>
+              <div id="student-email-send-msg" style="display:none; font-size:0.8rem; text-align:center; font-weight:600;"></div>
+            </form>
+          </div>
+
+          <!-- Bottom: Side-by-Side Sent Items & Inbox -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <!-- Left: Sent Items -->
+            <div class="admin-panel" style="display:flex; flex-direction:column;">
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">📤 Sent Items <span id="student-sent-count" class="badge badge-category" style="font-size:0.7rem;">0</span></h3>
+              <div id="student-sent-email-list" style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; flex:1; max-height:420px; overflow-y:auto;">
+                <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:1.5rem 0;">No sent emails yet.</p>
+              </div>
             </div>
 
-            <!-- Right: Inbox (messages from studio) -->
+            <!-- Right: Inbox -->
             <div class="admin-panel" style="display:flex; flex-direction:column;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                <h3 style="display:flex; align-items:center; gap:0.5rem; margin:0;" id="student-inbox-title-text">
-                  📥 My Inbox
-                </h3>
+              <h3 style="display:flex; align-items:center; justify-content:space-between;">
+                <span>📥 Inbox</span>
                 <span id="student-unread-count" class="badge badge-category" style="background:rgba(167,139,250,0.2); color:#a78bfa; font-size:0.7rem;">0 unread</span>
-              </div>
-              
-              <!-- Tab switcher pills for student -->
-              <div class="student-folder-pills" style="margin-top:1rem; align-self:flex-start;">
-                <button id="student-btn-folder-inbox" class="student-folder-pill active" onclick="setStudentEmailFolder('inbox')">Inbox</button>
-                <button id="student-btn-folder-sent" class="student-folder-pill" onclick="setStudentEmailFolder('sent')">Sent</button>
-              </div>
-
-              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; overflow-y:auto; max-height:360px;">
+              </h3>
+              <div id="student-inbox-email-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; flex:1; overflow-y:auto; max-height:420px;">
                 <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2rem 0;">No messages received yet.</p>
               </div>
             </div>
@@ -18620,6 +18620,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentPreviewDate = document.getElementById("student-preview-date");
   const studentPreviewBody = document.getElementById("student-preview-body");
   const studentCloseEmailPreview = document.getElementById("student-close-email-preview");
+  const studentSentEmailList = document.getElementById("student-sent-email-list");
+  const studentSentCount = document.getElementById("student-sent-count");
   
   // Admin UPI Settings DOM Elements
   const adminUpiSettingsForm = document.getElementById("admin-upi-settings-form");
@@ -24093,6 +24095,7 @@ Please verify and update my status. Thank you!`);
     }
 
     renderStudentInbox();
+    renderStudentSent();
     updateStudentUnreadBadge();
   }
 
@@ -24103,44 +24106,30 @@ Please verify and update my status. Thank you!`);
     if (!studentInboxEmailList || !state.currentUser) return;
     const emails = loadEmails();
     const userEmail = state.currentUser.email;
-    const folder = state.studentEmailFolder || "inbox";
 
     const list = emails
       .filter(e => {
-        if (folder === "inbox") {
-          const toField = (e.to || "").toLowerCase();
-          const match = toField.match(/<([^>]+)>/);
-          const recipientEmail = (match ? match[1] : toField).trim();
-          return recipientEmail === userEmail.toLowerCase();
-        } else {
-          const fromField = (e.from || "").toLowerCase();
-          const match = fromField.match(/<([^>]+)>/);
-          const senderEmail = (match ? match[1] : fromField).trim();
-          return senderEmail === userEmail.toLowerCase();
-        }
+        const toField = (e.to || "").toLowerCase();
+        const match = toField.match(/<([^>]+)>/);
+        const recipientEmail = (match ? match[1] : toField).trim();
+        return recipientEmail === userEmail.toLowerCase();
       })
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (list.length === 0) {
-      const msg = folder === "inbox" ? "No messages from the studio yet." : "No sent messages yet.";
-      studentInboxEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0;">${msg}</p>`;
+      studentInboxEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0;">No messages received yet.</p>`;
       return;
     }
 
     studentInboxEmailList.innerHTML = "";
     list.forEach(email => {
       const item = document.createElement("div");
-      const isRead = folder === "sent" ? true : email.isRead;
-      item.className = `email-list-item${isRead ? "" : " unread"}`;
+      item.className = `email-list-item${email.isRead ? "" : " unread"}`;
       
-      const displayLabel = folder === "sent" 
-        ? `To: ${escapeHtml(email.to || "Quantum Yoga Studio")}`
-        : `From: ${escapeHtml(email.from || "Quantum Yoga Studio")}`;
-
       item.innerHTML = `
-        <div class="${isRead ? "email-read-dot" : "email-unread-dot"}"></div>
+        <div class="${email.isRead ? "email-read-dot" : "email-unread-dot"}"></div>
         <div class="email-content">
-          <div class="email-sender">${displayLabel}</div>
+          <div class="email-sender">From: ${escapeHtml(email.from || "Quantum Yoga Studio")}</div>
           <div class="email-subject">${escapeHtml(email.subject || "(No Subject)")}</div>
           <div class="email-snippet">${escapeHtml(email.snippet || "")}</div>
         </div>
@@ -24149,7 +24138,7 @@ Please verify and update my status. Thank you!`);
         </div>
       `;
       item.addEventListener("click", async () => {
-        if (folder === "inbox" && !email.isRead) {
+        if (!email.isRead) {
           await emailMarkAsRead(email.id);
           renderStudentInbox();
           updateStudentUnreadBadge();
@@ -24157,11 +24146,7 @@ Please verify and update my status. Thank you!`);
         
         // Populate and open the student preview modal
         if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
-        if (studentPreviewFrom) {
-          studentPreviewFrom.textContent = folder === "sent"
-            ? `To: ${email.to || "Quantum Yoga Studio"}`
-            : `From: ${email.from || "Quantum Yoga Studio"}`;
-        }
+        if (studentPreviewFrom) studentPreviewFrom.textContent = `From: ${email.from || "Quantum Yoga Studio"}`;
         if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
         if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
@@ -24181,6 +24166,71 @@ Please verify and update my status. Thank you!`);
         }
       });
       studentInboxEmailList.appendChild(item);
+    });
+  }
+
+  /**
+   * Renders the student sent items list — messages sent by the student.
+   */
+  function renderStudentSent() {
+    if (!studentSentEmailList || !state.currentUser) return;
+    const emails = loadEmails();
+    const userEmail = state.currentUser.email;
+
+    const list = emails
+      .filter(e => {
+        const fromField = (e.from || "").toLowerCase();
+        const match = fromField.match(/<([^>]+)>/);
+        const senderEmail = (match ? match[1] : fromField).trim();
+        return senderEmail === userEmail.toLowerCase();
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (studentSentCount) studentSentCount.textContent = list.length;
+
+    if (list.length === 0) {
+      studentSentEmailList.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:1.5rem 0;">No sent messages yet.</p>`;
+      return;
+    }
+
+    studentSentEmailList.innerHTML = "";
+    list.forEach(email => {
+      const item = document.createElement("div");
+      item.className = `email-list-item`;
+      item.innerHTML = `
+        <div class="email-read-dot"></div>
+        <div class="email-content">
+          <div class="email-sender">To: ${escapeHtml(email.to || "Quantum Yoga Studio")}</div>
+          <div class="email-subject">${escapeHtml(email.subject || "(No Subject)")}</div>
+          <div class="email-snippet">${escapeHtml(email.snippet || "")}</div>
+        </div>
+        <div class="email-meta-right">
+          <span class="email-date">${formatEmailDate(email.date)}</span>
+        </div>
+      `;
+      item.addEventListener("click", async () => {
+        // Populate and open the student preview modal
+        if (studentPreviewSubject) studentPreviewSubject.textContent = email.subject || "(No Subject)";
+        if (studentPreviewFrom) studentPreviewFrom.textContent = `To: ${email.to || "Quantum Yoga Studio"}`;
+        if (studentPreviewDate) studentPreviewDate.textContent = `Date: ${formatEmailDate(email.date)} ${new Date(email.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        if (studentPreviewBody) studentPreviewBody.innerHTML = `<span style="opacity:0.6;">Loading message content...</span>`;
+        if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "flex";
+
+        // Retrieve full email body
+        const body = await emailGetMessageBody(email.id);
+        if (studentPreviewBody) {
+          if (body) {
+            if (body.trim().startsWith("<")) {
+              studentPreviewBody.innerHTML = body;
+            } else {
+              studentPreviewBody.innerHTML = escapeHtml(body).replace(/\n/g, "<br>");
+            }
+          } else {
+            studentPreviewBody.textContent = email.snippet || "(No message body content)";
+          }
+        }
+      });
+      studentSentEmailList.appendChild(item);
     });
   }
 
@@ -24453,6 +24503,9 @@ Please verify and update my status. Thank you!`);
           studentEmailSendMsg.style.color = "#10b981";
           studentEmailSendMsg.textContent = "✓ Message sent to the studio!";
           studentComposeEmailForm.reset();
+          renderStudentInbox();
+          renderStudentSent();
+          updateStudentUnreadBadge();
         } else {
           studentEmailSendMsg.style.color = "#ef4444";
           studentEmailSendMsg.textContent = `Failed: ${result.error || "Unknown error"}`;
@@ -27470,27 +27523,6 @@ Please verify and update my status. Thank you!`);
       return activeRoomId;
     }
 
-    function setStudentEmailFolder(folder) {
-      state.studentEmailFolder = folder;
-      const btnInbox = document.getElementById("student-btn-folder-inbox");
-      const btnSent = document.getElementById("student-btn-folder-sent");
-      if (btnInbox && btnSent) {
-        if (folder === "inbox") {
-          btnInbox.classList.add("active");
-          btnSent.classList.remove("active");
-        } else {
-          btnInbox.classList.remove("active");
-          btnSent.classList.add("active");
-        }
-      }
-      const titleText = document.getElementById("student-inbox-title-text");
-      if (titleText) {
-        titleText.innerHTML = folder === "inbox" ? "📥 My Inbox" : "📤 Sent Messages";
-      }
-      renderStudentInbox();
-    }
-
-    window.setStudentEmailFolder = setStudentEmailFolder;
     window.getActiveTimetableRoom = getActiveTimetableRoom;
 
     checkSession();
