@@ -16728,6 +16728,9 @@ function broadcastActiveUsers() {
                 <button class="modal-close" id="student-close-email-preview" aria-label="Close preview" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
               </div>
               <div id="student-preview-body" class="email-preview-body" style="margin-top:1.5rem; padding:1.5rem; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--glass-light-border); line-height:1.6; color:var(--text-primary); font-size:0.9rem; overflow-y:auto; max-height:350px;"></div>
+              <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap; justify-content:flex-end;">
+                <button class="btn btn-secondary btn-sm" id="student-preview-close-btn" style="font-size:0.8rem;">Close</button>
+              </div>
             </div>
           </div>
 
@@ -17529,8 +17532,9 @@ function broadcastActiveUsers() {
                 </div>
               </div>
 
-              <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
-                <button class="btn btn-primary btn-sm" id="admin-preview-reply-btn" style="font-size:0.8rem;">↩ Reply</button>
+              <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap; justify-content:flex-end;">
+                <button class="btn btn-primary btn-sm" id="admin-preview-reply-btn" style="font-size:0.8rem; margin-right:auto;">↩ Reply</button>
+                <button class="btn btn-secondary btn-sm" id="admin-preview-close-btn" style="font-size:0.8rem;">Close</button>
               </div>
             </div>
           </div>
@@ -18582,6 +18586,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminPreviewDate = document.getElementById("admin-preview-date");
   const adminPreviewBody = document.getElementById("admin-preview-body");
   const adminCloseEmailPreview = document.getElementById("admin-close-email-preview");
+  const adminPreviewCloseBtn = document.getElementById("admin-preview-close-btn");
   const adminPreviewReplyBtn = document.getElementById("admin-preview-reply-btn");
   const adminComposeEmailForm = document.getElementById("admin-compose-email-form");
   const adminEmailTo = document.getElementById("admin-email-to");
@@ -18629,6 +18634,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentPreviewDate = document.getElementById("student-preview-date");
   const studentPreviewBody = document.getElementById("student-preview-body");
   const studentCloseEmailPreview = document.getElementById("student-close-email-preview");
+  const studentPreviewCloseBtn = document.getElementById("student-preview-close-btn");
   const studentSentEmailList = document.getElementById("student-sent-email-list");
   const studentSentCount = document.getElementById("student-sent-count");
   
@@ -24310,6 +24316,13 @@ Please verify and update my status. Thank you!`);
       currentPreviewEmail = null;
     });
   }
+  if (adminPreviewCloseBtn) {
+    adminPreviewCloseBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (adminEmailPreviewOverlay) adminEmailPreviewOverlay.style.display = "none";
+      currentPreviewEmail = null;
+    });
+  }
   if (adminEmailPreviewOverlay) {
     adminEmailPreviewOverlay.addEventListener("click", (e) => {
       if (e.target === adminEmailPreviewOverlay) {
@@ -24322,6 +24335,12 @@ Please verify and update my status. Thank you!`);
   // Student Close preview
   if (studentCloseEmailPreview) {
     studentCloseEmailPreview.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "none";
+    });
+  }
+  if (studentPreviewCloseBtn) {
+    studentPreviewCloseBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "none";
     });

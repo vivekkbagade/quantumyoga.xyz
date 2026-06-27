@@ -341,6 +341,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminPreviewDate = document.getElementById("admin-preview-date");
   const adminPreviewBody = document.getElementById("admin-preview-body");
   const adminCloseEmailPreview = document.getElementById("admin-close-email-preview");
+  const adminPreviewCloseBtn = document.getElementById("admin-preview-close-btn");
   const adminPreviewReplyBtn = document.getElementById("admin-preview-reply-btn");
   const adminComposeEmailForm = document.getElementById("admin-compose-email-form");
   const adminEmailTo = document.getElementById("admin-email-to");
@@ -388,6 +389,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentPreviewDate = document.getElementById("student-preview-date");
   const studentPreviewBody = document.getElementById("student-preview-body");
   const studentCloseEmailPreview = document.getElementById("student-close-email-preview");
+  const studentPreviewCloseBtn = document.getElementById("student-preview-close-btn");
   const studentSentEmailList = document.getElementById("student-sent-email-list");
   const studentSentCount = document.getElementById("student-sent-count");
   
@@ -6069,6 +6071,13 @@ Please verify and update my status. Thank you!`);
       currentPreviewEmail = null;
     });
   }
+  if (adminPreviewCloseBtn) {
+    adminPreviewCloseBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (adminEmailPreviewOverlay) adminEmailPreviewOverlay.style.display = "none";
+      currentPreviewEmail = null;
+    });
+  }
   if (adminEmailPreviewOverlay) {
     adminEmailPreviewOverlay.addEventListener("click", (e) => {
       if (e.target === adminEmailPreviewOverlay) {
@@ -6081,6 +6090,12 @@ Please verify and update my status. Thank you!`);
   // Student Close preview
   if (studentCloseEmailPreview) {
     studentCloseEmailPreview.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "none";
+    });
+  }
+  if (studentPreviewCloseBtn) {
+    studentPreviewCloseBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (studentEmailPreviewOverlay) studentEmailPreviewOverlay.style.display = "none";
     });
