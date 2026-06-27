@@ -485,6 +485,14 @@ export default defineConfig({
       }
     }
   ],
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        'admin-emails': path.resolve(__dirname, 'admin-emails.html')
+      }
+    }
+  },
   server: {
     port: 80
   }

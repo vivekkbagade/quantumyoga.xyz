@@ -58,6 +58,7 @@ jobs:
           cp data.js deploy-dist/
           cp index.css deploy-dist/
           cp index.html deploy-dist/
+          cp admin-emails.html deploy-dist/
           # Copy images and other JSON configurations
           cp *.jpg deploy-dist/ || echo "No jpg files"
           cp *.png deploy-dist/ || echo "No png files"
