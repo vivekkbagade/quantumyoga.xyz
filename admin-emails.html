@@ -981,11 +981,29 @@
           </div>
         </div>
         <div class="preview-body-container">
-          <div class="preview-body">
-            ${email.html || `<p>${escapeHtml(email.snippet || "")}</p>`}
+          <div class="preview-body" id="preview-body-content" style="padding: 1rem;">
           </div>
         </div>
       `;
+
+      const bodyContent = document.getElementById("preview-body-content");
+      if (bodyContent) {
+        if (email.html) {
+          const iframe = document.createElement("iframe");
+          iframe.sandbox = "allow-same-origin";
+          iframe.style.cssText = "width:100%; border:none; min-height:450px; background:#ffffff; border-radius:8px;";
+          bodyContent.appendChild(iframe);
+          
+          iframe.contentDocument.open();
+          iframe.contentDocument.write(email.html);
+          iframe.contentDocument.close();
+        } else {
+          const p = document.createElement("p");
+          p.style.cssText = "white-space: pre-wrap; margin: 0; padding: 1rem; color: var(--text-primary);";
+          p.textContent = email.body || email.snippet || "(No message body content)";
+          bodyContent.appendChild(p);
+        }
+      }
     }
 
     // Toggle Read/Unread status
