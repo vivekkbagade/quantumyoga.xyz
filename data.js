@@ -18,7 +18,7 @@ export const YOGA_POSES = [
       "Roll your shoulders back and down, allowing your arms to hang naturally by your sides with palms facing forward.",
       "Lengthen your neck, look straight ahead, and breathe deeply into your chest for 1 minute."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-doing-yoga-on-the-beach-in-the-morning-43093-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     posterUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600",
     description: "The foundational posture for all standing yoga poses, promoting grounding, presence, and perfect skeletal alignment.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -55,7 +55,7 @@ export const YOGA_POSES = [
       "Exhale and lift your knees away from the floor, pushing your hips up and back toward the ceiling.",
       "Keep a slight bend in your knees if hamstrings are tight, and press your heels down toward the mat."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-yoga-in-a-studio-under-warm-lights-43094-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     posterUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=600",
     description: "One of the most widely recognized yoga poses, downward dog is an inversion that builds upper body strength and stretches the posterior chain.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -92,7 +92,7 @@ export const YOGA_POSES = [
       "Exhale and bend your right knee over the right ankle, keeping the thigh parallel to the floor.",
       "Keep the torso upright and turn your head to look out over the fingers of your right hand."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-doing-yoga-on-the-beach-in-the-morning-43093-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     posterUrl: "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?auto=format&fit=crop&q=80&w=600",
     description: "An active, powerful posture celebrating strength, stability, and focus, named after the mythical warrior Virabhadra.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -129,7 +129,7 @@ export const YOGA_POSES = [
       "Bring your hands to your chest in prayer position (Anjali Mudra).",
       "Once balanced, raise your arms overhead like branches, extending upward toward the sky."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-meditating-under-a-tree-43091-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
     posterUrl: "https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&q=80&w=600",
     description: "An elegant balancing pose that mimics the steady, grounded, and upright stature of a tree, cultivating mental calmness and coordination.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -169,7 +169,7 @@ export const YOGA_POSES = [
       "Inhale and lift your chest off the floor by straightening your arms, keeping thighs and hips pressed down.",
       "Keep your shoulders relaxed away from your ears, and gaze slightly upward."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stretching-and-doing-yoga-on-the-grass-43092-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
     posterUrl: "https://images.unsplash.com/photo-1599447421416-3414500d18a5?auto=format&fit=crop&q=80&w=600",
     description: "A gentle backbend that opens the heart and chest, rejuvenating the spine and counteracting the effects of prolonged sitting.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -202,7 +202,7 @@ export const YOGA_POSES = [
       "Reach the right torso forward directly over the right leg, bending from the hip joint, not the waist.",
       "Lower your right hand toward the floor/ankle and sweep the left hand straight up toward the sky."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-doing-yoga-on-the-beach-in-the-morning-43093-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     posterUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600",
     description: "A fundamental standing pose that improves hip flexibility and tests core stability, forming the shape of a geometric triangle.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -239,7 +239,7 @@ export const YOGA_POSES = [
       "Press your feet and arms into the floor, inhale, and lift your hips toward the ceiling.",
       "Clasp your hands under your back, roll your shoulders under, and lift your chest."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stretching-and-doing-yoga-on-the-grass-43092-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     posterUrl: "https://images.unsplash.com/photo-1599447421416-3414500d18a5?auto=format&fit=crop&q=80&w=600",
     description: "A calming backbend that rejuvenates the nervous system and relieves lower back tension, establishing a bridge structure.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -272,7 +272,7 @@ export const YOGA_POSES = [
       "Extend your arms forward with palms down, stretching your shoulders.",
       "Allow your chest to sink heavily into the mat and breathe deeply."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-meditating-under-a-tree-43091-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     posterUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600",
     description: "An essential resting posture in yoga, offering a safe, quiet shelter to restore breathing, calm the senses, and ease muscular tension.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -305,7 +305,7 @@ export const YOGA_POSES = [
       "Inhale and lift your torso tall. Exhale, walk your hands forward, and lower your chest toward your shin.",
       "Rest your forehead on your hands or the mat, breathing into the tight spots for up to 90 seconds."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stretching-and-doing-yoga-on-the-grass-43092-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
     posterUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=600",
     description: "A profound hip-opening posture that releases emotional tension, deeply stretching key leg and gluteal muscles.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -338,7 +338,7 @@ export const YOGA_POSES = [
       "Rest your knees high up against the back of your triceps/armpits.",
       "Shift your weight forward onto your hands, lift your toes off the mat, and engage your core to balance."
     ],
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-yoga-in-a-studio-under-warm-lights-43094-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
     posterUrl: "https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&q=80&w=600",
     description: "The primary arm balancing pose, challenging core strength and body awareness as you fly with your knees on your arms.",
     svgMarkup: `<svg viewBox="0 0 100 100" width="80" height="80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -363,7 +363,7 @@ export const YOGA_ROUTINES = [
     duration: "15 mins",
     difficulty: "Beginner",
     focus: "Prana & Energy Flow",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-doing-yoga-on-the-beach-in-the-morning-43093-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     posterUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=600",
     description: "Start your morning with deep breathing and foundational warmups. Boost focus, clear mental blockages, and charge your metabolic core.",
     poses: [
@@ -381,7 +381,7 @@ export const YOGA_ROUTINES = [
     duration: "20 mins",
     difficulty: "Beginner",
     focus: "Stress Relief & Relaxation",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-meditating-under-a-tree-43091-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     posterUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600",
     description: "Unwind your body from muscular stress. Focus on slowing your heart rate, restoring breathing sequences, and opening joints safely.",
     poses: [
@@ -397,7 +397,7 @@ export const YOGA_ROUTINES = [
     duration: "25 mins",
     difficulty: "Intermediate",
     focus: "Strength, Stability, Core Flow",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-yoga-in-a-studio-under-warm-lights-43094-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
     posterUrl: "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?auto=format&fit=crop&q=80&w=600",
     description: "Develop structural alignment, wrist strength, and balance through dynamic core postures, leading to arm balances and deep hip releases.",
     poses: [
