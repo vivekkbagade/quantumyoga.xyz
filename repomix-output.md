@@ -23833,8 +23833,9 @@ Please verify and update my status. Thank you!`);
     adminSentEmailList.innerHTML = "";
     list.forEach(email => {
       const item = document.createElement("div");
-      item.className = "email-sent-item";
+      item.className = "email-list-item"; // Use email-list-item for pointer and hover states
       item.innerHTML = `
+        <div class="email-read-dot"></div>
         <div class="email-content">
           <div class="email-sender" style="color:var(--text-muted);">To: ${escapeHtml(email.to || "")}</div>
           <div class="email-subject">${escapeHtml(email.subject || "(No Subject)")}</div>
@@ -23844,6 +23845,7 @@ Please verify and update my status. Thank you!`);
           <span class="email-date">${formatEmailDate(email.date)}</span>
         </div>
       `;
+      item.addEventListener("click", () => openAdminEmailPreview(email.id));
       adminSentEmailList.appendChild(item);
     });
   }
@@ -23859,7 +23861,10 @@ Please verify and update my status. Thank you!`);
     currentPreviewEmail = email;
 
     if (adminPreviewSubject) adminPreviewSubject.textContent = email.subject || "(No Subject)";
-    if (adminPreviewFrom) adminPreviewFrom.textContent = `From: ${email.from || ""}`;
+    if (adminPreviewFrom) {
+      const isSent = email.folder === "sent" || email.direction === "sent";
+      adminPreviewFrom.textContent = isSent ? `To: ${email.to || ""}` : `From: ${email.from || ""}`;
+    }
     if (adminPreviewDate) adminPreviewDate.textContent = email.date ? new Date(email.date).toLocaleString() : "";
     if (adminPreviewBody) adminPreviewBody.innerHTML = `<div class="email-loading-spinner"><div class="spinner-dot"></div><div class="spinner-dot"></div><div class="spinner-dot"></div></div>`;
     if (adminEmailPreviewOverlay) adminEmailPreviewOverlay.style.display = "flex";
