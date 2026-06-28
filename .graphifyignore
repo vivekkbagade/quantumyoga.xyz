@@ -1,0 +1,18 @@
+# graphify ignore patterns
+# Ignores files and directories during the graphify extraction process
+
+# Workspace caches and generated directories
+scratch/
+test-results/
+dist/
+node_modules/
+
+# Large package lock and output files
+package-lock.json
+repomix-output.md
+repomix.config.json
+
+# Local/mock databases and test files
+db.json
+tst.json
+sample_ledger.csv

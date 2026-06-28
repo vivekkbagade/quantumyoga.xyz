@@ -34,3 +34,7 @@ db.json
 .DS_Store
 Thumbs.db
 
+# graphify
+graphify-out/
+
+
