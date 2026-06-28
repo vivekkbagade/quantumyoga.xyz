@@ -47,4 +47,4 @@ Administrators have access to specialized management systems to control studio o
 
 ### 2.3 Automated Notifications
 * **WhatsApp Integration**: Toggle and configure WhatsApp templates for automated welcome messages, invoice reminders, and booking confirmations.
-* **Email Communications**: Write, track, and dispatch emails or reply to student queries.
+* **Email Communications (Resend)**: Write, track, and dispatch transactional emails and reply to student queries. This uses the integrated Resend API configured directly via server environment variables (no manual admin configuration required).

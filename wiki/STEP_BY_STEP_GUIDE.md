@@ -88,10 +88,9 @@ This guide provides step-by-step instructions for executing every feature and wo
    * Approve bookings or click cancel to remove a session.
 
 ### 3.5 Managing Email Inbox & Communications
-1. Navigate to the **Email Inbox** panel.
-2. Click **Connect Gmail** to authorize email connectivity.
-3. Filter messages using the **All** / **Unread** buttons.
-4. Open a message to review:
+1. Navigate to the **Email Inbox** panel on the Admin Dashboard (email capabilities are configured on the server using environment variables and do not require manual settings).
+2. Filter messages using the **All** / **Unread** buttons.
+3. Open a message to review:
    * Click **Reply** to compose and send a response.
    * Approve payment attachments directly by clicking **Approve Payment** or click decline to reject.
 
