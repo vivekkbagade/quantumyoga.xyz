@@ -17,25 +17,32 @@ The Student portal allows practitioners to manage their practices, book private 
 * **Contact Information**: Manage your profile contact details, including saving your phone number (validated for standard Indian formats).
 * **Wellness & Goals**: Document your personal health objectives, private goals, and health history notes.
 
-### 1.3 Appointment Booking
+### 1.3 Student Email Inbox
+* **Inbox**: Access a dedicated mailbox to receive important updates, invoices, booking confirmations, and direct messages from the studio.
+* **Outbox**: Compose and send emails directly to the studio admin from your dashboard.
+
+### 1.4 Appointment Booking
 * **Private Coaching**: Tap **Book Session** to open the appointment booking modal. 
 * Select your preferred routine, date, and time.
 * Once submitted, your appointment is scheduled and appears in your personal calendar dashboard.
 
-### 1.4 Billing & Payments
+### 1.5 Billing & Payments
 * View all invoices and subscriptions (monthly fees, coaching charges) from the Billing section.
 * Invoices clearly list status (such as pending, paid, or overdue).
 * Pay instantly using the auto-generated UPI QR Code or direct tap-to-pay link.
 
-### 1.5 Engagement: Streaks, Countdowns & Referrals
+### 1.6 Engagement: Streaks, Countdowns & Referrals
 * **Daily Practice Streaks**: Log practices daily to increase your activity streak score and unlock special badges.
 * **Batch Countdown**: View a real-time countdown clock showing exact time remaining before your next scheduled batch session.
 * **Referral Program**: Generate your own unique referral code. Invite friends to join Quantum Yoga using this code. As they enroll, you move up referral tiers to receive discounts on subscriptions.
 
-### 1.6 Community Chat
-* Join the live community chat from the dashboard.
-* Converse in real-time with active peers and coaches.
-* Toggle between dark mode and other system themes to suit your environment.
+### 1.7 Live Video Classroom
+* **Join Streams**: Access the Live Class tab to join active video lectures hosted by administrators.
+* **Controls**: Adjust playback, mute/unmute audio feed, toggle fullscreen mode, or configure personalized voice coach feedback preferences.
+
+### 1.8 Community Chat
+* **Group Discussion**: Participate in the real-time community chat room.
+* **Online Directory**: View a sidebar directory of active students and coaches currently connected to the chat.
 
 ---
 
@@ -55,6 +62,10 @@ Administrators have access to specialized management systems to control studio o
 * Track potential customers from initial contact through follow-ups.
 * **Lead Conversion**: Convert qualified leads directly into active registered members with one click.
 
-### 2.4 Automated Notifications
+### 2.4 Live Streaming Host
+* **Broadcast Class**: Launch and terminate live video streaming sessions for all active students.
+* **Live Classroom Chat**: Direct access to the shared community chat room to guide students and answer live questions during the broadcast.
+
+### 2.5 Automated Notifications
 * **WhatsApp Integration**: Toggle and configure WhatsApp templates for automated welcome messages, invoice reminders, and booking confirmations.
 * **Email Communications (Resend)**: Write, track, and dispatch transactional emails and reply to student queries. This uses the integrated Resend API configured directly via server environment variables (no manual admin configuration required).

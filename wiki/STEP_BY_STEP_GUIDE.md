@@ -46,17 +46,23 @@ This guide provides step-by-step instructions for executing every feature and wo
 3. Fill in the **Health History Notes** text area.
 4. Click **Save Personal Details** to save.
 
-### 2.4 Logging Practices & Streaks
+### 2.4 Managing Student Email Inbox
+1. Go to **My Studio Dashboard** > **My Email** sub-tab.
+2. View incoming messages in the email list. Open any message to read its contents.
+3. Click the **Compose** or **New Message** button.
+4. Fill in the **Subject** and **Message Body**, then click **Send Message** to dispatch it to the studio administration.
+
+### 2.5 Logging Practices & Streaks
 1. Go to **My Studio Dashboard** > **My Practice Log**.
 2. Click **Log Practice** to record your completed yoga session.
 3. Your consecutive day count and streaks will automatically update on the dashboard view.
 
-### 2.5 Checking Batch Details & Countdowns
+### 2.6 Checking Batch Details & Countdowns
 1. Go to **My Studio Dashboard**.
 2. Locate the **My Class Batch** details card.
 3. View the instructor, timetable, and the live real-time countdown timer displaying the days, hours, and minutes left before your next class batch starts.
 
-### 2.6 Booking & Managing Appointments
+### 2.7 Booking & Managing Appointments
 1. Navigate to **My Appointments** tab.
 2. Click **Book New Session** to open the appointment booking form.
 3. In the form:
@@ -65,17 +71,29 @@ This guide provides step-by-step instructions for executing every feature and wo
    * Click **Schedule Appointment**.
 4. View your pending and scheduled bookings under the appointment history table.
 
-### 2.7 Referral Code Generation
+### 2.8 Referral Code Generation
 1. Go to **My Studio Dashboard** > **Wellness & Goals** panel.
 2. Under the Referrals section, click **Generate Code**.
 3. Copy your unique referral code and share it with friends.
 
-### 2.8 Making Payments
+### 2.9 Making Payments
 1. Go to **My Studio Dashboard** and locate the **Billing & Invoices** card.
 2. For any invoice listed as `pending` or `overdue`:
    * Click **Pay Now** to open the payment screen.
    * Scan the generated **UPI QR Code** or tap the payment link.
    * Enter your transaction details once paid to submit the payment claim.
+
+### 2.10 Joining Live Video Sessions
+1. Click the **Live Class** tab in the main navigation bar.
+2. If the administrator has launched a stream, the video player will load automatically.
+3. Use the player overlay buttons to play/pause, mute/unmute, or toggle fullscreen mode.
+
+### 2.11 Participating in Community Chat
+1. Click the **Chat** tab in the main navigation bar.
+2. The chat message history is loaded automatically.
+3. Type your message in the chat input box at the bottom.
+4. Press **Send** to publish your message.
+5. View other active chat participants in the online users sidebar.
 
 ---
 
@@ -131,3 +149,8 @@ This guide provides step-by-step instructions for executing every feature and wo
 ### 3.7 Launching Live Streaming
 1. Go to the Admin Dashboard and select the **Live Stream** utility.
 2. Click **Launch Live Video Session**. The system initializes the video feed and notifies connected students.
+
+### 3.8 Admin Live Chat Interaction
+1. Click the **Chat** tab in the main navigation bar.
+2. Review messages from students.
+3. Type and send your response to answer questions or announcements in real-time.
