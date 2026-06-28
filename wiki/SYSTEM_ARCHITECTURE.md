@@ -6,7 +6,7 @@ This document provides visual diagrams and detailed descriptions of the system a
 
 ## 1. Container & Component Architecture
 
-This diagram illustrates the separation between the client-side user interface and the server-side components, including data storage paths.
+This diagram illustrates the separation between the client-side user interface and the server-side components, including data storage paths and third-party API gateways.
 
 ```mermaid
 graph TD
@@ -17,7 +17,7 @@ graph TD
     end
 
     subgraph Transport ["Communication Protocols"]
-        HTTP["HTTP / HTTPS (/api/db)"]
+        HTTP["HTTP / HTTPS (/api/db & /api/send-email)"]
         WS["WebSockets (/api/ws)"]
     end
 
@@ -31,6 +31,10 @@ graph TD
         PG[(PostgreSQL Pool)]
         Supa[(Supabase Client)]
         JSONDb[(Local db.json Fallback)]
+    end
+
+    subgraph Gateway ["Third-Party Service Gateways"]
+        ResendAPI["Resend Email API (api.resend.com)"]
     end
 
     %% Client Interactions
@@ -49,6 +53,9 @@ graph TD
     ServerJS --> PG
     ServerJS --> Supa
     ServerJS --> JSONDb
+
+    %% Server to Third-Party Gateway Connections
+    ServerJS --> ResendAPI
 ```
 
 ---
@@ -83,7 +90,7 @@ flowchart TD
 
 ## 3. Communication & Operations Sequence
 
-This sequence diagram depicts startup synchronization, database persistence, and WebSocket real-time chat operations.
+This sequence diagram depicts startup synchronization, database persistence, WebSocket real-time chat operations, and server-side email routing via the Resend API.
 
 ```mermaid
 sequenceDiagram
@@ -93,6 +100,7 @@ sequenceDiagram
     participant LS as Local Storage
     participant Srv as server.js (Express & WS Server)
     participant DB as Persistence Layer (PG/Supa/db.json)
+    participant Resend as Resend Email Service
 
     Note over User, DB: Startup & Initialization
     User->>App: DomContentLoaded
@@ -112,6 +120,14 @@ sequenceDiagram
     DB-->>Srv: Confirm Write
     Srv-->>App: HTTP 200 OK
     
+    Note over User, DB: Transactional Email Routing
+    App->>Srv: POST /api/send-email (Recipient details, HTML body)
+    Srv->>Srv: Fallback to process.env.RESEND_API_KEY & RESEND_FROM_ADDRESS
+    Srv->>Resend: POST api.resend.com/emails (Payload + Auth Header)
+    Resend-->>Srv: Return success status & message ID
+    Srv-->>App: Return message ID
+    App->>LS: Simulate local inbox & outbox record updates
+
     Note over User, DB: Real-Time Chat (WebSockets)
     App->>Srv: Connect to ws/wss://[host]/api/ws
     Srv-->>App: WebSocket Upgrade Success
